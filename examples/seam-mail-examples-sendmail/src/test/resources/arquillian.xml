@@ -13,7 +13,7 @@
    -->
 
    <jbasmanaged:container>
-      <jbasmanaged:jbossHome>/home/dallen/opt/jboss-as-tests</jbasmanaged:jbossHome>
+      <jbasmanaged:jbossHome>${env.JBOSS_HOME}</jbasmanaged:jbossHome>
    </jbasmanaged:container>
    
    <gfembed:container>

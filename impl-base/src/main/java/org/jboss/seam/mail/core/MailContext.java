@@ -4,12 +4,12 @@ import java.util.Map;
 
 import org.jboss.seam.mail.exception.SeamMailException;
 
-public class AttachmentMap
+public class MailContext
 {
    
    private Map<String, Attachment> attachments;
    
-   public AttachmentMap(Map<String, Attachment> attachments)
+   public MailContext(Map<String, Attachment> attachments)
    {
       this.attachments = attachments;
    }

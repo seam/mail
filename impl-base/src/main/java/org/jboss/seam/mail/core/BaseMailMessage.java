@@ -1,7 +1,7 @@
 package org.jboss.seam.mail.core;
 
 import java.io.File;
-import java.net.MalformedURLException;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.Collection;
 import java.util.Date;
@@ -24,6 +24,7 @@ import org.jboss.seam.mail.core.enumurations.MailHeader;
 import org.jboss.seam.mail.core.enumurations.MessagePriority;
 import org.jboss.seam.mail.core.enumurations.RecipientType;
 import org.jboss.seam.mail.exception.SeamMailException;
+import org.jboss.weld.extensions.resourceLoader.ResourceProvider;
 
 public abstract class BaseMailMessage<T extends MailMessage<T>> implements MailMessage<T>
 {
@@ -34,6 +35,9 @@ public abstract class BaseMailMessage<T extends MailMessage<T>> implements MailM
    private MimeMultipart relatedMultipart = new MimeMultipart("related");
 
    @Inject
+   private ResourceProvider resourceProvider;
+
+   @Inject
    public BaseMailMessage(@Module Session session) throws SeamMailException
    {
       rootMimeMessage = new RootMimeMessage(session);
@@ -42,19 +46,21 @@ public abstract class BaseMailMessage<T extends MailMessage<T>> implements MailM
       setMessageID("<" + UUID.randomUUID().toString() + "@" + UUID.randomUUID().toString() + ">");
       initialize();
    }
-   
+
    /**
     * Obtains the true underlying class type
+    * 
     * @return
     */
    protected abstract Class<T> getRealClass();
-   
+
    /**
-    * Provides typesafe casting to the true return type of this 
-    * instance
+    * Provides typesafe casting to the true return type of this instance
+    * 
     * @return
     */
-   protected final T covariantReturn(){
+   protected final T covariantReturn()
+   {
       return this.getRealClass().cast(this);
    }
 
@@ -339,20 +345,42 @@ public abstract class BaseMailMessage<T extends MailMessage<T>> implements MailM
       addAttachment(attachment);
    }
 
-   public T addAttachment(String url, String fileName, ContentDisposition contentDisposition) throws SeamMailException
+   public void addAttachment(byte[] bytes, String fileName, ContentDisposition contentDisposition) throws SeamMailException
    {
-      URL u;
+      Attachment attachment = new Attachment(bytes, fileName, "application/octetStream", contentDisposition);
+      addAttachment(attachment);
+   }
+
+   public T addAttachment(String fileName, String mimeType, ContentDisposition contentDisposition) throws SeamMailException
+   {
+      InputStream inputStream = resourceProvider.loadResourceStream(fileName);
+      
+      if(inputStream == null)
+      {
+         throw new SeamMailException("InputStream was NULL for fileName: " + fileName);
+      }
 
       try
       {
-         u = new URL(url);
+         Attachment attachment = new Attachment(inputStream, fileName, mimeType, contentDisposition);
+         addAttachment(attachment);
       }
-      catch (MalformedURLException e)
+      catch (SeamMailException e)
       {
-         throw new SeamMailException("Unable to add attachment with URL: " + url, e);
+         throw new SeamMailException("Unable to Add STANDARD Attachment: " + fileName, e);
       }
 
-      Attachment attachment = new Attachment(new URLDataSource(u), fileName, contentDisposition);
+      return this.covariantReturn();
+   }
+   
+   public T addAttachment(String fileName, ContentDisposition contentDisposition) throws SeamMailException
+   {
+      return addAttachment(fileName, "application/octetStream", contentDisposition);
+   }
+
+   public T addAttachment(URL url, String fileName, ContentDisposition contentDisposition) throws SeamMailException
+   {
+      Attachment attachment = new Attachment(new URLDataSource(url), fileName, contentDisposition);
       addAttachment(attachment);
       return this.covariantReturn();
    }

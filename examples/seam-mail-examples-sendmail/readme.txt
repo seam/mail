@@ -145,3 +145,6 @@
  JSR-299 overview:     http://seamframework.org/Weld
  JSF community site:   http://www.javaserverfaces.org
 
+Testing
+=============
+mvn test -Pglassfish-embedded-3

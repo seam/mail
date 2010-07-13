@@ -1,6 +1,7 @@
 package org.jboss.seam.mail.core;
 
 import java.io.File;
+import java.net.URL;
 
 import org.jboss.seam.mail.core.enumurations.ContentDisposition;
 import org.jboss.seam.mail.core.enumurations.MessagePriority;
@@ -32,8 +33,12 @@ public interface MailMessage<T extends MailMessage<T>>
    public T importance(MessagePriority messagePriority) throws SeamMailException;
 
    public T addAttachment(File file, ContentDisposition attachment) throws SeamMailException;
+   
+   public T addAttachment(String fileName, ContentDisposition attachment) throws SeamMailException;
+   
+   public T addAttachment(String fileName, String mimeType, ContentDisposition attachment) throws SeamMailException;
 
-   public T addAttachment(String url, String fileName, ContentDisposition contentDisposition) throws SeamMailException;
+   public T addAttachment(URL url, String fileName, ContentDisposition contentDisposition) throws SeamMailException;
 
    public T deliveryReciept(String address) throws SeamMailException;
 

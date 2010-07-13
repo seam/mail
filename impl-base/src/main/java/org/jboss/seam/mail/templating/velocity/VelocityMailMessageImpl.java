@@ -12,15 +12,14 @@ import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.exception.MethodInvocationException;
 import org.apache.velocity.exception.ParseErrorException;
 import org.apache.velocity.exception.ResourceNotFoundException;
-
 import org.jboss.seam.mail.annotations.Module;
 import org.jboss.seam.mail.annotations.Velocity;
 import org.jboss.seam.mail.api.VelocityMailMessage;
-import org.jboss.seam.mail.core.AttachmentMap;
 import org.jboss.seam.mail.core.BaseMailMessage;
+import org.jboss.seam.mail.core.MailContext;
 import org.jboss.seam.mail.exception.SeamMailException;
-import org.jboss.seam.mail.templating.exception.SeamTemplatingException;
 import org.jboss.seam.mail.templating.MailTemplate;
+import org.jboss.seam.mail.templating.exception.SeamTemplatingException;
 import org.jboss.weld.extensions.resourceLoader.ResourceProvider;
 
 @Velocity
@@ -33,8 +32,8 @@ public class VelocityMailMessageImpl extends BaseMailMessage<VelocityMailMessage
    private MailTemplate textTemplate;
    private MailTemplate htmlTemplate;
 
-    @Inject
-    private ResourceProvider resourceProvider;
+   @Inject
+   private ResourceProvider resourceProvider;
 
    @Inject
    public VelocityMailMessageImpl(@Module Session session, @Module SeamCDIVelocityContext seamCDIVelocityContext) throws SeamMailException
@@ -43,7 +42,7 @@ public class VelocityMailMessageImpl extends BaseMailMessage<VelocityMailMessage
       velocityEngine = new VelocityEngine();
       velocityEngine.setProperty("runtime.log.logsystem.class", "org.apache.velocity.runtime.log.SimpleLog4JLogSystem");
       context = new SeamBaseVelocityContext(seamCDIVelocityContext);
-      put("attachmentMap", new AttachmentMap(super.getAttachments()));
+      put("mailContext", new MailContext(super.getAttachments()));
    }
 
    public VelocityMailMessageImpl setTemplateHTMLTextAlt(String htmlTemplatePath, String textTemplatePath) throws SeamMailException

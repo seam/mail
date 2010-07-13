@@ -1,114 +1,164 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-   <modelVersion>4.0.0</modelVersion>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
 
-   <groupId>org.jboss.seam.mail</groupId>
-   <artifactId>seam-mail-examples-sendmail</artifactId>
-   <version>3.0.0-SNAPSHOT</version>
-   <packaging>war</packaging>
+	<groupId>org.jboss.seam.mail</groupId>
+	<artifactId>seam-mail-examples-sendmail</artifactId>
+	<version>3.0.0-SNAPSHOT</version>
+	<packaging>war</packaging>
 
-   <name>Seam Mail Module Example: Sendmail</name>
-   <description>A starter Java EE 6 webapp project generated from the jboss-javaee6-webapp archetype</description>
+	<name>Seam Mail Module Example: Sendmail</name>
+	<description>A starter Java EE 6 webapp project generated from the jboss-javaee6-webapp archetype</description>
 
-   <properties>
-      <!-- Explicitly declaring the source encoding eliminates the following message: -->
-      <!-- [WARNING] Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent! -->
-      <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-      <!-- Timestamp format for the maven.build.timestamp property -->
-      <!-- You can reference property in pom.xml or filtered resources (must enable third-party plugin if using Maven < 2.1) -->
-      <maven.build.timestamp.format>yyyyMMdd'T'HHmmss</maven.build.timestamp.format>
-      <!-- Set the jboss.home property in an active profile of the $HOME/.m2/settings.xml to specify the JBoss AS directory the "Maven way" -->
-      <!-- By default, we assign it to the value of the JBOSS_HOME envrionment variable -->
-      <jboss.home>${env.JBOSS_HOME}</jboss.home>
-      <jboss.domain>default</jboss.domain>
-      <arquillian.version>1.0.0-SNAPSHOT</arquillian.version>
-      <jboss-javaee6-spec.version>1.0.0.Beta5</jboss-javaee6-spec.version>
-   </properties>
+	<properties>
+		<!--
+			Explicitly declaring the source encoding eliminates the following
+			message:
+		-->
+		<!--
+			[WARNING] Using platform encoding (UTF-8 actually) to copy filtered
+			resources, i.e. build is platform dependent!
+		-->
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<!-- Timestamp format for the maven.build.timestamp property -->
+		<!--
+			You can reference property in pom.xml or filtered resources (must
+			enable third-party plugin if using Maven < 2.1)
+		-->
+		<maven.build.timestamp.format>yyyyMMdd'T'HHmmss</maven.build.timestamp.format>
+		<!--
+			Set the jboss.home property in an active profile of the
+			$HOME/.m2/settings.xml to specify the JBoss AS directory the "Maven
+			way"
+		-->
+		<!--
+			By default, we assign it to the value of the JBOSS_HOME envrionment
+			variable
+		-->
+		<jboss.home>${env.JBOSS_HOME}</jboss.home>
+		<jboss.domain>default</jboss.domain>
+		<arquillian.version>1.0.0-SNAPSHOT</arquillian.version>
+		<jboss-javaee6-spec.version>1.0.0.Beta5</jboss-javaee6-spec.version>
+	</properties>
 
-   <repositories>
-      <!-- The JBoss Community public repository is a composite repository of several major repositories -->
-      <!-- see http://community.jboss.org/wiki/MavenGettingStarted-Users -->
-      <!-- At the time of writing, Arquillian and the JBoss Spec POMs are only in the JBoss Community public repository (not Maven central) -->
-      <repository>
-         <id>jboss-public-repository</id>
-         <name>JBoss Repository</name>
-         <url>https://repository.jboss.org/nexus/content/groups/public</url>
-         <!-- These optional flags are designed to speed up your builds by reducing remote server calls -->
-         <releases>
-            <updatePolicy>never</updatePolicy>
-         </releases>
-         <snapshots>
-            <updatePolicy>daily</updatePolicy>
-         </snapshots>
-      </repository>
-   </repositories>
+	<repositories>
+		<!--
+			The JBoss Community public repository is a composite repository of
+			several major repositories
+		-->
+		<!-- see http://community.jboss.org/wiki/MavenGettingStarted-Users -->
+		<!--
+			At the time of writing, Arquillian and the JBoss Spec POMs are only
+			in the JBoss Community public repository (not Maven central)
+		-->
+		<repository>
+			<id>jboss-public-repository</id>
+			<name>JBoss Repository</name>
+			<url>https://repository.jboss.org/nexus/content/groups/public</url>
+			<!--
+				These optional flags are designed to speed up your builds by
+				reducing remote server calls
+			-->
+			<releases>
+				<updatePolicy>never</updatePolicy>
+			</releases>
+			<snapshots>
+				<updatePolicy>daily</updatePolicy>
+			</snapshots>
+		</repository>
+	</repositories>
 
-   <pluginRepositories>
-      <pluginRepository>
-         <id>jboss-public-repository</id>
-         <name>JBoss Repository</name>
-         <url>https://repository.jboss.org/nexus/content/groups/public</url>
-         <!-- These optional flags are designed to speed up your builds by reducing remote server calls -->
-         <releases>
-            <updatePolicy>never</updatePolicy>
-         </releases>
-         <snapshots>
-            <!-- Set to true to fix error in which Maven cannot find org.apache.maven.plugins:maven-archetype-plugin:maven-plugin:2.0-alpha-6-SNAPSHOT -->
-            <updatePolicy>daily</updatePolicy>
-         </snapshots>
-      </pluginRepository>
-   </pluginRepositories>
+	<pluginRepositories>
+		<pluginRepository>
+			<id>jboss-public-repository</id>
+			<name>JBoss Repository</name>
+			<url>https://repository.jboss.org/nexus/content/groups/public</url>
+			<!--
+				These optional flags are designed to speed up your builds by
+				reducing remote server calls
+			-->
+			<releases>
+				<updatePolicy>never</updatePolicy>
+			</releases>
+			<snapshots>
+				<!--
+					Set to true to fix error in which Maven cannot find
+					org.apache.maven.plugins:maven-archetype-plugin:maven-plugin:2.0-alpha-6-SNAPSHOT
+				-->
+				<updatePolicy>daily</updatePolicy>
+			</snapshots>
+		</pluginRepository>
+	</pluginRepositories>
 
-   <dependencies>
+	<dependencies>
 
-      <dependency>
-         <groupId>org.jboss.seam.mail</groupId>
-         <artifactId>seam-mail-impl-base</artifactId>
-         <version>${project.version}</version>
-      </dependency>
+		<dependency>
+			<groupId>org.jboss.seam.mail</groupId>
+			<artifactId>seam-mail-impl-base</artifactId>
+			<version>${project.version}</version>
+		</dependency>
 
-      <dependency>
-         <groupId>org.jboss.seam.xml</groupId>
-         <artifactId>seam-xml-config</artifactId>
-         <version>3.0.0.Alpha2</version>
-         <exclusions>
-            <exclusion>
-               <groupId>javax.enterprise</groupId>
-               <artifactId>cdi-api</artifactId>
-            </exclusion>
-         </exclusions>
-      </dependency>
+		<dependency>
+			<groupId>org.jboss.seam.xml</groupId>
+			<artifactId>seam-xml-config</artifactId>
+			<version>3.0.0.Alpha2</version>
+			<exclusions>
+				<exclusion>
+					<groupId>javax.enterprise</groupId>
+					<artifactId>cdi-api</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
 
-      <!-- Weld Extensions provides convenient, portable CDI extensions such as an injectable logger -->
-      <dependency>
-         <groupId>org.jboss.weld</groupId>
-         <artifactId>weld-extensions</artifactId>
-         <version>1.0.0.Alpha2</version>
-      </dependency>
+		<!--
+			Weld Extensions provides convenient, portable CDI extensions such as
+			an injectable logger
+		-->
+		<dependency>
+			<groupId>org.jboss.weld</groupId>
+			<artifactId>weld-extensions</artifactId>
+			<version>1.0.0.Alpha2</version>
+		</dependency>
 
-      <!-- Need to use the injectable logger in Weld Extensions -->
-      <!-- Both JBoss AS and GlassFish provide this API -->
-      <dependency>
-         <groupId>org.slf4j</groupId>
-         <artifactId>slf4j-api</artifactId>
-         <version>1.5.10</version>
-         <scope>provided</scope>
-      </dependency>
+		<!-- Need to use the injectable logger in Weld Extensions -->
+		<!-- Both JBoss AS and GlassFish provide this API -->
+		<!--
+			<dependency> <groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId> <version>1.5.10</version>
+			<scope>provided</scope> </dependency>
+		-->
 
-      <!-- JSR-303 (Bean Validation) Implementation -->
-      <!-- Provides portable constraints such as @Email -->
-      <!-- Hibernate Validator is the only JSR-303 implementation at the moment, so we can assume it's provided -->
-      <dependency>
-         <groupId>org.hibernate</groupId>
-         <artifactId>hibernate-validator</artifactId>
-         <version>4.0.0.GA</version>
-         <scope>provided</scope>
-      </dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>1.5.10</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-simple</artifactId>
+			<version>1.5.10</version>
+			<scope>runtime</scope>
+		</dependency>
+
+		<!-- JSR-303 (Bean Validation) Implementation -->
+		<!-- Provides portable constraints such as @Email -->
+		<!--
+			Hibernate Validator is the only JSR-303 implementation at the moment,
+			so we can assume it's provided
+		-->
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-validator</artifactId>
+			<version>4.0.0.GA</version>
+			<scope>provided</scope>
+		</dependency>
 
 		<dependency>
 			<groupId>javax.mail</groupId>
 			<artifactId>mail</artifactId>
-			<version>1.4.1</version>
+			<version>1.4.3</version>
 		</dependency>
 
 		<dependency>
@@ -117,179 +167,251 @@
 			<version>1.6.4</version>
 		</dependency>
 
-      <!-- Needed for running tests (you may also use TestNG) -->
-      <dependency>
-         <groupId>junit</groupId>
-         <artifactId>junit</artifactId>
-         <version>4.8.1</version>
-         <scope>test</scope>
-      </dependency>
+		<dependency>
+			<groupId>dumbster</groupId>
+			<artifactId>dumbster</artifactId>
+			<version>1.6</version>
+			<scope>test</scope>
+		</dependency>
 
-      <!-- Optional, but highly recommended -->
-      <!-- Arquillian allows you to test enterprise code such as EJBs and Transactional JPA from JUnit/TestNG -->
-      <dependency>
-         <groupId>org.jboss.arquillian</groupId>
-         <artifactId>arquillian-junit</artifactId>
-         <version>${arquillian.version}</version>
-         <scope>test</scope>
-      </dependency>
+		<!-- Needed for running tests (you may also use TestNG) -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.8.1</version>
+			<scope>test</scope>
+		</dependency>
 
-   </dependencies>
+		<!-- Optional, but highly recommended -->
+		<!--
+			Arquillian allows you to test enterprise code such as EJBs and
+			Transactional JPA from JUnit/TestNG
+		-->
+		<dependency>
+			<groupId>org.jboss.arquillian</groupId>
+			<artifactId>arquillian-junit</artifactId>
+			<version>${arquillian.version}</version>
+			<scope>test</scope>
+		</dependency>
 
-   <build>
-      <finalName>sendmail</finalName>
-      <plugins>
-         <!-- Compiler plugin enforces Java 1.6 compatibility -->
-         <plugin>
-            <artifactId>maven-compiler-plugin</artifactId>
-            <version>2.3.1</version>
-            <configuration>
-               <source>1.6</source>
-               <target>1.6</target>
-            </configuration>
-         </plugin>
-      </plugins>
-   </build>
+	</dependencies>
 
-   <profiles>
-      <profile>
-         <!-- The default profile skips all tests, though you can tune it to run just unit tests -->
-         <!-- Seperate profiles are provided for running all tests, including Arquillian tests, which execute in the specified container -->
-         <id>default</id>
-         <activation>
-            <activeByDefault>true</activeByDefault>
-         </activation>
-         <dependencies>
-            <!-- Java EE Specification POM -->
-            <!-- This one dependency imports all APIs available for a Java EE 6.0 application -->
-            <dependency>
-               <groupId>org.jboss.spec</groupId>
-               <artifactId>jboss-javaee-6.0</artifactId>
-               <version>${jboss-javaee6-spec.version}</version>
-               <type>pom</type>
-               <scope>provided</scope>
-            </dependency>
-         </dependencies>
-         <build>
-            <plugins>
-               <plugin>
-                  <artifactId>maven-surefire-plugin</artifactId>
-                  <version>2.4.3</version>
-                  <configuration>
-                     <skip>true</skip>
-                  </configuration>
-               </plugin>
-               <!-- Optional JBoss deployer plugin will deploy your war to a local JBoss AS container if you've declared $JBOSS_HOME in your OS -->
-               <!-- To use, set the JBOSS_HOME environment variable (or jboss.home in $HOME/.m2/settings.xml) and run 'mvn package jboss:hard-deploy' -->
-               <plugin>
-                  <groupId>org.codehaus.mojo</groupId>
-                  <artifactId>jboss-maven-plugin</artifactId>
-                  <version>1.4.1-SNAPSHOT</version>
-                  <configuration>
-                     <jbossHome>${jboss.home}</jbossHome>
-                     <serverName>${jboss.domain}</serverName>
-                     <fileNames>
-                        <fileName>${project.build.directory}/${project.build.finalName}.war</fileName>
-                        <!-- JNDI Datasource that connects to in-memory HSQLDB to demonstrate JPA -->
-                        <fileName>src/main/resources-jbossas/default-ds.xml</fileName>
-                        <fileName>${project.build.directory}/${project.build.finalName}.war</fileName>
-                     </fileNames>
-                  </configuration>
-               </plugin>
-            </plugins>
-         </build>
-      </profile>
+	<build>
+		<finalName>sendmail</finalName>
+		<plugins>
+			<!-- Compiler plugin enforces Java 1.6 compatibility -->
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.3.1</version>
+				<configuration>
+					<source>1.6</source>
+					<target>1.6</target>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
 
-      <profile>
-         <!-- An Arquillian testing profile that executes tests in GlassFish Embedded -->
-         <!-- Run with 'mvn test -Pglassfish-embedded-3' -->
-         <id>glassfish-embedded-3</id>
-         <dependencies>
-            <dependency>
-               <groupId>org.jboss.arquillian.container</groupId>
-               <artifactId>arquillian-glassfish-embedded-3</artifactId>
-               <version>${arquillian.version}</version>
-               <scope>test</scope>
-            </dependency>
-            <!-- This imports the Java EE 6 runtime provided by GlassFish Embedded -->
-            <dependency>
-               <groupId>org.glassfish.extras</groupId>
-               <artifactId>glassfish-embedded-all</artifactId>
-               <version>3.0.1-b19</version>
-               <scope>provided</scope>
-            </dependency>
-         </dependencies>
-         <build>
-            <testResources>
-               <testResource>
-                  <directory>src/test/resources</directory>
-               </testResource>
-               <!-- Overrides default configuration to use alternate persistence.xml with eclipselink settings and declare a Glassfish Datasource -->
-               <!-- Used by Arquillian -->
-               <testResource>
-                  <directory>src/test/resources-glassfish-embedded</directory>
-               </testResource>
-            </testResources>
-            <plugins>
-               <plugin>
-                  <artifactId>maven-surefire-plugin</artifactId>
-                  <!-- don't use version 2.5 as it creates seperate test suites per class -->
-                  <version>2.4.3</version>
-                  <configuration>
-                     <systemProperties>
-                        <!-- This optional property fixes an annoyance with Glassfish that puts derby.log in the project root -->
-                        <property>
-                           <name>derby.stream.error.file</name>
-                           <!-- If you save the log in target it is less likely to get committed in your project -->
-                           <value>target/derby.log</value>
-                        </property>
-                     </systemProperties>
-                  </configuration>
-               </plugin>
-            </plugins>
-         </build>
-      </profile>
-      <profile>
-         <!-- An Arquillian testing profile that executes tests in a remote JBoss AS instance -->
-         <!-- Run with 'mvn test -Pjbossas-remote-6' -->
-         <id>jbossas-remote-6</id>
-         <dependencies>
-            <dependency>
-               <groupId>org.jboss.arquillian.container</groupId>
-               <artifactId>arquillian-jbossas-remote-6</artifactId>
-               <version>${arquillian.version}</version>
-               <scope>test</scope>
-            </dependency>
-            <!-- Java EE Specification POM -->
-            <!-- This one dependency imports all APIs available for a Java EE 6.0 application -->
-            <dependency>
-               <groupId>org.jboss.spec</groupId>
-               <artifactId>jboss-javaee-6.0</artifactId>
-               <version>${jboss-javaee6-spec.version}</version>
-               <type>pom</type>
-               <scope>provided</scope>
-            </dependency>
-            <!-- need for org.jnp.interfaces.NamingContextFactory -->
-            <dependency>
-               <groupId>org.jboss.jbossas</groupId>
-               <artifactId>jboss-as-client</artifactId>
-               <version>6.0.0.20100429-M3</version>
-               <type>pom</type>
-               <scope>test</scope>
-            </dependency>
-         </dependencies>
-         <build>
-            <testResources>
-               <testResource>
-                  <directory>src/test/resources</directory>
-               </testResource>
-               <!-- Overrides default configuration to use alternate persistence.xml with Hibernate settings and declare a JBoss AS Datasource -->
-               <!-- Used by Arquillian -->
-               <testResource>
-                  <directory>src/test/resources-jbossas</directory>
-               </testResource>
-            </testResources>
-         </build>
-      </profile>
-   </profiles>
+	<profiles>
+		<profile>
+			<!--
+				The default profile skips all tests, though you can tune it to run
+				just unit tests
+			-->
+			<!--
+				Seperate profiles are provided for running all tests, including
+				Arquillian tests, which execute in the specified container
+			-->
+			<id>default</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<dependencies>
+				<!-- Java EE Specification POM -->
+				<!--
+					This one dependency imports all APIs available for a Java EE 6.0
+					application
+				-->
+				<dependency>
+					<groupId>org.jboss.spec</groupId>
+					<artifactId>jboss-javaee-6.0</artifactId>
+					<version>${jboss-javaee6-spec.version}</version>
+					<type>pom</type>
+					<scope>provided</scope>
+				</dependency>
+			</dependencies>
+			<build>
+				<plugins>
+					<plugin>
+						<artifactId>maven-surefire-plugin</artifactId>
+						<version>2.4.3</version>
+						<configuration>
+							<skip>true</skip>
+						</configuration>
+					</plugin>
+					<!--
+						Optional JBoss deployer plugin will deploy your war to a local
+						JBoss AS container if you've declared $JBOSS_HOME in your OS
+					-->
+					<!--
+						To use, set the JBOSS_HOME environment variable (or jboss.home in
+						$HOME/.m2/settings.xml) and run 'mvn package jboss:hard-deploy'
+					-->
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>jboss-maven-plugin</artifactId>
+						<version>1.4.1-SNAPSHOT</version>
+						<configuration>
+							<jbossHome>${jboss.home}</jbossHome>
+							<serverName>${jboss.domain}</serverName>
+							<fileNames>
+								<fileName>${project.build.directory}/${project.build.finalName}.war</fileName>
+								<!--
+									JNDI Datasource that connects to in-memory HSQLDB to
+									demonstrate JPA
+								-->
+								<fileName>src/main/resources-jbossas/default-ds.xml</fileName>
+								<fileName>${project.build.directory}/${project.build.finalName}.war</fileName>
+							</fileNames>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+
+		<profile>
+			<id>glassfish-3-deploy</id>
+			<dependencies>
+				<dependency>
+					<groupId>org.slf4j</groupId>
+					<artifactId>slf4j-api</artifactId>
+					<version>1.5.10</version>
+					<scope>compile</scope>
+				</dependency>
+				<dependency>
+					<groupId>org.slf4j</groupId>
+					<artifactId>slf4j-simple</artifactId>
+					<version>1.5.10</version>
+					<scope>runtime</scope>
+				</dependency>
+			</dependencies>
+		</profile>
+
+		<profile>
+			<!--
+				An Arquillian testing profile that executes tests in GlassFish
+				Embedded
+			-->
+			<!-- Run with 'mvn test -Pglassfish-embedded-3' -->
+			<id>glassfish-embedded-3</id>
+			<dependencies>
+				<dependency>
+					<groupId>org.jboss.arquillian.container</groupId>
+					<artifactId>arquillian-glassfish-embedded-3</artifactId>
+					<version>${arquillian.version}</version>
+					<scope>test</scope>
+				</dependency>
+				<!--
+					This imports the Java EE 6 runtime provided by GlassFish Embedded
+				-->
+				<dependency>
+					<groupId>org.glassfish.extras</groupId>
+					<artifactId>glassfish-embedded-all</artifactId>
+					<version>3.0.1-b19</version>
+					<scope>provided</scope>
+				</dependency>
+			</dependencies>
+			<build>
+				<testResources>
+					<testResource>
+						<directory>src/test/resources</directory>
+					</testResource>
+					<!--
+						Overrides default configuration to use alternate persistence.xml
+						with eclipselink settings and declare a Glassfish Datasource
+					-->
+					<!-- Used by Arquillian -->
+					<testResource>
+						<directory>src/test/resources-glassfish-embedded</directory>
+					</testResource>
+				</testResources>
+				<plugins>
+					<plugin>
+						<artifactId>maven-surefire-plugin</artifactId>
+						<!--
+							don't use version 2.5 as it creates seperate test suites per
+							class
+						-->
+						<version>2.4.3</version>
+						<configuration>
+							<systemProperties>
+								<!--
+									This optional property fixes an annoyance with Glassfish that
+									puts derby.log in the project root
+								-->
+								<property>
+									<name>derby.stream.error.file</name>
+									<!--
+										If you save the log in target it is less likely to get
+										committed in your project
+									-->
+									<value>target/derby.log</value>
+								</property>
+							</systemProperties>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<!--
+				An Arquillian testing profile that executes tests in a remote JBoss
+				AS instance
+			-->
+			<!-- Run with 'mvn test -Pjbossas-remote-6' -->
+			<id>jbossas-remote-6</id>
+			<dependencies>
+				<dependency>
+					<groupId>org.jboss.arquillian.container</groupId>
+					<artifactId>arquillian-jbossas-remote-6</artifactId>
+					<version>${arquillian.version}</version>
+					<scope>test</scope>
+				</dependency>
+				<!-- Java EE Specification POM -->
+				<!--
+					This one dependency imports all APIs available for a Java EE 6.0
+					application
+				-->
+				<dependency>
+					<groupId>org.jboss.spec</groupId>
+					<artifactId>jboss-javaee-6.0</artifactId>
+					<version>${jboss-javaee6-spec.version}</version>
+					<type>pom</type>
+					<scope>provided</scope>
+				</dependency>
+				<!-- need for org.jnp.interfaces.NamingContextFactory -->
+				<dependency>
+					<groupId>org.jboss.jbossas</groupId>
+					<artifactId>jboss-as-client</artifactId>
+					<version>6.0.0.20100429-M3</version>
+					<type>pom</type>
+					<scope>test</scope>
+				</dependency>
+			</dependencies>
+			<build>
+				<testResources>
+					<testResource>
+						<directory>src/test/resources</directory>
+					</testResource>
+					<!--
+						Overrides default configuration to use alternate persistence.xml
+						with Hibernate settings and declare a JBoss AS Datasource
+					-->
+					<!-- Used by Arquillian -->
+					<testResource>
+						<directory>src/test/resources-jbossas</directory>
+					</testResource>
+				</testResources>
+			</build>
+		</profile>
+	</profiles>
 </project>

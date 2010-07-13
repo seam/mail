@@ -16,14 +16,15 @@ public class MailSessionProducer
    private Logger log;
 
    @Inject
-   private MailConfig config;
+   private MailConfig mailConfig;
    
    @Produces @Module
    public Session getMailSession()
    {
       log.debug("Producing Mail Session");
       Properties props = new Properties();
-      props.put("mail.smtp.host", config.getServerHost());
+      props.put("mail.smtp.host", mailConfig.getServerHost());
+      props.put("mail.smtp.port", mailConfig.getServerPort());
       return Session.getInstance(props, null);
    }
 }

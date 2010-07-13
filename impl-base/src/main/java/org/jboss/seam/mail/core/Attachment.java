@@ -1,6 +1,8 @@
 package org.jboss.seam.mail.core;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.UUID;
 
 import javax.activation.DataHandler;
@@ -50,7 +52,12 @@ public class Attachment extends MimeBodyPart
 
    public Attachment(byte[] bytes, String fileName, String mimeType, ContentDisposition contentDisposition) throws SeamMailException
    {
-      this(new ByteArrayDataSource(bytes, mimeType), fileName, contentDisposition);
+      this(getByteArrayDataSource(bytes, mimeType), fileName, contentDisposition);
+   }
+   
+   public Attachment(InputStream inputStream, String fileName, String mimeType, ContentDisposition contentDisposition) throws SeamMailException
+   {         
+      this(getByteArrayDataSource(inputStream, mimeType), fileName, contentDisposition);
    }
 
    public Attachment(File file, String fileName, ContentDisposition contentDisposition) throws SeamMailException
@@ -109,5 +116,25 @@ public class Attachment extends MimeBodyPart
       {
          throw new SeamMailException("Unable to set Data on attachment");
       }
+   }
+   
+   private static ByteArrayDataSource getByteArrayDataSource(byte [] bytes, String mimeType)
+   {
+      ByteArrayDataSource bads = new ByteArrayDataSource(bytes, mimeType);
+      return bads;
+   }
+   
+   private static ByteArrayDataSource getByteArrayDataSource(InputStream inputStream, String mimeType) throws SeamMailException
+   {
+      ByteArrayDataSource bads;
+      try
+      {
+         bads = new ByteArrayDataSource(inputStream, mimeType);
+      }
+      catch (IOException e)
+      {
+         throw new SeamMailException("Unable to created Attacment from InputStream");
+      }
+      return bads;
    }
 }

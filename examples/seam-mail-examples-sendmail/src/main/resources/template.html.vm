@@ -1,10 +1,10 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
    <body>
       <p>
-         <b>Dear <a href="mailto:$helloWorld.email">$helloWorld.name</a>,</b>
+         <b>Dear <a href="mailto:$person.email">$person.name</a>,</b>
       </p>
       <p>This is an example <i>HTML</i> email sent by $version. $woo!</p>
-      <p><img src="$attachmentMap.insert("seamLogo.png")" />      
+      <p><img src="$mailContext.insert("seamLogo.png")" />      
       <p>It has an alternative text body for mail readers that don't support html.</p>
    </body>
 </html>

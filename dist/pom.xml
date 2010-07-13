@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+   <modelVersion>4.0.0</modelVersion>
+
+   <parent>
+      <groupId>org.jboss.seam.mail</groupId>
+      <artifactId>seam-mail-parent</artifactId>
+      <version>3.0.0-SNAPSHOT</version>
+      <relativePath>../pom.xml</relativePath>
+   </parent>
+
+   <artifactId>seam-mail-distribution</artifactId>
+   <name>Seam Mail Module Distribution</name>
+   <description>Builds a Seam Mail module release distribution</description>
+   <packaging>pom</packaging>
+
+   <properties>
+      <maven.deploy.skip>true</maven.deploy.skip>
+   </properties>
+
+   <dependencies>
+
+      <dependency>
+         <groupId>org.jboss.seam.mail</groupId>
+         <artifactId>seam-mail</artifactId>
+         <optional>true</optional>
+      </dependency>
+
+      <dependency>
+         <groupId>org.jboss.seam.mail</groupId>
+         <artifactId>seam-mail</artifactId>
+         <version>${project.version}</version>
+         <classifier>sources</classifier>
+      </dependency>
+
+      <dependency>
+         <groupId>org.jboss.seam.mail</groupId>
+         <artifactId>seam-mail</artifactId>
+         <version>${project.version}</version>
+         <classifier>javadoc</classifier>
+         <optional>true</optional>
+      </dependency>
+
+      <dependency>
+         <groupId>org.jboss.seam.mail</groupId>
+         <artifactId>seam-mail-reference-guide</artifactId>
+         <version>${project.version}</version>
+         <type>war</type>
+         <optional>true</optional>
+      </dependency>
+
+      <dependency>
+         <groupId>org.jboss.seam.mail</groupId>
+         <artifactId>seam-mail-examples-sendmail</artifactId>
+         <version>${project.version}</version>
+         <type>zip</type>
+         <optional>true</optional>
+      </dependency>
+
+   </dependencies>
+
+   <build>
+      <finalName>seam-mail</finalName>
+      <plugins>
+         <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-assembly-plugin</artifactId>
+         </plugin>
+      </plugins>
+   </build>
+</project>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- This optional file is used by JBoss AS to get around an issue involving serialization of sessions between container restarts -->
+<Context>
+   <!-- disable storage of sessions across restarts by setting the pathname to an empty value -->
+   <Manager pathname=""/>
+</Context>

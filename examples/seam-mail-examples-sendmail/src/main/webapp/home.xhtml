@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+   xmlns:ui="http://java.sun.com/jsf/facelets"
+   xmlns:f="http://java.sun.com/jsf/core"
+   xmlns:h="http://java.sun.com/jsf/html"
+   template="/WEB-INF/templates/default.xhtml">
+   <ui:define name="content">
+      <h1>Sendmail</h1>
+
+      <p>You can use this application to send sample e-mail messages.</p>
+
+      <h:form id="sendmail">
+         <table>
+         	<tr>
+               <th style="text-align: right;">
+                  <h:outputLabel for="name" value="Name:"/>
+               </th>
+               <td>
+                  <h:inputText id="name" value="#{helloWorld.name}"/>
+                  <h:message for="name" errorClass="invalid"/>
+               </td>
+            </tr>           
+            <tr>
+               <th style="text-align: right;">
+                  <h:outputLabel for="email" value="Email:"/>
+               </th>
+               <td>
+                  <h:inputText id="email" value="#{helloWorld.email}"/>
+                  <h:message for="email" errorClass="invalid"/>
+               </td>
+            </tr>
+         </table>
+         <p>
+            <h:commandButton action="#{helloWorld.sendText()}" value="Send Text Email" />
+            <h:commandButton action="#{helloWorld.sendHTML()}" value="Send HTML Email" onclick="value='Sending...';"/>
+            <h:commandButton action="#{helloWorld.sendHTMLwithAlternative()}" value="Send HTML+Text Email" onclick="value='Sending...';"/>           
+            <h:outputText value="Message Sent!" rendered="#{facesContext.postback and empty facesContext.messageList}" style="color: green;"/>
+         </p>
+      </h:form>
+
+   </ui:define>
+</ui:composition>

@@ -45,6 +45,11 @@ public class VelocityMailMessageTest
 
    @Inject
    Person person;
+   
+   String fromName = "Seam Framework";
+   String fromAddress = "seam@jboss.org";
+   String toName = "Seamy Seamerson";
+   String toAddress = "seamy.seamerson@seam-mail.test";
 
    @Test
    public void testGetVelocityTextMailMessage() throws SeamMailException, IOException, MessagingException
@@ -55,11 +60,7 @@ public class VelocityMailMessageTest
 
       Wiser wiser = new Wiser(mailConfig.getServerPort());
       wiser.start();
-
-      String fromName = "Seam Framework";
-      String fromAddress = "seam@jboss.org";
-      String toName = "Seamy Seamerson";
-      String toAddress = "cody.lerum@gmail.com";
+      
       String subject = "Text Message from Seam Mail - " + java.util.UUID.randomUUID().toString();
 
       person.setName(toName);
@@ -99,11 +100,7 @@ public class VelocityMailMessageTest
 
       Wiser wiser = new Wiser(mailConfig.getServerPort());
       wiser.start();
-
-      String fromName = "Seam Framework";
-      String fromAddress = "seam@jboss.org";
-      String toName = "Seamy Seamerson";
-      String toAddress = "cody.lerum@gmail.com";
+      
       String subject = "HTML Message from Seam Mail - " + java.util.UUID.randomUUID().toString();
 
       person.setName(toName);
@@ -145,10 +142,6 @@ public class VelocityMailMessageTest
       Wiser wiser = new Wiser(mailConfig.getServerPort());
       wiser.start();
 
-      String fromName = "Seam Framework";
-      String fromAddress = "seam@jboss.org";
-      String toName = "Seamy Seamerson";
-      String toAddress = "cody.lerum@gmail.com";
       String subject = "HTML+Text Message from Seam Mail - " + java.util.UUID.randomUUID().toString();
 
       person.setName(toName);
@@ -161,8 +154,8 @@ public class VelocityMailMessageTest
       .put("version", "Seam 3")
       .setTemplateHTMLTextAlt("template.html.vm", "template.text.vm")
       .importance(MessagePriority.LOW)
-      .deliveryReciept("cody.lerum@clearfly.net")
-      .readReciept("cody.lerum@clearfly.net")
+      .deliveryReciept(fromAddress)
+      .readReciept("seam.test")
       .addAttachment("template.html.vm", ContentDisposition.ATTACHMENT)
       .addAttachment(new URL("http://www.seamframework.org/themes/sfwkorg/img/seam_icon_large.png"), "seamLogo.png", ContentDisposition.INLINE)
       .send();

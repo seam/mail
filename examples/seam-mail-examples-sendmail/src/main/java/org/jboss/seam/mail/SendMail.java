@@ -55,8 +55,8 @@ public class SendMail
             .put("version", "Seam 3")
             .setTemplateHTMLTextAlt("template.html.vm", "template.text.vm")
             .importance(MessagePriority.LOW)
-            .deliveryReciept("cody.lerum@clearfly.net")
-            .readReciept("cody.lerum@clearfly.net")
+            .deliveryReciept("seam@jboss.org")
+            .readReciept("seam@jboss.org")
             .addAttachment("template.html.vm", ContentDisposition.ATTACHMENT)
             .addAttachment(new URL("http://www.seamframework.org/themes/sfwkorg/img/seam_icon_large.png"), "seamLogo.png", ContentDisposition.INLINE)
             .send();

@@ -37,9 +37,4 @@ public class MailUtility
    {
       return getInternetAddressses(recipients.toArray(new EmailContact[recipients.size()]));
    }
-   
-   public static String removeLineReturn(String value)
-   {
-      return value.replaceAll("[\r\n]", "");
-   }
 }

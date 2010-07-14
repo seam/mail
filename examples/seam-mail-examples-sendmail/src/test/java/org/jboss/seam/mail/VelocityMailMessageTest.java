@@ -6,6 +6,7 @@ import java.net.URL;
 import javax.inject.Inject;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeUtility;
 
 import junit.framework.Assert;
 
@@ -14,7 +15,6 @@ import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.seam.mail.core.Mail;
 import org.jboss.seam.mail.core.MailConfig;
 import org.jboss.seam.mail.core.MailTestUtil;
-import org.jboss.seam.mail.core.MailUtility;
 import org.jboss.seam.mail.core.enumurations.ContentDisposition;
 import org.jboss.seam.mail.core.enumurations.MessagePriority;
 import org.jboss.seam.mail.exception.SeamMailException;
@@ -83,7 +83,7 @@ public class VelocityMailMessageTest
 
       Assert.assertEquals(MailTestUtil.getAddressHeader(fromName, fromAddress), mess.getHeader("From", null));
       Assert.assertEquals(MailTestUtil.getAddressHeader(toName, toAddress), mess.getHeader("To", null));
-      Assert.assertEquals("Subject has been modified", subject, MailUtility.removeLineReturn(mess.getHeader("Subject", null)));
+      Assert.assertEquals("Subject has been modified", subject, MimeUtility.unfold(mess.getHeader("Subject", null)));
       Assert.assertEquals(MessagePriority.HIGH.getPriority(), mess.getHeader("Priority", null));
       Assert.assertEquals(MessagePriority.HIGH.getX_priority(), mess.getHeader("X-Priority", null));
       Assert.assertEquals(MessagePriority.HIGH.getImportance(), mess.getHeader("Importance", null));
@@ -124,7 +124,7 @@ public class VelocityMailMessageTest
 
       Assert.assertEquals(MailTestUtil.getAddressHeader(fromName, fromAddress), mess.getHeader("From", null));
       Assert.assertEquals(MailTestUtil.getAddressHeader(toName, toAddress), mess.getHeader("To", null));
-      Assert.assertEquals("Subject has been modified", subject, MailUtility.removeLineReturn(mess.getHeader("Subject", null)));
+      Assert.assertEquals("Subject has been modified", subject, MimeUtility.unfold(mess.getHeader("Subject", null)));
       Assert.assertEquals(MessagePriority.HIGH.getPriority(), mess.getHeader("Priority", null));
       Assert.assertEquals(MessagePriority.HIGH.getX_priority(), mess.getHeader("X-Priority", null));
       Assert.assertEquals(MessagePriority.HIGH.getImportance(), mess.getHeader("Importance", null));
@@ -168,7 +168,7 @@ public class VelocityMailMessageTest
 
       Assert.assertEquals(MailTestUtil.getAddressHeader(fromName, fromAddress), mess.getHeader("From", null));
       Assert.assertEquals(MailTestUtil.getAddressHeader(toName, toAddress), mess.getHeader("To", null));
-      Assert.assertEquals("Subject has been modified", subject, MailUtility.removeLineReturn(mess.getHeader("Subject", null)));
+      Assert.assertEquals("Subject has been modified", subject, MimeUtility.unfold(mess.getHeader("Subject", null)));
       Assert.assertEquals(MessagePriority.LOW.getPriority(), mess.getHeader("Priority", null));
       Assert.assertEquals(MessagePriority.LOW.getX_priority(), mess.getHeader("X-Priority", null));
       Assert.assertEquals(MessagePriority.LOW.getImportance(), mess.getHeader("Importance", null));

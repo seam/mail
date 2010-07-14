@@ -2,6 +2,7 @@ package org.jboss.seam.mail.core;
 
 import java.io.File;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.util.Collection;
 import java.util.Date;
@@ -17,6 +18,7 @@ import javax.mail.Transport;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
+import javax.mail.internet.MimeUtility;
 
 import org.jboss.seam.mail.annotations.Module;
 import org.jboss.seam.mail.core.enumurations.ContentDisposition;
@@ -213,9 +215,13 @@ public abstract class BaseMailMessage<T extends MailMessage<T>> implements MailM
    {
       try
       {
-         rootMimeMessage.setHeader(name, value);
+         rootMimeMessage.setHeader(name, MimeUtility.encodeText(value));
       }
       catch (MessagingException e)
+      {
+         throw new SeamMailException("Unable to SET Header: + " + name + " to Value: " + value, e);
+      }
+      catch (UnsupportedEncodingException e)
       {
          throw new SeamMailException("Unable to SET Header: + " + name + " to Value: " + value, e);
       }
@@ -225,9 +231,13 @@ public abstract class BaseMailMessage<T extends MailMessage<T>> implements MailM
    {
       try
       {
-         rootMimeMessage.addHeader(name, value);
+         rootMimeMessage.addHeader(name, MimeUtility.encodeText(value));
       }
       catch (MessagingException e)
+      {
+         throw new SeamMailException("Unable to ADD Header: + " + name + " to Value: " + value, e);
+      }
+      catch (UnsupportedEncodingException e)
       {
          throw new SeamMailException("Unable to ADD Header: + " + name + " to Value: " + value, e);
       }

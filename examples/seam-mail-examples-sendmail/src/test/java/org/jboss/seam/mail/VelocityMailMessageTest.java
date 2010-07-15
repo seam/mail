@@ -22,8 +22,10 @@ import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.ByteArrayAsset;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.subethamail.smtp.auth.EasyAuthenticationHandlerFactory;
 import org.subethamail.wiser.Wiser;
 
 @RunWith(Arquillian.class)
@@ -176,4 +178,44 @@ public class VelocityMailMessageTest
 
       // TODO Verify MimeBodyPart hierarchy and $person resolution is happening.
    }
+   
+   //TODO Enable this test when we have support for specialized MailConfig via XML
+   @Ignore
+   @Test
+   public void testSMTPSessionAuthentication() throws SeamMailException, IOException, MessagingException
+   {
+      mailConfig.setServerHost("localHost");
+      mailConfig.setServerPort(3535);
+
+      Wiser wiser = new Wiser(mailConfig.getServerPort());
+      wiser.getServer().setAuthenticationHandlerFactory(new EasyAuthenticationHandlerFactory(new SMTPAuthenticator("test","test12!")));
+      wiser.start();
+
+      String subject = "HTML+Text Message from Seam Mail - " + java.util.UUID.randomUUID().toString();
+
+      person.setName(toName);
+      person.setEmail(toAddress);
+
+      mail.velocity()
+      .from(fromName, fromAddress)
+      .to(person.getName(), person.getEmail())
+      .subject(subject)
+      .put("version", "Seam 3")
+      .setTemplateHTMLTextAlt("template.html.vm", "template.text.vm")
+      .importance(MessagePriority.LOW)
+      .deliveryReciept(fromAddress)
+      .readReciept("seam.test")
+      .addAttachment("template.html.vm", ContentDisposition.ATTACHMENT)
+      .addAttachment(new URL("http://www.seamframework.org/themes/sfwkorg/img/seam_icon_large.png"), "seamLogo.png", ContentDisposition.INLINE)
+      .send();
+
+      wiser.stop();
+
+      Assert.assertTrue("Didn't receive the expected amount of messages. Expected 1 got " + wiser.getMessages().size(), wiser.getMessages().size() == 1);
+
+      MimeMessage mess = wiser.getMessages().get(0).getMimeMessage();
+
+      Assert.assertEquals("Subject has been modified", subject, MimeUtility.unfold(mess.getHeader("Subject", null)));
+   }
+   
 }

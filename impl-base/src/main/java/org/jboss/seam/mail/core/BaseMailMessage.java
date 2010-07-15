@@ -52,14 +52,13 @@ public abstract class BaseMailMessage<T extends MailMessage<T>> implements MailM
    /**
     * Obtains the true underlying class type
     * 
-    * @return
+    * @return The underlying Class
     */
    protected abstract Class<T> getRealClass();
 
    /**
-    * Provides typesafe casting to the true return type of this instance
+    * Provides typesafe casting to the true return type of this instance *
     * 
-    * @return
     */
    protected final T covariantReturn()
    {
@@ -364,8 +363,8 @@ public abstract class BaseMailMessage<T extends MailMessage<T>> implements MailM
    public T addAttachment(String fileName, String mimeType, ContentDisposition contentDisposition) throws SeamMailException
    {
       InputStream inputStream = resourceProvider.loadResourceStream(fileName);
-      
-      if(inputStream == null)
+
+      if (inputStream == null)
       {
          throw new SeamMailException("InputStream was NULL for fileName: " + fileName);
       }
@@ -382,7 +381,7 @@ public abstract class BaseMailMessage<T extends MailMessage<T>> implements MailM
 
       return this.covariantReturn();
    }
-   
+
    public T addAttachment(String fileName, ContentDisposition contentDisposition) throws SeamMailException
    {
       return addAttachment(fileName, "application/octetStream", contentDisposition);

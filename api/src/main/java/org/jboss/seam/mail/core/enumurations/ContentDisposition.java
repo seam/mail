@@ -4,10 +4,20 @@ import javax.mail.internet.MimeBodyPart;
 
 import org.jboss.seam.mail.exception.SeamMailException;
 
+/**
+ * Defines the available Dispostions for attachments in an email Message.
+ * 
+ * <p>INLINE   is used where an attachment should be displayed in the body of the
+ * message such as a image reference in an HTML message body</p>
+ * 
+ * <p>ATTACHMENT is used for standard file attachments to a message.</p>
+ * 
+ * @author Cody Lerum
+ * 
+ */
 public enum ContentDisposition
 {
-   ATTACHMENT(MimeBodyPart.ATTACHMENT),
-   INLINE(MimeBodyPart.INLINE);
+   ATTACHMENT(MimeBodyPart.ATTACHMENT), INLINE(MimeBodyPart.INLINE);
 
    private String headerValue;
 

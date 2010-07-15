@@ -4,25 +4,31 @@ import java.nio.charset.Charset;
 
 import org.jboss.seam.mail.exception.SeamMailException;
 
-
+/**
+ * Defines an EmailContact for setting name/address pairs on email message
+ * headers.
+ * 
+ * @author Cody Lerum
+ * 
+ */
 public class EmailContact
 {
    private String name;
    private String emailAddress;
    private String charset;
-   
+
    public EmailContact(String name, String emailAddress)
    {
       this.name = name;
       this.emailAddress = emailAddress;
       charset = "UTF-8";
    }
-   
+
    public EmailContact(String name, String emailAddress, String charset) throws SeamMailException
    {
       this.name = name;
       this.emailAddress = emailAddress;
-      if(Charset.isSupported(charset))
+      if (Charset.isSupported(charset))
       {
          this.charset = charset;
       }
@@ -61,11 +67,11 @@ public class EmailContact
    {
       this.charset = charset;
    }
-   
+
    @Override
    public String toString()
    {
-      return name + " <" + emailAddress + ">"; 
+      return name + " <" + emailAddress + ">";
    }
-   
+
 }

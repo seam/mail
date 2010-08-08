@@ -44,7 +44,7 @@ public class VelocityMailMessageImpl extends BaseMailMessage<VelocityMailMessage
       super(session);
       velocityEngine = new VelocityEngine();
       velocityEngine.setProperty("runtime.log.logsystem.class", "org.apache.velocity.runtime.log.SimpleLog4JLogSystem");
-      context = new SeamBaseVelocityContext(seamCDIVelocityContext);
+      context = new SeamBaseVelocityContext(this, seamCDIVelocityContext);
       put("mailContext", new MailContext(super.getAttachments()));
    }
 

@@ -2,8 +2,6 @@ package org.jboss.seam.mail.core;
 
 import java.util.Map;
 
-import org.jboss.seam.mail.exception.SeamMailException;
-
 public class MailContext
 {
    
@@ -14,7 +12,7 @@ public class MailContext
       this.attachments = attachments;
    }
    
-   public String insert(String fileName) throws SeamMailException
+   public String insert(String fileName)
    {
       Attachment attachment = null;     
 
@@ -22,7 +20,7 @@ public class MailContext
       
       if(attachment == null)
       {
-         throw new SeamMailException("Unable to find attachment: " + fileName);
+         throw new RuntimeException("Unable to find attachment: " + fileName);
       }
       else
       {

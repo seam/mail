@@ -25,7 +25,6 @@ import org.jboss.seam.mail.core.enumurations.ContentDisposition;
 import org.jboss.seam.mail.core.enumurations.MailHeader;
 import org.jboss.seam.mail.core.enumurations.MessagePriority;
 import org.jboss.seam.mail.core.enumurations.RecipientType;
-import org.jboss.seam.mail.exception.SeamMailException;
 import org.jboss.weld.extensions.resourceLoader.ResourceProvider;
 
 public abstract class BaseMailMessage<T extends MailMessage<T>> implements MailMessage<T>
@@ -40,7 +39,7 @@ public abstract class BaseMailMessage<T extends MailMessage<T>> implements MailM
    private ResourceProvider resourceProvider;
 
    @Inject
-   public BaseMailMessage(@Module Session session) throws SeamMailException
+   public BaseMailMessage(@Module Session session)
    {
       rootMimeMessage = new RootMimeMessage(session);
       charset = "UTF-8";
@@ -65,7 +64,7 @@ public abstract class BaseMailMessage<T extends MailMessage<T>> implements MailM
       return this.getRealClass().cast(this);
    }
 
-   private void initialize() throws SeamMailException
+   private void initialize()
    {
       try
       {
@@ -73,11 +72,11 @@ public abstract class BaseMailMessage<T extends MailMessage<T>> implements MailM
       }
       catch (MessagingException e)
       {
-         throw new SeamMailException("Unable to set RootMultiPart", e);
+         throw new RuntimeException("Unable to set RootMultiPart", e);
       }
    }
 
-   public T addRecipient(RecipientType recipientType, EmailContact emailContact) throws SeamMailException
+   public T addRecipient(RecipientType recipientType, EmailContact emailContact)
    {
       try
       {
@@ -85,12 +84,12 @@ public abstract class BaseMailMessage<T extends MailMessage<T>> implements MailM
       }
       catch (MessagingException e)
       {
-         throw new SeamMailException("Unable to add recipient " + recipientType + ": " + emailContact.toString() + " to MIME message", e);
+         throw new RuntimeException("Unable to add recipient " + recipientType + ": " + emailContact.toString() + " to MIME message", e);
       }
       return this.covariantReturn();
    }
 
-   public void addRecipients(RecipientType recipientType, EmailContact[] emailContacts) throws SeamMailException
+   public void addRecipients(RecipientType recipientType, EmailContact[] emailContacts)
    {
       try
       {
@@ -98,11 +97,11 @@ public abstract class BaseMailMessage<T extends MailMessage<T>> implements MailM
       }
       catch (MessagingException e)
       {
-         throw new SeamMailException("Unable to add " + recipientType + ":  Collection<Recipients>to MIME message", e);
+         throw new RuntimeException("Unable to add " + recipientType + ":  Collection<Recipients>to MIME message", e);
       }
    }
 
-   public void addRecipients(RecipientType recipientType, Collection<EmailContact> emailContacts) throws SeamMailException
+   public void addRecipients(RecipientType recipientType, Collection<EmailContact> emailContacts)
    {
       try
       {
@@ -113,37 +112,37 @@ public abstract class BaseMailMessage<T extends MailMessage<T>> implements MailM
       }
    }
 
-   public T from(String name, String address) throws SeamMailException
+   public T from(String name, String address)
    {
       setFrom(new EmailContact(name, address));
       return this.covariantReturn();
    }
 
-   public T to(String name, String address) throws SeamMailException
+   public T to(String name, String address)
    {
       addRecipient(RecipientType.TO, new EmailContact(name, address));
       return this.covariantReturn();
    }
 
-   public T cc(String name, String address) throws SeamMailException
+   public T cc(String name, String address)
    {
       addRecipient(RecipientType.CC, new EmailContact(name, address));
       return this.covariantReturn();
    }
 
-   public T bcc(String name, String address) throws SeamMailException
+   public T bcc(String name, String address)
    {
       addRecipient(RecipientType.BCC, new EmailContact(name, address));
       return this.covariantReturn();
    }
 
-   public T subject(String subject) throws SeamMailException
+   public T subject(String subject)
    {
       subject(subject, "UTF-8");
       return this.covariantReturn();
    }
 
-   public void subject(String subject, String charset) throws SeamMailException
+   public void subject(String subject, String charset)
    {
       try
       {
@@ -151,16 +150,16 @@ public abstract class BaseMailMessage<T extends MailMessage<T>> implements MailM
       }
       catch (MessagingException e)
       {
-         throw new SeamMailException("Unable to add subject:" + subject + " to MIME message with charset: " + charset, e);
+         throw new RuntimeException("Unable to add subject:" + subject + " to MIME message with charset: " + charset, e);
       }
    }
 
-   public void setFrom(String name, String address) throws SeamMailException
+   public void setFrom(String name, String address)
    {
       setFrom(new EmailContact(name, address));
    }
 
-   public T setFrom(EmailContact emailContact) throws SeamMailException
+   public T setFrom(EmailContact emailContact)
    {
       try
       {
@@ -168,12 +167,12 @@ public abstract class BaseMailMessage<T extends MailMessage<T>> implements MailM
       }
       catch (MessagingException e)
       {
-         throw new SeamMailException("Unable to add From Address:" + emailContact.getEmailAddress() + " to MIME message with charset: " + emailContact.getCharset(), e);
+         throw new RuntimeException("Unable to add From Address:" + emailContact.getEmailAddress() + " to MIME message with charset: " + emailContact.getCharset(), e);
       }
       return this.covariantReturn();
    }
 
-   public void setSentDate(Date date) throws SeamMailException
+   public void setSentDate(Date date)
    {
       try
       {
@@ -181,7 +180,7 @@ public abstract class BaseMailMessage<T extends MailMessage<T>> implements MailM
       }
       catch (MessagingException e)
       {
-         throw new SeamMailException("Unable to set Sent Date on MimeMessage", e);
+         throw new RuntimeException("Unable to set Sent Date on MimeMessage", e);
       }
    }
 
@@ -190,19 +189,19 @@ public abstract class BaseMailMessage<T extends MailMessage<T>> implements MailM
       rootMimeMessage.setMessageId(messageId);
    }
 
-   public T deliveryReciept(String email) throws SeamMailException
+   public T deliveryReciept(String email)
    {
       setHeader(MailHeader.DELIVERY_RECIEPT.headerValue(), "<" + email + ">");
       return this.covariantReturn();
    }
 
-   public T readReciept(String email) throws SeamMailException
+   public T readReciept(String email)
    {
       setHeader(MailHeader.READ_RECIEPT.headerValue(), "<" + email + ">");
       return this.covariantReturn();
    }
 
-   public T importance(MessagePriority messagePriority) throws SeamMailException
+   public T importance(MessagePriority messagePriority)
    {
       setHeader("X-Priority", messagePriority.getX_priority());
       setHeader("Priority", messagePriority.getPriority());
@@ -210,7 +209,7 @@ public abstract class BaseMailMessage<T extends MailMessage<T>> implements MailM
       return this.covariantReturn();
    }
 
-   public void setHeader(String name, String value) throws SeamMailException
+   public void setHeader(String name, String value)
    {
       try
       {
@@ -218,15 +217,15 @@ public abstract class BaseMailMessage<T extends MailMessage<T>> implements MailM
       }
       catch (MessagingException e)
       {
-         throw new SeamMailException("Unable to SET Header: + " + name + " to Value: " + value, e);
+         throw new RuntimeException("Unable to SET Header: + " + name + " to Value: " + value, e);
       }
       catch (UnsupportedEncodingException e)
       {
-         throw new SeamMailException("Unable to SET Header: + " + name + " to Value: " + value, e);
+         throw new RuntimeException("Unable to SET Header: + " + name + " to Value: " + value, e);
       }
    }
 
-   public void addHeader(String name, String value) throws SeamMailException
+   public void addHeader(String name, String value)
    {
       try
       {
@@ -234,15 +233,15 @@ public abstract class BaseMailMessage<T extends MailMessage<T>> implements MailM
       }
       catch (MessagingException e)
       {
-         throw new SeamMailException("Unable to ADD Header: + " + name + " to Value: " + value, e);
+         throw new RuntimeException("Unable to ADD Header: + " + name + " to Value: " + value, e);
       }
       catch (UnsupportedEncodingException e)
       {
-         throw new SeamMailException("Unable to ADD Header: + " + name + " to Value: " + value, e);
+         throw new RuntimeException("Unable to ADD Header: + " + name + " to Value: " + value, e);
       }
    }
 
-   public T setText(String text) throws SeamMailException
+   public T setText(String text)
    {
       try
       {
@@ -250,12 +249,12 @@ public abstract class BaseMailMessage<T extends MailMessage<T>> implements MailM
       }
       catch (MessagingException e)
       {
-         throw new SeamMailException("Unable to add TextBody to MimeMessage", e);
+         throw new RuntimeException("Unable to add TextBody to MimeMessage", e);
       }
       return this.covariantReturn();
    }
 
-   public T setHTML(String html) throws SeamMailException
+   public T setHTML(String html)
    {
       MimeBodyPart relatedBodyPart = new MimeBodyPart();
       try
@@ -266,12 +265,12 @@ public abstract class BaseMailMessage<T extends MailMessage<T>> implements MailM
       }
       catch (MessagingException e)
       {
-         throw new SeamMailException("Unable to add TextBody to MimeMessage", e);
+         throw new RuntimeException("Unable to add TextBody to MimeMessage", e);
       }
       return this.covariantReturn();
    }
 
-   public T setHTMLTextAlt(String html, String text) throws SeamMailException
+   public T setHTMLTextAlt(String html, String text)
    {
       MimeBodyPart mixedBodyPart = new MimeBodyPart();
 
@@ -296,12 +295,12 @@ public abstract class BaseMailMessage<T extends MailMessage<T>> implements MailM
       }
       catch (MessagingException e)
       {
-         throw new SeamMailException("Unable to build HTML+Text Email", e);
+         throw new RuntimeException("Unable to build HTML+Text Email", e);
       }
       return this.covariantReturn();
    }
 
-   private MimeBodyPart buildTextBodyPart(String text) throws SeamMailException
+   private MimeBodyPart buildTextBodyPart(String text)
    {
       MimeBodyPart textBodyPart = new MimeBodyPart();
 
@@ -312,13 +311,13 @@ public abstract class BaseMailMessage<T extends MailMessage<T>> implements MailM
       }
       catch (MessagingException e)
       {
-         throw new SeamMailException("Unable to build TextBodyPart", e);
+         throw new RuntimeException("Unable to build TextBodyPart", e);
       }
 
       return textBodyPart;
    }
 
-   private MimeBodyPart buildHTMLBodyPart(String html) throws SeamMailException
+   private MimeBodyPart buildHTMLBodyPart(String html)
    {
       MimeBodyPart htmlBodyPart = new MimeBodyPart();
 
@@ -329,72 +328,65 @@ public abstract class BaseMailMessage<T extends MailMessage<T>> implements MailM
       }
       catch (MessagingException e)
       {
-         throw new SeamMailException("Unable to build HTMLBodyPart", e);
+         throw new RuntimeException("Unable to build HTMLBodyPart", e);
       }
 
       return htmlBodyPart;
    }
 
-   public T addAttachment(File file, ContentDisposition contentDisposition) throws SeamMailException
+   public T addAttachment(File file, ContentDisposition contentDisposition)
    {
       Attachment attachment = new Attachment(file, file.getName(), contentDisposition);
       addAttachment(attachment);
       return this.covariantReturn();
    }
 
-   public void addAttachment(File file, String fileName, ContentDisposition contentDisposition) throws SeamMailException
+   public void addAttachment(File file, String fileName, ContentDisposition contentDisposition)
    {
       Attachment attachment = new Attachment(file, fileName, contentDisposition);
       addAttachment(attachment);
    }
 
-   public void addAttachment(byte[] bytes, String fileName, String mimeType, ContentDisposition contentDisposition) throws SeamMailException
+   public void addAttachment(byte[] bytes, String fileName, String mimeType, ContentDisposition contentDisposition)
    {
       Attachment attachment = new Attachment(bytes, fileName, mimeType, contentDisposition);
       addAttachment(attachment);
    }
 
-   public void addAttachment(byte[] bytes, String fileName, ContentDisposition contentDisposition) throws SeamMailException
+   public void addAttachment(byte[] bytes, String fileName, ContentDisposition contentDisposition)
    {
       Attachment attachment = new Attachment(bytes, fileName, "application/octetStream", contentDisposition);
       addAttachment(attachment);
    }
 
-   public T addAttachment(String fileName, String mimeType, ContentDisposition contentDisposition) throws SeamMailException
+   public T addAttachment(String fileName, String mimeType, ContentDisposition contentDisposition)
    {
       InputStream inputStream = resourceProvider.loadResourceStream(fileName);
 
       if (inputStream == null)
       {
-         throw new SeamMailException("InputStream was NULL for fileName: " + fileName);
+         throw new RuntimeException("InputStream was NULL for fileName: " + fileName);
       }
 
-      try
-      {
-         Attachment attachment = new Attachment(inputStream, fileName, mimeType, contentDisposition);
-         addAttachment(attachment);
-      }
-      catch (SeamMailException e)
-      {
-         throw new SeamMailException("Unable to Add STANDARD Attachment: " + fileName, e);
-      }
+      Attachment attachment = new Attachment(inputStream, fileName, mimeType, contentDisposition);
+      addAttachment(attachment);
 
       return this.covariantReturn();
    }
 
-   public T addAttachment(String fileName, ContentDisposition contentDisposition) throws SeamMailException
+   public T addAttachment(String fileName, ContentDisposition contentDisposition)
    {
       return addAttachment(fileName, "application/octetStream", contentDisposition);
    }
 
-   public T addAttachment(URL url, String fileName, ContentDisposition contentDisposition) throws SeamMailException
+   public T addAttachment(URL url, String fileName, ContentDisposition contentDisposition)
    {
       Attachment attachment = new Attachment(new URLDataSource(url), fileName, contentDisposition);
       addAttachment(attachment);
       return this.covariantReturn();
    }
 
-   public void addAttachment(Attachment attachment) throws SeamMailException
+   public void addAttachment(Attachment attachment)
    {
       attachments.put(attachment.getAttachmentFileName(), attachment);
    }
@@ -409,18 +401,18 @@ public abstract class BaseMailMessage<T extends MailMessage<T>> implements MailM
       return rootMimeMessage;
    }
 
-   public void finalizeMessage() throws SeamMailException
+   public void finalizeMessage()
    {
       addAttachmentsToMessage();
    }
 
-   public MimeMessage getFinalizedMessage() throws SeamMailException
+   public MimeMessage getFinalizedMessage()
    {
       finalizeMessage();
       return getRootMimeMessage();
    }
 
-   public void send() throws SeamMailException
+   public void send()
    {
       try
       {
@@ -429,11 +421,11 @@ public abstract class BaseMailMessage<T extends MailMessage<T>> implements MailM
       }
       catch (MessagingException e)
       {
-         throw new SeamMailException("Message Send Failed!", e);
+         throw new RuntimeException("Message Send Failed!", e);
       }
    }
 
-   private void addAttachmentsToMessage() throws SeamMailException
+   private void addAttachmentsToMessage()
    {
       for (Attachment a : attachments.values())
       {
@@ -445,7 +437,7 @@ public abstract class BaseMailMessage<T extends MailMessage<T>> implements MailM
             }
             catch (MessagingException e)
             {
-               throw new SeamMailException("Unable to Add STANDARD Attachment: " + a.getAttachmentFileName(), e);
+               throw new RuntimeException("Unable to Add STANDARD Attachment: " + a.getAttachmentFileName(), e);
             }
          }
          else if (a.getContentDisposition() == ContentDisposition.INLINE)
@@ -456,12 +448,12 @@ public abstract class BaseMailMessage<T extends MailMessage<T>> implements MailM
             }
             catch (MessagingException e)
             {
-               throw new SeamMailException("Unable to Add INLINE Attachment: " + a.getAttachmentFileName(), e);
+               throw new RuntimeException("Unable to Add INLINE Attachment: " + a.getAttachmentFileName(), e);
             }
          }
          else
          {
-            throw new SeamMailException("Unsupported Attachment Content Disposition");
+            throw new RuntimeException("Unsupported Attachment Content Disposition");
          }
       }
    }

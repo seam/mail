@@ -5,11 +5,9 @@ import java.util.Collection;
 
 import javax.mail.internet.InternetAddress;
 
-import org.jboss.seam.mail.exception.SeamMailException;
-
 public class MailUtility
 {
-   public static InternetAddress getInternetAddress(EmailContact emailContact) throws SeamMailException
+   public static InternetAddress getInternetAddress(EmailContact emailContact)
    {
       try
       {
@@ -17,11 +15,11 @@ public class MailUtility
       }
       catch (UnsupportedEncodingException e)
       {
-         throw new SeamMailException("Unable convert recipient to InternetAddress", e);
+         throw new RuntimeException("Unable convert recipient to InternetAddress", e);
       }
    }
 
-   public static InternetAddress[] getInternetAddressses(EmailContact[] recipients) throws SeamMailException
+   public static InternetAddress[] getInternetAddressses(EmailContact[] recipients)
    {
       InternetAddress[] internetAddresses = new InternetAddress[recipients.length];
 
@@ -33,7 +31,7 @@ public class MailUtility
       return internetAddresses;
    }
 
-   public static InternetAddress[] getInternetAddressses(Collection<EmailContact> recipients) throws SeamMailException
+   public static InternetAddress[] getInternetAddressses(Collection<EmailContact> recipients)
    {
       return getInternetAddressses(recipients.toArray(new EmailContact[recipients.size()]));
    }

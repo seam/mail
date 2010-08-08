@@ -13,14 +13,13 @@ import javax.mail.internet.MimeBodyPart;
 import javax.mail.util.ByteArrayDataSource;
 
 import org.jboss.seam.mail.core.enumurations.ContentDisposition;
-import org.jboss.seam.mail.exception.SeamMailException;
 
 public class Attachment extends MimeBodyPart
 {
 
    private String id;
 
-   public Attachment(DataSource dataSource, String fileName, ContentDisposition contentDisposition) throws SeamMailException
+   public Attachment(DataSource dataSource, String fileName, ContentDisposition contentDisposition)
    {
       super();
 
@@ -32,7 +31,7 @@ public class Attachment extends MimeBodyPart
       }
       catch (MessagingException e1)
       {
-         throw new SeamMailException("Unable to set unique content-id on attachment");
+         throw new RuntimeException("Unable to set unique content-id on attachment");
       }
 
       setData(dataSource);
@@ -43,24 +42,24 @@ public class Attachment extends MimeBodyPart
       }
       catch (MessagingException e)
       {
-         throw new SeamMailException("Unable to get FileName on attachment");
+         throw new RuntimeException("Unable to get FileName on attachment");
       }
 
       setContentDisposition(contentDisposition);
 
    }
 
-   public Attachment(byte[] bytes, String fileName, String mimeType, ContentDisposition contentDisposition) throws SeamMailException
+   public Attachment(byte[] bytes, String fileName, String mimeType, ContentDisposition contentDisposition)
    {
       this(getByteArrayDataSource(bytes, mimeType), fileName, contentDisposition);
    }
    
-   public Attachment(InputStream inputStream, String fileName, String mimeType, ContentDisposition contentDisposition) throws SeamMailException
+   public Attachment(InputStream inputStream, String fileName, String mimeType, ContentDisposition contentDisposition)
    {         
       this(getByteArrayDataSource(inputStream, mimeType), fileName, contentDisposition);
    }
 
-   public Attachment(File file, String fileName, ContentDisposition contentDisposition) throws SeamMailException
+   public Attachment(File file, String fileName, ContentDisposition contentDisposition)
    {
       this(new FileDataSource(file), fileName, contentDisposition);
    }
@@ -70,7 +69,7 @@ public class Attachment extends MimeBodyPart
       return id;
    }
 
-   public String getAttachmentFileName() throws SeamMailException
+   public String getAttachmentFileName()
    {
       try
       {
@@ -78,11 +77,11 @@ public class Attachment extends MimeBodyPart
       }
       catch (MessagingException e)
       {
-         throw new SeamMailException("Unable to get File Name from attachment");
+         throw new RuntimeException("Unable to get File Name from attachment");
       }
    }
 
-   public ContentDisposition getContentDisposition() throws SeamMailException
+   public ContentDisposition getContentDisposition()
    {
       try
       {
@@ -90,11 +89,11 @@ public class Attachment extends MimeBodyPart
       }
       catch (MessagingException e)
       {
-         throw new SeamMailException("Unable to get Content-Dispostion on attachment");
+         throw new RuntimeException("Unable to get Content-Dispostion on attachment");
       }
    }
 
-   public void setContentDisposition(ContentDisposition contentDisposition) throws SeamMailException
+   public void setContentDisposition(ContentDisposition contentDisposition)
    {
       try
       {
@@ -102,11 +101,11 @@ public class Attachment extends MimeBodyPart
       }
       catch (MessagingException e)
       {
-         throw new SeamMailException("Unable to set Content-Dispostion on attachment");
+         throw new RuntimeException("Unable to set Content-Dispostion on attachment");
       }
    }
 
-   private void setData(DataSource datasource) throws SeamMailException
+   private void setData(DataSource datasource)
    {
       try
       {
@@ -114,7 +113,7 @@ public class Attachment extends MimeBodyPart
       }
       catch (MessagingException e)
       {
-         throw new SeamMailException("Unable to set Data on attachment");
+         throw new RuntimeException("Unable to set Data on attachment");
       }
    }
    
@@ -124,7 +123,7 @@ public class Attachment extends MimeBodyPart
       return bads;
    }
    
-   private static ByteArrayDataSource getByteArrayDataSource(InputStream inputStream, String mimeType) throws SeamMailException
+   private static ByteArrayDataSource getByteArrayDataSource(InputStream inputStream, String mimeType)
    {
       ByteArrayDataSource bads;
       try
@@ -133,7 +132,7 @@ public class Attachment extends MimeBodyPart
       }
       catch (IOException e)
       {
-         throw new SeamMailException("Unable to created Attacment from InputStream");
+         throw new RuntimeException("Unable to created Attacment from InputStream");
       }
       return bads;
    }

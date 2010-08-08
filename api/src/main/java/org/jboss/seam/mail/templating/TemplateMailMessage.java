@@ -3,7 +3,6 @@ package org.jboss.seam.mail.templating;
 import java.io.File;
 
 import org.jboss.seam.mail.core.MailMessage;
-import org.jboss.seam.mail.exception.SeamMailException;
 
 /**
  * Interface for creating email messages using a templating engine.
@@ -21,7 +20,7 @@ public interface TemplateMailMessage<T extends TemplateMailMessage<T>> extends M
     *           classpath
     * @throws SeamMailException
     */
-   public T setTemplateText(File textTemplateFile) throws SeamMailException;
+   public T setTemplateText(File textTemplateFile);
 
    /**
     * Sets the body of the message to the HTML output of the given template
@@ -30,7 +29,7 @@ public interface TemplateMailMessage<T extends TemplateMailMessage<T>> extends M
     *           
     * @throws SeamMailException
     */
-   public T setTemplateHTML(File htmlTemplateFile) throws SeamMailException;
+   public T setTemplateHTML(File htmlTemplateFile);
 
    /**
     * Sets the body of the message to a HTML body with a plain text alternative
@@ -40,7 +39,7 @@ public interface TemplateMailMessage<T extends TemplateMailMessage<T>> extends M
     * @param textTemplateFile File of the template
     * @throws SeamMailException
     */
-   public T setTemplateHTMLTextAlt(File htmlTemplateFile, File textTemplateFile) throws SeamMailException;
+   public T setTemplateHTMLTextAlt(File htmlTemplateFile, File textTemplateFile);
    
    /**
     * Sets the body of the message to the plain text output of the given
@@ -50,7 +49,7 @@ public interface TemplateMailMessage<T extends TemplateMailMessage<T>> extends M
     *           classpath
     * @throws SeamMailException
     */
-   public T setTemplateText(String templateFileName) throws SeamMailException;
+   public T setTemplateText(String templateFileName);
 
    /**
     * Sets the body of the message to the HTML output of the given template
@@ -59,7 +58,7 @@ public interface TemplateMailMessage<T extends TemplateMailMessage<T>> extends M
     *           classpath
     * @throws SeamMailException
     */
-   public T setTemplateHTML(String templateFileName) throws SeamMailException;
+   public T setTemplateHTML(String templateFileName);
 
    /**
     * Sets the body of the message to a HTML body with a plain text alternative
@@ -69,7 +68,7 @@ public interface TemplateMailMessage<T extends TemplateMailMessage<T>> extends M
     * @param textTemplateFileName Filename of the template to be found in the classpath
     * @throws SeamMailException
     */
-   public T setTemplateHTMLTextAlt(String htmlTemplateFileName, String textTemplateFileName) throws SeamMailException;
+   public T setTemplateHTMLTextAlt(String htmlTemplateFileName, String textTemplateFileName);
 
    /**
     * Places a variable in the templating engines context

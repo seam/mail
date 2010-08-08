@@ -17,7 +17,6 @@ import org.jboss.seam.mail.core.MailConfig;
 import org.jboss.seam.mail.core.MailTestUtil;
 import org.jboss.seam.mail.core.enumurations.ContentDisposition;
 import org.jboss.seam.mail.core.enumurations.MessagePriority;
-import org.jboss.seam.mail.exception.SeamMailException;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.ByteArrayAsset;
@@ -54,7 +53,7 @@ public class VelocityMailMessageTest
    String toAddress = "seamy.seamerson@seam-mail.test";
 
    @Test
-   public void testGetVelocityTextMailMessage() throws SeamMailException, IOException, MessagingException
+   public void testGetVelocityTextMailMessage() throws IOException, MessagingException
    {
 
       mailConfig.setServerHost("localHost");
@@ -95,7 +94,7 @@ public class VelocityMailMessageTest
    }
 
    @Test
-   public void testGetVelocityHTMLMailMessage() throws SeamMailException, IOException, MessagingException
+   public void testGetVelocityHTMLMailMessage() throws IOException, MessagingException
    {
       mailConfig.setServerHost("localHost");
       mailConfig.setServerPort(2525);
@@ -136,7 +135,7 @@ public class VelocityMailMessageTest
    }
 
    @Test
-   public void testGetVelocityHTMLTextAltMailMessage() throws SeamMailException, IOException, MessagingException
+   public void testGetVelocityHTMLTextAltMailMessage() throws IOException, MessagingException
    {
       mailConfig.setServerHost("localHost");
       mailConfig.setServerPort(2525);
@@ -182,7 +181,7 @@ public class VelocityMailMessageTest
    //TODO Enable this test when we have support for specialized MailConfig via XML
    @Ignore
    @Test
-   public void testSMTPSessionAuthentication() throws SeamMailException, IOException, MessagingException
+   public void testSMTPSessionAuthentication() throws IOException, MessagingException
    {
       mailConfig.setServerHost("localHost");
       mailConfig.setServerPort(3535);

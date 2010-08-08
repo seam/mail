@@ -20,9 +20,7 @@ import org.jboss.seam.mail.annotations.Velocity;
 import org.jboss.seam.mail.api.VelocityMailMessage;
 import org.jboss.seam.mail.core.BaseMailMessage;
 import org.jboss.seam.mail.core.MailContext;
-import org.jboss.seam.mail.exception.SeamMailException;
 import org.jboss.seam.mail.templating.MailTemplate;
-import org.jboss.seam.mail.templating.exception.SeamTemplatingException;
 import org.jboss.weld.extensions.resourceLoader.ResourceProvider;
 
 @Velocity
@@ -39,7 +37,7 @@ public class VelocityMailMessageImpl extends BaseMailMessage<VelocityMailMessage
    private ResourceProvider resourceProvider;
 
    @Inject
-   public VelocityMailMessageImpl(@Module Session session, @Module SeamCDIVelocityContext seamCDIVelocityContext) throws SeamMailException
+   public VelocityMailMessageImpl(@Module Session session, @Module SeamCDIVelocityContext seamCDIVelocityContext)
    {
       super(session);
       velocityEngine = new VelocityEngine();
@@ -48,90 +46,59 @@ public class VelocityMailMessageImpl extends BaseMailMessage<VelocityMailMessage
       put("mailContext", new MailContext(super.getAttachments()));
    }
 
-   public VelocityMailMessage setTemplateText(File textTemplateFile) throws SeamMailException
+   public VelocityMailMessage setTemplateText(File textTemplateFile)
    {
-      try
-      {
-         textTemplate = createTemplate(textTemplateFile);
-      }
-      catch (SeamTemplatingException e)
-      {
-         throw new SeamMailException("Unable to add Text template to MimeMessage", e);
-      }
+      textTemplate = createTemplate(textTemplateFile);
+
       return this;
    }
 
-   public VelocityMailMessage setTemplateHTML(File htmlTemplateFile) throws SeamMailException
+   public VelocityMailMessage setTemplateHTML(File htmlTemplateFile)
    {
-      try
-      {
-         htmlTemplate = createTemplate(htmlTemplateFile);
-      }
-      catch (SeamTemplatingException e)
-      {
-         throw new SeamMailException("Unable to add HTML template to MimeMessage", e);
-      }
+      htmlTemplate = createTemplate(htmlTemplateFile);
+
       return this;
    }
 
-   public VelocityMailMessage setTemplateHTMLTextAlt(File htmlTemplateFile, File textTemplateFile) throws SeamMailException
+   public VelocityMailMessage setTemplateHTMLTextAlt(File htmlTemplateFile, File textTemplateFile)
    {
       setTemplateHTML(htmlTemplateFile);
       setTemplateText(textTemplateFile);
       return this;
    }
 
-   public VelocityMailMessageImpl setTemplateText(String textTemplatePath) throws SeamMailException
+   public VelocityMailMessageImpl setTemplateText(String textTemplatePath)
    {
-      try
-      {
-         textTemplate = createTemplate(textTemplatePath);
-      }
-      catch (SeamTemplatingException e)
-      {
-         throw new SeamMailException("Unable to add Text template to MimeMessage", e);
-      }
+      textTemplate = createTemplate(textTemplatePath);
+
       return this;
    }
 
-   public VelocityMailMessageImpl setTemplateHTML(String htmlTemplatePath) throws SeamMailException
+   public VelocityMailMessageImpl setTemplateHTML(String htmlTemplatePath)
    {
-      try
-      {
-         htmlTemplate = createTemplate(htmlTemplatePath);
-      }
-      catch (SeamTemplatingException e)
-      {
-         throw new SeamMailException("Unable to add HTML template to MimeMessage", e);
-      }
+      htmlTemplate = createTemplate(htmlTemplatePath);
+
       return this;
    }
 
-   public VelocityMailMessageImpl setTemplateHTMLTextAlt(String htmlTemplatePath, String textTemplatePath) throws SeamMailException
+   public VelocityMailMessageImpl setTemplateHTMLTextAlt(String htmlTemplatePath, String textTemplatePath)
    {
       setTemplateHTML(htmlTemplatePath);
       setTemplateText(textTemplatePath);
       return this;
    }
 
-   private MailTemplate createTemplate(String templatePath) throws SeamTemplatingException
+   private MailTemplate createTemplate(String templatePath)
    {
       InputStream inputStream;
-      try
-      {
-         inputStream = resourceProvider.loadResourceStream(templatePath);
-      }
-      catch (Exception e)
-      {
-         throw new SeamTemplatingException("Unable to find template " + templatePath, e);
-      }
+      inputStream = resourceProvider.loadResourceStream(templatePath);
 
       MailTemplate template = new MailTemplate(templatePath, inputStream);
 
       return template;
    }
 
-   private MailTemplate createTemplate(File templateFile) throws SeamTemplatingException
+   private MailTemplate createTemplate(File templateFile)
    {
       InputStream inputStream;
 
@@ -141,7 +108,7 @@ public class VelocityMailMessageImpl extends BaseMailMessage<VelocityMailMessage
       }
       catch (FileNotFoundException e)
       {
-         throw new SeamTemplatingException("Unable to find template " + templateFile.getName(), e);
+         throw new RuntimeException("Unable to find template " + templateFile.getName(), e);
       }
 
       MailTemplate template = new MailTemplate(templateFile.getName(), inputStream);
@@ -149,7 +116,7 @@ public class VelocityMailMessageImpl extends BaseMailMessage<VelocityMailMessage
       return template;
    }
 
-   private String mergeTemplate(MailTemplate template) throws SeamTemplatingException
+   private String mergeTemplate(MailTemplate template)
    {
       StringWriter writer = new StringWriter();
       try
@@ -158,19 +125,19 @@ public class VelocityMailMessageImpl extends BaseMailMessage<VelocityMailMessage
       }
       catch (ResourceNotFoundException e)
       {
-         throw new SeamTemplatingException("Unable to find template", e);
+         throw new RuntimeException("Unable to find template", e);
       }
       catch (ParseErrorException e)
       {
-         throw new SeamTemplatingException("Unable to find template", e);
+         throw new RuntimeException("Unable to find template", e);
       }
       catch (MethodInvocationException e)
       {
-         throw new SeamTemplatingException("Error processing method referenced in context", e);
+         throw new RuntimeException("Error processing method referenced in context", e);
       }
       catch (IOException e)
       {
-         throw new SeamTemplatingException("Error rendering output", e);
+         throw new RuntimeException("Error rendering output", e);
       }
       return writer.toString();
    }
@@ -182,44 +149,23 @@ public class VelocityMailMessageImpl extends BaseMailMessage<VelocityMailMessage
    }
 
    @Override
-   public void send() throws SeamMailException
+   public void send()
    {
       if (htmlTemplate != null && textTemplate != null)
       {
-         try
-         {
-            super.setHTMLTextAlt(mergeTemplate(htmlTemplate), mergeTemplate(textTemplate));
-         }
-         catch (SeamTemplatingException e)
-         {
-            throw new SeamMailException("Error sending message", e);
-         }
+         super.setHTMLTextAlt(mergeTemplate(htmlTemplate), mergeTemplate(textTemplate));
       }
       else if (htmlTemplate != null)
       {
-         try
-         {
-            super.setHTML(mergeTemplate(htmlTemplate));
-         }
-         catch (SeamTemplatingException e)
-         {
-            throw new SeamMailException("Error sending message", e);
-         }
+         super.setHTML(mergeTemplate(htmlTemplate));
       }
       else if (textTemplate != null)
       {
-         try
-         {
-            super.setText(mergeTemplate(textTemplate));
-         }
-         catch (SeamTemplatingException e)
-         {
-            throw new SeamMailException("Error sending message", e);
-         }
+         super.setText(mergeTemplate(textTemplate));
       }
       else
       {
-         throw new SeamMailException("No Body was set");
+         throw new UnsupportedOperationException("No Body was set");
       }
       super.send();
    }

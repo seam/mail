@@ -2,8 +2,6 @@ package org.jboss.seam.mail.core.enumurations;
 
 import javax.mail.internet.MimeBodyPart;
 
-import org.jboss.seam.mail.exception.SeamMailException;
-
 /**
  * Defines the available Dispostions for attachments in an email Message.
  * 
@@ -31,7 +29,7 @@ public enum ContentDisposition
       return headerValue;
    }
 
-   public static ContentDisposition mapValue(String value) throws SeamMailException
+   public static ContentDisposition mapValue(String value)
    {
       if (value.equals(MimeBodyPart.ATTACHMENT))
       {
@@ -43,7 +41,7 @@ public enum ContentDisposition
       }
       else
       {
-         throw new SeamMailException("Unsupported Content DispostionType: " + value);
+         throw new UnsupportedOperationException("Unsupported Content DispostionType: " + value);
       }
    }
 }

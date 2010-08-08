@@ -2,8 +2,6 @@ package org.jboss.seam.mail.core;
 
 import java.nio.charset.Charset;
 
-import org.jboss.seam.mail.exception.SeamMailException;
-
 /**
  * Defines an EmailContact for setting name/address pairs on email message
  * headers.
@@ -24,7 +22,7 @@ public class EmailContact
       charset = "UTF-8";
    }
 
-   public EmailContact(String name, String emailAddress, String charset) throws SeamMailException
+   public EmailContact(String name, String emailAddress, String charset)
    {
       this.name = name;
       this.emailAddress = emailAddress;
@@ -34,7 +32,7 @@ public class EmailContact
       }
       else
       {
-         throw new SeamMailException("Unsupported Charset: " + charset);
+         throw new UnsupportedOperationException("Unsupported Charset: " + charset);
       }
    }
 

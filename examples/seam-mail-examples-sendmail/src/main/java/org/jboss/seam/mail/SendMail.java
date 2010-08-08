@@ -9,8 +9,6 @@ import javax.inject.Inject;
 import org.jboss.seam.mail.core.Mail;
 import org.jboss.seam.mail.core.enumurations.ContentDisposition;
 import org.jboss.seam.mail.core.enumurations.MessagePriority;
-import org.jboss.seam.mail.exception.SeamMailException;
-import org.jboss.seam.mail.templating.exception.SeamTemplatingException;
 
 @Model
 public class SendMail
@@ -23,7 +21,7 @@ public class SendMail
    @Inject
    private Person person;   
 
-   public void sendText() throws SeamMailException
+   public void sendText()
    {
       mail.standard()
             .from("Seam Framework", "seam@jboss.org")
@@ -33,7 +31,7 @@ public class SendMail
             .send();
    }
 
-   public void sendHTML() throws SeamMailException, SeamTemplatingException, MalformedURLException
+   public void sendHTML() throws MalformedURLException
    {
       mail.velocity()
             .from("Seam Framework", "seam@jboss.org")
@@ -46,7 +44,7 @@ public class SendMail
             .send();
    }
 
-   public void sendHTMLwithAlternative() throws SeamMailException, SeamTemplatingException, MalformedURLException
+   public void sendHTMLwithAlternative() throws MalformedURLException
    {
       mail.velocity()
             .from("Seam Framework", "seam@jboss.org")

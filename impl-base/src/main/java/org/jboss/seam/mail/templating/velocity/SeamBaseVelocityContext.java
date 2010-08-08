@@ -1,7 +1,6 @@
 package org.jboss.seam.mail.templating.velocity;
 
 import org.apache.velocity.VelocityContext;
-import org.jboss.seam.mail.exception.SeamMailException;
 
 public class SeamBaseVelocityContext extends VelocityContext
 {
@@ -13,17 +12,17 @@ public class SeamBaseVelocityContext extends VelocityContext
       this.mailMessage = velocityMailMessageImpl;
    }
    
-   public void to(String name, String address) throws SeamMailException
+   public void to(String name, String address)
    {
       mailMessage.to(name, address);
    }
    
-   public void from(String name, String address) throws SeamMailException
+   public void from(String name, String address)
    {
       mailMessage.from(name, address);
    }
    
-   public void subject(String subject) throws SeamMailException
+   public void subject(String subject)
    {
       mailMessage.subject(subject);
    }

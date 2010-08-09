@@ -27,7 +27,7 @@ public class SendMail
             .from("Seam Framework", "seam@jboss.org")
             .to(person.getName(), person.getEmail())
             .subject("Text Message from Seam Mail - " + java.util.UUID.randomUUID().toString())
-            .setText(text)
+            .textBody(text)
             .send();
    }
 

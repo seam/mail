@@ -1,40 +1,25 @@
-package org.jboss.seam.mail.core;
+package org.jboss.seam.mail.api;
 
 import java.io.File;
 import java.net.URL;
 
 import org.jboss.seam.mail.core.enumurations.ContentDisposition;
 import org.jboss.seam.mail.core.enumurations.MessagePriority;
-import org.jboss.seam.mail.core.enumurations.RecipientType;
 
 /**
  * Base interface for creating email messages.
  * 
  * @author Cody Lerum
  */
-public interface MailMessage<T extends MailMessage<T>>
+public interface MailMessage
 {
-   /**
-    * Set the From address
-    */
-   public T setFrom(EmailContact emailContact);
-
-   /**
-    * Add a recipient to the message
-    * 
-    * @param recipientType {@link RecipientType} TO/CC/BCC
-    * 
-    * @param emailContact {@link EmailContact} Name and Address
-    */
-   public T addRecipient(RecipientType recipientType, EmailContact emailContact);
-
    /**
     * Convenience method to set the FROM address using UTF-8 charset
     * 
     * @param name Personal name of the recipient eg "John Doe"
     * @param address Email address of the recipient eg "john.doe@example.com"
     */
-   public T from(String name, String address);
+   public MailMessage from(String name, String address);
 
    /**
     * Convenience method to add a TO recipient using UTF-8 charset
@@ -42,7 +27,7 @@ public interface MailMessage<T extends MailMessage<T>>
     * @param name Personal name of the recipient eg "John Doe"
     * @param address Email address of the recipient eg "john.doe@example.com"
     */
-   public T to(String name, String address);
+   public MailMessage to(String name, String address);
 
    /**
     * Convenience method to add a CC (Carbon Copy) recipient using UTF-8 charset
@@ -51,7 +36,7 @@ public interface MailMessage<T extends MailMessage<T>>
     * @param address Email address of the recipient eg "john.doe@example.com"
     * 
     */
-   public T cc(String name, String address);
+   public MailMessage cc(String name, String address);
 
    /**
     * Convenience method to add a BCC (Blind Carbon Copy) recipient using UTF-8
@@ -61,7 +46,7 @@ public interface MailMessage<T extends MailMessage<T>>
     * @param address Email address of the recipient eg "john.doe@example.com"
     * 
     */
-   public T bcc(String name, String address);
+   public MailMessage bcc(String name, String address);
 
    /**
     * Set the subject on the message
@@ -69,7 +54,7 @@ public interface MailMessage<T extends MailMessage<T>>
     * @param value Subject of the message
     * 
     */
-   public T subject(String value);
+   public MailMessage subject(String value);
 
    /**
     * Sets the body of the message a plan text body represented by the supplied
@@ -78,7 +63,7 @@ public interface MailMessage<T extends MailMessage<T>>
     * @param text Plain text body
     * 
     */
-   public T setText(String text);
+   public MailMessage textBody(String text);
 
    /**
     * Sets the body of the message a HTML body represented by the supplied
@@ -87,7 +72,7 @@ public interface MailMessage<T extends MailMessage<T>>
     * @param html HTML body
     * 
     */
-   public T setHTML(String html);
+   public MailMessage htmlBody(String html);
 
    /**
     * Sets the body of the message to a HTML body with a plain text alternative
@@ -96,7 +81,7 @@ public interface MailMessage<T extends MailMessage<T>>
     * @param text Plain text body
     * 
     */
-   public T setHTMLTextAlt(String html, String text);
+   public MailMessage htmlBodyTextAlt(String html, String text);
 
    /**
     * Sets the importance level of the message with a given
@@ -105,7 +90,7 @@ public interface MailMessage<T extends MailMessage<T>>
     * @param messagePriority The priority level of the message.
     * 
     */
-   public T importance(MessagePriority messagePriority);
+   public MailMessage importance(MessagePriority messagePriority);
 
    /**
     * Add a given {@link File} with a given {@link ContentDisposition}
@@ -114,7 +99,7 @@ public interface MailMessage<T extends MailMessage<T>>
     * @param contentDisposition Disposition of the attachment
     * 
     */
-   public T addAttachment(File fileName, ContentDisposition contentDisposition);
+   public MailMessage addAttachment(File fileName, ContentDisposition contentDisposition);
 
    /**
     * Add a file via the fileName. The classpath is searched for the specified
@@ -125,7 +110,7 @@ public interface MailMessage<T extends MailMessage<T>>
     * @param contentDisposition Disposition of the attachment
     * 
     */
-   public T addAttachment(String fileName, ContentDisposition contentDisposition);
+   public MailMessage addAttachment(String fileName, ContentDisposition contentDisposition);
 
    /**
     * Add a file via the fileName. The classpath is searched for the specified
@@ -137,7 +122,7 @@ public interface MailMessage<T extends MailMessage<T>>
     * @param contentDisposition Disposition of the attachment
     * 
     */
-   public T addAttachment(String fileName, String mimeType, ContentDisposition contentDisposition);
+   public MailMessage addAttachment(String fileName, String mimeType, ContentDisposition contentDisposition);
 
    /**
     * Adds a file to the message which can be found at the given {@link URL}
@@ -147,7 +132,7 @@ public interface MailMessage<T extends MailMessage<T>>
     * @param contentDisposition Disposition of the attachment
     * 
     */
-   public T addAttachment(URL url, String fileName, ContentDisposition contentDisposition);
+   public MailMessage addAttachment(URL url, String fileName, ContentDisposition contentDisposition);
 
    /**
     * Request a delivery reciept "Return-Receipt-To" to the given address
@@ -155,7 +140,7 @@ public interface MailMessage<T extends MailMessage<T>>
     * @param address Email address the recipent should be sent to
     * 
     */
-   public T deliveryReciept(String address);
+   public MailMessage deliveryReciept(String address);
 
    /**
     * Request a read reciept "Disposition-Notification-To" to a given address
@@ -163,12 +148,10 @@ public interface MailMessage<T extends MailMessage<T>>
     * @param address Email address the recipent should be sent to
     * 
     */
-   public T readReciept(String address);
+   public MailMessage readReciept(String address);
 
    /**
     * Send the Message
-    * 
-    * 
     */
    public void send();
 

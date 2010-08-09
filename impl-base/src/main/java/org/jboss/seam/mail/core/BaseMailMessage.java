@@ -27,7 +27,7 @@ import org.jboss.seam.mail.core.enumurations.MessagePriority;
 import org.jboss.seam.mail.core.enumurations.RecipientType;
 import org.jboss.weld.extensions.resourceLoader.ResourceProvider;
 
-public abstract class BaseMailMessage<T extends MailMessage<T>> implements MailMessage<T>
+public abstract class BaseMailMessage
 {
    private RootMimeMessage rootMimeMessage;
    private String charset;
@@ -48,22 +48,6 @@ public abstract class BaseMailMessage<T extends MailMessage<T>> implements MailM
       initialize();
    }
 
-   /**
-    * Obtains the true underlying class type
-    * 
-    * @return The underlying Class
-    */
-   protected abstract Class<T> getRealClass();
-
-   /**
-    * Provides typesafe casting to the true return type of this instance *
-    * 
-    */
-   protected final T covariantReturn()
-   {
-      return this.getRealClass().cast(this);
-   }
-
    private void initialize()
    {
       try
@@ -76,7 +60,7 @@ public abstract class BaseMailMessage<T extends MailMessage<T>> implements MailM
       }
    }
 
-   public T addRecipient(RecipientType recipientType, EmailContact emailContact)
+   public void addRecipient(RecipientType recipientType, EmailContact emailContact)
    {
       try
       {
@@ -86,7 +70,6 @@ public abstract class BaseMailMessage<T extends MailMessage<T>> implements MailM
       {
          throw new RuntimeException("Unable to add recipient " + recipientType + ": " + emailContact.toString() + " to MIME message", e);
       }
-      return this.covariantReturn();
    }
 
    public void addRecipients(RecipientType recipientType, EmailContact[] emailContacts)
@@ -112,54 +95,12 @@ public abstract class BaseMailMessage<T extends MailMessage<T>> implements MailM
       }
    }
 
-   public T from(String name, String address)
-   {
-      setFrom(new EmailContact(name, address));
-      return this.covariantReturn();
-   }
-
-   public T to(String name, String address)
-   {
-      addRecipient(RecipientType.TO, new EmailContact(name, address));
-      return this.covariantReturn();
-   }
-
-   public T cc(String name, String address)
-   {
-      addRecipient(RecipientType.CC, new EmailContact(name, address));
-      return this.covariantReturn();
-   }
-
-   public T bcc(String name, String address)
-   {
-      addRecipient(RecipientType.BCC, new EmailContact(name, address));
-      return this.covariantReturn();
-   }
-
-   public T subject(String subject)
-   {
-      subject(subject, "UTF-8");
-      return this.covariantReturn();
-   }
-
-   public void subject(String subject, String charset)
-   {
-      try
-      {
-         rootMimeMessage.setSubject(subject, charset);
-      }
-      catch (MessagingException e)
-      {
-         throw new RuntimeException("Unable to add subject:" + subject + " to MIME message with charset: " + charset, e);
-      }
-   }
-
    public void setFrom(String name, String address)
    {
       setFrom(new EmailContact(name, address));
    }
 
-   public T setFrom(EmailContact emailContact)
+   public BaseMailMessage setFrom(EmailContact emailContact)
    {
       try
       {
@@ -169,7 +110,39 @@ public abstract class BaseMailMessage<T extends MailMessage<T>> implements MailM
       {
          throw new RuntimeException("Unable to add From Address:" + emailContact.getEmailAddress() + " to MIME message with charset: " + emailContact.getCharset(), e);
       }
-      return this.covariantReturn();
+      return this;
+   }
+
+   public void addTo(String name, String address)
+   {
+      addRecipient(RecipientType.TO, new EmailContact(name, address));
+   }
+
+   public void addCc(String name, String address)
+   {
+      addRecipient(RecipientType.CC, new EmailContact(name, address));
+   }
+
+   public void addBcc(String name, String address)
+   {
+      addRecipient(RecipientType.BCC, new EmailContact(name, address));
+   }
+
+   public void setSubject(String value)
+   {
+      setSubject(value, "UTF-8");
+   }
+
+   public void setSubject(String value, String charset)
+   {
+      try
+      {
+         rootMimeMessage.setSubject(value, charset);
+      }
+      catch (MessagingException e)
+      {
+         throw new RuntimeException("Unable to add subject:" + value + " to MIME message with charset: " + charset, e);
+      }
    }
 
    public void setSentDate(Date date)
@@ -189,24 +162,21 @@ public abstract class BaseMailMessage<T extends MailMessage<T>> implements MailM
       rootMimeMessage.setMessageId(messageId);
    }
 
-   public T deliveryReciept(String email)
+   public void setDeliveryReciept(String address)
    {
-      setHeader(MailHeader.DELIVERY_RECIEPT.headerValue(), "<" + email + ">");
-      return this.covariantReturn();
+      setHeader(MailHeader.DELIVERY_RECIEPT.headerValue(), "<" + address + ">");
    }
 
-   public T readReciept(String email)
+   public void setReadReciept(String address)
    {
-      setHeader(MailHeader.READ_RECIEPT.headerValue(), "<" + email + ">");
-      return this.covariantReturn();
+      setHeader(MailHeader.READ_RECIEPT.headerValue(), "<" + address + ">");
    }
 
-   public T importance(MessagePriority messagePriority)
+   public void setImportance(MessagePriority messagePriority)
    {
       setHeader("X-Priority", messagePriority.getX_priority());
       setHeader("Priority", messagePriority.getPriority());
       setHeader("Importance", messagePriority.getImportance());
-      return this.covariantReturn();
    }
 
    public void setHeader(String name, String value)
@@ -241,7 +211,7 @@ public abstract class BaseMailMessage<T extends MailMessage<T>> implements MailM
       }
    }
 
-   public T setText(String text)
+   public void setText(String text)
    {
       try
       {
@@ -251,10 +221,9 @@ public abstract class BaseMailMessage<T extends MailMessage<T>> implements MailM
       {
          throw new RuntimeException("Unable to add TextBody to MimeMessage", e);
       }
-      return this.covariantReturn();
    }
 
-   public T setHTML(String html)
+   public void setHTML(String html)
    {
       MimeBodyPart relatedBodyPart = new MimeBodyPart();
       try
@@ -267,10 +236,9 @@ public abstract class BaseMailMessage<T extends MailMessage<T>> implements MailM
       {
          throw new RuntimeException("Unable to add TextBody to MimeMessage", e);
       }
-      return this.covariantReturn();
    }
 
-   public T setHTMLTextAlt(String html, String text)
+   public void setHTMLTextAlt(String html, String text)
    {
       MimeBodyPart mixedBodyPart = new MimeBodyPart();
 
@@ -297,7 +265,6 @@ public abstract class BaseMailMessage<T extends MailMessage<T>> implements MailM
       {
          throw new RuntimeException("Unable to build HTML+Text Email", e);
       }
-      return this.covariantReturn();
    }
 
    private MimeBodyPart buildTextBodyPart(String text)
@@ -334,32 +301,31 @@ public abstract class BaseMailMessage<T extends MailMessage<T>> implements MailM
       return htmlBodyPart;
    }
 
-   public T addAttachment(File file, ContentDisposition contentDisposition)
+   public void addAttachmentImpl(File file, ContentDisposition contentDisposition)
    {
       Attachment attachment = new Attachment(file, file.getName(), contentDisposition);
       addAttachment(attachment);
-      return this.covariantReturn();
    }
 
-   public void addAttachment(File file, String fileName, ContentDisposition contentDisposition)
+   public void addAttachmentImpl(File file, String fileName, ContentDisposition contentDisposition)
    {
       Attachment attachment = new Attachment(file, fileName, contentDisposition);
       addAttachment(attachment);
    }
 
-   public void addAttachment(byte[] bytes, String fileName, String mimeType, ContentDisposition contentDisposition)
+   public void addAttachmentImpl(byte[] bytes, String fileName, String mimeType, ContentDisposition contentDisposition)
    {
       Attachment attachment = new Attachment(bytes, fileName, mimeType, contentDisposition);
       addAttachment(attachment);
    }
 
-   public void addAttachment(byte[] bytes, String fileName, ContentDisposition contentDisposition)
+   public void addAttachmentImpl(byte[] bytes, String fileName, ContentDisposition contentDisposition)
    {
       Attachment attachment = new Attachment(bytes, fileName, "application/octetStream", contentDisposition);
       addAttachment(attachment);
    }
 
-   public T addAttachment(String fileName, String mimeType, ContentDisposition contentDisposition)
+   public void addAttachmentImpl(String fileName, String mimeType, ContentDisposition contentDisposition)
    {
       InputStream inputStream = resourceProvider.loadResourceStream(fileName);
 
@@ -370,23 +336,20 @@ public abstract class BaseMailMessage<T extends MailMessage<T>> implements MailM
 
       Attachment attachment = new Attachment(inputStream, fileName, mimeType, contentDisposition);
       addAttachment(attachment);
-
-      return this.covariantReturn();
    }
 
-   public T addAttachment(String fileName, ContentDisposition contentDisposition)
+   public void addAttachmentImpl(String fileName, ContentDisposition contentDisposition)
    {
-      return addAttachment(fileName, "application/octetStream", contentDisposition);
+      addAttachmentImpl(fileName, "application/octetStream", contentDisposition);
    }
 
-   public T addAttachment(URL url, String fileName, ContentDisposition contentDisposition)
+   public void addAttachmentImpl(URL url, String fileName, ContentDisposition contentDisposition)
    {
       Attachment attachment = new Attachment(new URLDataSource(url), fileName, contentDisposition);
       addAttachment(attachment);
-      return this.covariantReturn();
    }
 
-   public void addAttachment(Attachment attachment)
+   private void addAttachment(Attachment attachment)
    {
       attachments.put(attachment.getAttachmentFileName(), attachment);
    }

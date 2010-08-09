@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringWriter;
+import java.net.URL;
 
 import javax.inject.Inject;
 import javax.mail.Session;
@@ -17,14 +18,16 @@ import org.apache.velocity.exception.ParseErrorException;
 import org.apache.velocity.exception.ResourceNotFoundException;
 import org.jboss.seam.mail.annotations.Module;
 import org.jboss.seam.mail.annotations.Velocity;
-import org.jboss.seam.mail.api.VelocityMailMessage;
 import org.jboss.seam.mail.core.BaseMailMessage;
 import org.jboss.seam.mail.core.MailContext;
+import org.jboss.seam.mail.core.enumurations.ContentDisposition;
+import org.jboss.seam.mail.core.enumurations.MessagePriority;
 import org.jboss.seam.mail.templating.MailTemplate;
+import org.jboss.seam.mail.templating.VelocityMailMessage;
 import org.jboss.weld.extensions.resourceLoader.ResourceProvider;
 
 @Velocity
-public class VelocityMailMessageImpl extends BaseMailMessage<VelocityMailMessage> implements VelocityMailMessage
+public class VelocityMailMessageImpl extends BaseMailMessage implements VelocityMailMessage
 {
 
    private VelocityEngine velocityEngine;
@@ -45,11 +48,100 @@ public class VelocityMailMessageImpl extends BaseMailMessage<VelocityMailMessage
       context = new SeamBaseVelocityContext(this, seamCDIVelocityContext);
       put("mailContext", new MailContext(super.getAttachments()));
    }
+   
+   public VelocityMailMessage from(String name, String address)
+   {
+      super.setFrom(name, address);
+      return this;
+   }
+
+   public VelocityMailMessage to(String name, String address)
+   {
+      super.addTo(name, address);
+      return this;
+   }
+   
+   public VelocityMailMessage cc(String name, String address)
+   {
+      super.addCc(name, address);
+      return this;
+   }
+   
+   public VelocityMailMessage bcc(String name, String address)
+   {
+      super.addBcc(name, address);
+      return this;
+   }
+   
+   public VelocityMailMessage subject(String value)
+   {
+      super.setSubject(value);
+      return this;
+   }  
+
+   public VelocityMailMessage deliveryReciept(String address)
+   {
+      super.setDeliveryReciept(address);
+      return this;
+   }
+   
+   public VelocityMailMessage readReciept(String address)
+   {
+      super.setReadReciept(address);
+      return this;
+   }   
+
+   public VelocityMailMessage importance(MessagePriority messagePriority)
+   {
+      super.setImportance(messagePriority);
+      return this;
+   }
+   
+   public VelocityMailMessage textBody(String text)
+   {
+      super.setText(text);
+      return this;      
+   }
+   
+   public VelocityMailMessage htmlBody(String html)
+   {
+      super.setHTML(html);
+      return this;
+   }
+   
+   public VelocityMailMessage htmlBodyTextAlt(String html, String text)
+   {
+      super.setHTMLTextAlt(html, text);
+      return this;
+   }
+
+   public VelocityMailMessage addAttachment(File file, ContentDisposition contentDisposition)
+   {
+      super.addAttachmentImpl(file, contentDisposition);
+      return this;
+   }
+
+   public VelocityMailMessage addAttachment(String fileName, ContentDisposition contentDisposition)
+   {
+      super.addAttachmentImpl(fileName, contentDisposition);
+      return this;
+   }
+
+   public VelocityMailMessage addAttachment(String fileName, String mimeType, ContentDisposition contentDisposition)
+   {
+      super.addAttachmentImpl(fileName, mimeType, contentDisposition);
+      return this;
+   }
+
+   public VelocityMailMessage addAttachment(URL url, String fileName, ContentDisposition contentDisposition)
+   {
+      super.addAttachmentImpl(url, fileName, contentDisposition);
+      return this;
+   } 
 
    public VelocityMailMessage setTemplateText(File textTemplateFile)
    {
       textTemplate = createTemplate(textTemplateFile);
-
       return this;
    }
 
@@ -168,16 +260,5 @@ public class VelocityMailMessageImpl extends BaseMailMessage<VelocityMailMessage
          throw new UnsupportedOperationException("No Body was set");
       }
       super.send();
-   }
-
-   /**
-    * {@inheritDoc}
-    * 
-    * @see org.jboss.seam.mail.core.BaseMailMessage#getRealClass()
-    */
-   @Override
-   protected Class<VelocityMailMessage> getRealClass()
-   {
-      return VelocityMailMessage.class;
    }
 }

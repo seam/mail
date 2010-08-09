@@ -18,15 +18,9 @@
    <dependencies>
       <dependency>
          <groupId>org.jboss.seam.mail</groupId>
-         <artifactId>seam-mail-api</artifactId>
+         <artifactId>seam-mail-api-base</artifactId>
          <version>${project.version}</version>
       </dependency>
-
-		<dependency>
-			<groupId>org.apache.velocity</groupId>
-			<artifactId>velocity</artifactId>
-			<version>1.6.4</version>
-		</dependency>
 
       <dependency>
          <groupId>org.slf4j</groupId>

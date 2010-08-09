@@ -3,6 +3,7 @@ package org.jboss.seam.mail;
 import java.io.IOException;
 import java.net.URL;
 
+import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
@@ -12,11 +13,11 @@ import junit.framework.Assert;
 
 import org.jboss.arquillian.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
-import org.jboss.seam.mail.core.Mail;
 import org.jboss.seam.mail.core.MailConfig;
 import org.jboss.seam.mail.core.MailTestUtil;
 import org.jboss.seam.mail.core.enumurations.ContentDisposition;
 import org.jboss.seam.mail.core.enumurations.MessagePriority;
+import org.jboss.seam.mail.templating.VelocityMailMessage;
 import org.jboss.seam.mail.util.MavenArtifactResolver;
 import org.jboss.seam.mail.util.SMTPAuthenticator;
 import org.jboss.shrinkwrap.api.Archive;
@@ -41,7 +42,7 @@ public class VelocityMailMessageTest
    }
 
    @Inject
-   Mail mail;
+   private Instance<VelocityMailMessage> velocityMailMessage;
 
    @Inject
    MailConfig mailConfig;
@@ -69,7 +70,7 @@ public class VelocityMailMessageTest
       person.setName(toName);
       person.setEmail(toAddress);
 
-      mail.velocity()
+      velocityMailMessage.get()
       .from(fromName, fromAddress)
       .to(toName, toAddress)
       .subject(subject)
@@ -109,7 +110,7 @@ public class VelocityMailMessageTest
       person.setName(toName);
       person.setEmail(toAddress);
 
-      mail.velocity()
+      velocityMailMessage.get()
       .from(fromName, fromAddress)
       .to(person.getName(), person.getEmail())
       .subject(subject)
@@ -150,7 +151,7 @@ public class VelocityMailMessageTest
       person.setName(toName);
       person.setEmail(toAddress);
 
-      mail.velocity()
+      velocityMailMessage.get()
       .from(fromName, fromAddress)
       .to(person.getName(), person.getEmail())
       .subject(subject)
@@ -197,7 +198,7 @@ public class VelocityMailMessageTest
       person.setName(toName);
       person.setEmail(toAddress);
 
-      mail.velocity()
+      velocityMailMessage.get()
       .from(fromName, fromAddress)
       .to(person.getName(), person.getEmail())
       .subject(subject)

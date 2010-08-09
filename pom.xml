@@ -25,8 +25,10 @@
    -->
 
    <modules>
-      <module>api</module>
+      <module>api-base</module>
       <module>impl-base</module>
+      <module>api-velocity</module>
+      <module>impl-velocity</module>
    </modules>
 
    <dependencyManagement>

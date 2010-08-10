@@ -3,10 +3,12 @@ package org.jboss.seam.mail;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import javax.enterprise.inject.Instance;
 import javax.enterprise.inject.Model;
 import javax.inject.Inject;
 
-import org.jboss.seam.mail.core.Mail;
+import org.jboss.seam.mail.api.MailMessage;
+import org.jboss.seam.mail.templating.VelocityMailMessage;
 import org.jboss.seam.mail.core.enumurations.ContentDisposition;
 import org.jboss.seam.mail.core.enumurations.MessagePriority;
 
@@ -16,14 +18,17 @@ public class SendMail
    private String text = "This is the alternative text body for mail readers that don't support html";
 
    @Inject
-   private Mail mail;
+   private Instance<MailMessage> mailMessage;
+   
+   @Inject
+   private Instance<VelocityMailMessage> velocityMailMessage;
    
    @Inject
    private Person person;   
 
    public void sendText()
    {
-      mail.standard()
+      mailMessage.get()
             .from("Seam Framework", "seam@jboss.org")
             .to(person.getName(), person.getEmail())
             .subject("Text Message from Seam Mail - " + java.util.UUID.randomUUID().toString())
@@ -33,7 +38,7 @@ public class SendMail
 
    public void sendHTML() throws MalformedURLException
    {
-      mail.velocity()
+      velocityMailMessage.get()
             .from("Seam Framework", "seam@jboss.org")
             .to(person.getName(), person.getEmail())
             .subject("HTML Message from Seam Mail - " + java.util.UUID.randomUUID().toString())
@@ -46,7 +51,7 @@ public class SendMail
 
    public void sendHTMLwithAlternative() throws MalformedURLException
    {
-      mail.velocity()
+      velocityMailMessage.get()
             .from("Seam Framework", "seam@jboss.org")
             .to(person.getName(), person.getEmail())
             .subject("HTML+Text Message from Seam Mail - " + java.util.UUID.randomUUID().toString())

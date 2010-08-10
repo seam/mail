@@ -98,6 +98,12 @@
 			<artifactId>seam-mail-impl-base</artifactId>
 			<version>${project.version}</version>
 		</dependency>
+		
+		<dependency>
+			<groupId>org.jboss.seam.mail</groupId>
+			<artifactId>seam-mail-impl-velocity</artifactId>
+			<version>${project.version}</version>
+		</dependency>
 
 		<dependency>
 			<groupId>org.jboss.seam.xml</groupId>

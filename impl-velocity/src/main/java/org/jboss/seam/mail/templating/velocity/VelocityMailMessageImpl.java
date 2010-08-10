@@ -17,7 +17,6 @@ import org.apache.velocity.exception.MethodInvocationException;
 import org.apache.velocity.exception.ParseErrorException;
 import org.apache.velocity.exception.ResourceNotFoundException;
 import org.jboss.seam.mail.annotations.Module;
-import org.jboss.seam.mail.annotations.Velocity;
 import org.jboss.seam.mail.core.BaseMailMessage;
 import org.jboss.seam.mail.core.MailContext;
 import org.jboss.seam.mail.core.enumurations.ContentDisposition;
@@ -26,7 +25,6 @@ import org.jboss.seam.mail.templating.MailTemplate;
 import org.jboss.seam.mail.templating.VelocityMailMessage;
 import org.jboss.weld.extensions.resourceLoader.ResourceProvider;
 
-@Velocity
 public class VelocityMailMessageImpl extends BaseMailMessage implements VelocityMailMessage
 {
 

@@ -182,7 +182,7 @@ public abstract class BaseMailMessage
    {
       try
       {
-         rootMimeMessage.setHeader(name, MimeUtility.encodeText(value));
+         rootMimeMessage.setHeader(name, MimeUtility.fold(name.length() + 2, MimeUtility.encodeText(value)));
       }
       catch (MessagingException e)
       {
@@ -198,7 +198,7 @@ public abstract class BaseMailMessage
    {
       try
       {
-         rootMimeMessage.addHeader(name, MimeUtility.encodeText(value));
+         rootMimeMessage.addHeader(name, MimeUtility.fold(name.length() + 2, MimeUtility.encodeText(value)));
       }
       catch (MessagingException e)
       {

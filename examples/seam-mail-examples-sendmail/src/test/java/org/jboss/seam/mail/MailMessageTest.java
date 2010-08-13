@@ -18,6 +18,7 @@ import org.jboss.seam.mail.core.MailConfig;
 import org.jboss.seam.mail.core.MailTestUtil;
 import org.jboss.seam.mail.core.enumurations.ContentDisposition;
 import org.jboss.seam.mail.core.enumurations.MessagePriority;
+import org.jboss.seam.mail.example.Person;
 import org.jboss.seam.mail.util.MavenArtifactResolver;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
@@ -174,6 +175,55 @@ public class MailMessageTest
       Assert.assertEquals(MessagePriority.LOW.getPriority(), mess.getHeader("Priority", null));
       Assert.assertEquals(MessagePriority.LOW.getX_priority(), mess.getHeader("X-Priority", null));
       Assert.assertEquals(MessagePriority.LOW.getImportance(), mess.getHeader("Importance", null));
+      Assert.assertTrue(mess.getHeader("Content-Type", null).startsWith("multipart/mixed"));
+
+      // TODO Verify MimeBodyPart hierarchy and $person resolution is happening.
+   }
+   
+   @Test
+   public void testTextMailMessageLongFields() throws IOException, MessagingException
+   {
+
+      mailConfig.setServerHost("localHost");
+      mailConfig.setServerPort(2525);
+
+      Wiser wiser = new Wiser(mailConfig.getServerPort());
+      wiser.start();
+
+      String subject = "Sometimes it is important to have a really long subject even if nobody is going to read it - " + java.util.UUID.randomUUID().toString();
+      
+      String longFromName = "FromSometimesPeopleHaveNamesWhichAreALotLongerThanYouEverExpectedSomeoneToHaveSoItisGoodToTestUpTo100CharactersOrSo YouKnow?";
+      String longFromAddress = "sometimesPeopleHaveNamesWhichAreALotLongerThanYouEverExpectedSomeoneToHaveSoItisGoodToTestUpTo100CharactersOrSo@jboss.org";
+      String longToName = "ToSometimesPeopleHaveNamesWhichAreALotLongerThanYouEverExpectedSomeoneToHaveSoItisGoodToTestUpTo100CharactersOrSo YouKnow?";
+      String longToAddress = "toSometimesPeopleHaveNamesWhichAreALotLongerThanYouEverExpectedSomeoneToHaveSoItisGoodToTestUpTo100CharactersOrSo.seamerson@seam-mail.test";
+      String longCcName = "CCSometimesPeopleHaveNamesWhichAreALotLongerThanYouEverExpectedSomeoneToHaveSoItisGoodToTestUpTo100CharactersOrSo YouKnow? Hatty";
+      String longCcAddress = "cCSometimesPeopleHaveNamesWhichAreALotLongerThanYouEverExpectedSomeoneToHaveSoItisGoodToTestUpTo100CharactersOrSo.hatty@jboss.org";
+
+      person.setName(longToName);
+      person.setEmail(longToAddress);
+
+      mailMessage.get()
+      .from(longFromName, longFromAddress)
+      .to(longToName, longToAddress)
+      .cc(longCcName, longCcAddress)
+      .subject(subject)
+      .textBody(text)
+      .importance(MessagePriority.HIGH)
+      .send();
+
+      wiser.stop();
+
+      Assert.assertTrue("Didn't receive the expected amount of messages. Expected 2 got " + wiser.getMessages().size(), wiser.getMessages().size() == 2);
+
+      MimeMessage mess = wiser.getMessages().get(0).getMimeMessage();
+
+      Assert.assertEquals(MailTestUtil.getAddressHeader(longFromName, longFromAddress), mess.getHeader("From", null));
+      Assert.assertEquals(MailTestUtil.getAddressHeader(longToName, longToAddress), mess.getHeader("To", null));
+      Assert.assertEquals(MailTestUtil.getAddressHeader(longCcName, longCcAddress), mess.getHeader("CC", null));
+      Assert.assertEquals("Subject has been modified", subject, MimeUtility.unfold(mess.getHeader("Subject", null)));
+      Assert.assertEquals(MessagePriority.HIGH.getPriority(), mess.getHeader("Priority", null));
+      Assert.assertEquals(MessagePriority.HIGH.getX_priority(), mess.getHeader("X-Priority", null));
+      Assert.assertEquals(MessagePriority.HIGH.getImportance(), mess.getHeader("Importance", null));
       Assert.assertTrue(mess.getHeader("Content-Type", null).startsWith("multipart/mixed"));
 
       // TODO Verify MimeBodyPart hierarchy and $person resolution is happening.

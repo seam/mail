@@ -6,7 +6,6 @@ import java.net.URL;
 import javax.inject.Inject;
 import javax.mail.Session;
 
-import org.jboss.seam.mail.annotations.Module;
 import org.jboss.seam.mail.api.MailMessage;
 import org.jboss.seam.mail.core.enumurations.ContentDisposition;
 import org.jboss.seam.mail.core.enumurations.MessagePriority;
@@ -14,7 +13,7 @@ import org.jboss.seam.mail.core.enumurations.MessagePriority;
 public class MailMessageImpl extends BaseMailMessage implements MailMessage
 {
    @Inject
-   public MailMessageImpl(@Module Session session)
+   public MailMessageImpl(Session session)
    {
       super(session);
    }

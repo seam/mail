@@ -1,4 +1,4 @@
-package org.jboss.seam.mail.annotations;
+package org.jboss.seam.mail.example;
 
 import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.ElementType.METHOD;
@@ -21,6 +21,6 @@ import javax.inject.Qualifier;
 @Qualifier
 @Target( { FIELD, METHOD, TYPE, PARAMETER })
 @Retention(RUNTIME)
-public @interface Module
+public @interface Gmail
 {
 }

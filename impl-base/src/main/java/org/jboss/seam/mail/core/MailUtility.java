@@ -1,6 +1,7 @@
 package org.jboss.seam.mail.core;
 
 import java.io.UnsupportedEncodingException;
+import java.net.UnknownHostException;
 import java.util.Collection;
 
 import javax.mail.internet.InternetAddress;
@@ -34,5 +35,18 @@ public class MailUtility
    public static InternetAddress[] getInternetAddressses(Collection<EmailContact> recipients)
    {
       return getInternetAddressses(recipients.toArray(new EmailContact[recipients.size()]));
+   }
+
+   public static String getHostName()
+   {
+      try
+      {
+         java.net.InetAddress localMachine = java.net.InetAddress.getLocalHost();
+         return localMachine.getHostName();
+      }
+      catch (UnknownHostException e)
+      {
+         return "localhost";
+      }
    }
 }

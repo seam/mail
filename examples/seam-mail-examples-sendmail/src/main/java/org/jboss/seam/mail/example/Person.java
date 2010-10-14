@@ -1,4 +1,4 @@
-package org.jboss.seam.mail;
+package org.jboss.seam.mail.example;
 
 import javax.enterprise.inject.Model;
 import javax.validation.constraints.NotNull;

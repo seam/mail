@@ -1,4 +1,4 @@
-package org.jboss.seam.mail;
+package org.jboss.seam.mail.example;
 
 import java.net.MalformedURLException;
 import java.net.URL;

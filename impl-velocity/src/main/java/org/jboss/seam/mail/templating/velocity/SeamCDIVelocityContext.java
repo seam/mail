@@ -9,9 +9,6 @@ import javax.inject.Inject;
 import org.apache.velocity.context.AbstractContext;
 import org.slf4j.Logger;
 
-import org.jboss.seam.mail.annotations.Module;
-
-@Module
 public class SeamCDIVelocityContext extends AbstractContext
 {
    @Inject

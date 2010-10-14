@@ -6,7 +6,6 @@ import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 import javax.mail.Session;
 
-import org.jboss.seam.mail.annotations.Module;
 import org.slf4j.Logger;
 
 public class MailSessionProducer
@@ -17,7 +16,7 @@ public class MailSessionProducer
    @Inject
    private MailConfig mailConfig;
    
-   @Produces @Module
+   @Produces
    public Session getMailSession()
    {
       log.debug("Producing Mail Session");
@@ -41,5 +40,5 @@ public class MailSessionProducer
          session =  Session.getInstance(props, null);
       }
       return session;
-   }
+   }   
 }

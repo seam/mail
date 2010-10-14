@@ -20,7 +20,6 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import javax.mail.internet.MimeUtility;
 
-import org.jboss.seam.mail.annotations.Module;
 import org.jboss.seam.mail.core.enumurations.ContentDisposition;
 import org.jboss.seam.mail.core.enumurations.MailHeader;
 import org.jboss.seam.mail.core.enumurations.MessagePriority;
@@ -39,7 +38,7 @@ public abstract class BaseMailMessage
    private ResourceProvider resourceProvider;
 
    @Inject
-   public BaseMailMessage(@Module Session session)
+   public BaseMailMessage(Session session)
    {
       rootMimeMessage = new RootMimeMessage(session);
       charset = "UTF-8";

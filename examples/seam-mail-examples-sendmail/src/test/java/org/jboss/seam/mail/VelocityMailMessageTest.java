@@ -37,7 +37,12 @@ public class VelocityMailMessageTest
    @Deployment
    public static Archive<?> createTestArchive()
    {
-      Archive<?> ar = ShrinkWrap.create(WebArchive.class, "test.war").addResource("template.text.vm", "WEB-INF/classes/template.text.vm").addResource("template.html.vm", "WEB-INF/classes/template.text.vm").addPackages(true, VelocityMailMessageTest.class.getPackage()).addLibrary(MavenArtifactResolver.resolve("org.jboss.weld:weld-extensions:1.0.0.Alpha2")).addWebResource(new ByteArrayAsset(new byte[0]), "beans.xml");
+      Archive<?> ar = ShrinkWrap.create(WebArchive.class, "test.war")
+      .addResource("template.text.vm", "WEB-INF/classes/template.text.vm")
+      .addResource("template.html.vm", "WEB-INF/classes/template.text.vm")
+      .addPackages(true, VelocityMailMessageTest.class.getPackage())
+      .addLibrary(MavenArtifactResolver.resolve("org.jboss.weld:weld-extensions:1.0.0.Beta1"))
+      .addWebResource(new ByteArrayAsset(new byte[0]), "beans.xml");
       System.out.println(ar.toString(true));
       return ar;
    }

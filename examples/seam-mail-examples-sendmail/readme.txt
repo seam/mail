@@ -147,4 +147,4 @@
 
 Testing
 =============
-mvn test -Pglassfish-embedded-3
+mvn test -Pweld-ee-embedded-1.1

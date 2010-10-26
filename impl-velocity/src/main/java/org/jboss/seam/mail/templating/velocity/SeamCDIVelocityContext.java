@@ -7,7 +7,7 @@ import javax.enterprise.inject.spi.BeanManager;
 import javax.inject.Inject;
 
 import org.apache.velocity.context.AbstractContext;
-import org.slf4j.Logger;
+import org.jboss.logging.Logger;
 
 public class SeamCDIVelocityContext extends AbstractContext
 {

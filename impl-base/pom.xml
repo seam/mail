@@ -41,7 +41,7 @@
       
       <dependency>
          <groupId>org.jboss.arquillian.container</groupId>
-         <artifactId>arquillian-weld-embedded</artifactId>
+         <artifactId>arquillian-weld-ee-embedded-1.1</artifactId>
          <scope>test</scope>
       </dependency>
       
@@ -51,6 +51,10 @@
          <scope>test</scope>
       </dependency>
       
+      <dependency>
+      	<groupId>org.jboss.logging</groupId>
+      	<artifactId>jboss-logging</artifactId>
+      </dependency>
    </dependencies>
 
    <build>

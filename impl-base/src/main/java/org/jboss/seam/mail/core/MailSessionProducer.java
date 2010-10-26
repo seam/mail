@@ -6,7 +6,7 @@ import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 import javax.mail.Session;
 
-import org.slf4j.Logger;
+import org.jboss.logging.Logger;
 
 public class MailSessionProducer
 {

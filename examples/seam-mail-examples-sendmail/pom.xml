@@ -89,7 +89,17 @@
 		<dependency>
 			<groupId>org.jboss.weld</groupId>
 			<artifactId>weld-extensions</artifactId>
-			<version>1.0.0.Beta1</version>
+			<version>1.0.0.Beta1</version>			
+			<exclusions>
+				<exclusion>
+					<groupId>javax.el</groupId>
+					<artifactId>el-api</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>javax.transaction</groupId>
+					<artifactId>jta</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 
 		<!-- Need to use the injectable logger in Weld Extensions -->

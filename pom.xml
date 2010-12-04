@@ -83,10 +83,10 @@
 		</profile>
 	</profiles>
 
-	<scm>
-		<connection>scm:svn:http://anonsvn.jboss.org/repos/seam/modules/mail/trunk</connection>
-		<developerConnection>scm:svn:https://svn.jboss.org/repos/seam/modules/mail/trunk</developerConnection>
-		<url>http://fisheye.jboss.org/browse/Seam/modules/mail/trunk</url>
-	</scm>
+   <scm>
+      <connection>scm:git:git://github.com/seam/mail.git</connection>
+      <developerConnection>scm:git:git@github.com:seam/mail.git</developerConnection>
+      <url>http://github.com/seam/mail</url>
+   </scm>
 
 </project>

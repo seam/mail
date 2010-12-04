@@ -1,6 +1,5 @@
-*/target
-*/target/*
-*/.settings
-*/.project
-*/.classpath/target
-/target
+target
+.classpath
+.project
+.settings
+transaction.log

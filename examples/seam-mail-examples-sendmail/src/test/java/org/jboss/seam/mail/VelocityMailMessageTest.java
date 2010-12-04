@@ -23,7 +23,7 @@ import org.jboss.seam.mail.util.MavenArtifactResolver;
 import org.jboss.seam.mail.util.SMTPAuthenticator;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.asset.ByteArrayAsset;
+import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -41,9 +41,11 @@ public class VelocityMailMessageTest
       .addResource("template.text.vm", "WEB-INF/classes/template.text.vm")
       .addResource("template.html.vm", "WEB-INF/classes/template.text.vm")
       .addPackages(true, VelocityMailMessageTest.class.getPackage())
-      .addLibrary(MavenArtifactResolver.resolve("org.jboss.weld:weld-extensions:1.0.0.Beta1"))
-      .addWebResource(new ByteArrayAsset(new byte[0]), "beans.xml");
-      System.out.println(ar.toString(true));
+      .addLibraries(MavenArtifactResolver.resolve("org.jboss.weld:weld-extensions:1.0.0.Beta1"),
+            MavenArtifactResolver.resolve("org.subethamail:subethasmtp:3.1.4"),
+            MavenArtifactResolver.resolve("org.apache.velocity:velocity:1.6.4"),
+            MavenArtifactResolver.resolve("commons-lang:commons-lang:2.4"))
+      .addWebResource(EmptyAsset.INSTANCE, "beans.xml");
       return ar;
    }
 
@@ -64,28 +66,33 @@ public class VelocityMailMessageTest
    @Test
    public void testVelocityTextMailMessage() throws IOException, MessagingException
    {
-
-      mailConfig.setServerHost("localHost");
-      mailConfig.setServerPort(2525);
-
-      Wiser wiser = new Wiser(mailConfig.getServerPort());
-      wiser.start();
-      
       String subject = "Text Message from Seam Mail - " + java.util.UUID.randomUUID().toString();
 
-      person.setName(toName);
-      person.setEmail(toAddress);
+      mailConfig.setServerHost("localHost");
+      mailConfig.setServerPort(8977);
 
-      velocityMailMessage.get()
-      .from(fromName, fromAddress)
-      .to(toName, toAddress)
-      .subject(subject)
-      .setTemplateText("template.text.vm")
-      .put("version", "Seam 3")
-      .importance(MessagePriority.HIGH)
-      .send();
-
-      wiser.stop();
+      Wiser wiser = new Wiser(mailConfig.getServerPort());
+      try
+      {
+         wiser.start();
+         
+   
+         person.setName(toName);
+         person.setEmail(toAddress);
+   
+         velocityMailMessage.get()
+            .from(fromName, fromAddress)
+            .to(toName, toAddress)
+            .subject(subject)
+            .setTemplateText("template.text.vm")
+            .put("version", "Seam 3")
+            .importance(MessagePriority.HIGH)
+            .send();
+      }
+      finally
+      {
+         stop(wiser);
+      }
 
       Assert.assertTrue("Didn't receive the expected amount of messages. Expected 1 got " + wiser.getMessages().size(), wiser.getMessages().size() == 1);
 
@@ -105,28 +112,34 @@ public class VelocityMailMessageTest
    @Test
    public void testVelocityHTMLMailMessage() throws IOException, MessagingException
    {
+      String subject = "HTML Message from Seam Mail - " + java.util.UUID.randomUUID().toString();
+    
       mailConfig.setServerHost("localHost");
-      mailConfig.setServerPort(2525);
+      mailConfig.setServerPort(8977);
 
       Wiser wiser = new Wiser(mailConfig.getServerPort());
-      wiser.start();
-      
-      String subject = "HTML Message from Seam Mail - " + java.util.UUID.randomUUID().toString();
-
-      person.setName(toName);
-      person.setEmail(toAddress);
-
-      velocityMailMessage.get()
-      .from(fromName, fromAddress)
-      .to(person.getName(), person.getEmail())
-      .subject(subject)
-      .setTemplateHTML("template.html.vm")
-      .put("version", "Seam 3")
-      .importance(MessagePriority.HIGH)
-      .addAttachment(new URL("http://www.seamframework.org/themes/sfwkorg/img/seam_icon_large.png"), "seamLogo.png", ContentDisposition.INLINE)
-      .send();
-
-      wiser.stop();
+      try
+      {
+         wiser.start();
+         
+   
+         person.setName(toName);
+         person.setEmail(toAddress);
+   
+         velocityMailMessage.get()
+            .from(fromName, fromAddress)
+            .to(person.getName(), person.getEmail())
+            .subject(subject)
+            .setTemplateHTML("template.html.vm")
+            .put("version", "Seam 3")
+            .importance(MessagePriority.HIGH)
+            .addAttachment(new URL("http://www.seamframework.org/themes/sfwkorg/img/seam_icon_large.png"), "seamLogo.png", ContentDisposition.INLINE)
+            .send();
+      }
+      finally
+      {
+         stop(wiser);
+      }
 
       Assert.assertTrue("Didn't receive the expected amount of messages. Expected 1 got " + wiser.getMessages().size(), wiser.getMessages().size() == 1);
 
@@ -146,31 +159,36 @@ public class VelocityMailMessageTest
    @Test
    public void testVelocityHTMLTextAltMailMessage() throws IOException, MessagingException
    {
+      String subject = "HTML+Text Message from Seam Mail - " + java.util.UUID.randomUUID().toString();
+    
       mailConfig.setServerHost("localHost");
-      mailConfig.setServerPort(2525);
+      mailConfig.setServerPort(8977);
 
       Wiser wiser = new Wiser(mailConfig.getServerPort());
-      wiser.start();
-
-      String subject = "HTML+Text Message from Seam Mail - " + java.util.UUID.randomUUID().toString();
-
-      person.setName(toName);
-      person.setEmail(toAddress);
-
-      velocityMailMessage.get()
-      .from(fromName, fromAddress)
-      .to(person.getName(), person.getEmail())
-      .subject(subject)
-      .put("version", "Seam 3")
-      .setTemplateHTMLTextAlt("template.html.vm", "template.text.vm")
-      .importance(MessagePriority.LOW)
-      .deliveryReciept(fromAddress)
-      .readReciept("seam.test")
-      .addAttachment("template.html.vm", ContentDisposition.ATTACHMENT)
-      .addAttachment(new URL("http://www.seamframework.org/themes/sfwkorg/img/seam_icon_large.png"), "seamLogo.png", ContentDisposition.INLINE)
-      .send();
-
-      wiser.stop();
+      try
+      {
+         wiser.start();
+   
+         person.setName(toName);
+         person.setEmail(toAddress);
+   
+         velocityMailMessage.get()
+            .from(fromName, fromAddress)
+            .to(person.getName(), person.getEmail())
+            .subject(subject)
+            .put("version", "Seam 3")
+            .setTemplateHTMLTextAlt("template.html.vm", "template.text.vm")
+            .importance(MessagePriority.LOW)
+            .deliveryReciept(fromAddress)
+            .readReciept("seam.test")
+            .addAttachment("template.html.vm", ContentDisposition.ATTACHMENT)
+            .addAttachment(new URL("http://www.seamframework.org/themes/sfwkorg/img/seam_icon_large.png"), "seamLogo.png", ContentDisposition.INLINE)
+            .send();
+      }
+      finally
+      {
+         stop(wiser);
+      }
 
       Assert.assertTrue("Didn't receive the expected amount of messages. Expected 1 got " + wiser.getMessages().size(), wiser.getMessages().size() == 1);
 
@@ -192,32 +210,38 @@ public class VelocityMailMessageTest
    @Test
    public void testSMTPSessionAuthentication() throws IOException, MessagingException
    {
+      String subject = "HTML+Text Message from Seam Mail - " + java.util.UUID.randomUUID().toString();
+     
       mailConfig.setServerHost("localHost");
       mailConfig.setServerPort(3535);
 
       Wiser wiser = new Wiser(mailConfig.getServerPort());
       wiser.getServer().setAuthenticationHandlerFactory(new EasyAuthenticationHandlerFactory(new SMTPAuthenticator("test","test12!")));
-      wiser.start();
-
-      String subject = "HTML+Text Message from Seam Mail - " + java.util.UUID.randomUUID().toString();
-
-      person.setName(toName);
-      person.setEmail(toAddress);
-
-      velocityMailMessage.get()
-      .from(fromName, fromAddress)
-      .to(person.getName(), person.getEmail())
-      .subject(subject)
-      .put("version", "Seam 3")
-      .setTemplateHTMLTextAlt("template.html.vm", "template.text.vm")
-      .importance(MessagePriority.LOW)
-      .deliveryReciept(fromAddress)
-      .readReciept("seam.test")
-      .addAttachment("template.html.vm", ContentDisposition.ATTACHMENT)
-      .addAttachment(new URL("http://www.seamframework.org/themes/sfwkorg/img/seam_icon_large.png"), "seamLogo.png", ContentDisposition.INLINE)
-      .send();
-
-      wiser.stop();
+      try
+      {
+         wiser.start();
+   
+   
+         person.setName(toName);
+         person.setEmail(toAddress);
+   
+         velocityMailMessage.get()
+            .from(fromName, fromAddress)
+            .to(person.getName(), person.getEmail())
+            .subject(subject)
+            .put("version", "Seam 3")
+            .setTemplateHTMLTextAlt("template.html.vm", "template.text.vm")
+            .importance(MessagePriority.LOW)
+            .deliveryReciept(fromAddress)
+            .readReciept("seam.test")
+            .addAttachment("template.html.vm", ContentDisposition.ATTACHMENT)
+            .addAttachment(new URL("http://www.seamframework.org/themes/sfwkorg/img/seam_icon_large.png"), "seamLogo.png", ContentDisposition.INLINE)
+            .send();
+      }
+      finally
+      {
+         stop(wiser);
+      }
 
       Assert.assertTrue("Didn't receive the expected amount of messages. Expected 1 got " + wiser.getMessages().size(), wiser.getMessages().size() == 1);
 
@@ -226,4 +250,19 @@ public class VelocityMailMessageTest
       Assert.assertEquals("Subject has been modified", subject, MimeUtility.unfold(mess.getHeader("Subject", null)));
    }
    
+   /**
+    * Wiser takes a fraction of a second to shutdown, so let it finish.
+    */
+   protected void stop(Wiser wiser)
+   {
+      wiser.stop();
+      try
+      {
+         Thread.sleep(100);
+      }
+      catch (InterruptedException e)
+      {
+         throw new RuntimeException(e);
+      }
+   }
 }

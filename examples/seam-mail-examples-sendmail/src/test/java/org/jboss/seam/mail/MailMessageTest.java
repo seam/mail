@@ -22,7 +22,7 @@ import org.jboss.seam.mail.example.Person;
 import org.jboss.seam.mail.util.MavenArtifactResolver;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.asset.ByteArrayAsset;
+import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -37,9 +37,10 @@ public class MailMessageTest
       Archive<?> ar = ShrinkWrap.create(WebArchive.class, "test.war")
       .addResource("template.text.vm", "WEB-INF/classes/template.text.vm")
       .addPackages(true, MailMessageTest.class.getPackage())
-      .addLibrary(MavenArtifactResolver.resolve("org.jboss.weld:weld-extensions:1.0.0.Beta1"))
-      .addWebResource(new ByteArrayAsset(new byte[0]), "beans.xml");
-      System.out.println(ar.toString(true));
+      .addLibraries(MavenArtifactResolver.resolve("org.jboss.weld:weld-extensions:1.0.0.Beta1"),
+            MavenArtifactResolver.resolve("org.subethamail:subethasmtp:3.1.4"),
+            MavenArtifactResolver.resolve("org.apache.velocity:velocity:1.6.4"))
+      .addWebResource(EmptyAsset.INSTANCE, "beans.xml");
       return ar;
    }
 
@@ -65,27 +66,32 @@ public class MailMessageTest
    @Test
    public void testTextMailMessage() throws IOException, MessagingException
    {
-
-      mailConfig.setServerHost("localHost");
-      mailConfig.setServerPort(2525);
-
-      Wiser wiser = new Wiser(mailConfig.getServerPort());
-      wiser.start();
-
       String subject = "Text Message from Seam Mail - " + java.util.UUID.randomUUID().toString();
 
-      person.setName(toName);
-      person.setEmail(toAddress);
+      mailConfig.setServerHost("localHost");
+      mailConfig.setServerPort(8977);
 
-      mailMessage.get()
-      .from(fromName, fromAddress)
-      .to(toName, toAddress)
-      .subject(subject)
-      .textBody(text)
-      .importance(MessagePriority.HIGH)
-      .send();
-
-      wiser.stop();
+      Wiser wiser = new Wiser(mailConfig.getServerPort());
+      try
+      {
+         wiser.start();
+   
+   
+         person.setName(toName);
+         person.setEmail(toAddress);
+   
+         mailMessage.get()
+            .from(fromName, fromAddress)
+            .to(toName, toAddress)
+            .subject(subject)
+            .textBody(text)
+            .importance(MessagePriority.HIGH)
+            .send();
+      }
+      finally
+      {
+         stop(wiser);
+      }
 
       Assert.assertTrue("Didn't receive the expected amount of messages. Expected 1 got " + wiser.getMessages().size(), wiser.getMessages().size() == 1);
 
@@ -105,27 +111,33 @@ public class MailMessageTest
    @Test
    public void testHTMLMailMessage() throws IOException, MessagingException
    {
-      mailConfig.setServerHost("localHost");
-      mailConfig.setServerPort(2525);
-
-      Wiser wiser = new Wiser(mailConfig.getServerPort());
-      wiser.start();
-
       String subject = "HTML Message from Seam Mail - " + java.util.UUID.randomUUID().toString();
 
-      person.setName(toName);
-      person.setEmail(toAddress);
+      mailConfig.setServerHost("localHost");
+      mailConfig.setServerPort(8977);
 
-      mailMessage.get()
-      .from(fromName, fromAddress)
-      .to(person.getName(), person.getEmail())
-      .subject(subject)
-      .htmlBody("<html><body>Hello World!</body></html>")
-      .importance(MessagePriority.HIGH)
-      .addAttachment(new URL("http://www.seamframework.org/themes/sfwkorg/img/seam_icon_large.png"), "seamLogo.png", ContentDisposition.INLINE)
-      .send();
-
-      wiser.stop();
+      Wiser wiser = new Wiser(mailConfig.getServerPort());
+      try
+      {
+         wiser.start();
+   
+   
+         person.setName(toName);
+         person.setEmail(toAddress);
+   
+         mailMessage.get()
+            .from(fromName, fromAddress)
+            .to(person.getName(), person.getEmail())
+            .subject(subject)
+            .htmlBody("<html><body>Hello World!</body></html>")
+            .importance(MessagePriority.HIGH)
+            .addAttachment(new URL("http://www.seamframework.org/themes/sfwkorg/img/seam_icon_large.png"), "seamLogo.png", ContentDisposition.INLINE)
+            .send();
+      }
+      finally
+      {
+         stop(wiser);
+      }
 
       Assert.assertTrue("Didn't receive the expected amount of messages. Expected 1 got " + wiser.getMessages().size(), wiser.getMessages().size() == 1);
 
@@ -145,29 +157,34 @@ public class MailMessageTest
    @Test
    public void testHTMLTextAltMailMessage() throws IOException, MessagingException
    {
-      mailConfig.setServerHost("localHost");
-      mailConfig.setServerPort(2525);
-
-      Wiser wiser = new Wiser(mailConfig.getServerPort());
-      wiser.start();
-
       String subject = "HTML+Text Message from Seam Mail - " + java.util.UUID.randomUUID().toString();
 
-      person.setName(toName);
-      person.setEmail(toAddress);
+      mailConfig.setServerHost("localHost");
+      mailConfig.setServerPort(8977);
 
-      mailMessage.get()
-      .from(fromName, fromAddress)
-      .to(person.getName(), person.getEmail())
-      .subject(subject).htmlBodyTextAlt(html, text)
-      .importance(MessagePriority.LOW)
-      .deliveryReciept(fromAddress)
-      .readReciept("seam.test")
-      .addAttachment("template.text.vm", ContentDisposition.ATTACHMENT)
-      .addAttachment(new URL("http://www.seamframework.org/themes/sfwkorg/img/seam_icon_large.png"), "seamLogo.png", ContentDisposition.INLINE)
-      .send();
-
-      wiser.stop();
+      Wiser wiser = new Wiser(mailConfig.getServerPort());
+      try
+      {
+         wiser.start();
+   
+         person.setName(toName);
+         person.setEmail(toAddress);
+   
+         mailMessage.get()
+            .from(fromName, fromAddress)
+            .to(person.getName(), person.getEmail())
+            .subject(subject).htmlBodyTextAlt(html, text)
+            .importance(MessagePriority.LOW)
+            .deliveryReciept(fromAddress)
+            .readReciept("seam.test")
+            .addAttachment("template.text.vm", ContentDisposition.ATTACHMENT)
+            .addAttachment(new URL("http://www.seamframework.org/themes/sfwkorg/img/seam_icon_large.png"), "seamLogo.png", ContentDisposition.INLINE)
+            .send();
+      }
+      finally
+      {
+         stop(wiser);
+      }
 
       Assert.assertTrue("Didn't receive the expected amount of messages. Expected 1 got " + wiser.getMessages().size(), wiser.getMessages().size() == 1);
 
@@ -187,13 +204,6 @@ public class MailMessageTest
    @Test
    public void testTextMailMessageLongFields() throws IOException, MessagingException
    {
-
-      mailConfig.setServerHost("localHost");
-      mailConfig.setServerPort(2525);
-
-      Wiser wiser = new Wiser(mailConfig.getServerPort());
-      wiser.start();
-
       String subject = "Sometimes it is important to have a really long subject even if nobody is going to read it - " + java.util.UUID.randomUUID().toString();
       
       String longFromName = "FromSometimesPeopleHaveNamesWhichAreALotLongerThanYouEverExpectedSomeoneToHaveSoItisGoodToTestUpTo100CharactersOrSo YouKnow?";
@@ -203,19 +213,31 @@ public class MailMessageTest
       String longCcName = "CCSometimesPeopleHaveNamesWhichAreALotLongerThanYouEverExpectedSomeoneToHaveSoItisGoodToTestUpTo100CharactersOrSo YouKnow? Hatty";
       String longCcAddress = "cCSometimesPeopleHaveNamesWhichAreALotLongerThanYouEverExpectedSomeoneToHaveSoItisGoodToTestUpTo100CharactersOrSo.hatty@jboss.org";
 
-      person.setName(longToName);
-      person.setEmail(longToAddress);
+      mailConfig.setServerHost("localHost");
+      mailConfig.setServerPort(8977);
 
-      mailMessage.get()
-      .from(longFromName, longFromAddress)
-      .to(longToName, longToAddress)
-      .cc(longCcName, longCcAddress)
-      .subject(subject)
-      .textBody(text)
-      .importance(MessagePriority.HIGH)
-      .send();
-
-      wiser.stop();
+      Wiser wiser = new Wiser(mailConfig.getServerPort());
+      try
+      {
+         wiser.start();
+   
+   
+         person.setName(longToName);
+         person.setEmail(longToAddress);
+   
+         mailMessage.get()
+            .from(longFromName, longFromAddress)
+            .to(longToName, longToAddress)
+            .cc(longCcName, longCcAddress)
+            .subject(subject)
+            .textBody(text)
+            .importance(MessagePriority.HIGH)
+            .send();
+      }
+      finally
+      {
+         stop(wiser);
+      }
 
       Assert.assertTrue("Didn't receive the expected amount of messages. Expected 2 got " + wiser.getMessages().size(), wiser.getMessages().size() == 2);
 
@@ -231,5 +253,21 @@ public class MailMessageTest
       Assert.assertTrue(mess.getHeader("Content-Type", null).startsWith("multipart/mixed"));
 
       // TODO Verify MimeBodyPart hierarchy and $person resolution is happening.
+   }
+   
+   /**
+    * Wiser takes a fraction of a second to shutdown, so let it finish.
+    */
+   protected void stop(Wiser wiser)
+   {
+      wiser.stop();
+      try
+      {
+         Thread.sleep(100);
+      }
+      catch (InterruptedException e)
+      {
+         throw new RuntimeException(e);
+      }
    }
 }

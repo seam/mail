@@ -4,7 +4,7 @@
 	<parent>
 		<artifactId>seam-parent</artifactId>
 		<groupId>org.jboss.seam</groupId>
-		<version>4-SNAPSHOT</version>
+		<version>4</version>
 	</parent>
 
 	<groupId>org.jboss.seam.mail</groupId>
@@ -14,7 +14,7 @@
 	<name>Seam Mail Module Parent</name>
 
 	<properties>
-		<seam.version>3.0.0.b01</seam.version>
+		<seam.version>3.0.0.b03</seam.version>
 	</properties>
 
 	<!-- <prerequisites> <maven>3.0</maven> </prerequisites> -->
@@ -30,7 +30,7 @@
 		<dependencies>
 			<dependency>
 				<groupId>org.jboss.seam</groupId>
-				<artifactId>seam</artifactId>
+				<artifactId>seam-bom</artifactId>
 				<version>${seam.version}</version>
 				<type>pom</type>
 				<scope>import</scope>

@@ -13,13 +13,36 @@ import org.jboss.seam.mail.core.enumurations.MessagePriority;
  */
 public interface MailMessage
 {
+
    /**
-    * Convenience method to set the FROM address using UTF-8 charset
+    * Convenience method to set the FROM address
+    * 
+    * @param address Email address of the recipient eq "john.doe@example.com"
+    */
+   public MailMessage from(String address);
+
+   /**
+    * Convenience method to set the FROM name and address using UTF-8 charset
     * 
     * @param name Personal name of the recipient eg "John Doe"
     * @param address Email address of the recipient eg "john.doe@example.com"
     */
    public MailMessage from(String name, String address);
+
+   /**
+    * Convenience method to set the REPLY-TO address
+    * 
+    * @param address Email address of the recipient eq "john.doe@example.com"
+    */
+   public MailMessage replyTo(String address);
+
+   /**
+    * Convenience method to set the REPLY-TO name and address using UTF-8 charset
+    * 
+    * @param name Personal name of the recipient eg "John Doe"
+    * @param address Email address of the recipient eg "john.doe@example.com"
+    */
+   public MailMessage replyTo(String name, String address);
 
    /**
     * Convenience method to add a TO recipient using UTF-8 charset
@@ -39,8 +62,7 @@ public interface MailMessage
    public MailMessage cc(String name, String address);
 
    /**
-    * Convenience method to add a BCC (Blind Carbon Copy) recipient using UTF-8
-    * charset
+    * Convenience method to add a BCC (Blind Carbon Copy) recipient using UTF-8 charset
     * 
     * @param name Personal name of the recipient eg "John Doe"
     * @param address Email address of the recipient eg "john.doe@example.com"
@@ -57,8 +79,7 @@ public interface MailMessage
    public MailMessage subject(String value);
 
    /**
-    * Sets the body of the message a plan text body represented by the supplied
-    * string
+    * Sets the body of the message a plan text body represented by the supplied string
     * 
     * @param text Plain text body
     * 
@@ -66,8 +87,7 @@ public interface MailMessage
    public MailMessage textBody(String text);
 
    /**
-    * Sets the body of the message a HTML body represented by the supplied
-    * string
+    * Sets the body of the message a HTML body represented by the supplied string
     * 
     * @param html HTML body
     * 
@@ -84,8 +104,7 @@ public interface MailMessage
    public MailMessage htmlBodyTextAlt(String html, String text);
 
    /**
-    * Sets the importance level of the message with a given
-    * {@link MessagePriority}
+    * Sets the importance level of the message with a given {@link MessagePriority}
     * 
     * @param messagePriority The priority level of the message.
     * 
@@ -102,8 +121,7 @@ public interface MailMessage
    public MailMessage addAttachment(File fileName, ContentDisposition contentDisposition);
 
    /**
-    * Add a file via the fileName. The classpath is searched for the specified
-    * fileName and it is added to the message with the mimeType of
+    * Add a file via the fileName. The classpath is searched for the specified fileName and it is added to the message with the mimeType of
     * "application/octetStream" and a given {@link ContentDisposition}
     * 
     * @param fileName Name of the file to be resolved on the classpath.
@@ -113,8 +131,7 @@ public interface MailMessage
    public MailMessage addAttachment(String fileName, ContentDisposition contentDisposition);
 
    /**
-    * Add a file via the fileName. The classpath is searched for the specified
-    * fileName and it is added to the message with a given mimeType and a given
+    * Add a file via the fileName. The classpath is searched for the specified fileName and it is added to the message with a given mimeType and a given
     * {@link ContentDisposition}
     * 
     * @param fileName Name of the file to be attached.

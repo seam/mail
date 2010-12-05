@@ -15,12 +15,34 @@ public interface VelocityMailMessage
 {
 
    /**
-    * Convenience method to set the FROM address using UTF-8 charset
+    * Convenience method to set the FROM address
+    * 
+    * @param address Email address of the recipient eq "john.doe@example.com"
+    */
+   public VelocityMailMessage from(String address);
+
+   /**
+    * Convenience method to set the FROM name and address using UTF-8 charset
     * 
     * @param name Personal name of the recipient eg "John Doe"
     * @param address Email address of the recipient eg "john.doe@example.com"
     */
    public VelocityMailMessage from(String name, String address);
+
+   /**
+    * Convenience method to set the REPLY-TO address
+    * 
+    * @param address Email address of the recipient eq "john.doe@example.com"
+    */
+   public VelocityMailMessage replyTo(String address);
+
+   /**
+    * Convenience method to set the REPLY-TO name and address using UTF-8 charset
+    * 
+    * @param name Personal name of the recipient eg "John Doe"
+    * @param address Email address of the recipient eg "john.doe@example.com"
+    */
+   public VelocityMailMessage replyTo(String name, String address);
 
    /**
     * Convenience method to add a TO recipient using UTF-8 charset

@@ -60,6 +60,8 @@ public class VelocityMailMessageTest
    
    String fromName = "Seam Framework";
    String fromAddress = "seam@jboss.org";
+   String replyToName = "No Reply";
+   String replyToAddress = "no-reply@seam-mal.test";
    String toName = "Seamy Seamerson";
    String toAddress = "seamy.seamerson@seam-mail.test";
 
@@ -82,6 +84,7 @@ public class VelocityMailMessageTest
    
          velocityMailMessage.get()
             .from(fromName, fromAddress)
+            .replyTo(replyToAddress)
             .to(toName, toAddress)
             .subject(subject)
             .setTemplateText("template.text.vm")
@@ -99,6 +102,7 @@ public class VelocityMailMessageTest
       MimeMessage mess = wiser.getMessages().get(0).getMimeMessage();
 
       Assert.assertEquals(MailTestUtil.getAddressHeader(fromName, fromAddress), mess.getHeader("From", null));
+      Assert.assertEquals(MailTestUtil.getAddressHeader(replyToAddress), mess.getHeader("Reply-To", null));
       Assert.assertEquals(MailTestUtil.getAddressHeader(toName, toAddress), mess.getHeader("To", null));
       Assert.assertEquals("Subject has been modified", subject, MimeUtility.unfold(mess.getHeader("Subject", null)));
       Assert.assertEquals(MessagePriority.HIGH.getPriority(), mess.getHeader("Priority", null));
@@ -128,6 +132,7 @@ public class VelocityMailMessageTest
    
          velocityMailMessage.get()
             .from(fromName, fromAddress)
+            .replyTo(replyToName, replyToAddress)
             .to(person.getName(), person.getEmail())
             .subject(subject)
             .setTemplateHTML("template.html.vm")
@@ -146,6 +151,7 @@ public class VelocityMailMessageTest
       MimeMessage mess = wiser.getMessages().get(0).getMimeMessage();
 
       Assert.assertEquals(MailTestUtil.getAddressHeader(fromName, fromAddress), mess.getHeader("From", null));
+      Assert.assertEquals(MailTestUtil.getAddressHeader(replyToName, replyToAddress), mess.getHeader("Reply-To", null));
       Assert.assertEquals(MailTestUtil.getAddressHeader(toName, toAddress), mess.getHeader("To", null));
       Assert.assertEquals("Subject has been modified", subject, MimeUtility.unfold(mess.getHeader("Subject", null)));
       Assert.assertEquals(MessagePriority.HIGH.getPriority(), mess.getHeader("Priority", null));

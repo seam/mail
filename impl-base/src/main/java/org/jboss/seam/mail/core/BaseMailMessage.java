@@ -4,9 +4,11 @@ import java.io.File;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -94,6 +96,11 @@ public abstract class BaseMailMessage
       }
    }
 
+   public void setFrom(String address)
+   {
+      setFrom(new EmailContact(address));
+   }
+
    public void setFrom(String name, String address)
    {
       setFrom(new EmailContact(name, address));
@@ -110,6 +117,35 @@ public abstract class BaseMailMessage
          throw new RuntimeException("Unable to add From Address:" + emailContact.getEmailAddress() + " to MIME message with charset: " + emailContact.getCharset(), e);
       }
       return this;
+   }
+
+   public void setReplyTo(String address)
+   {
+      setReplyTo(new EmailContact(address));
+   }
+
+   public void setReplyTo(String name, String address)
+   {
+      setReplyTo(new EmailContact(name, address));
+   }
+
+   public void setReplyTo(EmailContact emailContact)
+   {
+      List<EmailContact> emailContacts = new ArrayList<EmailContact>();
+      emailContacts.add(emailContact);
+      setReplyTo(emailContacts);
+   }
+
+   public void setReplyTo(Collection<EmailContact> emailContacts)
+   {
+      try
+      {
+         rootMimeMessage.setReplyTo(MailUtility.getInternetAddressses(emailContacts));
+      }
+      catch (MessagingException e)
+      {
+         throw new RuntimeException("Unable to set Reply-To", e);
+      }
    }
 
    public void addTo(String name, String address)

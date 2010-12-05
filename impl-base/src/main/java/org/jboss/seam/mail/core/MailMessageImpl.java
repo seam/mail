@@ -18,9 +18,27 @@ public class MailMessageImpl extends BaseMailMessage implements MailMessage
       super(session);
    }
    
+   public MailMessage from(String address)
+   {
+      super.setFrom(address);
+      return this;
+   }
+   
    public MailMessage from(String name, String address)
    {
       super.setFrom(name, address);
+      return this;
+   }
+   
+   public MailMessage replyTo(String address)
+   {
+      super.setReplyTo(address);
+      return this;
+   }
+   
+   public MailMessage replyTo(String name, String address)
+   {
+      super.setReplyTo(name, address);
       return this;
    }
 

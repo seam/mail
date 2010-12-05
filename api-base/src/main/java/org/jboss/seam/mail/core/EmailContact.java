@@ -3,8 +3,7 @@ package org.jboss.seam.mail.core;
 import java.nio.charset.Charset;
 
 /**
- * Defines an EmailContact for setting name/address pairs on email message
- * headers.
+ * Defines an EmailContact for setting name/address pairs on email message headers.
  * 
  * @author Cody Lerum
  * 
@@ -14,6 +13,11 @@ public class EmailContact
    private String name;
    private String emailAddress;
    private String charset;
+
+   public EmailContact(String emailAddress)
+   {
+      this.emailAddress = emailAddress;
+   }
 
    public EmailContact(String name, String emailAddress)
    {

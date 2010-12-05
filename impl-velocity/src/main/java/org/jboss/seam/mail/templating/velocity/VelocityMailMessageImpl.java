@@ -46,9 +46,27 @@ public class VelocityMailMessageImpl extends BaseMailMessage implements Velocity
       put("mailContext", new MailContext(super.getAttachments()));
    }
    
+   public VelocityMailMessage from(String address)
+   {
+      super.setFrom(address);
+      return this;
+   }
+   
    public VelocityMailMessage from(String name, String address)
    {
       super.setFrom(name, address);
+      return this;
+   }
+   
+   public VelocityMailMessage replyTo(String address)
+   {
+      super.setReplyTo(address);
+      return this;
+   }
+   
+   public VelocityMailMessage replyTo(String name, String address)
+   {
+      super.setReplyTo(name, address);
       return this;
    }
 

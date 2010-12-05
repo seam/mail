@@ -4,12 +4,24 @@ import java.io.UnsupportedEncodingException;
 import java.net.UnknownHostException;
 import java.util.Collection;
 
+import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 
 public class MailUtility
 {
    public static InternetAddress getInternetAddress(EmailContact emailContact)
    {
+      if (emailContact.getName() == null)
+      {
+         try
+         {
+            return new InternetAddress(emailContact.getEmailAddress(), true);
+         }
+         catch (AddressException e)
+         {
+            throw new RuntimeException("Unable convert recipient to InternetAddress", e);
+         }
+      }
       try
       {
          return new InternetAddress(emailContact.getEmailAddress(), emailContact.getName(), emailContact.getCharset());
@@ -18,6 +30,13 @@ public class MailUtility
       {
          throw new RuntimeException("Unable convert recipient to InternetAddress", e);
       }
+   }
+
+   public static InternetAddress[] getInternetAddressses(EmailContact emailContact)
+   {
+      InternetAddress[] internetAddresses = { getInternetAddress(emailContact) };
+
+      return internetAddresses;
    }
 
    public static InternetAddress[] getInternetAddressses(EmailContact[] recipients)

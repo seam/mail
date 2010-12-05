@@ -55,6 +55,8 @@ public class MailMessageTest
 
    String fromName = "Seam Framework";
    String fromAddress = "seam@jboss.org";
+   String replyToName = "No Reply";
+   String replyToAddress = "no-reply@seam-mal.test";
    String toName = "Seamy Seamerson";
    String toAddress = "seamy.seamerson@seam-mail.test";
    String ccName = "Red Hatty";
@@ -82,6 +84,7 @@ public class MailMessageTest
    
          mailMessage.get()
             .from(fromName, fromAddress)
+            .replyTo(replyToAddress)
             .to(toName, toAddress)
             .subject(subject)
             .textBody(text)
@@ -96,8 +99,9 @@ public class MailMessageTest
       Assert.assertTrue("Didn't receive the expected amount of messages. Expected 1 got " + wiser.getMessages().size(), wiser.getMessages().size() == 1);
 
       MimeMessage mess = wiser.getMessages().get(0).getMimeMessage();
-
+      
       Assert.assertEquals(MailTestUtil.getAddressHeader(fromName, fromAddress), mess.getHeader("From", null));
+      Assert.assertEquals(MailTestUtil.getAddressHeader(replyToAddress), mess.getHeader("Reply-To", null));
       Assert.assertEquals(MailTestUtil.getAddressHeader(toName, toAddress), mess.getHeader("To", null));
       Assert.assertEquals("Subject has been modified", subject, MimeUtility.unfold(mess.getHeader("Subject", null)));
       Assert.assertEquals(MessagePriority.HIGH.getPriority(), mess.getHeader("Priority", null));
@@ -127,6 +131,7 @@ public class MailMessageTest
    
          mailMessage.get()
             .from(fromName, fromAddress)
+            .replyTo(replyToName, replyToAddress)
             .to(person.getName(), person.getEmail())
             .subject(subject)
             .htmlBody("<html><body>Hello World!</body></html>")
@@ -144,6 +149,7 @@ public class MailMessageTest
       MimeMessage mess = wiser.getMessages().get(0).getMimeMessage();
 
       Assert.assertEquals(MailTestUtil.getAddressHeader(fromName, fromAddress), mess.getHeader("From", null));
+      Assert.assertEquals(MailTestUtil.getAddressHeader(replyToName, replyToAddress), mess.getHeader("Reply-To", null));
       Assert.assertEquals(MailTestUtil.getAddressHeader(toName, toAddress), mess.getHeader("To", null));
       Assert.assertEquals("Subject has been modified", subject, MimeUtility.unfold(mess.getHeader("Subject", null)));
       Assert.assertEquals(MessagePriority.HIGH.getPriority(), mess.getHeader("Priority", null));

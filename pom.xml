@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
@@ -64,7 +65,7 @@
 			<artifactId>activation</artifactId>
 			<version>1.1.1</version>
 			<scope>provided</scope>
-		</dependency>		
+		</dependency>
 	</dependencies>
 
 	<profiles>
@@ -81,12 +82,55 @@
 				<module>examples/sendmail</module>
 			</modules>
 		</profile>
+		<profile>
+			<id>jboss-public-repository</id>
+			<!-- Repository is active unless explicitly disabled e.g. -P!jboss-public-repository -->
+			<activation>
+				<property>
+					<name>jboss-public-repository</name>
+					<value>!false</value>
+				</property>
+			</activation>
+			<repositories>
+				<repository>
+					<id>jboss-public-repository-group</id>
+					<name>JBoss Public Maven Repository Group</name>
+					<url>http://repository.jboss.org/nexus/content/groups/public</url>
+					<layout>default</layout>
+					<releases>
+						<enabled>true</enabled>
+						<updatePolicy>never</updatePolicy>
+					</releases>
+					<snapshots>
+						<enabled>false</enabled>
+						<updatePolicy>never</updatePolicy>
+					</snapshots>
+				</repository>
+			</repositories>
+			<pluginRepositories>
+				<pluginRepository>
+					<id>jboss-public-repository-group</id>
+					<name>JBoss Public Maven Repository Group</name>
+					<url>http://repository.jboss.org/nexus/content/groups/public</url>
+					<layout>default</layout>
+					<releases>
+						<enabled>true</enabled>
+						<updatePolicy>never</updatePolicy>
+					</releases>
+					<snapshots>
+						<enabled>true</enabled>
+						<updatePolicy>never</updatePolicy>
+					</snapshots>
+				</pluginRepository>
+			</pluginRepositories>
+		</profile>
+
 	</profiles>
 
-   <scm>
-      <connection>scm:git:git://github.com/seam/mail.git</connection>
-      <developerConnection>scm:git:git@github.com:seam/mail.git</developerConnection>
-      <url>http://github.com/seam/mail</url>
-   </scm>
+	<scm>
+		<connection>scm:git:git://github.com/seam/mail.git</connection>
+		<developerConnection>scm:git:git@github.com:seam/mail.git</developerConnection>
+		<url>http://github.com/seam/mail</url>
+	</scm>
 
 </project>

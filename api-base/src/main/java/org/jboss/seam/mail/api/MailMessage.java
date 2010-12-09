@@ -2,7 +2,9 @@ package org.jboss.seam.mail.api;
 
 import java.io.File;
 import java.net.URL;
+import java.util.Collection;
 
+import org.jboss.seam.mail.core.EmailContact;
 import org.jboss.seam.mail.core.enumurations.ContentDisposition;
 import org.jboss.seam.mail.core.enumurations.MessagePriority;
 
@@ -14,6 +16,8 @@ import org.jboss.seam.mail.core.enumurations.MessagePriority;
 public interface MailMessage
 {
 
+   //Begin Recipients
+   
    /**
     * Convenience method to set the FROM address
     * 
@@ -28,7 +32,9 @@ public interface MailMessage
     * @param address Email address of the recipient eg "john.doe@example.com"
     */
    public MailMessage from(String name, String address);
-
+   
+   public MailMessage from(EmailContact emailContact);
+   
    /**
     * Convenience method to set the REPLY-TO address
     * 
@@ -44,6 +50,9 @@ public interface MailMessage
     */
    public MailMessage replyTo(String name, String address);
 
+   
+   public MailMessage to(String address);
+   
    /**
     * Convenience method to add a TO recipient using UTF-8 charset
     * 
@@ -53,6 +62,30 @@ public interface MailMessage
    public MailMessage to(String name, String address);
 
    /**
+    * Add TO recipient using EmailContact
+    * @param emailContact
+    * @return
+    */
+   public MailMessage to(EmailContact emailContact);
+   
+   /**
+    * Convenience method to add a TO recipients using a collection of EmailContact
+    * 
+    * @param name Personal name of the recipient eg "John Doe"
+    * @param address Email address of the recipient eg "john.doe@example.com"
+    */
+   public MailMessage to(Collection<EmailContact> emailContacts);   
+
+   /**
+    * Convenience method to add a CC (Carbon Copy) recipient using UTF-8 charset
+    * 
+    * @param name Personal name of the recipient eg "John Doe"
+    * @param address Email address of the recipient eg "john.doe@example.com"
+    * 
+    */
+   public MailMessage cc(String address);
+   
+   /**
     * Convenience method to add a CC (Carbon Copy) recipient using UTF-8 charset
     * 
     * @param name Personal name of the recipient eg "John Doe"
@@ -60,7 +93,18 @@ public interface MailMessage
     * 
     */
    public MailMessage cc(String name, String address);
-
+   
+   public MailMessage cc(EmailContact emailContact);
+   
+   /**
+    * Add collection of CC recipients 
+    * @param emailContact Collection of EmailContact
+    * @return
+    */
+   public MailMessage cc(Collection<EmailContact> emailContacts);   
+   
+   public MailMessage bcc(String address);
+   
    /**
     * Convenience method to add a BCC (Blind Carbon Copy) recipient using UTF-8 charset
     * 
@@ -68,49 +112,16 @@ public interface MailMessage
     * @param address Email address of the recipient eg "john.doe@example.com"
     * 
     */
-   public MailMessage bcc(String name, String address);
-
-   /**
-    * Set the subject on the message
-    * 
-    * @param value Subject of the message
-    * 
-    */
-   public MailMessage subject(String value);
-
-   /**
-    * Sets the body of the message a plan text body represented by the supplied string
-    * 
-    * @param text Plain text body
-    * 
-    */
-   public MailMessage textBody(String text);
-
-   /**
-    * Sets the body of the message a HTML body represented by the supplied string
-    * 
-    * @param html HTML body
-    * 
-    */
-   public MailMessage htmlBody(String html);
-
-   /**
-    * Sets the body of the message to a HTML body with a plain text alternative
-    * 
-    * @param html HTML body
-    * @param text Plain text body
-    * 
-    */
-   public MailMessage htmlBodyTextAlt(String html, String text);
-
-   /**
-    * Sets the importance level of the message with a given {@link MessagePriority}
-    * 
-    * @param messagePriority The priority level of the message.
-    * 
-    */
-   public MailMessage importance(MessagePriority messagePriority);
-
+   public MailMessage bcc(String name, String address);   
+   
+   public MailMessage bcc(EmailContact emailContact);
+   
+   public MailMessage bcc(Collection<EmailContact> emailContacts);
+   
+   //Begin Recipients
+   
+   //Begin Attachments
+   
    /**
     * Add a given {@link File} with a given {@link ContentDisposition}
     * 
@@ -150,7 +161,22 @@ public interface MailMessage
     * 
     */
    public MailMessage addAttachment(URL url, String fileName, ContentDisposition contentDisposition);
+   
+   
+   public MailMessage addAttachment(byte[] bytes, String fileName, String mimeType, ContentDisposition contentDisposition);
 
+   //End Attachements
+   
+   //Begin Flags
+   
+   /**
+    * Sets the importance level of the message with a given {@link MessagePriority}
+    * 
+    * @param messagePriority The priority level of the message.
+    * 
+    */
+   public MailMessage importance(MessagePriority messagePriority);
+   
    /**
     * Request a delivery reciept "Return-Receipt-To" to the given address
     * 
@@ -167,6 +193,58 @@ public interface MailMessage
     */
    public MailMessage readReciept(String address);
 
+   //End Flags
+   
+   //Begin Calendar
+   
+   /**
+    * Calendar invites require a special format.
+    * 
+    * @param htmlSummary Summary of the invite to be displayed in the message
+    * @param bytes Calendar data
+    * 
+    */
+   public MailMessage calendarBody(String htmlSummary, byte[] bytes);
+   
+   //End Calendar
+   
+   //Begin Core
+   
+   /**
+    * Set the subject on the message
+    * 
+    * @param value Subject of the message
+    * 
+    */
+   public MailMessage subject(String value);
+
+   /**
+    * Sets the body of the message a plan text body represented by the supplied string
+    * 
+    * @param text Plain text body
+    * 
+    */
+   public MailMessage textBody(String text);
+
+   /**
+    * Sets the body of the message a HTML body represented by the supplied string
+    * 
+    * @param html HTML body
+    * 
+    */
+   public MailMessage htmlBody(String html);
+
+   /**
+    * Sets the body of the message to a HTML body with a plain text alternative
+    * 
+    * @param html HTML body
+    * @param text Plain text body
+    * 
+    */
+   public MailMessage htmlBodyTextAlt(String html, String text);   
+
+   //End Core
+   
    /**
     * Send the Message
     */

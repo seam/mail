@@ -8,6 +8,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringWriter;
 import java.net.URL;
+import java.util.Collection;
 
 import javax.inject.Inject;
 import javax.mail.Session;
@@ -16,10 +17,13 @@ import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.exception.MethodInvocationException;
 import org.apache.velocity.exception.ParseErrorException;
 import org.apache.velocity.exception.ResourceNotFoundException;
+import org.jboss.seam.mail.core.Attachment;
 import org.jboss.seam.mail.core.BaseMailMessage;
+import org.jboss.seam.mail.core.EmailContact;
 import org.jboss.seam.mail.core.MailContext;
 import org.jboss.seam.mail.core.enumurations.ContentDisposition;
 import org.jboss.seam.mail.core.enumurations.MessagePriority;
+import org.jboss.seam.mail.core.enumurations.RecipientType;
 import org.jboss.seam.mail.templating.MailTemplate;
 import org.jboss.seam.mail.templating.VelocityMailMessage;
 import org.jboss.weld.extensions.resourceLoader.ResourceProvider;
@@ -46,6 +50,8 @@ public class VelocityMailMessageImpl extends BaseMailMessage implements Velocity
       put("mailContext", new MailContext(super.getAttachments()));
    }
    
+//Begin Addressing
+   
    public VelocityMailMessage from(String address)
    {
       super.setFrom(address);
@@ -55,6 +61,12 @@ public class VelocityMailMessageImpl extends BaseMailMessage implements Velocity
    public VelocityMailMessage from(String name, String address)
    {
       super.setFrom(name, address);
+      return this;
+   }
+   
+   public VelocityMailMessage from(EmailContact emailContact)
+   {
+      super.setFrom(emailContact);
       return this;
    }
    
@@ -69,24 +81,86 @@ public class VelocityMailMessageImpl extends BaseMailMessage implements Velocity
       super.setReplyTo(name, address);
       return this;
    }
-
+   
+   public VelocityMailMessage replyTo(EmailContact emailContact)
+   {
+      super.setReplyTo(emailContact);
+      return this;
+   }
+   
+   public VelocityMailMessage to(String address)
+   {
+      super.addRecipient(RecipientType.TO, address);
+      return this;
+   }
+   
    public VelocityMailMessage to(String name, String address)
    {
-      super.addTo(name, address);
+      super.addRecipient(RecipientType.TO, name, address);
+      return this;
+   }
+   
+   public VelocityMailMessage to(EmailContact emailContact)
+   {
+      super.addRecipient(RecipientType.TO, emailContact);
+      return this;
+   }
+   
+   public VelocityMailMessage to(Collection<EmailContact> emailContacts)
+   {
+      super.addRecipients(RecipientType.TO, emailContacts);
+      return this;
+   }   
+   
+   public VelocityMailMessage cc(String address)
+   {
+      super.addRecipient(RecipientType.CC, address);
       return this;
    }
    
    public VelocityMailMessage cc(String name, String address)
    {
-      super.addCc(name, address);
+      super.addRecipient(RecipientType.CC, name, address);
+      return this;
+   }
+   
+   public VelocityMailMessage cc(EmailContact emailContact)
+   {
+      super.addRecipient(RecipientType.CC, emailContact);
+      return this;
+   }
+   
+   public VelocityMailMessage cc(Collection<EmailContact> emailContacts)
+   {
+      super.addRecipients(RecipientType.CC, emailContacts);
+      return this;
+   }  
+   
+   public VelocityMailMessage bcc(String address)
+   {
+      super.addRecipient(RecipientType.BCC, address);
       return this;
    }
    
    public VelocityMailMessage bcc(String name, String address)
    {
-      super.addBcc(name, address);
+      super.addRecipient(RecipientType.BCC, name, address);
       return this;
    }
+   
+   public VelocityMailMessage bcc(EmailContact emailContact)
+   {
+      super.addRecipient(RecipientType.BCC, emailContact);
+      return this;
+   }
+   
+   public VelocityMailMessage bcc(Collection<EmailContact> emailContacts)
+   {
+      super.addRecipients(RecipientType.BCC, emailContacts);
+      return this;
+   }
+   
+   //End Addressing
    
    public VelocityMailMessage subject(String value)
    {
@@ -130,6 +204,8 @@ public class VelocityMailMessageImpl extends BaseMailMessage implements Velocity
       return this;
    }
 
+//Begin Attachments
+   
    public VelocityMailMessage addAttachment(File file, ContentDisposition contentDisposition)
    {
       super.addAttachmentImpl(file, contentDisposition);
@@ -152,7 +228,31 @@ public class VelocityMailMessageImpl extends BaseMailMessage implements Velocity
    {
       super.addAttachmentImpl(url, fileName, contentDisposition);
       return this;
-   } 
+   }
+
+   public VelocityMailMessage addAttachment(byte[] bytes, String fileName, String mimeType, String contentClass, ContentDisposition contentDisposition)
+   {
+      super.addAttachmentImpl(bytes, fileName, mimeType, contentClass, contentDisposition);
+      return this;
+   }
+
+   public VelocityMailMessage addAttachment(byte[] bytes, String fileName, String mimeType, ContentDisposition contentDisposition)
+   {
+      super.addAttachmentImpl(bytes, fileName, mimeType, null, contentDisposition);
+      return this;
+   }
+   
+   //End Attachments
+   
+   //Begin Calendar
+   
+   public VelocityMailMessage calendarBody(String html, byte[] bytes)
+   {
+      super.setCalendar(html, new Attachment(bytes,null, "text/calendar;method=CANCEL", "urn:content-classes:calendarmessage", ContentDisposition.INLINE));
+      return this;
+   }
+   
+   //End Calendar
 
    public VelocityMailMessage setTemplateText(File textTemplateFile)
    {

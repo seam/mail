@@ -19,7 +19,7 @@ public class Attachment extends MimeBodyPart
 
    private String id;
 
-   public Attachment(DataSource dataSource, String fileName, ContentDisposition contentDisposition)
+   public Attachment(DataSource dataSource, String fileName, String contentClass, ContentDisposition contentDisposition)
    {
       super();
 
@@ -35,33 +35,52 @@ public class Attachment extends MimeBodyPart
       }
 
       setData(dataSource);
-
-      try
+      
+      if(fileName != null)
       {
-         setFileName(fileName);
+         try
+         {
+            setFileName(fileName);
+         }
+         catch (MessagingException e)
+         {
+            throw new RuntimeException("Unable to get FileName on attachment");
+         }
       }
-      catch (MessagingException e)
+      
+      if(contentClass != null && contentClass.trim().length() != 0)
       {
-         throw new RuntimeException("Unable to get FileName on attachment");
-      }
+         try
+         {
+            addHeader("Content-Class","urn:content-classes:calendarmessage");
+         }
+         catch (MessagingException e)
+         {
+            throw new RuntimeException("Unable to add Content-Class Header");
+         }
+      }      
 
       setContentDisposition(contentDisposition);
-
+   }
+   
+   public Attachment(byte[] bytes, String fileName, String mimeType, String contentClass, ContentDisposition contentDisposition)
+   {
+      this(getByteArrayDataSource(bytes, mimeType), fileName, contentClass, contentDisposition);
    }
 
    public Attachment(byte[] bytes, String fileName, String mimeType, ContentDisposition contentDisposition)
    {
-      this(getByteArrayDataSource(bytes, mimeType), fileName, contentDisposition);
+      this(getByteArrayDataSource(bytes, mimeType), fileName, null, contentDisposition);
    }
    
    public Attachment(InputStream inputStream, String fileName, String mimeType, ContentDisposition contentDisposition)
    {         
-      this(getByteArrayDataSource(inputStream, mimeType), fileName, contentDisposition);
+      this(getByteArrayDataSource(inputStream, mimeType), fileName, null, contentDisposition);
    }
 
    public Attachment(File file, String fileName, ContentDisposition contentDisposition)
    {
-      this(new FileDataSource(file), fileName, contentDisposition);
+      this(new FileDataSource(file), fileName, null, contentDisposition);
    }
 
    public String getId()

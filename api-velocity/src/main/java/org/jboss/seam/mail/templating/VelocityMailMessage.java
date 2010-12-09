@@ -2,7 +2,9 @@ package org.jboss.seam.mail.templating;
 
 import java.io.File;
 import java.net.URL;
+import java.util.Collection;
 
+import org.jboss.seam.mail.core.EmailContact;
 import org.jboss.seam.mail.core.enumurations.ContentDisposition;
 import org.jboss.seam.mail.core.enumurations.MessagePriority;
 
@@ -14,6 +16,8 @@ import org.jboss.seam.mail.core.enumurations.MessagePriority;
 public interface VelocityMailMessage 
 {
 
+   ///Begin Recipients
+   
    /**
     * Convenience method to set the FROM address
     * 
@@ -28,7 +32,9 @@ public interface VelocityMailMessage
     * @param address Email address of the recipient eg "john.doe@example.com"
     */
    public VelocityMailMessage from(String name, String address);
-
+   
+   public VelocityMailMessage from(EmailContact emailContact);
+   
    /**
     * Convenience method to set the REPLY-TO address
     * 
@@ -44,6 +50,9 @@ public interface VelocityMailMessage
     */
    public VelocityMailMessage replyTo(String name, String address);
 
+   
+   public VelocityMailMessage to(String address);
+   
    /**
     * Convenience method to add a TO recipient using UTF-8 charset
     * 
@@ -53,6 +62,30 @@ public interface VelocityMailMessage
    public VelocityMailMessage to(String name, String address);
 
    /**
+    * Add TO recipient using EmailContact
+    * @param emailContact
+    * @return
+    */
+   public VelocityMailMessage to(EmailContact emailContact);
+   
+   /**
+    * Convenience method to add a TO recipients using a collection of EmailContact
+    * 
+    * @param name Personal name of the recipient eg "John Doe"
+    * @param address Email address of the recipient eg "john.doe@example.com"
+    */
+   public VelocityMailMessage to(Collection<EmailContact> emailContacts);   
+
+   /**
+    * Convenience method to add a CC (Carbon Copy) recipient using UTF-8 charset
+    * 
+    * @param name Personal name of the recipient eg "John Doe"
+    * @param address Email address of the recipient eg "john.doe@example.com"
+    * 
+    */
+   public VelocityMailMessage cc(String address);
+   
+   /**
     * Convenience method to add a CC (Carbon Copy) recipient using UTF-8 charset
     * 
     * @param name Personal name of the recipient eg "John Doe"
@@ -60,16 +93,32 @@ public interface VelocityMailMessage
     * 
     */
    public VelocityMailMessage cc(String name, String address);
-
+   
+   public VelocityMailMessage cc(EmailContact emailContact);
+   
    /**
-    * Convenience method to add a BCC (Blind Carbon Copy) recipient using UTF-8
-    * charset
+    * Add collection of CC recipients 
+    * @param emailContact Collection of EmailContact
+    * @return
+    */
+   public VelocityMailMessage cc(Collection<EmailContact> emailContacts);   
+   
+   public VelocityMailMessage bcc(String address);
+   
+   /**
+    * Convenience method to add a BCC (Blind Carbon Copy) recipient using UTF-8 charset
     * 
     * @param name Personal name of the recipient eg "John Doe"
     * @param address Email address of the recipient eg "john.doe@example.com"
     * 
     */
-   public VelocityMailMessage bcc(String name, String address);
+   public VelocityMailMessage bcc(String name, String address);   
+   
+   public VelocityMailMessage bcc(EmailContact emailContact);
+   
+   public VelocityMailMessage bcc(Collection<EmailContact> emailContacts);
+   
+   //Begin Recipients
 
    /**
     * Set the subject on the message
@@ -106,15 +155,8 @@ public interface VelocityMailMessage
     */
    public VelocityMailMessage htmlBodyTextAlt(String html, String text);
 
-   /**
-    * Sets the importance level of the message with a given
-    * {@link MessagePriority}
-    * 
-    * @param messagePriority The priority level of the message.
-    * 
-    */
-   public VelocityMailMessage importance(MessagePriority messagePriority);
-
+//Begin Attachments
+   
    /**
     * Add a given {@link File} with a given {@link ContentDisposition}
     * 
@@ -125,8 +167,7 @@ public interface VelocityMailMessage
    public VelocityMailMessage addAttachment(File fileName, ContentDisposition contentDisposition);
 
    /**
-    * Add a file via the fileName. The classpath is searched for the specified
-    * fileName and it is added to the message with the mimeType of
+    * Add a file via the fileName. The classpath is searched for the specified fileName and it is added to the message with the mimeType of
     * "application/octetStream" and a given {@link ContentDisposition}
     * 
     * @param fileName Name of the file to be resolved on the classpath.
@@ -136,8 +177,7 @@ public interface VelocityMailMessage
    public VelocityMailMessage addAttachment(String fileName, ContentDisposition contentDisposition);
 
    /**
-    * Add a file via the fileName. The classpath is searched for the specified
-    * fileName and it is added to the message with a given mimeType and a given
+    * Add a file via the fileName. The classpath is searched for the specified fileName and it is added to the message with a given mimeType and a given
     * {@link ContentDisposition}
     * 
     * @param fileName Name of the file to be attached.
@@ -156,7 +196,35 @@ public interface VelocityMailMessage
     * 
     */
    public VelocityMailMessage addAttachment(URL url, String fileName, ContentDisposition contentDisposition);
+   
+   
+   public VelocityMailMessage addAttachment(byte[] bytes, String fileName, String mimeType, ContentDisposition contentDisposition);
 
+   //End Attachements
+   
+   //Begin Calendar
+   
+   /**
+    * Calendar invites require a special format.
+    * 
+    * @param htmlSummary Summary of the invite to be displayed in the message
+    * @param bytes Calendar data
+    * 
+    */
+   public VelocityMailMessage calendarBody(String htmlSummary, byte[] bytes);
+   
+   //End Calendar
+   
+   //Begin Flags
+   
+   /**
+    * Sets the importance level of the message with a given {@link MessagePriority}
+    * 
+    * @param messagePriority The priority level of the message.
+    * 
+    */
+   public VelocityMailMessage importance(MessagePriority messagePriority);
+   
    /**
     * Request a delivery reciept "Return-Receipt-To" to the given address
     * 
@@ -172,6 +240,8 @@ public interface VelocityMailMessage
     * 
     */
    public VelocityMailMessage readReciept(String address);
+
+   //End Flags
 
    /**
     * Send the Message

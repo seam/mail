@@ -60,6 +60,30 @@ public abstract class BaseMailMessage
          throw new RuntimeException("Unable to set RootMultiPart", e);
       }
    }
+   
+   public void addRecipient(RecipientType recipientType, String address)
+   {
+      try
+      {
+         rootMimeMessage.addRecipient(recipientType.getRecipientType(), MailUtility.getInternetAddress(new EmailContact(address)));
+      }
+      catch (MessagingException e)
+      {
+         throw new RuntimeException("Unable to add recipient " + recipientType + ": " + address + " to MIME message", e);
+      }
+   }
+   
+   public void addRecipient(RecipientType recipientType, String name, String address)
+   {
+      try
+      {
+         rootMimeMessage.addRecipient(recipientType.getRecipientType(), MailUtility.getInternetAddress(new EmailContact(name,address)));
+      }
+      catch (MessagingException e)
+      {
+         throw new RuntimeException("Unable to add recipient " + recipientType + ": " + address + " to MIME message", e);
+      }
+   }
 
    public void addRecipient(RecipientType recipientType, EmailContact emailContact)
    {
@@ -146,22 +170,7 @@ public abstract class BaseMailMessage
       {
          throw new RuntimeException("Unable to set Reply-To", e);
       }
-   }
-
-   public void addTo(String name, String address)
-   {
-      addRecipient(RecipientType.TO, new EmailContact(name, address));
-   }
-
-   public void addCc(String name, String address)
-   {
-      addRecipient(RecipientType.CC, new EmailContact(name, address));
-   }
-
-   public void addBcc(String name, String address)
-   {
-      addRecipient(RecipientType.BCC, new EmailContact(name, address));
-   }
+   }  
 
    public void setSubject(String value)
    {
@@ -301,6 +310,20 @@ public abstract class BaseMailMessage
          throw new RuntimeException("Unable to build HTML+Text Email", e);
       }
    }
+   
+   public void setCalendar(String body, Attachment invite)
+   {
+      MimeBodyPart calendarBodyPart = buildHTMLBodyPart(body);
+      try
+      {
+         rootMultipart.addBodyPart(calendarBodyPart);
+         rootMultipart.addBodyPart(invite);
+      }
+      catch (MessagingException e)
+      {
+         throw new RuntimeException("Unable to add Calendar Body to MimeMessage", e);
+      }
+   }
 
    private MimeBodyPart buildTextBodyPart(String text)
    {
@@ -359,6 +382,12 @@ public abstract class BaseMailMessage
       Attachment attachment = new Attachment(bytes, fileName, "application/octetStream", contentDisposition);
       addAttachment(attachment);
    }
+   
+   public void addAttachmentImpl(byte[] bytes, String fileName, String mimeType, String contentClass, ContentDisposition contentDisposition)
+   {
+      Attachment attachment = new Attachment(bytes, fileName, mimeType, contentClass, contentDisposition);
+      addAttachment(attachment);
+   }
 
    public void addAttachmentImpl(String fileName, String mimeType, ContentDisposition contentDisposition)
    {
@@ -380,9 +409,9 @@ public abstract class BaseMailMessage
 
    public void addAttachmentImpl(URL url, String fileName, ContentDisposition contentDisposition)
    {
-      Attachment attachment = new Attachment(new URLDataSource(url), fileName, contentDisposition);
+      Attachment attachment = new Attachment(new URLDataSource(url), fileName, null, contentDisposition);
       addAttachment(attachment);
-   }
+   }  
 
    private void addAttachment(Attachment attachment)
    {

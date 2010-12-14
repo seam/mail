@@ -242,6 +242,12 @@ public class VelocityMailMessageImpl extends BaseMailMessage implements Velocity
       return this;
    }
    
+   public VelocityMailMessage addAttachment(Attachment attachment)
+   {
+      super.addAttachmentImpl(attachment);
+      return this;
+   }
+   
    //End Attachments
    
    //Begin Calendar

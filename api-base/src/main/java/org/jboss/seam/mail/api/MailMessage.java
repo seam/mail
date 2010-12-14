@@ -4,6 +4,7 @@ import java.io.File;
 import java.net.URL;
 import java.util.Collection;
 
+import org.jboss.seam.mail.core.Attachment;
 import org.jboss.seam.mail.core.EmailContact;
 import org.jboss.seam.mail.core.enumurations.ContentDisposition;
 import org.jboss.seam.mail.core.enumurations.MessagePriority;
@@ -164,6 +165,8 @@ public interface MailMessage
    
    
    public MailMessage addAttachment(byte[] bytes, String fileName, String mimeType, ContentDisposition contentDisposition);
+   
+   public MailMessage addAttachment(Attachment attachment);
 
    //End Attachements
    

@@ -212,6 +212,12 @@ public class MailMessageImpl extends BaseMailMessage implements MailMessage
       return this;
    }
    
+   public MailMessage addAttachment(Attachment attachment)
+   {
+      super.addAttachmentImpl(attachment);
+      return this;
+   }
+   
    //End Attachments
    
    //Begin Calendar

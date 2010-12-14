@@ -362,31 +362,31 @@ public abstract class BaseMailMessage
    public void addAttachmentImpl(File file, ContentDisposition contentDisposition)
    {
       Attachment attachment = new Attachment(file, file.getName(), contentDisposition);
-      addAttachment(attachment);
+      addAttachmentImpl(attachment);
    }
 
    public void addAttachmentImpl(File file, String fileName, ContentDisposition contentDisposition)
    {
       Attachment attachment = new Attachment(file, fileName, contentDisposition);
-      addAttachment(attachment);
+      addAttachmentImpl(attachment);
    }
 
    public void addAttachmentImpl(byte[] bytes, String fileName, String mimeType, ContentDisposition contentDisposition)
    {
       Attachment attachment = new Attachment(bytes, fileName, mimeType, contentDisposition);
-      addAttachment(attachment);
+      addAttachmentImpl(attachment);
    }
 
    public void addAttachmentImpl(byte[] bytes, String fileName, ContentDisposition contentDisposition)
    {
       Attachment attachment = new Attachment(bytes, fileName, "application/octetStream", contentDisposition);
-      addAttachment(attachment);
+      addAttachmentImpl(attachment);
    }
    
    public void addAttachmentImpl(byte[] bytes, String fileName, String mimeType, String contentClass, ContentDisposition contentDisposition)
    {
       Attachment attachment = new Attachment(bytes, fileName, mimeType, contentClass, contentDisposition);
-      addAttachment(attachment);
+      addAttachmentImpl(attachment);
    }
 
    public void addAttachmentImpl(String fileName, String mimeType, ContentDisposition contentDisposition)
@@ -399,7 +399,7 @@ public abstract class BaseMailMessage
       }
 
       Attachment attachment = new Attachment(inputStream, fileName, mimeType, contentDisposition);
-      addAttachment(attachment);
+      addAttachmentImpl(attachment);
    }
 
    public void addAttachmentImpl(String fileName, ContentDisposition contentDisposition)
@@ -410,10 +410,10 @@ public abstract class BaseMailMessage
    public void addAttachmentImpl(URL url, String fileName, ContentDisposition contentDisposition)
    {
       Attachment attachment = new Attachment(new URLDataSource(url), fileName, null, contentDisposition);
-      addAttachment(attachment);
+      addAttachmentImpl(attachment);
    }  
 
-   private void addAttachment(Attachment attachment)
+   public void addAttachmentImpl(Attachment attachment)
    {
       attachments.put(attachment.getAttachmentFileName(), attachment);
    }

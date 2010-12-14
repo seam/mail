@@ -73,7 +73,15 @@ public class EmailContact
    @Override
    public String toString()
    {
-      return name + " <" + emailAddress + ">";
+      if(name != null && name.length() > 0)
+      {
+         return name + " <" + emailAddress + ">";
+      }
+      else
+      {
+         return emailAddress;
+      }
+      
    }
 
 }

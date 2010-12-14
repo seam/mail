@@ -1,7 +1,7 @@
 package org.jboss.seam.mail.core.enumurations;
 
 /**
- * Defines the available message recipet headers
+ * Defines the available message receipt headers
  * 
  * @author Cody Lerum
  */

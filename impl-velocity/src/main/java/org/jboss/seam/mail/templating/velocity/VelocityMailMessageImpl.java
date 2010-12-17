@@ -17,7 +17,7 @@ import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.exception.MethodInvocationException;
 import org.apache.velocity.exception.ParseErrorException;
 import org.apache.velocity.exception.ResourceNotFoundException;
-import org.jboss.seam.mail.core.Attachment;
+import org.jboss.seam.mail.core.AttachmentPart;
 import org.jboss.seam.mail.core.BaseMailMessage;
 import org.jboss.seam.mail.core.EmailContact;
 import org.jboss.seam.mail.core.MailContext;
@@ -242,7 +242,7 @@ public class VelocityMailMessageImpl extends BaseMailMessage implements Velocity
       return this;
    }
    
-   public VelocityMailMessage addAttachment(Attachment attachment)
+   public VelocityMailMessage addAttachment(AttachmentPart attachment)
    {
       super.addAttachmentImpl(attachment);
       return this;
@@ -254,7 +254,7 @@ public class VelocityMailMessageImpl extends BaseMailMessage implements Velocity
    
    public VelocityMailMessage calendarBody(String html, byte[] bytes)
    {
-      super.setCalendar(html, new Attachment(bytes,null, "text/calendar;method=CANCEL", "urn:content-classes:calendarmessage", ContentDisposition.INLINE));
+      super.setCalendar(html, new AttachmentPart(bytes,null, "text/calendar;method=CANCEL", "urn:content-classes:calendarmessage", ContentDisposition.INLINE));
       return this;
    }
    

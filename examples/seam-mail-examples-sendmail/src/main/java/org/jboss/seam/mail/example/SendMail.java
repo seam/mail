@@ -8,9 +8,9 @@ import javax.enterprise.inject.Model;
 import javax.inject.Inject;
 
 import org.jboss.seam.mail.api.MailMessage;
-import org.jboss.seam.mail.templating.VelocityMailMessage;
 import org.jboss.seam.mail.core.enumurations.ContentDisposition;
 import org.jboss.seam.mail.core.enumurations.MessagePriority;
+import org.jboss.seam.mail.templating.VelocityMailMessage;
 
 @Model
 public class SendMail

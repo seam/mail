@@ -14,12 +14,12 @@ import javax.mail.util.ByteArrayDataSource;
 
 import org.jboss.seam.mail.core.enumurations.ContentDisposition;
 
-public class Attachment extends MimeBodyPart
+public class AttachmentPart extends MimeBodyPart
 {
 
    private String id;
 
-   public Attachment(DataSource dataSource, String fileName, String contentClass, ContentDisposition contentDisposition)
+   public AttachmentPart(DataSource dataSource, String fileName, String contentClass, ContentDisposition contentDisposition)
    {
       super();
 
@@ -63,22 +63,22 @@ public class Attachment extends MimeBodyPart
       setContentDisposition(contentDisposition);
    }
    
-   public Attachment(byte[] bytes, String fileName, String mimeType, String contentClass, ContentDisposition contentDisposition)
+   public AttachmentPart(byte[] bytes, String fileName, String mimeType, String contentClass, ContentDisposition contentDisposition)
    {
       this(getByteArrayDataSource(bytes, mimeType), fileName, contentClass, contentDisposition);
    }
 
-   public Attachment(byte[] bytes, String fileName, String mimeType, ContentDisposition contentDisposition)
+   public AttachmentPart(byte[] bytes, String fileName, String mimeType, ContentDisposition contentDisposition)
    {
       this(getByteArrayDataSource(bytes, mimeType), fileName, null, contentDisposition);
    }
    
-   public Attachment(InputStream inputStream, String fileName, String mimeType, ContentDisposition contentDisposition)
+   public AttachmentPart(InputStream inputStream, String fileName, String mimeType, ContentDisposition contentDisposition)
    {         
       this(getByteArrayDataSource(inputStream, mimeType), fileName, null, contentDisposition);
    }
 
-   public Attachment(File file, String fileName, ContentDisposition contentDisposition)
+   public AttachmentPart(File file, String fileName, ContentDisposition contentDisposition)
    {
       this(new FileDataSource(file), fileName, null, contentDisposition);
    }

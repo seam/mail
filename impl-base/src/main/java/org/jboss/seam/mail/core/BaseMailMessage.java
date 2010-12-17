@@ -32,7 +32,7 @@ public abstract class BaseMailMessage
 {
    private RootMimeMessage rootMimeMessage;
    private String charset;
-   private Map<String, Attachment> attachments = new HashMap<String, Attachment>();
+   private Map<String, AttachmentPart> attachments = new HashMap<String, AttachmentPart>();
    private MimeMultipart rootMultipart = new MimeMultipart("mixed");
    private MimeMultipart relatedMultipart = new MimeMultipart("related");
 
@@ -311,7 +311,7 @@ public abstract class BaseMailMessage
       }
    }
    
-   public void setCalendar(String body, Attachment invite)
+   public void setCalendar(String body, AttachmentPart invite)
    {
       MimeBodyPart calendarBodyPart = buildHTMLBodyPart(body);
       try
@@ -361,31 +361,31 @@ public abstract class BaseMailMessage
 
    public void addAttachmentImpl(File file, ContentDisposition contentDisposition)
    {
-      Attachment attachment = new Attachment(file, file.getName(), contentDisposition);
+      AttachmentPart attachment = new AttachmentPart(file, file.getName(), contentDisposition);
       addAttachmentImpl(attachment);
    }
 
    public void addAttachmentImpl(File file, String fileName, ContentDisposition contentDisposition)
    {
-      Attachment attachment = new Attachment(file, fileName, contentDisposition);
+      AttachmentPart attachment = new AttachmentPart(file, fileName, contentDisposition);
       addAttachmentImpl(attachment);
    }
 
    public void addAttachmentImpl(byte[] bytes, String fileName, String mimeType, ContentDisposition contentDisposition)
    {
-      Attachment attachment = new Attachment(bytes, fileName, mimeType, contentDisposition);
+      AttachmentPart attachment = new AttachmentPart(bytes, fileName, mimeType, contentDisposition);
       addAttachmentImpl(attachment);
    }
 
    public void addAttachmentImpl(byte[] bytes, String fileName, ContentDisposition contentDisposition)
    {
-      Attachment attachment = new Attachment(bytes, fileName, "application/octetStream", contentDisposition);
+      AttachmentPart attachment = new AttachmentPart(bytes, fileName, "application/octetStream", contentDisposition);
       addAttachmentImpl(attachment);
    }
    
    public void addAttachmentImpl(byte[] bytes, String fileName, String mimeType, String contentClass, ContentDisposition contentDisposition)
    {
-      Attachment attachment = new Attachment(bytes, fileName, mimeType, contentClass, contentDisposition);
+      AttachmentPart attachment = new AttachmentPart(bytes, fileName, mimeType, contentClass, contentDisposition);
       addAttachmentImpl(attachment);
    }
 
@@ -398,7 +398,7 @@ public abstract class BaseMailMessage
          throw new RuntimeException("InputStream was NULL for fileName: " + fileName);
       }
 
-      Attachment attachment = new Attachment(inputStream, fileName, mimeType, contentDisposition);
+      AttachmentPart attachment = new AttachmentPart(inputStream, fileName, mimeType, contentDisposition);
       addAttachmentImpl(attachment);
    }
 
@@ -409,16 +409,16 @@ public abstract class BaseMailMessage
 
    public void addAttachmentImpl(URL url, String fileName, ContentDisposition contentDisposition)
    {
-      Attachment attachment = new Attachment(new URLDataSource(url), fileName, null, contentDisposition);
+      AttachmentPart attachment = new AttachmentPart(new URLDataSource(url), fileName, null, contentDisposition);
       addAttachmentImpl(attachment);
    }  
 
-   public void addAttachmentImpl(Attachment attachment)
+   public void addAttachmentImpl(AttachmentPart attachment)
    {
       attachments.put(attachment.getAttachmentFileName(), attachment);
    }
 
-   public Map<String, Attachment> getAttachments()
+   public Map<String, AttachmentPart> getAttachments()
    {
       return attachments;
    }
@@ -454,7 +454,7 @@ public abstract class BaseMailMessage
 
    private void addAttachmentsToMessage()
    {
-      for (Attachment a : attachments.values())
+      for (AttachmentPart a : attachments.values())
       {
          if (a.getContentDisposition() == ContentDisposition.ATTACHMENT)
          {

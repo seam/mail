@@ -212,7 +212,7 @@ public class MailMessageImpl extends BaseMailMessage implements MailMessage
       return this;
    }
    
-   public MailMessage addAttachment(Attachment attachment)
+   public MailMessage addAttachment(AttachmentPart attachment)
    {
       super.addAttachmentImpl(attachment);
       return this;
@@ -224,7 +224,7 @@ public class MailMessageImpl extends BaseMailMessage implements MailMessage
    
    public MailMessage calendarBody(String html, byte[] bytes)
    {
-      super.setCalendar(html, new Attachment(bytes,null, "text/calendar;method=CANCEL", "urn:content-classes:calendarmessage", ContentDisposition.INLINE));
+      super.setCalendar(html, new AttachmentPart(bytes,null, "text/calendar;method=CANCEL", "urn:content-classes:calendarmessage", ContentDisposition.INLINE));
       return this;
    }
    

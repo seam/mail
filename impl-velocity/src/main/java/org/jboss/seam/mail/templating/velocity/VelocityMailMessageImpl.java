@@ -26,7 +26,7 @@ import org.jboss.seam.mail.core.enumurations.MessagePriority;
 import org.jboss.seam.mail.core.enumurations.RecipientType;
 import org.jboss.seam.mail.templating.MailTemplate;
 import org.jboss.seam.mail.templating.VelocityMailMessage;
-import org.jboss.weld.extensions.resourceLoader.ResourceProvider;
+import org.jboss.seam.solder.resourceLoader.ResourceProvider;
 
 public class VelocityMailMessageImpl extends BaseMailMessage implements VelocityMailMessage
 {

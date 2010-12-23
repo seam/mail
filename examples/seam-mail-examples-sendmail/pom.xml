@@ -74,9 +74,9 @@
 		</dependency>
 
 		<dependency>
-			<groupId>org.jboss.seam.xml</groupId>
-			<artifactId>seam-xml-config</artifactId>
-			<version>3.0.0.Alpha3</version>
+			<groupId>org.jboss.seam.config</groupId>
+			<artifactId>seam-config-xml</artifactId>
+			<version>3.0.0.Beta2</version>
 			<exclusions>
 				<exclusion>
 					<groupId>javax.enterprise</groupId>
@@ -87,9 +87,9 @@
 
 		<!-- Weld Extensions provides convenient, portable CDI extensions such as an injectable logger -->
 		<dependency>
-			<groupId>org.jboss.weld</groupId>
-			<artifactId>weld-extensions</artifactId>
-			<version>1.0.0.Beta1</version>			
+			<groupId>org.jboss.seam.solder</groupId>
+			<artifactId>seam-solder</artifactId>
+			<version>3.0.0.Beta1</version>
 			<exclusions>
 				<exclusion>
 					<groupId>javax.el</groupId>
@@ -251,14 +251,14 @@
 				<dependency>
 					<groupId>org.slf4j</groupId>
 					<artifactId>slf4j-simple</artifactId>
-				</dependency>				
+				</dependency>
 				<dependency>
 					<groupId>org.jboss.spec</groupId>
 					<artifactId>jboss-javaee-6.0</artifactId>
 					<version>${jboss-javaee6-spec.version}</version>
 					<type>pom</type>
 					<scope>test</scope>
-				</dependency>				
+				</dependency>
 			</dependencies>
 			<dependencyManagement>
 				<dependencies>

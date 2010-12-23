@@ -37,7 +37,7 @@ public class MailMessageTest
       Archive<?> ar = ShrinkWrap.create(WebArchive.class, "test.war")
       .addResource("template.text.vm", "WEB-INF/classes/template.text.vm")
       .addPackages(true, MailMessageTest.class.getPackage())
-      .addLibraries(MavenArtifactResolver.resolve("org.jboss.weld:weld-extensions:1.0.0.Beta1"),
+      .addLibraries(MavenArtifactResolver.resolve("org.jboss.seam.solder:seam-solder:3.0.0.Beta1"),
             MavenArtifactResolver.resolve("org.subethamail:subethasmtp:3.1.4"),
             MavenArtifactResolver.resolve("org.apache.velocity:velocity:1.6.4"))
       .addWebResource(EmptyAsset.INSTANCE, "beans.xml");

@@ -1,5 +1,6 @@
 package org.jboss.seam.mail.templating.velocity;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -7,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringWriter;
+import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.util.Collection;
 
@@ -17,248 +19,257 @@ import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.exception.MethodInvocationException;
 import org.apache.velocity.exception.ParseErrorException;
 import org.apache.velocity.exception.ResourceNotFoundException;
-import org.jboss.seam.mail.core.AttachmentPart;
-import org.jboss.seam.mail.core.BaseMailMessage;
+import org.jboss.seam.mail.core.EmailAttachment;
 import org.jboss.seam.mail.core.EmailContact;
+import org.jboss.seam.mail.core.EmailMessage;
 import org.jboss.seam.mail.core.MailContext;
+import org.jboss.seam.mail.core.MailUtility;
 import org.jboss.seam.mail.core.enumurations.ContentDisposition;
 import org.jboss.seam.mail.core.enumurations.MessagePriority;
-import org.jboss.seam.mail.core.enumurations.RecipientType;
 import org.jboss.seam.mail.templating.MailTemplate;
 import org.jboss.seam.mail.templating.VelocityMailMessage;
 import org.jboss.seam.solder.resourceLoader.ResourceProvider;
 
-public class VelocityMailMessageImpl extends BaseMailMessage implements VelocityMailMessage
+public class VelocityMailMessageImpl implements VelocityMailMessage
 {
-
+   private EmailMessage emailMessage;
    private VelocityEngine velocityEngine;
    private SeamBaseVelocityContext context;
 
    private MailTemplate textTemplate;
    private MailTemplate htmlTemplate;
-
+   
    @Inject
    private ResourceProvider resourceProvider;
 
    @Inject
-   public VelocityMailMessageImpl(Session session, SeamCDIVelocityContext seamCDIVelocityContext)
+   public VelocityMailMessageImpl(SeamCDIVelocityContext seamCDIVelocityContext)
    {
-      super(session);
+      emailMessage = new EmailMessage();
       velocityEngine = new VelocityEngine();
       velocityEngine.setProperty("runtime.log.logsystem.class", "org.apache.velocity.runtime.log.SimpleLog4JLogSystem");
       context = new SeamBaseVelocityContext(this, seamCDIVelocityContext);
-      put("mailContext", new MailContext(super.getAttachments()));
+      put("mailContext", new MailContext(MailUtility.getEmailAttachmentMap(emailMessage.getAttachments())));
    }
-   
-//Begin Addressing
-   
+
+   // Begin Addressing
+
    public VelocityMailMessage from(String address)
    {
-      super.setFrom(address);
+      emailMessage.setFromAddress(new EmailContact(address));
       return this;
    }
-   
+
    public VelocityMailMessage from(String name, String address)
    {
-      super.setFrom(name, address);
+      emailMessage.setFromAddress(new EmailContact(name, address));
       return this;
    }
-   
+
    public VelocityMailMessage from(EmailContact emailContact)
    {
-      super.setFrom(emailContact);
+      emailMessage.setFromAddress(emailContact);
       return this;
    }
-   
+
    public VelocityMailMessage replyTo(String address)
    {
-      super.setReplyTo(address);
+      emailMessage.addReplyToAddress(new EmailContact(address));
       return this;
    }
-   
+
    public VelocityMailMessage replyTo(String name, String address)
    {
-      super.setReplyTo(name, address);
+      emailMessage.addReplyToAddress(new EmailContact(name, address));
       return this;
    }
-   
+
    public VelocityMailMessage replyTo(EmailContact emailContact)
    {
-      super.setReplyTo(emailContact);
+      emailMessage.addReplyToAddress(emailContact);
       return this;
    }
-   
+
+   public VelocityMailMessage replyTo(Collection<EmailContact> emailContacts)
+   {
+      emailMessage.addReplyToAddresses(emailContacts);
+      return this;
+   }
+
    public VelocityMailMessage to(String address)
    {
-      super.addRecipient(RecipientType.TO, address);
+      emailMessage.addToAddress(new EmailContact(address));
       return this;
    }
-   
+
    public VelocityMailMessage to(String name, String address)
    {
-      super.addRecipient(RecipientType.TO, name, address);
+      emailMessage.addToAddress(new EmailContact(name, address));
       return this;
    }
-   
+
    public VelocityMailMessage to(EmailContact emailContact)
    {
-      super.addRecipient(RecipientType.TO, emailContact);
+      emailMessage.addToAddress(emailContact);
       return this;
    }
-   
+
    public VelocityMailMessage to(Collection<EmailContact> emailContacts)
    {
-      super.addRecipients(RecipientType.TO, emailContacts);
+      emailMessage.addToAddresses(emailContacts);
       return this;
-   }   
-   
+   }
+
    public VelocityMailMessage cc(String address)
    {
-      super.addRecipient(RecipientType.CC, address);
+      emailMessage.addCcAddress(new EmailContact(address));
       return this;
    }
-   
+
    public VelocityMailMessage cc(String name, String address)
    {
-      super.addRecipient(RecipientType.CC, name, address);
+      emailMessage.addCcAddress(new EmailContact(name, address));
       return this;
    }
-   
+
    public VelocityMailMessage cc(EmailContact emailContact)
    {
-      super.addRecipient(RecipientType.CC, emailContact);
+      emailMessage.addCcAddress(emailContact);
       return this;
    }
-   
+
    public VelocityMailMessage cc(Collection<EmailContact> emailContacts)
    {
-      super.addRecipients(RecipientType.CC, emailContacts);
+      emailMessage.addCcAddresses(emailContacts);
       return this;
-   }  
-   
+   }
+
    public VelocityMailMessage bcc(String address)
    {
-      super.addRecipient(RecipientType.BCC, address);
+      emailMessage.addBccAddress(new EmailContact(address));
       return this;
    }
-   
+
    public VelocityMailMessage bcc(String name, String address)
    {
-      super.addRecipient(RecipientType.BCC, name, address);
+      emailMessage.addBccAddress(new EmailContact(name, address));
       return this;
    }
-   
+
    public VelocityMailMessage bcc(EmailContact emailContact)
    {
-      super.addRecipient(RecipientType.BCC, emailContact);
+      emailMessage.addBccAddress(emailContact);
       return this;
    }
-   
+
    public VelocityMailMessage bcc(Collection<EmailContact> emailContacts)
    {
-      super.addRecipients(RecipientType.BCC, emailContacts);
+      emailMessage.addBccAddresses(emailContacts);
       return this;
    }
-   
-   //End Addressing
-   
+
+   // End Addressing
+
    public VelocityMailMessage subject(String value)
    {
-      super.setSubject(value);
-      return this;
-   }  
-
-   public VelocityMailMessage deliveryReciept(String address)
-   {
-      super.setDeliveryReciept(address);
+      emailMessage.setSubject(value);
       return this;
    }
-   
-   public VelocityMailMessage readReciept(String address)
+
+   public VelocityMailMessage deliveryReceipt(String address)
    {
-      super.setReadReciept(address);
+      emailMessage.addDeliveryReceiptAddress(address);
       return this;
-   }   
+   }
+
+   public VelocityMailMessage readReceipt(String address)
+   {
+      emailMessage.addReadReceiptAddress(address);
+      return this;
+   }
 
    public VelocityMailMessage importance(MessagePriority messagePriority)
    {
-      super.setImportance(messagePriority);
+      emailMessage.setImportance(messagePriority);
       return this;
    }
-   
+
    public VelocityMailMessage textBody(String text)
    {
-      super.setText(text);
-      return this;      
+      emailMessage.setTextBody(text);
+      return this;
    }
-   
+
    public VelocityMailMessage htmlBody(String html)
    {
-      super.setHTML(html);
+      emailMessage.setHtmlBody(html);
       return this;
    }
-   
+
    public VelocityMailMessage htmlBodyTextAlt(String html, String text)
    {
-      super.setHTMLTextAlt(html, text);
+      emailMessage.setTextBody(text);
+      emailMessage.setHtmlBody(html);
       return this;
    }
 
-//Begin Attachments
-   
+// Begin Attachments
+
    public VelocityMailMessage addAttachment(File file, ContentDisposition contentDisposition)
    {
-      super.addAttachmentImpl(file, contentDisposition);
+      emailMessage.addAttachment(MailUtility.getEmailAttachment(file, contentDisposition));
       return this;
-   }
-
-   public VelocityMailMessage addAttachment(String fileName, ContentDisposition contentDisposition)
-   {
-      super.addAttachmentImpl(fileName, contentDisposition);
-      return this;
-   }
+   }  
 
    public VelocityMailMessage addAttachment(String fileName, String mimeType, ContentDisposition contentDisposition)
    {
-      super.addAttachmentImpl(fileName, mimeType, contentDisposition);
+      InputStream inputStream = resourceProvider.loadResourceStream(fileName);
+      emailMessage.addAttachment(MailUtility.getEmailAttachment(fileName, inputStream, mimeType, contentDisposition));
       return this;
    }
 
    public VelocityMailMessage addAttachment(URL url, String fileName, ContentDisposition contentDisposition)
    {
-      super.addAttachmentImpl(url, fileName, contentDisposition);
+      emailMessage.addAttachment(MailUtility.getEmailAttachment(url, fileName, contentDisposition));
       return this;
    }
 
    public VelocityMailMessage addAttachment(byte[] bytes, String fileName, String mimeType, String contentClass, ContentDisposition contentDisposition)
    {
-      super.addAttachmentImpl(bytes, fileName, mimeType, contentClass, contentDisposition);
+      emailMessage.addAttachment(MailUtility.getEmailAttachment(bytes, fileName, mimeType, contentClass, contentDisposition));
       return this;
    }
 
    public VelocityMailMessage addAttachment(byte[] bytes, String fileName, String mimeType, ContentDisposition contentDisposition)
    {
-      super.addAttachmentImpl(bytes, fileName, mimeType, null, contentDisposition);
+      emailMessage.addAttachment(MailUtility.getEmailAttachment(bytes, fileName, mimeType, contentDisposition));
       return this;
    }
-   
-   public VelocityMailMessage addAttachment(AttachmentPart attachment)
+
+   public VelocityMailMessage addAttachment(EmailAttachment attachment)
    {
-      super.addAttachmentImpl(attachment);
+      emailMessage.addAttachment(attachment);
       return this;
    }
-   
-   //End Attachments
-   
-   //Begin Calendar
-   
-   public VelocityMailMessage calendarBody(String html, byte[] bytes)
+
+   public VelocityMailMessage addAttachment(Collection<EmailAttachment> attachments)
    {
-      super.setCalendar(html, new AttachmentPart(bytes,null, "text/calendar;method=CANCEL", "urn:content-classes:calendarmessage", ContentDisposition.INLINE));
+      emailMessage.addAttachments(attachments);
       return this;
    }
-   
-   //End Calendar
+
+   // End Attachments
+
+   // Begin Calendar
+
+   public VelocityMailMessage iCal(String html, byte[] bytes)
+   {
+      emailMessage.setHtmlBody(html);
+      emailMessage.addAttachment(MailUtility.getEmailAttachment(bytes, null, "text/calendar;method=CANCEL", "urn:content-classes:calendarmessage", ContentDisposition.INLINE));
+      return this;
+   }
+
+   // End Calendar
 
    public VelocityMailMessage setTemplateText(File textTemplateFile)
    {
@@ -269,7 +280,6 @@ public class VelocityMailMessageImpl extends BaseMailMessage implements Velocity
    public VelocityMailMessage setTemplateHTML(File htmlTemplateFile)
    {
       htmlTemplate = createTemplate(htmlTemplateFile);
-
       return this;
    }
 
@@ -280,33 +290,39 @@ public class VelocityMailMessageImpl extends BaseMailMessage implements Velocity
       return this;
    }
 
-   public VelocityMailMessageImpl setTemplateText(String textTemplatePath)
+   public VelocityMailMessageImpl setTemplateText(String text)
    {
-      textTemplate = createTemplate(textTemplatePath);
-
+      textTemplate = createTemplate(text);
       return this;
    }
 
-   public VelocityMailMessageImpl setTemplateHTML(String htmlTemplatePath)
+   public VelocityMailMessageImpl setTemplateHTML(String html)
    {
-      htmlTemplate = createTemplate(htmlTemplatePath);
-
+      this.htmlTemplate = createTemplate(html);
       return this;
    }
 
-   public VelocityMailMessageImpl setTemplateHTMLTextAlt(String htmlTemplatePath, String textTemplatePath)
+   public VelocityMailMessageImpl setTemplateHTMLTextAlt(String html, String text)
    {
-      setTemplateHTML(htmlTemplatePath);
-      setTemplateText(textTemplatePath);
+      setTemplateHTML(html);
+      setTemplateText(text);
       return this;
    }
 
-   private MailTemplate createTemplate(String templatePath)
+   private MailTemplate createTemplate(String value)
    {
       InputStream inputStream;
-      inputStream = resourceProvider.loadResourceStream(templatePath);
 
-      MailTemplate template = new MailTemplate(templatePath, inputStream);
+      try
+      {
+         inputStream = new ByteArrayInputStream(value.getBytes("UTF-8"));
+      }
+      catch (UnsupportedEncodingException e)
+      {
+         throw new RuntimeException("Unable to create template from rawText", e);
+      }
+
+      MailTemplate template = new MailTemplate("rawInput", inputStream);
 
       return template;
    }
@@ -361,25 +377,20 @@ public class VelocityMailMessageImpl extends BaseMailMessage implements Velocity
       return this;
    }
 
-   @Override
-   public void send()
+   public EmailMessage send(Session session)
    {
-      if (htmlTemplate != null && textTemplate != null)
+      if (htmlTemplate != null)
       {
-         super.setHTMLTextAlt(mergeTemplate(htmlTemplate), mergeTemplate(textTemplate));
+         emailMessage.setHtmlBody(mergeTemplate(htmlTemplate));
       }
-      else if (htmlTemplate != null)
+
+      if (textTemplate != null)
       {
-         super.setHTML(mergeTemplate(htmlTemplate));
+         emailMessage.setTextBody(mergeTemplate(textTemplate));
       }
-      else if (textTemplate != null)
-      {
-         super.setText(mergeTemplate(textTemplate));
-      }
-      else
-      {
-         throw new UnsupportedOperationException("No Body was set");
-      }
-      super.send();
-   }
+
+      MailUtility.send(emailMessage, session);
+
+      return emailMessage;
+   }  
 }

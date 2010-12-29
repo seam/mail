@@ -1,9 +1,5 @@
 package org.jboss.seam.mail.core;
 
-import java.io.File;
-import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -12,23 +8,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import javax.activation.URLDataSource;
-import javax.inject.Inject;
 import javax.mail.MessagingException;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
-import javax.mail.internet.MimeUtility;
 
 import org.jboss.seam.mail.core.enumurations.ContentDisposition;
 import org.jboss.seam.mail.core.enumurations.MailHeader;
 import org.jboss.seam.mail.core.enumurations.MessagePriority;
 import org.jboss.seam.mail.core.enumurations.RecipientType;
-import org.jboss.seam.solder.resourceLoader.ResourceProvider;
 
-public abstract class BaseMailMessage
+public class BaseMailMessage
 {
    private RootMimeMessage rootMimeMessage;
    private String charset;
@@ -36,10 +28,6 @@ public abstract class BaseMailMessage
    private MimeMultipart rootMultipart = new MimeMultipart("mixed");
    private MimeMultipart relatedMultipart = new MimeMultipart("related");
 
-   @Inject
-   private ResourceProvider resourceProvider;
-
-   @Inject
    public BaseMailMessage(Session session)
    {
       rootMimeMessage = new RootMimeMessage(session);
@@ -60,7 +48,7 @@ public abstract class BaseMailMessage
          throw new RuntimeException("Unable to set RootMultiPart", e);
       }
    }
-   
+
    public void addRecipient(RecipientType recipientType, String address)
    {
       try
@@ -72,12 +60,12 @@ public abstract class BaseMailMessage
          throw new RuntimeException("Unable to add recipient " + recipientType + ": " + address + " to MIME message", e);
       }
    }
-   
+
    public void addRecipient(RecipientType recipientType, String name, String address)
    {
       try
       {
-         rootMimeMessage.addRecipient(recipientType.getRecipientType(), MailUtility.getInternetAddress(new EmailContact(name,address)));
+         rootMimeMessage.addRecipient(recipientType.getRecipientType(), MailUtility.getInternetAddress(new EmailContact(name, address)));
       }
       catch (MessagingException e)
       {
@@ -170,7 +158,7 @@ public abstract class BaseMailMessage
       {
          throw new RuntimeException("Unable to set Reply-To", e);
       }
-   }  
+   }
 
    public void setSubject(String value)
    {
@@ -206,52 +194,63 @@ public abstract class BaseMailMessage
       rootMimeMessage.setMessageId(messageId);
    }
 
-   public void setDeliveryReciept(String address)
+   public void addDeliveryRecieptAddresses(Collection<String> addresses)
    {
-      setHeader(MailHeader.DELIVERY_RECIEPT.headerValue(), "<" + address + ">");
+      for (String address : addresses)
+      {
+         addDeliveryReciept(address);
+      }
    }
 
-   public void setReadReciept(String address)
+   public void addReadRecieptAddresses(Collection<String> addresses)
    {
-      setHeader(MailHeader.READ_RECIEPT.headerValue(), "<" + address + ">");
+      for (String address : addresses)
+      {
+         addReadReciept(address);
+      }
+   }
+
+   public void addDeliveryReciept(String address)
+   {
+      addHeader(new Header(MailHeader.DELIVERY_RECIEPT.headerValue(), "<" + address + ">"));
+   }
+
+   public void addReadReciept(String address)
+   {
+      addHeader(new Header(MailHeader.READ_RECIEPT.headerValue(), "<" + address + ">"));
    }
 
    public void setImportance(MessagePriority messagePriority)
    {
-      setHeader("X-Priority", messagePriority.getX_priority());
-      setHeader("Priority", messagePriority.getPriority());
-      setHeader("Importance", messagePriority.getImportance());
-   }
-
-   public void setHeader(String name, String value)
-   {
-      try
+      if (messagePriority != null)
       {
-         rootMimeMessage.setHeader(name, MimeUtility.fold(name.length() + 2, MimeUtility.encodeText(value)));
-      }
-      catch (MessagingException e)
-      {
-         throw new RuntimeException("Unable to SET Header: + " + name + " to Value: " + value, e);
-      }
-      catch (UnsupportedEncodingException e)
-      {
-         throw new RuntimeException("Unable to SET Header: + " + name + " to Value: " + value, e);
+         setHeader(new Header("X-Priority", messagePriority.getX_priority()));
+         setHeader(new Header("Priority", messagePriority.getPriority()));
+         setHeader(new Header("Importance", messagePriority.getImportance()));
       }
    }
 
-   public void addHeader(String name, String value)
+   public void setHeader(Header header)
    {
       try
       {
-         rootMimeMessage.addHeader(name, MimeUtility.fold(name.length() + 2, MimeUtility.encodeText(value)));
+         rootMimeMessage.setHeader(header.getName(), header.getValue());
       }
       catch (MessagingException e)
       {
-         throw new RuntimeException("Unable to ADD Header: + " + name + " to Value: " + value, e);
+         throw new RuntimeException("Unable to SET Header: + " + header.getName() + " to Value: " + header.getValue(), e);
       }
-      catch (UnsupportedEncodingException e)
+   }
+
+   public void addHeader(Header header)
+   {
+      try
       {
-         throw new RuntimeException("Unable to ADD Header: + " + name + " to Value: " + value, e);
+         rootMimeMessage.addHeader(header.getName(), header.getValue());
+      }
+      catch (MessagingException e)
+      {
+         throw new RuntimeException("Unable to ADD Header: + " + header.getName() + " to Value: " + header.getValue(), e);
       }
    }
 
@@ -310,7 +309,7 @@ public abstract class BaseMailMessage
          throw new RuntimeException("Unable to build HTML+Text Email", e);
       }
    }
-   
+
    public void setCalendar(String body, AttachmentPart invite)
    {
       MimeBodyPart calendarBodyPart = buildHTMLBodyPart(body);
@@ -359,62 +358,9 @@ public abstract class BaseMailMessage
       return htmlBodyPart;
    }
 
-   public void addAttachmentImpl(File file, ContentDisposition contentDisposition)
+   public void addAttachment(EmailAttachment emailAttachment)
    {
-      AttachmentPart attachment = new AttachmentPart(file, file.getName(), contentDisposition);
-      addAttachmentImpl(attachment);
-   }
-
-   public void addAttachmentImpl(File file, String fileName, ContentDisposition contentDisposition)
-   {
-      AttachmentPart attachment = new AttachmentPart(file, fileName, contentDisposition);
-      addAttachmentImpl(attachment);
-   }
-
-   public void addAttachmentImpl(byte[] bytes, String fileName, String mimeType, ContentDisposition contentDisposition)
-   {
-      AttachmentPart attachment = new AttachmentPart(bytes, fileName, mimeType, contentDisposition);
-      addAttachmentImpl(attachment);
-   }
-
-   public void addAttachmentImpl(byte[] bytes, String fileName, ContentDisposition contentDisposition)
-   {
-      AttachmentPart attachment = new AttachmentPart(bytes, fileName, "application/octetStream", contentDisposition);
-      addAttachmentImpl(attachment);
-   }
-   
-   public void addAttachmentImpl(byte[] bytes, String fileName, String mimeType, String contentClass, ContentDisposition contentDisposition)
-   {
-      AttachmentPart attachment = new AttachmentPart(bytes, fileName, mimeType, contentClass, contentDisposition);
-      addAttachmentImpl(attachment);
-   }
-
-   public void addAttachmentImpl(String fileName, String mimeType, ContentDisposition contentDisposition)
-   {
-      InputStream inputStream = resourceProvider.loadResourceStream(fileName);
-
-      if (inputStream == null)
-      {
-         throw new RuntimeException("InputStream was NULL for fileName: " + fileName);
-      }
-
-      AttachmentPart attachment = new AttachmentPart(inputStream, fileName, mimeType, contentDisposition);
-      addAttachmentImpl(attachment);
-   }
-
-   public void addAttachmentImpl(String fileName, ContentDisposition contentDisposition)
-   {
-      addAttachmentImpl(fileName, "application/octetStream", contentDisposition);
-   }
-
-   public void addAttachmentImpl(URL url, String fileName, ContentDisposition contentDisposition)
-   {
-      AttachmentPart attachment = new AttachmentPart(new URLDataSource(url), fileName, null, contentDisposition);
-      addAttachmentImpl(attachment);
-   }  
-
-   public void addAttachmentImpl(AttachmentPart attachment)
-   {
+      AttachmentPart attachment = new AttachmentPart(emailAttachment.getBytes(), emailAttachment.getUid(), emailAttachment.getFileName(), emailAttachment.getMimeType(), emailAttachment.getHeaders(), emailAttachment.getContentDisposition());
       attachments.put(attachment.getAttachmentFileName(), attachment);
    }
 

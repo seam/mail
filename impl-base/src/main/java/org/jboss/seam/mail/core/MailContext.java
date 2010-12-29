@@ -5,16 +5,16 @@ import java.util.Map;
 public class MailContext
 {
    
-   private Map<String, AttachmentPart> attachments;
+   private Map<String, EmailAttachment> attachments;
    
-   public MailContext(Map<String, AttachmentPart> attachments)
+   public MailContext(Map<String, EmailAttachment> attachments)
    {
       this.attachments = attachments;
    }
    
    public String insert(String fileName)
    {
-      AttachmentPart attachment = null;     
+      EmailAttachment attachment = null;     
 
       attachment = attachments.get(fileName);     
       
@@ -24,7 +24,7 @@ public class MailContext
       }
       else
       {
-         return "cid:" + attachment.getId();
+         return "cid:" + attachment.getUid();
       }      
    }
 }

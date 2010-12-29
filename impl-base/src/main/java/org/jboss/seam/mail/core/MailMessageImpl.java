@@ -1,6 +1,7 @@
 package org.jboss.seam.mail.core;
 
 import java.io.File;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.Collection;
 
@@ -10,123 +11,133 @@ import javax.mail.Session;
 import org.jboss.seam.mail.api.MailMessage;
 import org.jboss.seam.mail.core.enumurations.ContentDisposition;
 import org.jboss.seam.mail.core.enumurations.MessagePriority;
-import org.jboss.seam.mail.core.enumurations.RecipientType;
+import org.jboss.seam.solder.resourceLoader.ResourceProvider;
 
-public class MailMessageImpl extends BaseMailMessage implements MailMessage
-{
+public class MailMessageImpl implements MailMessage
+{   
+   private EmailMessage emailMessage;
+   
    @Inject
-   public MailMessageImpl(Session session)
+   private ResourceProvider resourceProvider;
+   
+   public MailMessageImpl()
    {
-      super(session);
+      emailMessage = new EmailMessage();
    }
 
    // Begin Addressing
 
    public MailMessage from(String address)
    {
-      super.setFrom(address);
+      emailMessage.setFromAddress(new EmailContact(address));
       return this;
    }
 
    public MailMessage from(String name, String address)
    {
-      super.setFrom(name, address);
+      emailMessage.setFromAddress(new EmailContact(name, address));
       return this;
    }
 
    public MailMessage from(EmailContact emailContact)
    {
-      super.setFrom(emailContact);
+      emailMessage.setFromAddress(emailContact);
       return this;
    }
 
    public MailMessage replyTo(String address)
    {
-      super.setReplyTo(address);
+      emailMessage.addReplyToAddress(new EmailContact(address));
       return this;
    }
 
    public MailMessage replyTo(String name, String address)
    {
-      super.setReplyTo(name, address);
+      emailMessage.addReplyToAddress(new EmailContact(name, address));
       return this;
    }
 
    public MailMessage replyTo(EmailContact emailContact)
    {
-      super.setReplyTo(emailContact);
+      emailMessage.addReplyToAddress(emailContact);
+      return this;
+   }
+   
+   public MailMessage replyTo(Collection<EmailContact> emailContacts)
+   {
+      emailMessage.addReplyToAddresses(emailContacts);
       return this;
    }
 
    public MailMessage to(String address)
    {
-      super.addRecipient(RecipientType.TO, address);
+      emailMessage.addToAddress(new EmailContact(address));
       return this;
    }
 
    public MailMessage to(String name, String address)
    {
-      super.addRecipient(RecipientType.TO, name, address);
+      emailMessage.addToAddress(new EmailContact(name, address));
       return this;
    }
 
    public MailMessage to(EmailContact emailContact)
    {
-      super.addRecipient(RecipientType.TO, emailContact);
+      emailMessage.addToAddress(emailContact);
       return this;
    }
 
    public MailMessage to(Collection<EmailContact> emailContacts)
    {
-      super.addRecipients(RecipientType.TO, emailContacts);
+      emailMessage.addToAddresses(emailContacts);
       return this;
    }
 
    public MailMessage cc(String address)
    {
-      super.addRecipient(RecipientType.CC, address);
+      emailMessage.addCcAddress(new EmailContact(address));
       return this;
    }
 
    public MailMessage cc(String name, String address)
    {
-      super.addRecipient(RecipientType.CC, name, address);
+      emailMessage.addCcAddress(new EmailContact(name, address));
       return this;
    }
 
    public MailMessage cc(EmailContact emailContact)
    {
-      super.addRecipient(RecipientType.CC, emailContact);
+      emailMessage.addCcAddress(emailContact);
       return this;
    }
 
    public MailMessage cc(Collection<EmailContact> emailContacts)
    {
-      super.addRecipients(RecipientType.CC, emailContacts);
+      emailMessage.addCcAddresses(emailContacts);
       return this;
    }
 
    public MailMessage bcc(String address)
    {
-      super.addRecipient(RecipientType.BCC, address);
+      emailMessage.addBccAddress(new EmailContact(address));
       return this;
    }
 
    public MailMessage bcc(String name, String address)
    {
-      super.addRecipient(RecipientType.BCC, name, address);
+      emailMessage.addBccAddress(new EmailContact(name, address));
       return this;
    }
 
    public MailMessage bcc(EmailContact emailContact)
    {
-      super.addRecipient(RecipientType.BCC, emailContact);
+      emailMessage.addBccAddress(emailContact);
       return this;
    }
 
    public MailMessage bcc(Collection<EmailContact> emailContacts)
    {
-      super.addRecipients(RecipientType.BCC, emailContacts);
+      emailMessage.addBccAddresses(emailContacts);
       return this;
    }
 
@@ -134,100 +145,110 @@ public class MailMessageImpl extends BaseMailMessage implements MailMessage
 
    public MailMessage subject(String value)
    {
-      super.setSubject(value);
+      emailMessage.setSubject(value);
       return this;
    }
 
-   public MailMessage deliveryReciept(String address)
+   public MailMessage deliveryReceipt(String address)
    {
-      super.setDeliveryReciept(address);
+      emailMessage.addDeliveryReceiptAddress(address);
       return this;
    }
 
-   public MailMessage readReciept(String address)
+   public MailMessage readReceipt(String address)
    {
-      super.setReadReciept(address);
+      emailMessage.addReadReceiptAddress(address);
       return this;
    }
 
    public MailMessage importance(MessagePriority messagePriority)
    {
-      super.setImportance(messagePriority);
+      emailMessage.setImportance(messagePriority);
       return this;
    }
 
    public MailMessage textBody(String text)
    {
-      super.setText(text);
+      emailMessage.setTextBody(text);
       return this;
    }
 
    public MailMessage htmlBody(String html)
    {
-      super.setHTML(html);
+      emailMessage.setHtmlBody(html);
       return this;
    }
 
    public MailMessage htmlBodyTextAlt(String html, String text)
    {
-      super.setHTMLTextAlt(html, text);
+      emailMessage.setTextBody(text);
+      emailMessage.setHtmlBody(html);
       return this;
    }
 
-   //Begin Attachments
-   
+   // Begin Attachments
+
    public MailMessage addAttachment(File file, ContentDisposition contentDisposition)
    {
-      super.addAttachmentImpl(file, contentDisposition);
+      emailMessage.addAttachment(MailUtility.getEmailAttachment(file, contentDisposition));
       return this;
-   }
-
-   public MailMessage addAttachment(String fileName, ContentDisposition contentDisposition)
-   {
-      super.addAttachmentImpl(fileName, contentDisposition);
-      return this;
-   }
+   }   
 
    public MailMessage addAttachment(String fileName, String mimeType, ContentDisposition contentDisposition)
    {
-      super.addAttachmentImpl(fileName, mimeType, contentDisposition);
+      InputStream inputStream = resourceProvider.loadResourceStream(fileName);
+      emailMessage.addAttachment(MailUtility.getEmailAttachment(fileName, inputStream, mimeType, contentDisposition));
       return this;
    }
 
    public MailMessage addAttachment(URL url, String fileName, ContentDisposition contentDisposition)
    {
-      super.addAttachmentImpl(url, fileName, contentDisposition);
+      emailMessage.addAttachment(MailUtility.getEmailAttachment(url, fileName, contentDisposition));
       return this;
    }
 
    public MailMessage addAttachment(byte[] bytes, String fileName, String mimeType, String contentClass, ContentDisposition contentDisposition)
    {
-      super.addAttachmentImpl(bytes, fileName, mimeType, contentClass, contentDisposition);
+      emailMessage.addAttachment(MailUtility.getEmailAttachment(bytes, fileName, mimeType, contentClass, contentDisposition));
       return this;
    }
 
    public MailMessage addAttachment(byte[] bytes, String fileName, String mimeType, ContentDisposition contentDisposition)
    {
-      super.addAttachmentImpl(bytes, fileName, mimeType, null, contentDisposition);
+      emailMessage.addAttachment(MailUtility.getEmailAttachment(bytes, fileName, mimeType, contentDisposition));
       return this;
    }
-   
-   public MailMessage addAttachment(AttachmentPart attachment)
+
+   public MailMessage addAttachment(EmailAttachment attachment)
    {
-      super.addAttachmentImpl(attachment);
+      emailMessage.addAttachment(attachment);
       return this;
    }
-   
-   //End Attachments
-   
-   //Begin Calendar
-   
-   public MailMessage calendarBody(String html, byte[] bytes)
+
+   public MailMessage addAttachment(Collection<EmailAttachment> attachments)
    {
-      super.setCalendar(html, new AttachmentPart(bytes,null, "text/calendar;method=CANCEL", "urn:content-classes:calendarmessage", ContentDisposition.INLINE));
+      emailMessage.addAttachments(attachments);
       return this;
    }
-   
-   //End Calendar
+
+   // End Attachments
+
+   // Begin Calendar
+
+   public MailMessage iCal(String html, byte[] bytes)
+   {
+      emailMessage.setHtmlBody(html);
+      emailMessage.addAttachment(MailUtility.getEmailAttachment(bytes, null, "text/calendar;method=CANCEL", "urn:content-classes:calendarmessage", ContentDisposition.INLINE));
+      return this;
+   }
+
+   // End Calendar
+
+   public EmailMessage send(Session session)
+   {      
+      MailUtility.send(emailMessage, session);
+      
+      return emailMessage;
+   }
 
 }

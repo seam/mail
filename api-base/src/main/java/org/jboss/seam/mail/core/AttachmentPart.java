@@ -1,13 +1,9 @@
 package org.jboss.seam.mail.core;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.UUID;
+import java.util.Collection;
 
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
-import javax.activation.FileDataSource;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.util.ByteArrayDataSource;
@@ -17,17 +13,17 @@ import org.jboss.seam.mail.core.enumurations.ContentDisposition;
 public class AttachmentPart extends MimeBodyPart
 {
 
-   private String id;
+   private String uid;
 
-   public AttachmentPart(DataSource dataSource, String fileName, String contentClass, ContentDisposition contentDisposition)
+   public AttachmentPart(DataSource dataSource, String uid, String fileName, Collection<Header> headers, ContentDisposition contentDisposition)
    {
       super();
 
-      id = UUID.randomUUID().toString();
-
+      this.uid = uid;
+      
       try
       {
-         setContentID("<" + id + ">");
+         setContentID("<" + uid + ">");
       }
       catch (MessagingException e1)
       {
@@ -35,8 +31,8 @@ public class AttachmentPart extends MimeBodyPart
       }
 
       setData(dataSource);
-      
-      if(fileName != null)
+
+      if (fileName != null)
       {
          try
          {
@@ -47,46 +43,30 @@ public class AttachmentPart extends MimeBodyPart
             throw new RuntimeException("Unable to get FileName on attachment");
          }
       }
-      
-      if(contentClass != null && contentClass.trim().length() != 0)
+
+      if (headers != null)
       {
-         try
+         for (Header header : headers)
          {
-            addHeader("Content-Class","urn:content-classes:calendarmessage");
+            try
+            {
+               addHeader(header.getName(), header.getValue());
+
+            }
+            catch (MessagingException e)
+            {
+               throw new RuntimeException("Unable to add Content-Class Header");
+            }
          }
-         catch (MessagingException e)
-         {
-            throw new RuntimeException("Unable to add Content-Class Header");
-         }
-      }      
+      }
 
       setContentDisposition(contentDisposition);
    }
-   
-   public AttachmentPart(byte[] bytes, String fileName, String mimeType, String contentClass, ContentDisposition contentDisposition)
-   {
-      this(getByteArrayDataSource(bytes, mimeType), fileName, contentClass, contentDisposition);
-   }
 
-   public AttachmentPart(byte[] bytes, String fileName, String mimeType, ContentDisposition contentDisposition)
+   public AttachmentPart(byte[] bytes, String uid, String fileName, String mimeType, Collection<Header> headers, ContentDisposition contentDisposition)
    {
-      this(getByteArrayDataSource(bytes, mimeType), fileName, null, contentDisposition);
-   }
-   
-   public AttachmentPart(InputStream inputStream, String fileName, String mimeType, ContentDisposition contentDisposition)
-   {         
-      this(getByteArrayDataSource(inputStream, mimeType), fileName, null, contentDisposition);
-   }
-
-   public AttachmentPart(File file, String fileName, ContentDisposition contentDisposition)
-   {
-      this(new FileDataSource(file), fileName, null, contentDisposition);
-   }
-
-   public String getId()
-   {
-      return id;
-   }
+      this(getByteArrayDataSource(bytes, mimeType), uid, fileName, headers, contentDisposition);
+   } 
 
    public String getAttachmentFileName()
    {
@@ -112,6 +92,11 @@ public class AttachmentPart extends MimeBodyPart
       }
    }
 
+   public String getUid()
+   {
+      return uid;
+   }
+
    public void setContentDisposition(ContentDisposition contentDisposition)
    {
       try
@@ -135,24 +120,10 @@ public class AttachmentPart extends MimeBodyPart
          throw new RuntimeException("Unable to set Data on attachment");
       }
    }
-   
-   private static ByteArrayDataSource getByteArrayDataSource(byte [] bytes, String mimeType)
+
+   private static ByteArrayDataSource getByteArrayDataSource(byte[] bytes, String mimeType)
    {
       ByteArrayDataSource bads = new ByteArrayDataSource(bytes, mimeType);
-      return bads;
-   }
-   
-   private static ByteArrayDataSource getByteArrayDataSource(InputStream inputStream, String mimeType)
-   {
-      ByteArrayDataSource bads;
-      try
-      {
-         bads = new ByteArrayDataSource(inputStream, mimeType);
-      }
-      catch (IOException e)
-      {
-         throw new RuntimeException("Unable to created Attacment from InputStream");
-      }
       return bads;
    }
 }

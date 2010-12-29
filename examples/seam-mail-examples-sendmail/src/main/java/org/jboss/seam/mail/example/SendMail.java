@@ -6,6 +6,7 @@ import java.net.URL;
 import javax.enterprise.inject.Instance;
 import javax.enterprise.inject.Model;
 import javax.inject.Inject;
+import javax.mail.Session;
 
 import org.jboss.seam.mail.api.MailMessage;
 import org.jboss.seam.mail.core.enumurations.ContentDisposition;
@@ -24,6 +25,9 @@ public class SendMail
    private Instance<VelocityMailMessage> velocityMailMessage;
    
    @Inject
+   private Session session;
+   
+   @Inject
    private Person person;   
 
    public void sendText()
@@ -33,7 +37,7 @@ public class SendMail
             .to(person.getName(), person.getEmail())
             .subject("Text Message from Seam Mail - " + java.util.UUID.randomUUID().toString())
             .textBody(text)
-            .send();
+            .send(session);
    }
 
    public void sendHTML() throws MalformedURLException
@@ -46,7 +50,7 @@ public class SendMail
             .put("version", "Seam 3")
             .importance(MessagePriority.HIGH)
             .addAttachment(new URL("http://www.seamframework.org/themes/sfwkorg/img/seam_icon_large.png"), "seamLogo.png", ContentDisposition.INLINE)
-            .send();
+            .send(session);
    }
 
    public void sendHTMLwithAlternative() throws MalformedURLException
@@ -58,10 +62,10 @@ public class SendMail
             .put("version", "Seam 3")
             .setTemplateHTMLTextAlt("template.html.vm", "template.text.vm")
             .importance(MessagePriority.LOW)
-            .deliveryReciept("seam@jboss.org")
-            .readReciept("seam@jboss.org")
-            .addAttachment("template.html.vm", ContentDisposition.ATTACHMENT)
+            .deliveryReceipt("seam@jboss.org")
+            .readReceipt("seam@jboss.org")
+            .addAttachment("template.html.vm", "text/html", ContentDisposition.ATTACHMENT)
             .addAttachment(new URL("http://www.seamframework.org/themes/sfwkorg/img/seam_icon_large.png"), "seamLogo.png", ContentDisposition.INLINE)
-            .send();
+            .send(session);
    }
 }

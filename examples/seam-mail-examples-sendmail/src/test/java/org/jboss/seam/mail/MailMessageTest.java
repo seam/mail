@@ -6,6 +6,7 @@ import java.net.URL;
 import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
 import javax.mail.MessagingException;
+import javax.mail.Session;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeUtility;
 
@@ -45,13 +46,16 @@ public class MailMessageTest
    }
 
    @Inject
-   private Instance<MailMessage> mailMessage;   
+   private Instance<MailMessage> mailMessage;
+   
+   @Inject 
+   private Session session;
 
    @Inject
-   MailConfig mailConfig;
+   private MailConfig mailConfig;
 
    @Inject
-   Person person;
+   private Person person;
 
    String fromName = "Seam Framework";
    String fromAddress = "seam@jboss.org";
@@ -89,7 +93,7 @@ public class MailMessageTest
             .subject(subject)
             .textBody(text)
             .importance(MessagePriority.HIGH)
-            .send();
+            .send(session);
       }
       finally
       {
@@ -137,7 +141,7 @@ public class MailMessageTest
             .htmlBody("<html><body>Hello World!</body></html>")
             .importance(MessagePriority.HIGH)
             .addAttachment(new URL("http://www.seamframework.org/themes/sfwkorg/img/seam_icon_large.png"), "seamLogo.png", ContentDisposition.INLINE)
-            .send();
+            .send(session);
       }
       finally
       {
@@ -179,13 +183,14 @@ public class MailMessageTest
          mailMessage.get()
             .from(fromName, fromAddress)
             .to(person.getName(), person.getEmail())
-            .subject(subject).htmlBodyTextAlt(html, text)
+            .subject(subject)
+            .htmlBodyTextAlt(html, text)
             .importance(MessagePriority.LOW)
-            .deliveryReciept(fromAddress)
-            .readReciept("seam.test")
-            .addAttachment("template.text.vm", ContentDisposition.ATTACHMENT)
+            .deliveryReceipt(fromAddress)
+            .readReceipt("seam.test")
+            .addAttachment("template.text.vm", "text/plain", ContentDisposition.ATTACHMENT)
             .addAttachment(new URL("http://www.seamframework.org/themes/sfwkorg/img/seam_icon_large.png"), "seamLogo.png", ContentDisposition.INLINE)
-            .send();
+            .send(session);
       }
       finally
       {
@@ -238,7 +243,7 @@ public class MailMessageTest
             .subject(subject)
             .textBody(text)
             .importance(MessagePriority.HIGH)
-            .send();
+            .send(session);
       }
       finally
       {

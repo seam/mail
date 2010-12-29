@@ -18,6 +18,7 @@ public class MailConfig
    private String password;
    private boolean tls = true;
    private boolean ssl = false;
+   private boolean auth = false;
 
 
    public String getServerHost()
@@ -78,5 +79,15 @@ public class MailConfig
    public void setSsl(boolean ssl)
    {
       this.ssl = ssl;
+   }
+
+   public boolean isAuth()
+   {
+      return auth;
+   }
+
+   public void setAuth(boolean auth)
+   {
+      this.auth = auth;
    }
 }

@@ -1,5 +1,6 @@
 package org.jboss.seam.mail.core;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 import javax.activation.DataHandler;
@@ -66,7 +67,12 @@ public class AttachmentPart extends MimeBodyPart
    public AttachmentPart(byte[] bytes, String uid, String fileName, String mimeType, Collection<Header> headers, ContentDisposition contentDisposition)
    {
       this(getByteArrayDataSource(bytes, mimeType), uid, fileName, headers, contentDisposition);
-   } 
+   }
+   
+   public AttachmentPart(byte[] bytes, String uid, String fileName, String mimeType, ContentDisposition contentDisposition)
+   {
+      this(getByteArrayDataSource(bytes, mimeType), uid, fileName, new ArrayList<Header>(), contentDisposition);
+   }
 
    public String getAttachmentFileName()
    {

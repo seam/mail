@@ -24,21 +24,28 @@ public class BaseMailMessage
 {
    private RootMimeMessage rootMimeMessage;
    private String charset;
+   private String rootSubType;
    private Map<String, AttachmentPart> attachments = new HashMap<String, AttachmentPart>();
-   private MimeMultipart rootMultipart = new MimeMultipart("mixed");
+   private MimeMultipart rootMultipart;
    private MimeMultipart relatedMultipart = new MimeMultipart("related");
-   private Session session;
-
-   public BaseMailMessage(Session session)
+   private Session session;  
+   
+   public BaseMailMessage(Session session, String rootSubType)
    {
       this.session = session;
-
+      this.rootSubType = rootSubType;      
       initialize();
+   }
+   
+   public BaseMailMessage(Session session)
+   {
+      this(session, "mixed");
    }
 
    private void initialize()
    {
       rootMimeMessage = new RootMimeMessage(session);
+      rootMultipart = new MimeMultipart(rootSubType);
       charset = "UTF-8";
       setSentDate(new Date());
 
@@ -201,7 +208,7 @@ public class BaseMailMessage
 
    private void initializeMessageId()
    {
-      String mailerDomainName = session.getProperty("mail.seam.mailerDomainName");
+      String mailerDomainName = session.getProperty("mail.seam.domainName");
 
       if (mailerDomainName != null && mailerDomainName.length() > 0)
       {

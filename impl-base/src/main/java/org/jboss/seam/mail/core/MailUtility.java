@@ -156,52 +156,6 @@ public class MailUtility
       return bytes;
    }
 
-   public static void send(EmailMessage e, Session session)
-   {
-      BaseMailMessage b = new BaseMailMessage(session);
-
-      if (!MailUtility.isNullOrEmpty(e.getMessageId()))
-      {
-         b.setMessageID(e.getMessageId());
-      }
-
-      b.setFrom(e.getFromAddress());
-      b.addRecipients(RecipientType.TO, e.getToAddresses());
-      b.addRecipients(RecipientType.CC, e.getCcAddresses());
-      b.addRecipients(RecipientType.BCC, e.getBccAddresses());
-      b.setReplyTo(e.getReplyToAddresses());
-      b.addDeliveryRecieptAddresses(e.getDeliveryReceiptAddresses());
-      b.addReadRecieptAddresses(e.getReadReceiptAddresses());
-      b.setImportance(e.getImportance());
-
-      if (e.getSubject() != null)
-      {
-         b.setSubject(e.getSubject());
-      }
-
-      if (e.getTextBody() != null)
-      {
-         b.setText(e.getTextBody());
-      }
-
-      if (e.getHtmlBody() != null)
-      {
-         b.setHTML(e.getHtmlBody());
-      }
-
-      b.send();
-
-      try
-      {
-         e.setMessageId(null);
-         e.setLastMessageId(MailUtility.headerStripper(b.getFinalizedMessage().getMessageID()));
-      }
-      catch (MessagingException e1)
-      {
-         throw new RuntimeException("Unable to read Message-ID from sent message");
-      }
-   }
-
    public static Map<String, EmailAttachment> getEmailAttachmentMap(Collection<EmailAttachment> attachments)
    {
       Map<String, EmailAttachment> m = new HashMap<String, EmailAttachment>();
@@ -252,7 +206,7 @@ public class MailUtility
 
       if (!MailUtility.isNullOrEmpty(mailConfig.getDomainName()))
       {
-         props.put("mail.seam.mailerDomainName", mailConfig.getDomainName());
+         props.put("mail.seam.domainName", mailConfig.getDomainName());
       }
 
       if (mailConfig.getUsername() != null && mailConfig.getUsername().length() != 0 && mailConfig.getPassword() != null && mailConfig.getPassword().length() != 0)
@@ -277,6 +231,55 @@ public class MailUtility
       else
       {
          return header;
+      }
+   }
+
+   public static void send(EmailMessage e, Session session)
+   {
+      BaseMailMessage b = new BaseMailMessage(session, e.getRootSubType());
+
+      if (!MailUtility.isNullOrEmpty(e.getMessageId()))
+      {
+         b.setMessageID(e.getMessageId());
+      }
+
+      b.setFrom(e.getFromAddress());
+      b.addRecipients(RecipientType.TO, e.getToAddresses());
+      b.addRecipients(RecipientType.CC, e.getCcAddresses());
+      b.addRecipients(RecipientType.BCC, e.getBccAddresses());
+      b.setReplyTo(e.getReplyToAddresses());
+      b.addDeliveryRecieptAddresses(e.getDeliveryReceiptAddresses());
+      b.addReadRecieptAddresses(e.getReadReceiptAddresses());
+      b.setImportance(e.getImportance());
+
+      if (e.getSubject() != null)
+      {
+         b.setSubject(e.getSubject());
+      }
+
+      if (e.getHtmlBody() != null && e.getTextBody() != null)
+      {
+         b.setHTMLTextAlt(e.getHtmlBody(), e.getTextBody());
+      }
+      else if (e.getTextBody() != null)
+      {
+         b.setText(e.getTextBody());
+      }
+      else if (e.getHtmlBody() != null)
+      {
+         b.setHTML(e.getHtmlBody());
+      }
+
+      b.send();
+
+      try
+      {
+         e.setMessageId(null);
+         e.setLastMessageId(MailUtility.headerStripper(b.getFinalizedMessage().getMessageID()));
+      }
+      catch (MessagingException e1)
+      {
+         throw new RuntimeException("Unable to read Message-ID from sent message");
       }
    }
 }

@@ -24,6 +24,11 @@ public class MailMessageImpl implements MailMessage
    {
       emailMessage = new EmailMessage();
    }
+   
+   public MailMessageImpl(String rootSubType)
+   {
+      emailMessage = new EmailMessage(rootSubType);
+   }
 
    // Begin Addressing
 

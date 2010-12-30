@@ -12,6 +12,7 @@ public class EmailMessage implements Serializable
 {
    private static final long serialVersionUID = 1L;
 
+   private String rootSubType = "mixed";
    private String messageId;
    private String lastMessageId;
    private EmailContact fromAddress;
@@ -31,6 +32,26 @@ public class EmailMessage implements Serializable
    private Collection<String> readReceiptAddresses = new ArrayList<String>();
 
    private MessagePriority importance;
+
+   public EmailMessage()
+   {
+
+   }
+
+   public EmailMessage(String rootSubType)
+   {
+      this.rootSubType = rootSubType;
+   }
+
+   public String getRootSubType()
+   {
+      return rootSubType;
+   }
+
+   public void setRootSubType(String rootSubType)
+   {
+      this.rootSubType = rootSubType;
+   }
 
    public String getMessageId()
    {

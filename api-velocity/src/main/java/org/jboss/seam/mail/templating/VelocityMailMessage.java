@@ -232,6 +232,13 @@ public interface VelocityMailMessage
     * 
     */
    public VelocityMailMessage readReceipt(String address);
+   
+   /**
+    * Set the Message-ID for the message. Will only be used once. Attempts to send message again with same id will fail.
+    * @param messageId
+    * @return
+    */
+   public VelocityMailMessage messageId(String messageId);
 
    // End Flags
 

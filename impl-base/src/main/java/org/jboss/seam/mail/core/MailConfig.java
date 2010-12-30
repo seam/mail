@@ -14,12 +14,12 @@ public class MailConfig
 {
    private String serverHost = "localhost";
    private int serverPort = 25;
+   private String domainName;
    private String username;
    private String password;
    private boolean tls = true;
    private boolean ssl = false;
    private boolean auth = false;
-
 
    public String getServerHost()
    {
@@ -39,6 +39,16 @@ public class MailConfig
    public void setServerPort(int serverPort)
    {
       this.serverPort = serverPort;
+   }
+
+   public String getDomainName()
+   {
+      return domainName;
+   }
+
+   public void setDomainName(String domainName)
+   {
+      this.domainName = domainName;
    }
 
    public String getUsername()
@@ -89,5 +99,20 @@ public class MailConfig
    public void setAuth(boolean auth)
    {
       this.auth = auth;
+   }
+
+   public boolean isValid()
+   {
+      if (MailUtility.isNullOrEmpty(serverHost))
+      {
+         return false;
+      }
+
+      if (serverPort == 0)
+      {
+         return false;
+      }
+
+      return true;
    }
 }

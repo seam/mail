@@ -28,7 +28,10 @@ Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
       http://java.sun.com/xml/ns/javaee 
       http://docs.jboss.org/cdi/beans_1_0.xsd">
 
-   <mail:MailConfig serverHost="localhost" serverPort="8977">
+   <mail:MailConfig 
+   	serverHost="localhost" 
+   	serverPort="8977"
+   	domainName="test.com">
       <s:modifies/>
    </mail:MailConfig>
    

@@ -15,8 +15,10 @@ import junit.framework.Assert;
 import org.jboss.arquillian.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.seam.mail.api.MailMessage;
+import org.jboss.seam.mail.core.EmailMessage;
 import org.jboss.seam.mail.core.MailConfig;
 import org.jboss.seam.mail.core.MailTestUtil;
+import org.jboss.seam.mail.core.MailUtility;
 import org.jboss.seam.mail.core.enumurations.ContentDisposition;
 import org.jboss.seam.mail.core.enumurations.MessagePriority;
 import org.jboss.seam.mail.example.Person;
@@ -76,6 +78,8 @@ public class MailMessageTest
 
       mailConfig.setServerHost("localHost");
       mailConfig.setServerPort(8977);
+      
+      String messageId = "1234@seam.test.com";
 
       Wiser wiser = new Wiser(mailConfig.getServerPort());
       try
@@ -93,6 +97,7 @@ public class MailMessageTest
             .subject(subject)
             .textBody(text)
             .importance(MessagePriority.HIGH)
+            .messageId(messageId)
             .send(session);
       }
       finally
@@ -112,6 +117,8 @@ public class MailMessageTest
       Assert.assertEquals(MessagePriority.HIGH.getX_priority(), mess.getHeader("X-Priority", null));
       Assert.assertEquals(MessagePriority.HIGH.getImportance(), mess.getHeader("Importance", null));
       Assert.assertTrue(mess.getHeader("Content-Type", null).startsWith("multipart/mixed"));
+      Assert.assertEquals(messageId, MailUtility.headerStripper(mess.getHeader("Message-ID", null)));
+
 
       // TODO Verify MimeBodyPart hierarchy and $person resolution is happening.
    }
@@ -123,6 +130,8 @@ public class MailMessageTest
 
       mailConfig.setServerHost("localHost");
       mailConfig.setServerPort(8977);
+      
+      EmailMessage emailMessage;
 
       Wiser wiser = new Wiser(mailConfig.getServerPort());
       try
@@ -133,7 +142,7 @@ public class MailMessageTest
          person.setName(toName);
          person.setEmail(toAddress);
    
-         mailMessage.get()
+         emailMessage = mailMessage.get()
             .from(fromName, fromAddress)
             .replyTo(replyToName, replyToAddress)
             .to(person.getName(), person.getEmail())
@@ -159,6 +168,7 @@ public class MailMessageTest
       Assert.assertEquals(MessagePriority.HIGH.getPriority(), mess.getHeader("Priority", null));
       Assert.assertEquals(MessagePriority.HIGH.getX_priority(), mess.getHeader("X-Priority", null));
       Assert.assertEquals(MessagePriority.HIGH.getImportance(), mess.getHeader("Importance", null));
+      Assert.assertEquals(emailMessage.getLastMessageId(), MailUtility.headerStripper(mess.getHeader("Message-ID", null)));
       Assert.assertTrue(mess.getHeader("Content-Type", null).startsWith("multipart/mixed"));
 
       // TODO Verify MimeBodyPart hierarchy and $person resolution is happening.

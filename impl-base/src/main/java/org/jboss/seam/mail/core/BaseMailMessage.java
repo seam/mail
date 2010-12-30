@@ -27,18 +27,21 @@ public class BaseMailMessage
    private Map<String, AttachmentPart> attachments = new HashMap<String, AttachmentPart>();
    private MimeMultipart rootMultipart = new MimeMultipart("mixed");
    private MimeMultipart relatedMultipart = new MimeMultipart("related");
+   private Session session;
 
    public BaseMailMessage(Session session)
    {
-      rootMimeMessage = new RootMimeMessage(session);
-      charset = "UTF-8";
-      setSentDate(new Date());
-      setMessageID("<" + UUID.randomUUID().toString() + "@" + MailUtility.getHostName() + ">");
+      this.session = session;
+
       initialize();
    }
 
    private void initialize()
    {
+      rootMimeMessage = new RootMimeMessage(session);
+      charset = "UTF-8";
+      setSentDate(new Date());
+
       try
       {
          rootMimeMessage.setContent(rootMultipart);
@@ -47,6 +50,8 @@ public class BaseMailMessage
       {
          throw new RuntimeException("Unable to set RootMultiPart", e);
       }
+
+      initializeMessageId();
    }
 
    public void addRecipient(RecipientType recipientType, String address)
@@ -191,7 +196,21 @@ public class BaseMailMessage
 
    public void setMessageID(String messageId)
    {
-      rootMimeMessage.setMessageId(messageId);
+      rootMimeMessage.setMessageId("<" + messageId + ">");
+   }
+
+   private void initializeMessageId()
+   {
+      String mailerDomainName = session.getProperty("mail.seam.mailerDomainName");
+
+      if (mailerDomainName != null && mailerDomainName.length() > 0)
+      {
+         setMessageID(UUID.randomUUID().toString() + "@" + mailerDomainName);
+      }
+      else
+      {
+         setMessageID(UUID.randomUUID().toString() + "@" + MailUtility.getHostName());
+      }
    }
 
    public void addDeliveryRecieptAddresses(Collection<String> addresses)

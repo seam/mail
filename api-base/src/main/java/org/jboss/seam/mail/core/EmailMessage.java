@@ -12,6 +12,8 @@ public class EmailMessage implements Serializable
 {
    private static final long serialVersionUID = 1L;
 
+   private String messageId;
+   private String lastMessageId;
    private EmailContact fromAddress;
    private Collection<EmailContact> replyToAddresses = new ArrayList<EmailContact>();
    private Collection<EmailContact> toAddresses = new ArrayList<EmailContact>();
@@ -29,6 +31,26 @@ public class EmailMessage implements Serializable
    private Collection<String> readReceiptAddresses = new ArrayList<String>();
 
    private MessagePriority importance;
+
+   public String getMessageId()
+   {
+      return messageId;
+   }
+
+   public void setMessageId(String messageId)
+   {
+      this.messageId = messageId;
+   }
+
+   public String getLastMessageId()
+   {
+      return lastMessageId;
+   }
+
+   public void setLastMessageId(String lastMessageId)
+   {
+      this.lastMessageId = lastMessageId;
+   }
 
    public EmailContact getFromAddress()
    {

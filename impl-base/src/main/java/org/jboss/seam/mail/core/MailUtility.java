@@ -10,9 +10,11 @@ import java.net.UnknownHostException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 
 import javax.activation.FileDataSource;
 import javax.activation.URLDataSource;
+import javax.mail.MessagingException;
 import javax.mail.Session;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
@@ -157,6 +159,12 @@ public class MailUtility
    public static void send(EmailMessage e, Session session)
    {
       BaseMailMessage b = new BaseMailMessage(session);
+
+      if (!MailUtility.isNullOrEmpty(e.getMessageId()))
+      {
+         b.setMessageID(e.getMessageId());
+      }
+
       b.setFrom(e.getFromAddress());
       b.addRecipients(RecipientType.TO, e.getToAddresses());
       b.addRecipients(RecipientType.CC, e.getCcAddresses());
@@ -165,11 +173,11 @@ public class MailUtility
       b.addDeliveryRecieptAddresses(e.getDeliveryReceiptAddresses());
       b.addReadRecieptAddresses(e.getReadReceiptAddresses());
       b.setImportance(e.getImportance());
-      
-      if(e.getSubject() != null)
+
+      if (e.getSubject() != null)
       {
          b.setSubject(e.getSubject());
-      }      
+      }
 
       if (e.getTextBody() != null)
       {
@@ -182,6 +190,16 @@ public class MailUtility
       }
 
       b.send();
+
+      try
+      {
+         e.setMessageId(null);
+         e.setLastMessageId(MailUtility.headerStripper(b.getFinalizedMessage().getMessageID()));
+      }
+      catch (MessagingException e1)
+      {
+         throw new RuntimeException("Unable to read Message-ID from sent message");
+      }
    }
 
    public static Map<String, EmailAttachment> getEmailAttachmentMap(Collection<EmailAttachment> attachments)
@@ -190,12 +208,75 @@ public class MailUtility
 
       for (EmailAttachment ea : attachments)
       {
-         if (ea.getFileName() != null && ea.getFileName().length() > 0)
+         if (!MailUtility.isNullOrEmpty(ea.getFileName()))
          {
             m.put(ea.getFileName(), ea);
          }
       }
 
       return null;
+   }
+
+   public static boolean isNullOrEmpty(String value)
+   {
+      return isNullOrEmpty(value, true);
+   }
+
+   public static boolean isNullOrEmpty(String value, boolean trim)
+   {
+      if (trim)
+      {
+         return value == null || value.trim().length() == 0;
+      }
+      else
+      {
+         return value == null || value.length() == 0;
+      }
+   }
+
+   public static Session buildMailSession(MailConfig mailConfig)
+   {
+      Session session;
+
+      Properties props = new Properties();
+
+      if (mailConfig.isValid())
+      {
+         props.put("mail.smtp.host", mailConfig.getServerHost());
+         props.put("mail.smtp.port", mailConfig.getServerPort());
+      }
+      else
+      {
+         throw new RuntimeException("ServerHost and ServerPort must be set in MailConfig");
+      }
+
+      if (!MailUtility.isNullOrEmpty(mailConfig.getDomainName()))
+      {
+         props.put("mail.seam.mailerDomainName", mailConfig.getDomainName());
+      }
+
+      if (mailConfig.getUsername() != null && mailConfig.getUsername().length() != 0 && mailConfig.getPassword() != null && mailConfig.getPassword().length() != 0)
+      {
+         MailSessionAuthenticator authenticator = new MailSessionAuthenticator(mailConfig.getUsername(), mailConfig.getPassword());
+
+         session = Session.getInstance(props, authenticator);
+      }
+      else
+      {
+         session = Session.getInstance(props, null);
+      }
+      return session;
+   }
+
+   public static String headerStripper(String header)
+   {
+      if (!MailUtility.isNullOrEmpty(header) && header.length() > 2)
+      {
+         return header.substring(1, header.length() - 1);
+      }
+      else
+      {
+         return header;
+      }
    }
 }

@@ -22,7 +22,8 @@ public class RootMimeMessage extends MimeMessage
    @Override
    protected void updateMessageID() throws MessagingException
    {
-      setHeader("Message-ID", messageId);
+      Header header = new Header("Message-ID", messageId);
+      setHeader(header.getName(), header.getValue());
    }
 
    public String getMessageId()

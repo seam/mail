@@ -193,6 +193,12 @@ public class VelocityMailMessageImpl implements VelocityMailMessage
       emailMessage.setImportance(messagePriority);
       return this;
    }
+   
+   public VelocityMailMessage messageId(String messageId)
+   {
+      emailMessage.setMessageId(messageId);
+      return this;
+   }
 
    public VelocityMailMessage textBody(String text)
    {

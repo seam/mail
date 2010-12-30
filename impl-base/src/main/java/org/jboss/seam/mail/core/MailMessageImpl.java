@@ -14,12 +14,12 @@ import org.jboss.seam.mail.core.enumurations.MessagePriority;
 import org.jboss.seam.solder.resourceLoader.ResourceProvider;
 
 public class MailMessageImpl implements MailMessage
-{   
+{
    private EmailMessage emailMessage;
-   
+
    @Inject
    private ResourceProvider resourceProvider;
-   
+
    public MailMessageImpl()
    {
       emailMessage = new EmailMessage();
@@ -62,7 +62,7 @@ public class MailMessageImpl implements MailMessage
       emailMessage.addReplyToAddress(emailContact);
       return this;
    }
-   
+
    public MailMessage replyTo(Collection<EmailContact> emailContacts)
    {
       emailMessage.addReplyToAddresses(emailContacts);
@@ -167,6 +167,12 @@ public class MailMessageImpl implements MailMessage
       return this;
    }
 
+   public MailMessage messageId(String messageId)
+   {
+      emailMessage.setMessageId(messageId);
+      return this;
+   }
+
    public MailMessage textBody(String text)
    {
       emailMessage.setTextBody(text);
@@ -192,7 +198,7 @@ public class MailMessageImpl implements MailMessage
    {
       emailMessage.addAttachment(MailUtility.getEmailAttachment(file, contentDisposition));
       return this;
-   }   
+   }
 
    public MailMessage addAttachment(String fileName, String mimeType, ContentDisposition contentDisposition)
    {
@@ -245,10 +251,9 @@ public class MailMessageImpl implements MailMessage
    // End Calendar
 
    public EmailMessage send(Session session)
-   {      
+   {
       MailUtility.send(emailMessage, session);
-      
+
       return emailMessage;
    }
-
 }

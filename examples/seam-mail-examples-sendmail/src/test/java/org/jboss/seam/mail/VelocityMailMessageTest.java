@@ -76,7 +76,10 @@ public class VelocityMailMessageTest
    @Test
    public void testVelocityTextMailMessage() throws IOException, MessagingException
    {
-      String subject = "Text Message from Seam Mail - " + java.util.UUID.randomUUID().toString();
+      String uuid = java.util.UUID.randomUUID().toString();
+      String subject = "Text Message from $version Mail - " + uuid;
+      String version = "Seam 3";
+      String mergedSubject = "Text Message from " + version + " Mail - " + uuid;
 
       mailConfig.setServerHost("localHost");
       mailConfig.setServerPort(8977);
@@ -94,9 +97,9 @@ public class VelocityMailMessageTest
             .from(fromName, fromAddress)
             .replyTo(replyToAddress)
             .to(toName, toAddress)
-            .subject(subject)
+            .templateSubject(subject)
             .templateTextFromClassPath("template.text.vm")
-            .put("version", "Seam 3")
+            .put("version", version)
             .importance(MessagePriority.HIGH)
             .send(session);
       }
@@ -112,7 +115,7 @@ public class VelocityMailMessageTest
       Assert.assertEquals(MailTestUtil.getAddressHeader(fromName, fromAddress), mess.getHeader("From", null));
       Assert.assertEquals(MailTestUtil.getAddressHeader(replyToAddress), mess.getHeader("Reply-To", null));
       Assert.assertEquals(MailTestUtil.getAddressHeader(toName, toAddress), mess.getHeader("To", null));
-      Assert.assertEquals("Subject has been modified", subject, MimeUtility.unfold(mess.getHeader("Subject", null)));
+      Assert.assertEquals("Subject has been modified", mergedSubject, MimeUtility.unfold(mess.getHeader("Subject", null)));
       Assert.assertEquals(MessagePriority.HIGH.getPriority(), mess.getHeader("Priority", null));
       Assert.assertEquals(MessagePriority.HIGH.getX_priority(), mess.getHeader("X-Priority", null));
       Assert.assertEquals(MessagePriority.HIGH.getImportance(), mess.getHeader("Importance", null));

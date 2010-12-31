@@ -251,40 +251,47 @@ public interface VelocityMailMessage
     */
    public EmailMessage send(Session session);
 
+   public VelocityMailMessage templateSubject(String text);
+   
    public VelocityMailMessage templateText(String text);
    
    public VelocityMailMessage templateHTML(String html);
    
    public VelocityMailMessage templateHTMLTextAlt(String html, String text);
    
+   
+   public VelocityMailMessage templateSubject(File file);
+   
    /**
     * Sets the body of the message to the plain text output of the given
     * template
     * 
-    * @param textTemplateFile File of the template classpath
+    * @param file File of the template classpath
     * @throws SeamMailException
     */
-   public VelocityMailMessage templateText(File textTemplateFile);
+   public VelocityMailMessage templateText(File file);
 
    /**
     * Sets the body of the message to the HTML output of the given template
     * 
-    * @param htmlTemplateFile File of the template
+    * @param file File of the template
     * 
     * @throws SeamMailException
     */
-   public VelocityMailMessage templateHTML(File htmlTemplateFile);
+   public VelocityMailMessage templateHTML(File file);
 
    /**
     * Sets the body of the message to a HTML body with a plain text alternative
     * output of the given templates
     * 
-    * @param htmlTemplateFile File of the template
-    * @param textTemplateFile File of the template
+    * @param htmlFile File of the template for HTML body part
+    * @param textFile File of the template for Text body part
     * @throws SeamMailException
     */
-   public VelocityMailMessage templateHTMLTextAlt(File htmlTemplateFile, File textTemplateFile);
+   public VelocityMailMessage templateHTMLTextAlt(File htmlFile, File textFile);
 
+   public VelocityMailMessage templateSubjectFromClassPath(String fileName);
+   
    /**
     * Sets the body of the message to the plain text output of the given
     * template

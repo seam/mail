@@ -11,8 +11,13 @@ import javax.mail.Session;
 import org.jboss.seam.mail.api.MailMessage;
 import org.jboss.seam.mail.core.enumurations.ContentDisposition;
 import org.jboss.seam.mail.core.enumurations.MessagePriority;
+import org.jboss.seam.mail.util.EmailAttachmentUtil;
 import org.jboss.seam.solder.resourceLoader.ResourceProvider;
-
+/**
+ * 
+ * @author Cody Lerum
+ *
+ */
 public class MailMessageImpl implements MailMessage
 {
    private EmailMessage emailMessage;
@@ -201,32 +206,32 @@ public class MailMessageImpl implements MailMessage
 
    public MailMessage addAttachment(File file, ContentDisposition contentDisposition)
    {
-      emailMessage.addAttachment(MailUtility.getEmailAttachment(file, contentDisposition));
+      emailMessage.addAttachment(EmailAttachmentUtil.getEmailAttachment(file, contentDisposition));
       return this;
    }
 
    public MailMessage addAttachment(String fileName, String mimeType, ContentDisposition contentDisposition)
    {
       InputStream inputStream = resourceProvider.loadResourceStream(fileName);
-      emailMessage.addAttachment(MailUtility.getEmailAttachment(fileName, inputStream, mimeType, contentDisposition));
+      emailMessage.addAttachment(EmailAttachmentUtil.getEmailAttachment(fileName, inputStream, mimeType, contentDisposition));
       return this;
    }
 
    public MailMessage addAttachment(URL url, String fileName, ContentDisposition contentDisposition)
    {
-      emailMessage.addAttachment(MailUtility.getEmailAttachment(url, fileName, contentDisposition));
+      emailMessage.addAttachment(EmailAttachmentUtil.getEmailAttachment(url, fileName, contentDisposition));
       return this;
    }
 
    public MailMessage addAttachment(byte[] bytes, String fileName, String mimeType, String contentClass, ContentDisposition contentDisposition)
    {
-      emailMessage.addAttachment(MailUtility.getEmailAttachment(bytes, fileName, mimeType, contentClass, contentDisposition));
+      emailMessage.addAttachment(EmailAttachmentUtil.getEmailAttachment(bytes, fileName, mimeType, contentClass, contentDisposition));
       return this;
    }
 
    public MailMessage addAttachment(byte[] bytes, String fileName, String mimeType, ContentDisposition contentDisposition)
    {
-      emailMessage.addAttachment(MailUtility.getEmailAttachment(bytes, fileName, mimeType, contentDisposition));
+      emailMessage.addAttachment(EmailAttachmentUtil.getEmailAttachment(bytes, fileName, mimeType, contentDisposition));
       return this;
    }
 
@@ -249,7 +254,7 @@ public class MailMessageImpl implements MailMessage
    public MailMessage iCal(String html, byte[] bytes)
    {
       emailMessage.setHtmlBody(html);
-      emailMessage.addAttachment(MailUtility.getEmailAttachment(bytes, null, "text/calendar;method=CANCEL", "urn:content-classes:calendarmessage", ContentDisposition.INLINE));
+      emailMessage.addAttachment(EmailAttachmentUtil.getEmailAttachment(bytes, null, "text/calendar;method=CANCEL", "urn:content-classes:calendarmessage", ContentDisposition.INLINE));
       return this;
    }
 

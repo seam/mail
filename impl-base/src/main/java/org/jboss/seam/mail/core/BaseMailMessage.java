@@ -19,6 +19,7 @@ import org.jboss.seam.mail.core.enumurations.ContentDisposition;
 import org.jboss.seam.mail.core.enumurations.MailHeader;
 import org.jboss.seam.mail.core.enumurations.MessagePriority;
 import org.jboss.seam.mail.core.enumurations.RecipientType;
+import org.jboss.seam.mail.util.EmailContactUtil;
 
 public class BaseMailMessage
 {
@@ -65,7 +66,7 @@ public class BaseMailMessage
    {
       try
       {
-         rootMimeMessage.addRecipient(recipientType.getRecipientType(), MailUtility.getInternetAddress(new EmailContact(address)));
+         rootMimeMessage.addRecipient(recipientType.getRecipientType(), EmailContactUtil.getInternetAddress(new EmailContact(address)));
       }
       catch (MessagingException e)
       {
@@ -77,7 +78,7 @@ public class BaseMailMessage
    {
       try
       {
-         rootMimeMessage.addRecipient(recipientType.getRecipientType(), MailUtility.getInternetAddress(new EmailContact(name, address)));
+         rootMimeMessage.addRecipient(recipientType.getRecipientType(), EmailContactUtil.getInternetAddress(new EmailContact(name, address)));
       }
       catch (MessagingException e)
       {
@@ -89,7 +90,7 @@ public class BaseMailMessage
    {
       try
       {
-         rootMimeMessage.addRecipient(recipientType.getRecipientType(), MailUtility.getInternetAddress(emailContact));
+         rootMimeMessage.addRecipient(recipientType.getRecipientType(), EmailContactUtil.getInternetAddress(emailContact));
       }
       catch (MessagingException e)
       {
@@ -101,7 +102,7 @@ public class BaseMailMessage
    {
       try
       {
-         rootMimeMessage.addRecipients(recipientType.getRecipientType(), MailUtility.getInternetAddressses(emailContacts));
+         rootMimeMessage.addRecipients(recipientType.getRecipientType(), EmailContactUtil.getInternetAddressses(emailContacts));
       }
       catch (MessagingException e)
       {
@@ -113,7 +114,7 @@ public class BaseMailMessage
    {
       try
       {
-         rootMimeMessage.addRecipients(recipientType.getRecipientType(), MailUtility.getInternetAddressses(emailContacts));
+         rootMimeMessage.addRecipients(recipientType.getRecipientType(), EmailContactUtil.getInternetAddressses(emailContacts));
       }
       catch (MessagingException e)
       {
@@ -134,7 +135,7 @@ public class BaseMailMessage
    {
       try
       {
-         rootMimeMessage.setFrom(MailUtility.getInternetAddress(emailContact));
+         rootMimeMessage.setFrom(EmailContactUtil.getInternetAddress(emailContact));
       }
       catch (MessagingException e)
       {
@@ -164,7 +165,7 @@ public class BaseMailMessage
    {
       try
       {
-         rootMimeMessage.setReplyTo(MailUtility.getInternetAddressses(emailContacts));
+         rootMimeMessage.setReplyTo(EmailContactUtil.getInternetAddressses(emailContacts));
       }
       catch (MessagingException e)
       {

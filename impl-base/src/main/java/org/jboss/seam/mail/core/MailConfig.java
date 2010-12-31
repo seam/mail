@@ -2,6 +2,8 @@ package org.jboss.seam.mail.core;
 
 import javax.enterprise.context.ApplicationScoped;
 
+import com.google.common.base.Strings;
+
 /**
  * Bean which holds Mail Session configuraiton options. Can be configured via
  * Seam XML
@@ -103,7 +105,7 @@ public class MailConfig
 
    public boolean isValid()
    {
-      if (MailUtility.isNullOrEmpty(serverHost))
+      if (Strings.isNullOrEmpty(serverHost.trim()))
       {
          return false;
       }

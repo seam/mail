@@ -3,9 +3,7 @@ package org.jboss.seam.mail.core;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
-import org.jboss.seam.mail.core.enumurations.ContentDisposition;
 import org.jboss.seam.mail.core.enumurations.MessagePriority;
 
 public class EmailMessage implements Serializable
@@ -25,8 +23,7 @@ public class EmailMessage implements Serializable
    private String textBody;
    private String htmlBody;
 
-   private Collection<EmailAttachment> standardAttachments = new ArrayList<EmailAttachment>();
-   private Collection<EmailAttachment> inlineAttachments = new ArrayList<EmailAttachment>();
+   private Collection<EmailAttachment> attachments = new ArrayList<EmailAttachment>();
 
    private Collection<String> deliveryReceiptAddresses = new ArrayList<String>();
    private Collection<String> readReceiptAddresses = new ArrayList<String>();
@@ -230,18 +227,7 @@ public class EmailMessage implements Serializable
 
    public void addAttachment(EmailAttachment attachment)
    {
-      if (attachment.getContentDisposition() == ContentDisposition.ATTACHMENT)
-      {
-         standardAttachments.add(attachment);
-      }
-      else if (attachment.getContentDisposition() == ContentDisposition.INLINE)
-      {
-         inlineAttachments.add(attachment);
-      }
-      else
-      {
-         throw new RuntimeException("Unknown ContentDisposition: " + attachment.getContentDisposition());
-      }
+      attachments.add(attachment);
    }
 
    public void addAttachments(Collection<EmailAttachment> attachments)
@@ -254,21 +240,6 @@ public class EmailMessage implements Serializable
 
    public Collection<EmailAttachment> getAttachments()
    {
-      List<EmailAttachment> attachments = new ArrayList<EmailAttachment>();
-
-      attachments.addAll(standardAttachments);
-      attachments.addAll(inlineAttachments);
-
       return attachments;
-   }
-
-   public Collection<EmailAttachment> getStandardAttachments()
-   {
-      return standardAttachments;
-   }
-
-   public Collection<EmailAttachment> getInlineAttachments()
-   {
-      return inlineAttachments;
    }
 }

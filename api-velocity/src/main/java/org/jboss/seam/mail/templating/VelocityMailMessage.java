@@ -241,12 +241,22 @@ public interface VelocityMailMessage
    public VelocityMailMessage messageId(String messageId);
 
    // End Flags
+   
+   public EmailMessage getEmailMessage();
+   
+   public VelocityMailMessage mergeTemplates();
 
    /**
     * Send the Message
     */
    public EmailMessage send(Session session);
 
+   public VelocityMailMessage templateText(String text);
+   
+   public VelocityMailMessage templateHTML(String html);
+   
+   public VelocityMailMessage templateHTMLTextAlt(String html, String text);
+   
    /**
     * Sets the body of the message to the plain text output of the given
     * template
@@ -254,7 +264,7 @@ public interface VelocityMailMessage
     * @param textTemplateFile File of the template classpath
     * @throws SeamMailException
     */
-   public VelocityMailMessage setTemplateText(File textTemplateFile);
+   public VelocityMailMessage templateText(File textTemplateFile);
 
    /**
     * Sets the body of the message to the HTML output of the given template
@@ -263,7 +273,7 @@ public interface VelocityMailMessage
     * 
     * @throws SeamMailException
     */
-   public VelocityMailMessage setTemplateHTML(File htmlTemplateFile);
+   public VelocityMailMessage templateHTML(File htmlTemplateFile);
 
    /**
     * Sets the body of the message to a HTML body with a plain text alternative
@@ -273,7 +283,7 @@ public interface VelocityMailMessage
     * @param textTemplateFile File of the template
     * @throws SeamMailException
     */
-   public VelocityMailMessage setTemplateHTMLTextAlt(File htmlTemplateFile, File textTemplateFile);
+   public VelocityMailMessage templateHTMLTextAlt(File htmlTemplateFile, File textTemplateFile);
 
    /**
     * Sets the body of the message to the plain text output of the given
@@ -283,7 +293,7 @@ public interface VelocityMailMessage
     *           classpath
     * @throws SeamMailException
     */
-   public VelocityMailMessage setTemplateText(String templateFileName);
+   public VelocityMailMessage templateTextFromClassPath(String templateFileName);
 
    /**
     * Sets the body of the message to the HTML output of the given template
@@ -292,7 +302,7 @@ public interface VelocityMailMessage
     *           classpath
     * @throws SeamMailException
     */
-   public VelocityMailMessage setTemplateHTML(String templateFileName);
+   public VelocityMailMessage templateHTMLFromClassPath(String templateFileName);
 
    /**
     * Sets the body of the message to a HTML body with a plain text alternative
@@ -304,7 +314,7 @@ public interface VelocityMailMessage
     *           classpath
     * @throws SeamMailException
     */
-   public VelocityMailMessage setTemplateHTMLTextAlt(String htmlTemplateFileName, String textTemplateFileName);
+   public VelocityMailMessage templateHTMLTextAltFromClassPath(String htmlTemplateFileName, String textTemplateFileName);
 
    /**
     * Places a variable in the templating engines context
@@ -313,5 +323,4 @@ public interface VelocityMailMessage
     * @param value the Object being placed in the context
     */
    public VelocityMailMessage put(String name, Object value);
-
 }

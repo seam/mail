@@ -389,6 +389,14 @@ public class BaseMailMessage
       AttachmentPart attachment = new AttachmentPart(emailAttachment.getBytes(), emailAttachment.getUid(), emailAttachment.getFileName(), emailAttachment.getMimeType(), emailAttachment.getHeaders(), emailAttachment.getContentDisposition());
       attachments.put(attachment.getAttachmentFileName(), attachment);
    }
+   
+   public void addAttachments(Collection<EmailAttachment> emailAttachments)
+   {
+      for(EmailAttachment ea : emailAttachments)
+      {
+         addAttachment(ea);
+      }
+   }
 
    public Map<String, AttachmentPart> getAttachments()
    {

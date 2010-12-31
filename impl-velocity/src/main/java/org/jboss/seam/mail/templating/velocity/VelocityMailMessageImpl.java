@@ -39,6 +39,8 @@ public class VelocityMailMessageImpl implements VelocityMailMessage
    private MailTemplate textTemplate;
    private MailTemplate htmlTemplate;
    
+   private boolean templatesMerged = false;
+
    @Inject
    private ResourceProvider resourceProvider;
 
@@ -49,7 +51,6 @@ public class VelocityMailMessageImpl implements VelocityMailMessage
       velocityEngine = new VelocityEngine();
       velocityEngine.setProperty("runtime.log.logsystem.class", "org.apache.velocity.runtime.log.SimpleLog4JLogSystem");
       context = new SeamBaseVelocityContext(this, seamCDIVelocityContext);
-      put("mailContext", new MailContext(MailUtility.getEmailAttachmentMap(emailMessage.getAttachments())));
    }
 
    // Begin Addressing
@@ -193,7 +194,7 @@ public class VelocityMailMessageImpl implements VelocityMailMessage
       emailMessage.setImportance(messagePriority);
       return this;
    }
-   
+
    public VelocityMailMessage messageId(String messageId)
    {
       emailMessage.setMessageId(messageId);
@@ -219,13 +220,13 @@ public class VelocityMailMessageImpl implements VelocityMailMessage
       return this;
    }
 
-// Begin Attachments
+   // Begin Attachments
 
    public VelocityMailMessage addAttachment(File file, ContentDisposition contentDisposition)
    {
       emailMessage.addAttachment(MailUtility.getEmailAttachment(file, contentDisposition));
       return this;
-   }  
+   }
 
    public VelocityMailMessage addAttachment(String fileName, String mimeType, ContentDisposition contentDisposition)
    {
@@ -277,51 +278,77 @@ public class VelocityMailMessageImpl implements VelocityMailMessage
 
    // End Calendar
 
-   public VelocityMailMessage setTemplateText(File textTemplateFile)
+   public VelocityMailMessage templateTextFromClassPath(String templateFileName)
+   {
+      textTemplate = createTemplateFromClassPath(templateFileName);
+      return this;
+   }
+
+   public VelocityMailMessage templateHTMLFromClassPath(String templateFileName)
+   {
+      htmlTemplate = createTemplateFromClassPath(templateFileName);
+      return this;
+   }
+
+   public VelocityMailMessage templateHTMLTextAltFromClassPath(String htmlTemplateFileName, String textTemplateFileName)
+   {
+      htmlTemplate = createTemplateFromClassPath(htmlTemplateFileName);
+      textTemplate = createTemplateFromClassPath(textTemplateFileName);
+      return this;
+   }
+
+   public VelocityMailMessage templateText(File textTemplateFile)
    {
       textTemplate = createTemplate(textTemplateFile);
       return this;
    }
 
-   public VelocityMailMessage setTemplateHTML(File htmlTemplateFile)
+   public VelocityMailMessage templateHTML(File htmlTemplateFile)
    {
       htmlTemplate = createTemplate(htmlTemplateFile);
       return this;
    }
 
-   public VelocityMailMessage setTemplateHTMLTextAlt(File htmlTemplateFile, File textTemplateFile)
+   public VelocityMailMessage templateHTMLTextAlt(File htmlTemplateFile, File textTemplateFile)
    {
-      setTemplateHTML(htmlTemplateFile);
-      setTemplateText(textTemplateFile);
+      templateHTML(htmlTemplateFile);
+      templateText(textTemplateFile);
       return this;
    }
 
-   public VelocityMailMessageImpl setTemplateText(String text)
+   public VelocityMailMessageImpl templateText(String text)
    {
       textTemplate = createTemplate(text);
       return this;
    }
 
-   public VelocityMailMessageImpl setTemplateHTML(String html)
+   public VelocityMailMessageImpl templateHTML(String html)
    {
       this.htmlTemplate = createTemplate(html);
       return this;
    }
 
-   public VelocityMailMessageImpl setTemplateHTMLTextAlt(String html, String text)
+   public VelocityMailMessageImpl templateHTMLTextAlt(String html, String text)
    {
-      setTemplateHTML(html);
-      setTemplateText(text);
+      templateHTML(html);
+      templateText(text);
       return this;
    }
 
-   private MailTemplate createTemplate(String value)
+   private MailTemplate createTemplateFromClassPath(String classPathFileName)
+   {
+      InputStream inputStream = resourceProvider.loadResourceStream(classPathFileName);
+
+      return new MailTemplate("rawInput", inputStream);
+   }
+
+   private MailTemplate createTemplate(String rawText)
    {
       InputStream inputStream;
 
       try
       {
-         inputStream = new ByteArrayInputStream(value.getBytes("UTF-8"));
+         inputStream = new ByteArrayInputStream(rawText.getBytes("UTF-8"));
       }
       catch (UnsupportedEncodingException e)
       {
@@ -354,6 +381,7 @@ public class VelocityMailMessageImpl implements VelocityMailMessage
    private String mergeTemplate(MailTemplate template)
    {
       StringWriter writer = new StringWriter();
+
       try
       {
          velocityEngine.evaluate(context, writer, template.getName(), new InputStreamReader(template.getInputStream()));
@@ -374,6 +402,7 @@ public class VelocityMailMessageImpl implements VelocityMailMessage
       {
          throw new RuntimeException("Error rendering output", e);
       }
+
       return writer.toString();
    }
 
@@ -383,20 +412,46 @@ public class VelocityMailMessageImpl implements VelocityMailMessage
       return this;
    }
 
+   public EmailMessage getEmailMessage()
+   {
+      return emailMessage;
+   }
+
+   public VelocityMailMessageImpl mergeTemplates()
+   {
+      if(!templatesMerged)
+      {
+         put("mailContext", new MailContext(MailUtility.getEmailAttachmentMap(emailMessage.getAttachments())));
+   
+         if (htmlTemplate != null)
+         {
+            emailMessage.setHtmlBody(mergeTemplate(htmlTemplate));
+         }
+   
+         if (textTemplate != null)
+         {
+            emailMessage.setTextBody(mergeTemplate(textTemplate));
+         }
+   
+         templatesMerged = true;
+         
+         return this;
+      }
+      else
+      {
+         throw new RuntimeException("Email Templates Already Merged");
+      }
+   }
+
    public EmailMessage send(Session session)
    {
-      if (htmlTemplate != null)
+      if(!templatesMerged)
       {
-         emailMessage.setHtmlBody(mergeTemplate(htmlTemplate));
-      }
-
-      if (textTemplate != null)
-      {
-         emailMessage.setTextBody(mergeTemplate(textTemplate));
+         mergeTemplates();
       }
 
       MailUtility.send(emailMessage, session);
 
       return emailMessage;
-   }  
+   }
 }

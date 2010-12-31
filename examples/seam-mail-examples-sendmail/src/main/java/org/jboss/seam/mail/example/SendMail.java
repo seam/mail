@@ -42,15 +42,16 @@ public class SendMail
 
    public void sendHTML() throws MalformedURLException
    {
-      velocityMailMessage.get()
-            .from("Seam Framework", "seam@jboss.org")
+      VelocityMailMessage vmm = velocityMailMessage.get();
+      
+      vmm.from("Seam Framework", "seam@jboss.org")
             .to(person.getName(), person.getEmail())
             .subject("HTML Message from Seam Mail - " + java.util.UUID.randomUUID().toString())
-            .setTemplateHTML("template.html.vm")
+            .templateHTMLFromClassPath("template.html.vm")
             .put("version", "Seam 3")
             .importance(MessagePriority.HIGH)
-            .addAttachment(new URL("http://www.seamframework.org/themes/sfwkorg/img/seam_icon_large.png"), "seamLogo.png", ContentDisposition.INLINE)
-            .send(session);
+            .addAttachment(new URL("http://www.seamframework.org/themes/sfwkorg/img/seam_icon_large.png"), "seamLogo.png", ContentDisposition.INLINE);
+            vmm.send(session);
    }
 
    public void sendHTMLwithAlternative() throws MalformedURLException
@@ -60,7 +61,7 @@ public class SendMail
             .to(person.getName(), person.getEmail())
             .subject("HTML+Text Message from Seam Mail - " + java.util.UUID.randomUUID().toString())
             .put("version", "Seam 3")
-            .setTemplateHTMLTextAlt("template.html.vm", "template.text.vm")
+            .templateHTMLTextAltFromClassPath("template.html.vm", "template.text.vm")
             .importance(MessagePriority.LOW)
             .deliveryReceipt("seam@jboss.org")
             .readReceipt("seam@jboss.org")

@@ -117,6 +117,7 @@ public class MailUtility
       URLDataSource uds = new URLDataSource(url);
 
       byte[] bytes;
+
       try
       {
          bytes = new byte[uds.getInputStream().available()];
@@ -125,7 +126,6 @@ public class MailUtility
       catch (IOException e)
       {
          throw new RuntimeException("Wasn't able to create email attachment from URL: " + url.getPath(), e);
-
       }
 
       return new EmailAttachment(fileName, uds.getContentType(), contentDisposition, bytes);
@@ -158,17 +158,17 @@ public class MailUtility
 
    public static Map<String, EmailAttachment> getEmailAttachmentMap(Collection<EmailAttachment> attachments)
    {
-      Map<String, EmailAttachment> m = new HashMap<String, EmailAttachment>();
+      Map<String, EmailAttachment> emailAttachmentMap = new HashMap<String, EmailAttachment>();
 
       for (EmailAttachment ea : attachments)
       {
          if (!MailUtility.isNullOrEmpty(ea.getFileName()))
          {
-            m.put(ea.getFileName(), ea);
+            emailAttachmentMap.put(ea.getFileName(), ea);
          }
       }
 
-      return null;
+      return emailAttachmentMap;
    }
 
    public static boolean isNullOrEmpty(String value)
@@ -269,6 +269,8 @@ public class MailUtility
       {
          b.setHTML(e.getHtmlBody());
       }
+
+      b.addAttachments(e.getAttachments());
 
       b.send();
 

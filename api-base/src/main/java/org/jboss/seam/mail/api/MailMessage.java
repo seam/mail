@@ -255,6 +255,8 @@ public interface MailMessage
 
    // End Core
 
+   public EmailMessage getEmailMessage();
+   
    /**
     * Send the Message
     * 

@@ -254,6 +254,11 @@ public class MailMessageImpl implements MailMessage
    }
 
    // End Calendar
+   
+   public EmailMessage getEmailMessage()
+   {
+      return emailMessage;
+   }
 
    public EmailMessage send(Session session)
    {

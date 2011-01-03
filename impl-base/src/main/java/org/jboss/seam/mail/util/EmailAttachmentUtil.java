@@ -30,7 +30,7 @@ public class EmailAttachmentUtil
 
       for (EmailAttachment ea : attachments)
       {
-         if (!Strings.isNullOrEmpty(ea.getFileName(), true))
+         if (!Strings.isNullOrBlank(ea.getFileName()))
          {
             emailAttachmentMap.put(ea.getFileName(), ea);
          }

@@ -45,7 +45,7 @@ public class MailUtility
          throw new RuntimeException("ServerHost and ServerPort must be set in MailConfig");
       }
 
-      if (!Strings.isNullOrEmpty(mailConfig.getDomainName(), true))
+      if (!Strings.isNullOrBlank(mailConfig.getDomainName()))
       {
          props.put("mail.seam.domainName", mailConfig.getDomainName());
       }
@@ -65,7 +65,7 @@ public class MailUtility
 
    public static String headerStripper(String header)
    {
-      if (!Strings.isNullOrEmpty(header, true))
+      if (!Strings.isNullOrBlank(header))
       {
          String s = header.trim();
 
@@ -88,7 +88,7 @@ public class MailUtility
    {
       BaseMailMessage b = new BaseMailMessage(session, e.getRootSubType());
 
-      if (!Strings.isNullOrEmpty(e.getMessageId(), true))
+      if (!Strings.isNullOrBlank(e.getMessageId()))
       {
          b.setMessageID(e.getMessageId());
       }

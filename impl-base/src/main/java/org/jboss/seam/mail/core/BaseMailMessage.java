@@ -29,15 +29,15 @@ public class BaseMailMessage
    private Map<String, AttachmentPart> attachments = new HashMap<String, AttachmentPart>();
    private MimeMultipart rootMultipart;
    private MimeMultipart relatedMultipart = new MimeMultipart("related");
-   private Session session;  
-   
+   private Session session;
+
    public BaseMailMessage(Session session, String rootSubType)
    {
       this.session = session;
-      this.rootSubType = rootSubType;      
+      this.rootSubType = rootSubType;
       initialize();
    }
-   
+
    public BaseMailMessage(Session session)
    {
       this(session, "mixed");
@@ -269,6 +269,14 @@ public class BaseMailMessage
       }
    }
 
+   public void addHeaders(Collection<Header> headers)
+   {
+      for (Header header : headers)
+      {
+         addHeader(header);
+      }
+   }
+
    public void addHeader(Header header)
    {
       try
@@ -307,6 +315,19 @@ public class BaseMailMessage
          throw new RuntimeException("Unable to add TextBody to MimeMessage", e);
       }
    }
+   
+   public void setHTMLNotRelated(String html)
+   {
+      try
+      {
+         rootMultipart.addBodyPart(buildHTMLBodyPart(html));
+      }
+      catch (MessagingException e)
+      {
+         throw new RuntimeException("Unable to add TextBody to MimeMessage", e);
+      }
+   }
+     
 
    public void setHTMLTextAlt(String html, String text)
    {
@@ -339,10 +360,9 @@ public class BaseMailMessage
 
    public void setCalendar(String body, AttachmentPart invite)
    {
-      MimeBodyPart calendarBodyPart = buildHTMLBodyPart(body);
       try
       {
-         rootMultipart.addBodyPart(calendarBodyPart);
+         rootMultipart.addBodyPart(buildHTMLBodyPart(body));
          rootMultipart.addBodyPart(invite);
       }
       catch (MessagingException e)
@@ -390,10 +410,10 @@ public class BaseMailMessage
       AttachmentPart attachment = new AttachmentPart(emailAttachment.getBytes(), emailAttachment.getUid(), emailAttachment.getFileName(), emailAttachment.getMimeType(), emailAttachment.getHeaders(), emailAttachment.getContentDisposition());
       attachments.put(attachment.getAttachmentFileName(), attachment);
    }
-   
+
    public void addAttachments(Collection<EmailAttachment> emailAttachments)
    {
-      for(EmailAttachment ea : emailAttachments)
+      for (EmailAttachment ea : emailAttachments)
       {
          addAttachment(ea);
       }

@@ -8,10 +8,11 @@ import javax.mail.Session;
 
 import org.jboss.seam.mail.core.enumurations.RecipientType;
 import org.jboss.seam.mail.util.Strings;
+
 /**
  * 
  * @author Cody Lerum
- *
+ * 
  */
 public class MailUtility
 {
@@ -27,7 +28,7 @@ public class MailUtility
       {
          return "localhost";
       }
-   }  
+   }
 
    public static Session buildMailSession(MailConfig mailConfig)
    {
@@ -101,27 +102,40 @@ public class MailUtility
       b.addDeliveryRecieptAddresses(e.getDeliveryReceiptAddresses());
       b.addReadRecieptAddresses(e.getReadReceiptAddresses());
       b.setImportance(e.getImportance());
+      b.addHeaders(e.getHeaders());
 
       if (e.getSubject() != null)
       {
          b.setSubject(e.getSubject());
       }
 
-      if (e.getHtmlBody() != null && e.getTextBody() != null)
+      if (e.getType() == EmailMessageType.STANDARD)
       {
-         b.setHTMLTextAlt(e.getHtmlBody(), e.getTextBody());
-      }
-      else if (e.getTextBody() != null)
-      {
-         b.setText(e.getTextBody());
-      }
-      else if (e.getHtmlBody() != null)
-      {
-         b.setHTML(e.getHtmlBody());
-      }
 
-      b.addAttachments(e.getAttachments());
+         if (e.getHtmlBody() != null && e.getTextBody() != null)
+         {
+            b.setHTMLTextAlt(e.getHtmlBody(), e.getTextBody());
+         }
+         else if (e.getTextBody() != null)
+         {
+            b.setText(e.getTextBody());
+         }
+         else if (e.getHtmlBody() != null)
+         {
+            b.setHTML(e.getHtmlBody());
+         }
 
+         b.addAttachments(e.getAttachments());
+      }
+      else if (e.getType() == EmailMessageType.ICAL_INVITE)
+      {
+         b.setHTMLNotRelated(e.getHtmlBody());
+         b.addAttachments(e.getAttachments());
+      }
+      else
+      {
+         throw new RuntimeException("Unsupported Message Type: " + e.getType());
+      }
       b.send();
 
       try

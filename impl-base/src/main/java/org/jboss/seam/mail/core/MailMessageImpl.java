@@ -13,10 +13,11 @@ import org.jboss.seam.mail.core.enumurations.ContentDisposition;
 import org.jboss.seam.mail.core.enumurations.MessagePriority;
 import org.jboss.seam.mail.util.EmailAttachmentUtil;
 import org.jboss.seam.solder.resourceLoader.ResourceProvider;
+
 /**
  * 
  * @author Cody Lerum
- *
+ * 
  */
 public class MailMessageImpl implements MailMessage
 {
@@ -29,7 +30,7 @@ public class MailMessageImpl implements MailMessage
    {
       emailMessage = new EmailMessage();
    }
-   
+
    public MailMessageImpl(String rootSubType)
    {
       emailMessage = new EmailMessage(rootSubType);
@@ -253,13 +254,14 @@ public class MailMessageImpl implements MailMessage
 
    public MailMessage iCal(String html, byte[] bytes)
    {
+      emailMessage.setType(EmailMessageType.ICAL_INVITE);
       emailMessage.setHtmlBody(html);
       emailMessage.addAttachment(EmailAttachmentUtil.getEmailAttachment(bytes, null, "text/calendar;method=CANCEL", "urn:content-classes:calendarmessage", ContentDisposition.INLINE));
       return this;
    }
 
    // End Calendar
-   
+
    public EmailMessage getEmailMessage()
    {
       return emailMessage;

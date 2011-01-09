@@ -11,6 +11,7 @@ public class EmailMessage implements Serializable
    private static final long serialVersionUID = 1L;
 
    private String rootSubType = "mixed";
+   private EmailMessageType type = EmailMessageType.STANDARD;
    private String messageId;
    private String lastMessageId;
    private EmailContact fromAddress;
@@ -18,6 +19,7 @@ public class EmailMessage implements Serializable
    private Collection<EmailContact> toAddresses = new ArrayList<EmailContact>();
    private Collection<EmailContact> ccAddresses = new ArrayList<EmailContact>();
    private Collection<EmailContact> bccAddresses = new ArrayList<EmailContact>();
+   private Collection<Header> headers = new ArrayList<Header>();
 
    private String subject;
    private String textBody;
@@ -48,6 +50,16 @@ public class EmailMessage implements Serializable
    public void setRootSubType(String rootSubType)
    {
       this.rootSubType = rootSubType;
+   }
+
+   public EmailMessageType getType()
+   {
+      return type;
+   }
+
+   public void setType(EmailMessageType type)
+   {
+      this.type = type;
    }
 
    public String getMessageId()
@@ -153,6 +165,21 @@ public class EmailMessage implements Serializable
    public boolean removeBccAddress(EmailContact bccAddress)
    {
       return bccAddresses.remove(bccAddress);
+   }
+
+   public Collection<Header> getHeaders()
+   {
+      return headers;
+   }
+   
+   public void addHeader(Header header)
+   {
+      headers.add(header);
+   }
+
+   public void addHeaders(Collection<Header> headers)
+   {
+      this.headers.addAll(headers);
    }
 
    public String getSubject()

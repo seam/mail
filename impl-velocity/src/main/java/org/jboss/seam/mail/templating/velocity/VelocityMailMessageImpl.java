@@ -28,8 +28,13 @@ import org.jboss.seam.mail.core.enumurations.ContentDisposition;
 import org.jboss.seam.mail.core.enumurations.MessagePriority;
 import org.jboss.seam.mail.templating.MailTemplate;
 import org.jboss.seam.mail.templating.VelocityMailMessage;
+import org.jboss.seam.mail.util.EmailAttachmentUtil;
 import org.jboss.seam.solder.resourceLoader.ResourceProvider;
-
+/**
+ * 
+ * @author Cody Lerum
+ *
+ */
 public class VelocityMailMessageImpl implements VelocityMailMessage
 {
    private EmailMessage emailMessage;
@@ -225,32 +230,32 @@ public class VelocityMailMessageImpl implements VelocityMailMessage
 
    public VelocityMailMessage addAttachment(File file, ContentDisposition contentDisposition)
    {
-      emailMessage.addAttachment(MailUtility.getEmailAttachment(file, contentDisposition));
+      emailMessage.addAttachment(EmailAttachmentUtil.getEmailAttachment(file, contentDisposition));
       return this;
    }
 
    public VelocityMailMessage addAttachment(String fileName, String mimeType, ContentDisposition contentDisposition)
    {
       InputStream inputStream = resourceProvider.loadResourceStream(fileName);
-      emailMessage.addAttachment(MailUtility.getEmailAttachment(fileName, inputStream, mimeType, contentDisposition));
+      emailMessage.addAttachment(EmailAttachmentUtil.getEmailAttachment(fileName, inputStream, mimeType, contentDisposition));
       return this;
    }
 
    public VelocityMailMessage addAttachment(URL url, String fileName, ContentDisposition contentDisposition)
    {
-      emailMessage.addAttachment(MailUtility.getEmailAttachment(url, fileName, contentDisposition));
+      emailMessage.addAttachment(EmailAttachmentUtil.getEmailAttachment(url, fileName, contentDisposition));
       return this;
    }
 
    public VelocityMailMessage addAttachment(byte[] bytes, String fileName, String mimeType, String contentClass, ContentDisposition contentDisposition)
    {
-      emailMessage.addAttachment(MailUtility.getEmailAttachment(bytes, fileName, mimeType, contentClass, contentDisposition));
+      emailMessage.addAttachment(EmailAttachmentUtil.getEmailAttachment(bytes, fileName, mimeType, contentClass, contentDisposition));
       return this;
    }
 
    public VelocityMailMessage addAttachment(byte[] bytes, String fileName, String mimeType, ContentDisposition contentDisposition)
    {
-      emailMessage.addAttachment(MailUtility.getEmailAttachment(bytes, fileName, mimeType, contentDisposition));
+      emailMessage.addAttachment(EmailAttachmentUtil.getEmailAttachment(bytes, fileName, mimeType, contentDisposition));
       return this;
    }
 
@@ -273,7 +278,7 @@ public class VelocityMailMessageImpl implements VelocityMailMessage
    public VelocityMailMessage iCal(String html, byte[] bytes)
    {
       emailMessage.setHtmlBody(html);
-      emailMessage.addAttachment(MailUtility.getEmailAttachment(bytes, null, "text/calendar;method=CANCEL", "urn:content-classes:calendarmessage", ContentDisposition.INLINE));
+      emailMessage.addAttachment(EmailAttachmentUtil.getEmailAttachment(bytes, null, "text/calendar;method=CANCEL", "urn:content-classes:calendarmessage", ContentDisposition.INLINE));
       return this;
    }
 
@@ -328,7 +333,7 @@ public class VelocityMailMessageImpl implements VelocityMailMessage
       textTemplate = createTemplateFromClassPath(textFileName);
       return this;
    }
-   
+
    public VelocityMailMessage templateSubject(File file)
    {
       subjectTemplate = createTemplate(file);
@@ -440,22 +445,22 @@ public class VelocityMailMessageImpl implements VelocityMailMessage
    {
       if (!templatesMerged)
       {
-         put("mailContext", new MailContext(MailUtility.getEmailAttachmentMap(emailMessage.getAttachments())));
+         put("mailContext", new MailContext(EmailAttachmentUtil.getEmailAttachmentMap(emailMessage.getAttachments())));
 
          if (subjectTemplate != null)
          {
             emailMessage.setSubject(mergeTemplate(subjectTemplate));
          }
-         
+
          if (textTemplate != null)
          {
             emailMessage.setTextBody(mergeTemplate(textTemplate));
          }
-         
+
          if (htmlTemplate != null)
          {
             emailMessage.setHtmlBody(mergeTemplate(htmlTemplate));
-         }        
+         }
 
          templatesMerged = true;
 
@@ -477,5 +482,5 @@ public class VelocityMailMessageImpl implements VelocityMailMessage
       MailUtility.send(emailMessage, session);
 
       return emailMessage;
-   }   
+   }
 }

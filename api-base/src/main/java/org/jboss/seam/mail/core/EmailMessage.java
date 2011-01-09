@@ -1,15 +1,12 @@
 package org.jboss.seam.mail.core;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 
 import org.jboss.seam.mail.core.enumurations.MessagePriority;
 
-public class EmailMessage implements Serializable
+public class EmailMessage
 {
-   private static final long serialVersionUID = 1L;
-
    private String rootSubType = "mixed";
    private EmailMessageType type = EmailMessageType.STANDARD;
    private String messageId;

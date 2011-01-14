@@ -64,19 +64,25 @@ public class VelocityMailMessageImpl implements VelocityMailMessage
 
    public VelocityMailMessage from(String address)
    {
-      emailMessage.setFromAddress(new EmailContact(address));
+      emailMessage.addFromAddress(new EmailContact(address));
       return this;
    }
 
    public VelocityMailMessage from(String name, String address)
    {
-      emailMessage.setFromAddress(new EmailContact(name, address));
+      emailMessage.addFromAddress(new EmailContact(name, address));
       return this;
    }
 
    public VelocityMailMessage from(EmailContact emailContact)
    {
-      emailMessage.setFromAddress(emailContact);
+      emailMessage.addFromAddress(emailContact);
+      return this;
+   }
+   
+   public VelocityMailMessage from(Collection<EmailContact> emailContacts)
+   {
+      emailMessage.addFromAddresses(emailContacts);
       return this;
    }
 

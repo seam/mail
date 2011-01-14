@@ -39,6 +39,8 @@ public interface MailMessage
    public MailMessage from(String name, String address);
 
    public MailMessage from(EmailContact emailContact);
+   
+   public MailMessage from(Collection<EmailContact> emailContacts);
 
    /**
     * Convenience method to set the REPLY-TO address

@@ -95,7 +95,7 @@ public class MailUtility
          b.setMessageID(e.getMessageId());
       }
 
-      b.setFrom(e.getFromAddress());
+      b.setFrom(e.getFromAddresses());
       b.addRecipients(RecipientType.TO, e.getToAddresses());
       b.addRecipients(RecipientType.CC, e.getCcAddresses());
       b.addRecipients(RecipientType.BCC, e.getBccAddresses());

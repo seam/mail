@@ -41,19 +41,25 @@ public class MailMessageImpl implements MailMessage
 
    public MailMessage from(String address)
    {
-      emailMessage.setFromAddress(new EmailContact(address));
+      emailMessage.addFromAddress(new EmailContact(address));
       return this;
    }
 
    public MailMessage from(String name, String address)
    {
-      emailMessage.setFromAddress(new EmailContact(name, address));
+      emailMessage.addFromAddress(new EmailContact(name, address));
       return this;
    }
 
    public MailMessage from(EmailContact emailContact)
    {
-      emailMessage.setFromAddress(emailContact);
+      emailMessage.addFromAddress(emailContact);
+      return this;
+   }
+   
+   public MailMessage from(Collection<EmailContact> emailContacts)
+   {
+      emailMessage.addFromAddresses(emailContacts);
       return this;
    }
 

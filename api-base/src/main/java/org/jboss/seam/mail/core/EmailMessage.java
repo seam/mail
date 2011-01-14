@@ -11,7 +11,7 @@ public class EmailMessage
    private EmailMessageType type = EmailMessageType.STANDARD;
    private String messageId;
    private String lastMessageId;
-   private EmailContact fromAddress;
+   private Collection<EmailContact> fromAddresses = new ArrayList<EmailContact>();
    private Collection<EmailContact> replyToAddresses = new ArrayList<EmailContact>();
    private Collection<EmailContact> toAddresses = new ArrayList<EmailContact>();
    private Collection<EmailContact> ccAddresses = new ArrayList<EmailContact>();
@@ -78,15 +78,20 @@ public class EmailMessage
    {
       this.lastMessageId = lastMessageId;
    }
-
-   public EmailContact getFromAddress()
+   
+   public Collection<EmailContact> getFromAddresses()
    {
-      return fromAddress;
+      return fromAddresses;
    }
 
-   public void setFromAddress(EmailContact fromAddress)
+   public void addFromAddress(EmailContact fromAddress)
    {
-      this.fromAddress = fromAddress;
+      this.fromAddresses.add(fromAddress);
+   }
+
+   public void addFromAddresses(Collection<EmailContact> fromAddresses)
+   {
+      this.fromAddresses.addAll(fromAddresses);
    }
 
    public Collection<EmailContact> getReplyToAddresses()

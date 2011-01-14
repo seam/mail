@@ -39,6 +39,8 @@ public interface VelocityMailMessage
    public VelocityMailMessage from(String name, String address);
 
    public VelocityMailMessage from(EmailContact emailContact);
+   
+   public VelocityMailMessage from(Collection<EmailContact> emailContacts);
 
    /**
     * Convenience method to set the REPLY-TO address

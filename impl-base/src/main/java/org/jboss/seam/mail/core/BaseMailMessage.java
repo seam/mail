@@ -131,8 +131,8 @@ public class BaseMailMessage
    {
       setFrom(new EmailContact(name, address));
    }
-
-   public BaseMailMessage setFrom(EmailContact emailContact)
+   
+   public void setFrom(EmailContact emailContact)
    {
       try
       {
@@ -140,7 +140,22 @@ public class BaseMailMessage
       }
       catch (MessagingException e)
       {
-         throw new RuntimeException("Unable to add From Address:" + emailContact.getEmailAddress() + " to MIME message with charset: " + emailContact.getCharset(), e);
+         throw new RuntimeException("Unable to From Addresses", e);
+      }
+   }
+
+   public BaseMailMessage setFrom(Collection<EmailContact> emailContacts)
+   {
+      try
+      {  
+         if(emailContacts.size() > 0)
+         {
+            rootMimeMessage.addFrom(EmailContactUtil.getInternetAddressses(emailContacts));
+         }
+      }
+      catch (MessagingException e)
+      {
+         throw new RuntimeException("Unable to From Addresses", e);
       }
       return this;
    }

@@ -1,11 +1,12 @@
 package org.jboss.seam.mail;
 
-import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 
 import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
 import javax.mail.MessagingException;
+import javax.mail.SendFailedException;
 import javax.mail.Session;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeUtility;
@@ -74,7 +75,7 @@ public class VelocityMailMessageTest
    String toAddress = "seamy.seamerson@seam-mail.test";
 
    @Test
-   public void testVelocityTextMailMessage() throws IOException, MessagingException
+   public void testVelocityTextMailMessage() throws MessagingException
    {
       String uuid = java.util.UUID.randomUUID().toString();
       String subject = "Text Message from $version Mail - " + uuid;
@@ -125,7 +126,7 @@ public class VelocityMailMessageTest
    }
 
    @Test
-   public void testVelocityHTMLMailMessage() throws IOException, MessagingException
+   public void testVelocityHTMLMailMessage() throws MalformedURLException, MessagingException
    {
       String subject = "HTML Message from Seam Mail - " + java.util.UUID.randomUUID().toString();
     
@@ -174,7 +175,7 @@ public class VelocityMailMessageTest
    }
 
    @Test
-   public void testVelocityHTMLTextAltMailMessage() throws IOException, MessagingException
+   public void testVelocityHTMLTextAltMailMessage() throws MessagingException, MalformedURLException
    {
       String subject = "HTML+Text Message from Seam Mail - " + java.util.UUID.randomUUID().toString();
     
@@ -223,7 +224,7 @@ public class VelocityMailMessageTest
    }
    
    @Test
-   public void testSMTPSessionAuthentication() throws IOException, MessagingException
+   public void testSMTPSessionAuthentication() throws MessagingException, MalformedURLException
    {
       String subject = "HTML+Text Message from Seam Mail - " + java.util.UUID.randomUUID().toString();
      
@@ -263,6 +264,41 @@ public class VelocityMailMessageTest
       MimeMessage mess = wiser.getMessages().get(0).getMimeMessage();
 
       Assert.assertEquals("Subject has been modified", subject, MimeUtility.unfold(mess.getHeader("Subject", null)));
+   }
+   
+   @Test(expected=SendFailedException.class)
+   public void testVelocityTextMailMessageSendFailed() throws SendFailedException
+   {
+      String uuid = java.util.UUID.randomUUID().toString();
+      String subject = "Text Message from $version Mail - " + uuid;
+      String version = "Seam 3";
+      mailConfig.setServerHost("localHost");
+      mailConfig.setServerPort(8977);
+
+      //Port is two off so this should fail
+      Wiser wiser = new Wiser(mailConfig.getServerPort()+2);
+      try
+      {
+         wiser.start();
+         
+   
+         person.setName(toName);
+         person.setEmail(toAddress);
+   
+         velocityMailMessage.get()
+            .from(fromName, fromAddress)
+            .replyTo(replyToAddress)
+            .to(toName, toAddress)
+            .templateSubject(subject)
+            .templateTextFromClassPath("template.text.vm")
+            .put("version", version)
+            .importance(MessagePriority.HIGH)
+            .send(session);
+      }
+      finally
+      {
+         stop(wiser);
+      }
    }
    
    /**

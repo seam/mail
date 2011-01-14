@@ -13,6 +13,7 @@ import java.net.URL;
 import java.util.Collection;
 
 import javax.inject.Inject;
+import javax.mail.SendFailedException;
 import javax.mail.Session;
 
 import org.apache.velocity.app.VelocityEngine;
@@ -472,7 +473,7 @@ public class VelocityMailMessageImpl implements VelocityMailMessage
       }
    }
 
-   public EmailMessage send(Session session)
+   public EmailMessage send(Session session) throws SendFailedException
    {
       if (!templatesMerged)
       {

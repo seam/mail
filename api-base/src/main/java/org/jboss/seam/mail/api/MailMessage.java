@@ -4,6 +4,7 @@ import java.io.File;
 import java.net.URL;
 import java.util.Collection;
 
+import javax.mail.SendFailedException;
 import javax.mail.Session;
 
 import org.jboss.seam.mail.core.EmailAttachment;
@@ -261,7 +262,8 @@ public interface MailMessage
     * Send the Message
     * 
     * @return
+    * @throws SendFailedException 
     */
-   public EmailMessage send(Session session);
+   public EmailMessage send(Session session) throws SendFailedException;
 
 }

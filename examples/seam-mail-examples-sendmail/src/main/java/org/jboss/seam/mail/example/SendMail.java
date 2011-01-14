@@ -6,6 +6,7 @@ import java.net.URL;
 import javax.enterprise.inject.Instance;
 import javax.enterprise.inject.Model;
 import javax.inject.Inject;
+import javax.mail.SendFailedException;
 import javax.mail.Session;
 
 import org.jboss.seam.mail.api.MailMessage;
@@ -30,7 +31,7 @@ public class SendMail
    @Inject
    private Person person;   
 
-   public void sendText()
+   public void sendText() throws SendFailedException
    {
       mailMessage.get()
             .from("Seam Framework", "seam@jboss.org")
@@ -40,7 +41,7 @@ public class SendMail
             .send(session);
    }
 
-   public void sendHTML() throws MalformedURLException
+   public void sendHTML() throws MalformedURLException, SendFailedException
    {
       VelocityMailMessage vmm = velocityMailMessage.get();
       
@@ -54,7 +55,7 @@ public class SendMail
             vmm.send(session);
    }
 
-   public void sendHTMLwithAlternative() throws MalformedURLException
+   public void sendHTMLwithAlternative() throws MalformedURLException, SendFailedException
    {
       velocityMailMessage.get()
             .from("Seam Framework", "seam@jboss.org")

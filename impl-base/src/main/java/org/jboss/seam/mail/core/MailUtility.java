@@ -4,6 +4,7 @@ import java.net.UnknownHostException;
 import java.util.Properties;
 
 import javax.mail.MessagingException;
+import javax.mail.SendFailedException;
 import javax.mail.Session;
 
 import org.jboss.seam.mail.core.enumurations.RecipientType;
@@ -85,7 +86,7 @@ public class MailUtility
       }
    }
 
-   public static void send(EmailMessage e, Session session)
+   public static void send(EmailMessage e, Session session) throws SendFailedException
    {
       BaseMailMessage b = new BaseMailMessage(session, e.getRootSubType());
 

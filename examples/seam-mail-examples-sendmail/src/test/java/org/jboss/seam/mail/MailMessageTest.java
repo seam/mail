@@ -1,11 +1,12 @@
 package org.jboss.seam.mail;
 
-import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 
 import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
 import javax.mail.MessagingException;
+import javax.mail.SendFailedException;
 import javax.mail.Session;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeUtility;
@@ -72,7 +73,7 @@ public class MailMessageTest
    String text = "This is a Text Alternative";
 
    @Test
-   public void testTextMailMessage() throws IOException, MessagingException
+   public void testTextMailMessage() throws MessagingException
    {
       String subject = "Text Message from Seam Mail - " + java.util.UUID.randomUUID().toString();
 
@@ -124,7 +125,7 @@ public class MailMessageTest
    }
 
    @Test
-   public void testHTMLMailMessage() throws IOException, MessagingException
+   public void testHTMLMailMessage() throws MalformedURLException, MessagingException
    {
       String subject = "HTML Message from Seam Mail - " + java.util.UUID.randomUUID().toString();
 
@@ -175,7 +176,7 @@ public class MailMessageTest
    }
 
    @Test
-   public void testHTMLTextAltMailMessage() throws IOException, MessagingException
+   public void testHTMLTextAltMailMessage() throws MalformedURLException, MessagingException
    {
       String subject = "HTML+Text Message from Seam Mail - " + java.util.UUID.randomUUID().toString();
 
@@ -223,7 +224,7 @@ public class MailMessageTest
    }
    
    @Test
-   public void testTextMailMessageLongFields() throws IOException, MessagingException
+   public void testTextMailMessageLongFields() throws MessagingException
    {
       String subject = "Sometimes it is important to have a really long subject even if nobody is going to read it - " + java.util.UUID.randomUUID().toString();
       
@@ -274,6 +275,43 @@ public class MailMessageTest
       Assert.assertTrue(mess.getHeader("Content-Type", null).startsWith("multipart/mixed"));
 
       // TODO Verify MimeBodyPart hierarchy and $person resolution is happening.
+   }
+   
+   @Test(expected=SendFailedException.class)
+   public void testTextMailMessageSendFailed() throws SendFailedException
+   {
+      String subject = "Text Message from Seam Mail - " + java.util.UUID.randomUUID().toString();
+
+      mailConfig.setServerHost("localHost");
+      mailConfig.setServerPort(8977);
+      
+      String messageId = "1234@seam.test.com";
+
+      //Port is one off so this should fail
+      Wiser wiser = new Wiser(mailConfig.getServerPort()+1);
+      
+      try
+      {
+         wiser.start();
+   
+   
+         person.setName(toName);
+         person.setEmail(toAddress);
+   
+         mailMessage.get()
+            .from(fromName, fromAddress)
+            .replyTo(replyToAddress)
+            .to(toName, toAddress)
+            .subject(subject)
+            .textBody(text)
+            .importance(MessagePriority.HIGH)
+            .messageId(messageId)
+            .send(session);
+      }
+      finally
+      {
+         stop(wiser);
+      }      
    }
    
    /**

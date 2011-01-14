@@ -6,6 +6,7 @@ import java.net.URL;
 import java.util.Collection;
 
 import javax.inject.Inject;
+import javax.mail.SendFailedException;
 import javax.mail.Session;
 
 import org.jboss.seam.mail.api.MailMessage;
@@ -267,7 +268,7 @@ public class MailMessageImpl implements MailMessage
       return emailMessage;
    }
 
-   public EmailMessage send(Session session)
+   public EmailMessage send(Session session) throws SendFailedException
    {
       MailUtility.send(emailMessage, session);
 

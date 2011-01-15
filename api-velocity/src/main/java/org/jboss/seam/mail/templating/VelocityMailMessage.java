@@ -6,9 +6,9 @@ import java.util.Collection;
 
 import javax.mail.SendFailedException;
 import javax.mail.Session;
+import javax.mail.internet.InternetAddress;
 
 import org.jboss.seam.mail.core.EmailAttachment;
-import org.jboss.seam.mail.core.EmailContact;
 import org.jboss.seam.mail.core.EmailMessage;
 import org.jboss.seam.mail.core.enumurations.ContentDisposition;
 import org.jboss.seam.mail.core.enumurations.MessagePriority;
@@ -21,7 +21,7 @@ import org.jboss.seam.mail.core.enumurations.MessagePriority;
 public interface VelocityMailMessage
 {
 
-   // Begin Recipients
+// Begin Recipients
 
    /**
     * Convenience method to set the FROM address
@@ -38,9 +38,9 @@ public interface VelocityMailMessage
     */
    public VelocityMailMessage from(String name, String address);
 
-   public VelocityMailMessage from(EmailContact emailContact);
+   public VelocityMailMessage from(InternetAddress emailAddress);
    
-   public VelocityMailMessage from(Collection<EmailContact> emailContacts);
+   public VelocityMailMessage from(Collection<InternetAddress> emailAddresses);
 
    /**
     * Convenience method to set the REPLY-TO address
@@ -69,21 +69,21 @@ public interface VelocityMailMessage
    public VelocityMailMessage to(String name, String address);
 
    /**
-    * Add TO recipient using EmailContact
+    * Add TO recipient using InternetAddress
     * 
-    * @param emailContact
+    * @param InternetAddress
     * @return
     */
-   public VelocityMailMessage to(EmailContact emailContact);
+   public VelocityMailMessage to(InternetAddress emailAddress);
 
    /**
     * Convenience method to add a TO recipients using a collection of
-    * EmailContact
+    * InternetAddress
     * 
     * @param name Personal name of the recipient eg "John Doe"
     * @param address Email address of the recipient eg "john.doe@example.com"
     */
-   public VelocityMailMessage to(Collection<EmailContact> emailContacts);
+   public VelocityMailMessage to(Collection<InternetAddress> emailAddress);
 
    /**
     * Convenience method to add a CC (Carbon Copy) recipient using UTF-8 charset
@@ -103,15 +103,15 @@ public interface VelocityMailMessage
     */
    public VelocityMailMessage cc(String name, String address);
 
-   public VelocityMailMessage cc(EmailContact emailContact);
+   public VelocityMailMessage cc(InternetAddress emailAddress);
 
    /**
     * Add collection of CC recipients
     * 
-    * @param emailContact Collection of EmailContact
+    * @param InternetAddress Collection of InternetAddress
     * @return
     */
-   public VelocityMailMessage cc(Collection<EmailContact> emailContacts);
+   public VelocityMailMessage cc(Collection<InternetAddress> emailAddresses);
 
    public VelocityMailMessage bcc(String address);
 
@@ -125,9 +125,9 @@ public interface VelocityMailMessage
     */
    public VelocityMailMessage bcc(String name, String address);
 
-   public VelocityMailMessage bcc(EmailContact emailContact);
+   public VelocityMailMessage bcc(InternetAddress emailAddresses);
 
-   public VelocityMailMessage bcc(Collection<EmailContact> emailContacts);
+   public VelocityMailMessage bcc(Collection<InternetAddress> emailAddresses);
 
    // End Recipients
 

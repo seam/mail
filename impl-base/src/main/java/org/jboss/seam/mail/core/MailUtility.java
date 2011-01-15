@@ -1,11 +1,15 @@
 package org.jboss.seam.mail.core;
 
+import java.io.UnsupportedEncodingException;
 import java.net.UnknownHostException;
+import java.util.Collection;
 import java.util.Properties;
 
 import javax.mail.MessagingException;
 import javax.mail.SendFailedException;
 import javax.mail.Session;
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
 
 import org.jboss.seam.mail.core.enumurations.RecipientType;
 import org.jboss.seam.mail.util.Strings;
@@ -17,6 +21,50 @@ import org.jboss.seam.mail.util.Strings;
  */
 public class MailUtility
 {
+   public static InternetAddress internetAddress(String address)
+   {
+      try
+      {
+         return new InternetAddress(address);
+      }
+      catch (AddressException e)
+      {
+         throw new InvalidAddressException(e);
+      }
+   }
+
+   public static InternetAddress internetAddress(String name, String address)
+   {
+      InternetAddress internetAddress;
+      try
+      {
+         internetAddress = new InternetAddress(address);
+         internetAddress.setPersonal(name);
+         return internetAddress;
+      }
+      catch (AddressException e)
+      {
+         throw new InvalidAddressException(e);
+      }
+      catch (UnsupportedEncodingException e)
+      {
+         throw new InvalidAddressException(e);
+      }
+   }
+
+   public static InternetAddress[] getInternetAddressses(InternetAddress emaiAddress)
+   {
+      InternetAddress[] internetAddresses = { emaiAddress };
+
+      return internetAddresses;
+   }
+
+   public static InternetAddress[] getInternetAddressses(Collection<InternetAddress> recipients)
+   {
+      InternetAddress[] result = new InternetAddress[recipients.size()];
+      recipients.toArray(result);
+      return result;
+   }
 
    public static String getHostName()
    {

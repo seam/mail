@@ -8,6 +8,7 @@ import java.util.Collection;
 import javax.inject.Inject;
 import javax.mail.SendFailedException;
 import javax.mail.Session;
+import javax.mail.internet.InternetAddress;
 
 import org.jboss.seam.mail.api.MailMessage;
 import org.jboss.seam.mail.core.enumurations.ContentDisposition;
@@ -41,121 +42,121 @@ public class MailMessageImpl implements MailMessage
 
    public MailMessage from(String address)
    {
-      emailMessage.addFromAddress(new EmailContact(address));
+      emailMessage.addFromAddress(MailUtility.internetAddress(address));
       return this;
    }
 
    public MailMessage from(String name, String address)
    {
-      emailMessage.addFromAddress(new EmailContact(name, address));
+      emailMessage.addFromAddress(MailUtility.internetAddress(name, address));
       return this;
    }
 
-   public MailMessage from(EmailContact emailContact)
+   public MailMessage from(InternetAddress emailAddress)
    {
-      emailMessage.addFromAddress(emailContact);
+      emailMessage.addFromAddress(emailAddress);
       return this;
    }
    
-   public MailMessage from(Collection<EmailContact> emailContacts)
+   public MailMessage from(Collection<InternetAddress> emailAddresses)
    {
-      emailMessage.addFromAddresses(emailContacts);
+      emailMessage.addFromAddresses(emailAddresses);
       return this;
    }
 
    public MailMessage replyTo(String address)
    {
-      emailMessage.addReplyToAddress(new EmailContact(address));
+      emailMessage.addReplyToAddress(MailUtility.internetAddress(address));
       return this;
    }
 
    public MailMessage replyTo(String name, String address)
    {
-      emailMessage.addReplyToAddress(new EmailContact(name, address));
+      emailMessage.addReplyToAddress(MailUtility.internetAddress(name, address));
       return this;
    }
 
-   public MailMessage replyTo(EmailContact emailContact)
+   public MailMessage replyTo(InternetAddress emailAddress)
    {
-      emailMessage.addReplyToAddress(emailContact);
+      emailMessage.addReplyToAddress(emailAddress);
       return this;
    }
 
-   public MailMessage replyTo(Collection<EmailContact> emailContacts)
+   public MailMessage replyTo(Collection<InternetAddress> emailAddresses)
    {
-      emailMessage.addReplyToAddresses(emailContacts);
+      emailMessage.addReplyToAddresses(emailAddresses);
       return this;
    }
 
    public MailMessage to(String address)
    {
-      emailMessage.addToAddress(new EmailContact(address));
+      emailMessage.addToAddress(MailUtility.internetAddress(address));
       return this;
    }
 
    public MailMessage to(String name, String address)
    {
-      emailMessage.addToAddress(new EmailContact(name, address));
+      emailMessage.addToAddress(MailUtility.internetAddress(name, address));
       return this;
    }
 
-   public MailMessage to(EmailContact emailContact)
+   public MailMessage to(InternetAddress emailAddress)
    {
-      emailMessage.addToAddress(emailContact);
+      emailMessage.addToAddress(emailAddress);
       return this;
    }
 
-   public MailMessage to(Collection<EmailContact> emailContacts)
+   public MailMessage to(Collection<InternetAddress> emailAddresses)
    {
-      emailMessage.addToAddresses(emailContacts);
+      emailMessage.addToAddresses(emailAddresses);
       return this;
    }
 
    public MailMessage cc(String address)
    {
-      emailMessage.addCcAddress(new EmailContact(address));
+      emailMessage.addCcAddress(MailUtility.internetAddress(address));
       return this;
    }
 
    public MailMessage cc(String name, String address)
    {
-      emailMessage.addCcAddress(new EmailContact(name, address));
+      emailMessage.addCcAddress(MailUtility.internetAddress(name, address));
       return this;
    }
 
-   public MailMessage cc(EmailContact emailContact)
+   public MailMessage cc(InternetAddress emailAddress)
    {
-      emailMessage.addCcAddress(emailContact);
+      emailMessage.addCcAddress(emailAddress);
       return this;
    }
 
-   public MailMessage cc(Collection<EmailContact> emailContacts)
+   public MailMessage cc(Collection<InternetAddress> emailAddresses)
    {
-      emailMessage.addCcAddresses(emailContacts);
+      emailMessage.addCcAddresses(emailAddresses);
       return this;
    }
 
    public MailMessage bcc(String address)
    {
-      emailMessage.addBccAddress(new EmailContact(address));
+      emailMessage.addBccAddress(MailUtility.internetAddress(address));
       return this;
    }
 
    public MailMessage bcc(String name, String address)
    {
-      emailMessage.addBccAddress(new EmailContact(name, address));
+      emailMessage.addBccAddress(MailUtility.internetAddress(name, address));
       return this;
    }
 
-   public MailMessage bcc(EmailContact emailContact)
+   public MailMessage bcc(InternetAddress emailAddress)
    {
-      emailMessage.addBccAddress(emailContact);
+      emailMessage.addBccAddress(emailAddress);
       return this;
    }
 
-   public MailMessage bcc(Collection<EmailContact> emailContacts)
+   public MailMessage bcc(Collection<InternetAddress> emailAddresses)
    {
-      emailMessage.addBccAddresses(emailContacts);
+      emailMessage.addBccAddresses(emailAddresses);
       return this;
    }
 

@@ -6,9 +6,10 @@ import java.util.Collection;
 
 import javax.mail.SendFailedException;
 import javax.mail.Session;
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
 
 import org.jboss.seam.mail.core.EmailAttachment;
-import org.jboss.seam.mail.core.EmailContact;
 import org.jboss.seam.mail.core.EmailMessage;
 import org.jboss.seam.mail.core.enumurations.ContentDisposition;
 import org.jboss.seam.mail.core.enumurations.MessagePriority;
@@ -27,8 +28,9 @@ public interface MailMessage
     * Convenience method to set the FROM address
     * 
     * @param address Email address of the recipient eq "john.doe@example.com"
+    * @throws AddressException 
     */
-   public MailMessage from(String address);
+   public MailMessage from(String address) throws AddressException;
 
    /**
     * Convenience method to set the FROM name and address using UTF-8 charset
@@ -38,9 +40,9 @@ public interface MailMessage
     */
    public MailMessage from(String name, String address);
 
-   public MailMessage from(EmailContact emailContact);
+   public MailMessage from(InternetAddress emailAddress);
    
-   public MailMessage from(Collection<EmailContact> emailContacts);
+   public MailMessage from(Collection<InternetAddress> emailAddresses);
 
    /**
     * Convenience method to set the REPLY-TO address
@@ -69,21 +71,21 @@ public interface MailMessage
    public MailMessage to(String name, String address);
 
    /**
-    * Add TO recipient using EmailContact
+    * Add TO recipient using InternetAddress
     * 
-    * @param emailContact
+    * @param InternetAddress
     * @return
     */
-   public MailMessage to(EmailContact emailContact);
+   public MailMessage to(InternetAddress emailAddress);
 
    /**
     * Convenience method to add a TO recipients using a collection of
-    * EmailContact
+    * InternetAddress
     * 
     * @param name Personal name of the recipient eg "John Doe"
     * @param address Email address of the recipient eg "john.doe@example.com"
     */
-   public MailMessage to(Collection<EmailContact> emailContacts);
+   public MailMessage to(Collection<InternetAddress> emailAddress);
 
    /**
     * Convenience method to add a CC (Carbon Copy) recipient using UTF-8 charset
@@ -103,15 +105,15 @@ public interface MailMessage
     */
    public MailMessage cc(String name, String address);
 
-   public MailMessage cc(EmailContact emailContact);
+   public MailMessage cc(InternetAddress emailAddress);
 
    /**
     * Add collection of CC recipients
     * 
-    * @param emailContact Collection of EmailContact
+    * @param InternetAddress Collection of InternetAddress
     * @return
     */
-   public MailMessage cc(Collection<EmailContact> emailContacts);
+   public MailMessage cc(Collection<InternetAddress> emailAddresses);
 
    public MailMessage bcc(String address);
 
@@ -125,9 +127,9 @@ public interface MailMessage
     */
    public MailMessage bcc(String name, String address);
 
-   public MailMessage bcc(EmailContact emailContact);
+   public MailMessage bcc(InternetAddress emailAddresses);
 
-   public MailMessage bcc(Collection<EmailContact> emailContacts);
+   public MailMessage bcc(Collection<InternetAddress> emailAddresses);
 
    // End Recipients
 

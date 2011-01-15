@@ -15,13 +15,13 @@ import java.util.Collection;
 import javax.inject.Inject;
 import javax.mail.SendFailedException;
 import javax.mail.Session;
+import javax.mail.internet.InternetAddress;
 
 import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.exception.MethodInvocationException;
 import org.apache.velocity.exception.ParseErrorException;
 import org.apache.velocity.exception.ResourceNotFoundException;
 import org.jboss.seam.mail.core.EmailAttachment;
-import org.jboss.seam.mail.core.EmailContact;
 import org.jboss.seam.mail.core.EmailMessage;
 import org.jboss.seam.mail.core.MailContext;
 import org.jboss.seam.mail.core.MailUtility;
@@ -64,121 +64,121 @@ public class VelocityMailMessageImpl implements VelocityMailMessage
 
    public VelocityMailMessage from(String address)
    {
-      emailMessage.addFromAddress(new EmailContact(address));
+      emailMessage.addFromAddress(MailUtility.internetAddress(address));
       return this;
    }
 
    public VelocityMailMessage from(String name, String address)
    {
-      emailMessage.addFromAddress(new EmailContact(name, address));
+      emailMessage.addFromAddress(MailUtility.internetAddress(name, address));
       return this;
    }
 
-   public VelocityMailMessage from(EmailContact emailContact)
+   public VelocityMailMessage from(InternetAddress emailAddress)
    {
-      emailMessage.addFromAddress(emailContact);
+      emailMessage.addFromAddress(emailAddress);
       return this;
    }
    
-   public VelocityMailMessage from(Collection<EmailContact> emailContacts)
+   public VelocityMailMessage from(Collection<InternetAddress> emailAddresses)
    {
-      emailMessage.addFromAddresses(emailContacts);
+      emailMessage.addFromAddresses(emailAddresses);
       return this;
    }
 
    public VelocityMailMessage replyTo(String address)
    {
-      emailMessage.addReplyToAddress(new EmailContact(address));
+      emailMessage.addReplyToAddress(MailUtility.internetAddress(address));
       return this;
    }
 
    public VelocityMailMessage replyTo(String name, String address)
    {
-      emailMessage.addReplyToAddress(new EmailContact(name, address));
+      emailMessage.addReplyToAddress(MailUtility.internetAddress(name, address));
       return this;
    }
 
-   public VelocityMailMessage replyTo(EmailContact emailContact)
+   public VelocityMailMessage replyTo(InternetAddress emailAddress)
    {
-      emailMessage.addReplyToAddress(emailContact);
+      emailMessage.addReplyToAddress(emailAddress);
       return this;
    }
 
-   public VelocityMailMessage replyTo(Collection<EmailContact> emailContacts)
+   public VelocityMailMessage replyTo(Collection<InternetAddress> emailAddresses)
    {
-      emailMessage.addReplyToAddresses(emailContacts);
+      emailMessage.addReplyToAddresses(emailAddresses);
       return this;
    }
 
    public VelocityMailMessage to(String address)
    {
-      emailMessage.addToAddress(new EmailContact(address));
+      emailMessage.addToAddress(MailUtility.internetAddress(address));
       return this;
    }
 
    public VelocityMailMessage to(String name, String address)
    {
-      emailMessage.addToAddress(new EmailContact(name, address));
+      emailMessage.addToAddress(MailUtility.internetAddress(name, address));
       return this;
    }
 
-   public VelocityMailMessage to(EmailContact emailContact)
+   public VelocityMailMessage to(InternetAddress emailAddress)
    {
-      emailMessage.addToAddress(emailContact);
+      emailMessage.addToAddress(emailAddress);
       return this;
    }
 
-   public VelocityMailMessage to(Collection<EmailContact> emailContacts)
+   public VelocityMailMessage to(Collection<InternetAddress> emailAddresses)
    {
-      emailMessage.addToAddresses(emailContacts);
+      emailMessage.addToAddresses(emailAddresses);
       return this;
    }
 
    public VelocityMailMessage cc(String address)
    {
-      emailMessage.addCcAddress(new EmailContact(address));
+      emailMessage.addCcAddress(MailUtility.internetAddress(address));
       return this;
    }
 
    public VelocityMailMessage cc(String name, String address)
    {
-      emailMessage.addCcAddress(new EmailContact(name, address));
+      emailMessage.addCcAddress(MailUtility.internetAddress(name, address));
       return this;
    }
 
-   public VelocityMailMessage cc(EmailContact emailContact)
+   public VelocityMailMessage cc(InternetAddress emailAddress)
    {
-      emailMessage.addCcAddress(emailContact);
+      emailMessage.addCcAddress(emailAddress);
       return this;
    }
 
-   public VelocityMailMessage cc(Collection<EmailContact> emailContacts)
+   public VelocityMailMessage cc(Collection<InternetAddress> emailAddresses)
    {
-      emailMessage.addCcAddresses(emailContacts);
+      emailMessage.addCcAddresses(emailAddresses);
       return this;
    }
 
    public VelocityMailMessage bcc(String address)
    {
-      emailMessage.addBccAddress(new EmailContact(address));
+      emailMessage.addBccAddress(MailUtility.internetAddress(address));
       return this;
    }
 
    public VelocityMailMessage bcc(String name, String address)
    {
-      emailMessage.addBccAddress(new EmailContact(name, address));
+      emailMessage.addBccAddress(MailUtility.internetAddress(name, address));
       return this;
    }
 
-   public VelocityMailMessage bcc(EmailContact emailContact)
+   public VelocityMailMessage bcc(InternetAddress emailAddress)
    {
-      emailMessage.addBccAddress(emailContact);
+      emailMessage.addBccAddress(emailAddress);
       return this;
    }
 
-   public VelocityMailMessage bcc(Collection<EmailContact> emailContacts)
+   public VelocityMailMessage bcc(Collection<InternetAddress> emailAddresses)
    {
-      emailMessage.addBccAddresses(emailContacts);
+      emailMessage.addBccAddresses(emailAddresses);
       return this;
    }
 

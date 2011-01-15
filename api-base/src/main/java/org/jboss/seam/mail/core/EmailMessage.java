@@ -3,6 +3,8 @@ package org.jboss.seam.mail.core;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import javax.mail.internet.InternetAddress;
+
 import org.jboss.seam.mail.core.enumurations.MessagePriority;
 
 public class EmailMessage
@@ -11,11 +13,11 @@ public class EmailMessage
    private EmailMessageType type = EmailMessageType.STANDARD;
    private String messageId;
    private String lastMessageId;
-   private Collection<EmailContact> fromAddresses = new ArrayList<EmailContact>();
-   private Collection<EmailContact> replyToAddresses = new ArrayList<EmailContact>();
-   private Collection<EmailContact> toAddresses = new ArrayList<EmailContact>();
-   private Collection<EmailContact> ccAddresses = new ArrayList<EmailContact>();
-   private Collection<EmailContact> bccAddresses = new ArrayList<EmailContact>();
+   private Collection<InternetAddress> fromAddresses = new ArrayList<InternetAddress>();
+   private Collection<InternetAddress> replyToAddresses = new ArrayList<InternetAddress>();
+   private Collection<InternetAddress> toAddresses = new ArrayList<InternetAddress>();
+   private Collection<InternetAddress> ccAddresses = new ArrayList<InternetAddress>();
+   private Collection<InternetAddress> bccAddresses = new ArrayList<InternetAddress>();
    private Collection<Header> headers = new ArrayList<Header>();
 
    private String subject;
@@ -79,92 +81,92 @@ public class EmailMessage
       this.lastMessageId = lastMessageId;
    }
    
-   public Collection<EmailContact> getFromAddresses()
+   public Collection<InternetAddress> getFromAddresses()
    {
       return fromAddresses;
    }
 
-   public void addFromAddress(EmailContact fromAddress)
+   public void addFromAddress(InternetAddress fromAddress)
    {
       this.fromAddresses.add(fromAddress);
    }
 
-   public void addFromAddresses(Collection<EmailContact> fromAddresses)
+   public void addFromAddresses(Collection<InternetAddress> fromAddresses)
    {
       this.fromAddresses.addAll(fromAddresses);
    }
 
-   public Collection<EmailContact> getReplyToAddresses()
+   public Collection<InternetAddress> getReplyToAddresses()
    {
       return replyToAddresses;
    }
 
-   public void addReplyToAddress(EmailContact replyToAddress)
+   public void addReplyToAddress(InternetAddress replyToAddress)
    {
       this.replyToAddresses.add(replyToAddress);
    }
 
-   public void addReplyToAddresses(Collection<EmailContact> replyToAddress)
+   public void addReplyToAddresses(Collection<InternetAddress> replyToAddress)
    {
       this.replyToAddresses.addAll(replyToAddress);
    }
 
-   public Collection<EmailContact> getToAddresses()
+   public Collection<InternetAddress> getToAddresses()
    {
       return toAddresses;
    }
 
-   public void addToAddress(EmailContact toAddress)
+   public void addToAddress(InternetAddress toAddress)
    {
       this.toAddresses.add(toAddress);
    }
 
-   public void addToAddresses(Collection<EmailContact> toAddresses)
+   public void addToAddresses(Collection<InternetAddress> toAddresses)
    {
       this.toAddresses.addAll(toAddresses);
    }
 
-   public boolean removeToAddress(EmailContact toAddress)
+   public boolean removeToAddress(InternetAddress toAddress)
    {
       return toAddresses.remove(toAddress);
    }
 
-   public Collection<EmailContact> getCcAddresses()
+   public Collection<InternetAddress> getCcAddresses()
    {
       return ccAddresses;
    }
 
-   public void addCcAddress(EmailContact ccAddress)
+   public void addCcAddress(InternetAddress ccAddress)
    {
       this.ccAddresses.add(ccAddress);
    }
 
-   public void addCcAddresses(Collection<EmailContact> ccAddresses)
+   public void addCcAddresses(Collection<InternetAddress> ccAddresses)
    {
       this.ccAddresses.addAll(ccAddresses);
    }
 
-   public boolean removeCcAddress(EmailContact ccAddress)
+   public boolean removeCcAddress(InternetAddress ccAddress)
    {
       return ccAddresses.remove(ccAddress);
    }
 
-   public Collection<EmailContact> getBccAddresses()
+   public Collection<InternetAddress> getBccAddresses()
    {
       return bccAddresses;
    }
 
-   public void addBccAddress(EmailContact bccAddress)
+   public void addBccAddress(InternetAddress bccAddress)
    {
       this.bccAddresses.add(bccAddress);
    }
 
-   public void addBccAddresses(Collection<EmailContact> bccAddresses)
+   public void addBccAddresses(Collection<InternetAddress> bccAddresses)
    {
       this.bccAddresses.addAll(bccAddresses);
    }
 
-   public boolean removeBccAddress(EmailContact bccAddress)
+   public boolean removeBccAddress(InternetAddress bccAddress)
    {
       return bccAddresses.remove(bccAddress);
    }

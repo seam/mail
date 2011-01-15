@@ -12,6 +12,8 @@ import javax.mail.MessagingException;
 import javax.mail.SendFailedException;
 import javax.mail.Session;
 import javax.mail.Transport;
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
@@ -20,7 +22,6 @@ import org.jboss.seam.mail.core.enumurations.ContentDisposition;
 import org.jboss.seam.mail.core.enumurations.MailHeader;
 import org.jboss.seam.mail.core.enumurations.MessagePriority;
 import org.jboss.seam.mail.core.enumurations.RecipientType;
-import org.jboss.seam.mail.util.EmailContactUtil;
 
 public class BaseMailMessage
 {
@@ -63,35 +64,11 @@ public class BaseMailMessage
       initializeMessageId();
    }
 
-   public void addRecipient(RecipientType recipientType, String address)
+   public void addRecipient(RecipientType recipientType, InternetAddress emailContact)
    {
       try
       {
-         rootMimeMessage.addRecipient(recipientType.getRecipientType(), EmailContactUtil.getInternetAddress(new EmailContact(address)));
-      }
-      catch (MessagingException e)
-      {
-         throw new RuntimeException("Unable to add recipient " + recipientType + ": " + address + " to MIME message", e);
-      }
-   }
-
-   public void addRecipient(RecipientType recipientType, String name, String address)
-   {
-      try
-      {
-         rootMimeMessage.addRecipient(recipientType.getRecipientType(), EmailContactUtil.getInternetAddress(new EmailContact(name, address)));
-      }
-      catch (MessagingException e)
-      {
-         throw new RuntimeException("Unable to add recipient " + recipientType + ": " + address + " to MIME message", e);
-      }
-   }
-
-   public void addRecipient(RecipientType recipientType, EmailContact emailContact)
-   {
-      try
-      {
-         rootMimeMessage.addRecipient(recipientType.getRecipientType(), EmailContactUtil.getInternetAddress(emailContact));
+         rootMimeMessage.addRecipient(recipientType.getRecipientType(), emailContact);
       }
       catch (MessagingException e)
       {
@@ -99,11 +76,11 @@ public class BaseMailMessage
       }
    }
 
-   public void addRecipients(RecipientType recipientType, EmailContact[] emailContacts)
+   public void addRecipients(RecipientType recipientType, InternetAddress[] emailAddresses)
    {
       try
       {
-         rootMimeMessage.addRecipients(recipientType.getRecipientType(), EmailContactUtil.getInternetAddressses(emailContacts));
+         rootMimeMessage.addRecipients(recipientType.getRecipientType(), emailAddresses);
       }
       catch (MessagingException e)
       {
@@ -111,32 +88,22 @@ public class BaseMailMessage
       }
    }
 
-   public void addRecipients(RecipientType recipientType, Collection<EmailContact> emailContacts)
+   public void addRecipients(RecipientType recipientType, Collection<InternetAddress> emailAddresses)
    {
       try
       {
-         rootMimeMessage.addRecipients(recipientType.getRecipientType(), EmailContactUtil.getInternetAddressses(emailContacts));
+         rootMimeMessage.addRecipients(recipientType.getRecipientType(), MailUtility.getInternetAddressses(emailAddresses));
       }
       catch (MessagingException e)
       {
       }
    }
 
-   public void setFrom(String address)
-   {
-      setFrom(new EmailContact(address));
-   }
-
-   public void setFrom(String name, String address)
-   {
-      setFrom(new EmailContact(name, address));
-   }
-   
-   public void setFrom(EmailContact emailContact)
+   public void setFrom(InternetAddress emailAddress)
    {
       try
       {
-         rootMimeMessage.setFrom(EmailContactUtil.getInternetAddress(emailContact));
+         rootMimeMessage.setFrom(emailAddress);
       }
       catch (MessagingException e)
       {
@@ -144,13 +111,13 @@ public class BaseMailMessage
       }
    }
 
-   public BaseMailMessage setFrom(Collection<EmailContact> emailContacts)
+   public BaseMailMessage setFrom(Collection<InternetAddress> emailAddresses)
    {
       try
-      {  
-         if(emailContacts.size() > 0)
+      {
+         if (emailAddresses.size() > 0)
          {
-            rootMimeMessage.addFrom(EmailContactUtil.getInternetAddressses(emailContacts));
+            rootMimeMessage.addFrom(MailUtility.getInternetAddressses(emailAddresses));
          }
       }
       catch (MessagingException e)
@@ -160,28 +127,28 @@ public class BaseMailMessage
       return this;
    }
 
-   public void setReplyTo(String address)
+   public void setReplyTo(String address) throws AddressException
    {
-      setReplyTo(new EmailContact(address));
+      setReplyTo(MailUtility.internetAddress(address));
    }
 
    public void setReplyTo(String name, String address)
    {
-      setReplyTo(new EmailContact(name, address));
+      setReplyTo(MailUtility.internetAddress(name, address));
    }
 
-   public void setReplyTo(EmailContact emailContact)
+   public void setReplyTo(InternetAddress emailContact)
    {
-      List<EmailContact> emailContacts = new ArrayList<EmailContact>();
+      List<InternetAddress> emailContacts = new ArrayList<InternetAddress>();
       emailContacts.add(emailContact);
       setReplyTo(emailContacts);
    }
 
-   public void setReplyTo(Collection<EmailContact> emailContacts)
+   public void setReplyTo(Collection<InternetAddress> emailContacts)
    {
       try
       {
-         rootMimeMessage.setReplyTo(EmailContactUtil.getInternetAddressses(emailContacts));
+         rootMimeMessage.setReplyTo(MailUtility.getInternetAddressses(emailContacts));
       }
       catch (MessagingException e)
       {
@@ -331,7 +298,7 @@ public class BaseMailMessage
          throw new RuntimeException("Unable to add TextBody to MimeMessage", e);
       }
    }
-   
+
    public void setHTMLNotRelated(String html)
    {
       try
@@ -343,7 +310,6 @@ public class BaseMailMessage
          throw new RuntimeException("Unable to add TextBody to MimeMessage", e);
       }
    }
-     
 
    public void setHTMLTextAlt(String html, String text)
    {

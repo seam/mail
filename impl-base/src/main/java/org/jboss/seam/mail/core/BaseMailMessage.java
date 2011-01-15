@@ -9,7 +9,6 @@ import java.util.Map;
 import java.util.UUID;
 
 import javax.mail.MessagingException;
-import javax.mail.SendFailedException;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.AddressException;
@@ -422,7 +421,7 @@ public class BaseMailMessage
       return getRootMimeMessage();
    }
 
-   public void send() throws SendFailedException
+   public void send()
    {
       finalizeMessage();
 
@@ -432,7 +431,7 @@ public class BaseMailMessage
       }
       catch (MessagingException e)
       {
-         throw new SendFailedException("Message Send Failed", e);
+         throw new SendFailedException("Send Failed", e);
       }
 
    }

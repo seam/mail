@@ -6,7 +6,6 @@ import java.util.Collection;
 import java.util.Properties;
 
 import javax.mail.MessagingException;
-import javax.mail.SendFailedException;
 import javax.mail.Session;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;

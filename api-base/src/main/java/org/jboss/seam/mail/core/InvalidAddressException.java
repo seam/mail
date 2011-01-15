@@ -1,6 +1,12 @@
 package org.jboss.seam.mail.core;
 
-public class InvalidAddressException extends RuntimeException
+/**
+ * Thrown when an email address fails to validate as RFC822
+ * 
+ * @author Cody Lerum
+ * 
+ */
+public class InvalidAddressException extends MailException
 {
    private static final long serialVersionUID = 1L;
 

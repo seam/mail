@@ -6,7 +6,6 @@ import java.net.URL;
 import java.util.Collection;
 
 import javax.inject.Inject;
-import javax.mail.SendFailedException;
 import javax.mail.Session;
 import javax.mail.internet.InternetAddress;
 

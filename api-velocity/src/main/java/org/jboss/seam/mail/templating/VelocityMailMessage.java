@@ -4,12 +4,12 @@ import java.io.File;
 import java.net.URL;
 import java.util.Collection;
 
-import javax.mail.SendFailedException;
 import javax.mail.Session;
 import javax.mail.internet.InternetAddress;
 
 import org.jboss.seam.mail.core.EmailAttachment;
 import org.jboss.seam.mail.core.EmailMessage;
+import org.jboss.seam.mail.core.SendFailedException;
 import org.jboss.seam.mail.core.enumurations.ContentDisposition;
 import org.jboss.seam.mail.core.enumurations.MessagePriority;
 

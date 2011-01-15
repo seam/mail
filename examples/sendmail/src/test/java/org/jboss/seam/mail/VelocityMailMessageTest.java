@@ -6,7 +6,6 @@ import java.net.URL;
 import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
 import javax.mail.MessagingException;
-import javax.mail.SendFailedException;
 import javax.mail.Session;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeUtility;
@@ -17,6 +16,7 @@ import org.jboss.arquillian.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.seam.mail.core.MailConfig;
 import org.jboss.seam.mail.core.MailTestUtil;
+import org.jboss.seam.mail.core.SendFailedException;
 import org.jboss.seam.mail.core.enumurations.ContentDisposition;
 import org.jboss.seam.mail.core.enumurations.MessagePriority;
 import org.jboss.seam.mail.example.Gmail;
@@ -267,7 +267,7 @@ public class VelocityMailMessageTest
    }
    
    @Test(expected=SendFailedException.class)
-   public void testVelocityTextMailMessageSendFailed() throws SendFailedException
+   public void testVelocityTextMailMessageSendFailed()
    {
       String uuid = java.util.UUID.randomUUID().toString();
       String subject = "Text Message from $version Mail - " + uuid;

@@ -6,7 +6,6 @@ import java.net.URL;
 import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
 import javax.mail.MessagingException;
-import javax.mail.SendFailedException;
 import javax.mail.Session;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeUtility;
@@ -21,6 +20,7 @@ import org.jboss.seam.mail.core.InvalidAddressException;
 import org.jboss.seam.mail.core.MailConfig;
 import org.jboss.seam.mail.core.MailTestUtil;
 import org.jboss.seam.mail.core.MailUtility;
+import org.jboss.seam.mail.core.SendFailedException;
 import org.jboss.seam.mail.core.enumurations.ContentDisposition;
 import org.jboss.seam.mail.core.enumurations.MessagePriority;
 import org.jboss.seam.mail.example.Person;
@@ -279,7 +279,7 @@ public class MailMessageTest
    }
    
    @Test(expected=SendFailedException.class)
-   public void testTextMailMessageSendFailed() throws SendFailedException
+   public void testTextMailMessageSendFailed()
    {
       String subject = "Text Message from Seam Mail - " + java.util.UUID.randomUUID().toString();
 

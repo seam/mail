@@ -19,18 +19,18 @@
 		<dependency>
 			<groupId>org.jboss.seam.mail</groupId>
 			<artifactId>seam-mail-impl-base</artifactId>
-			<version>${project.version}</version>
+         <scope>compile</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>org.jboss.seam.mail</groupId>
 			<artifactId>seam-mail-api-velocity</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.apache.velocity</groupId>
 			<artifactId>velocity</artifactId>
+         <!-- remove version when switch to seam-parent 7 -->
 			<version>1.6.4</version>
 		</dependency>
 
@@ -48,19 +48,16 @@
 		<dependency>
 			<groupId>org.jboss.arquillian</groupId>
 			<artifactId>arquillian-junit</artifactId>
-			<scope>test</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>org.jboss.arquillian.container</groupId>
 			<artifactId>arquillian-weld-ee-embedded-1.1</artifactId>
-			<scope>test</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<scope>test</scope>
 		</dependency>
 
 	</dependencies>

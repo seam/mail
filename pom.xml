@@ -11,13 +11,11 @@
 	<artifactId>seam-mail-parent</artifactId>
 	<packaging>pom</packaging>
 	<version>3.0.0-SNAPSHOT</version>
-	<name>Seam Mail Module Parent</name>
+	<name>Seam Mail Module</name>
 
 	<properties>
 		<seam.version>3.0.0.b05</seam.version>
 	</properties>
-
-	<!-- <prerequisites> <maven>3.0</maven> </prerequisites> -->
 
 	<modules>
 		<module>api-base</module>
@@ -36,13 +34,32 @@
 				<scope>import</scope>
 			</dependency>
 
-			<!-- Override submodule versions from org.jboss.seam:seam -->
+         <!-- Override versions from seam-bom for this module's artifacts -->
 			<dependency>
 				<groupId>org.jboss.seam.mail</groupId>
-				<artifactId>seam-mail</artifactId>
+				<artifactId>seam-mail-api-base</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 
+			<dependency>
+				<groupId>org.jboss.seam.mail</groupId>
+				<artifactId>seam-mail-api-velocity</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.jboss.seam.mail</groupId>
+				<artifactId>seam-mail-impl-base</artifactId>
+				<version>${project.version}</version>
+            <scope>runtime</scope>
+			</dependency>
+
+			<dependency>
+				<groupId>org.jboss.seam.mail</groupId>
+				<artifactId>seam-mail-impl-velocity</artifactId>
+				<version>${project.version}</version>
+            <scope>runtime</scope>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 
@@ -81,9 +98,9 @@
 				</property>
 			</activation>
 			<modules>
-				<module>dist</module>
 				<module>docs</module>
 				<module>examples/sendmail</module>
+				<module>dist</module>
 			</modules>
 		</profile>
 		<profile>
@@ -136,5 +153,26 @@
 		<developerConnection>scm:git:git@github.com:seam/mail.git</developerConnection>
 		<url>http://github.com/seam/mail</url>
 	</scm>
+
+   <issueManagement>
+      <system>JIRA</system>
+      <url>http://issues.jboss.org/browse/SEAMMAIL</url>
+   </issueManagement>
+
+   <ciManagement>
+      <system>Hudson</system>
+      <url>http://hudson.jboss.org/hudson/view/Seam/job/Seam-3.X-mail-CI</url>
+   </ciManagement>
+
+   <developers>
+      <developer>
+         <name>Cody Lerum</name>
+         <url>http://community.jboss.org/people/clerum</url>
+         <timezone>MST</timezone>
+         <roles>
+            <role>Project Lead</role>
+         </roles>
+      </developer>
+   </developers>
 
 </project>

@@ -23,22 +23,73 @@
 
       <dependency>
          <groupId>org.jboss.seam.mail</groupId>
-         <artifactId>seam-mail</artifactId>
+         <artifactId>seam-mail-api-base</artifactId>
          <optional>true</optional>
       </dependency>
 
       <dependency>
          <groupId>org.jboss.seam.mail</groupId>
-         <artifactId>seam-mail</artifactId>
+         <artifactId>seam-mail-api-base</artifactId>
          <version>${project.version}</version>
          <classifier>sources</classifier>
+         <optional>true</optional>
       </dependency>
 
       <dependency>
          <groupId>org.jboss.seam.mail</groupId>
-         <artifactId>seam-mail</artifactId>
+         <artifactId>seam-mail-api-base</artifactId>
          <version>${project.version}</version>
          <classifier>javadoc</classifier>
+         <optional>true</optional>
+      </dependency>
+
+      <dependency>
+         <groupId>org.jboss.seam.mail</groupId>
+         <artifactId>seam-mail-api-velocity</artifactId>
+         <optional>true</optional>
+      </dependency>
+
+      <dependency>
+         <groupId>org.jboss.seam.mail</groupId>
+         <artifactId>seam-mail-api-velocity</artifactId>
+         <version>${project.version}</version>
+         <classifier>sources</classifier>
+         <optional>true</optional>
+      </dependency>
+
+      <dependency>
+         <groupId>org.jboss.seam.mail</groupId>
+         <artifactId>seam-mail-api-velocity</artifactId>
+         <version>${project.version}</version>
+         <classifier>javadoc</classifier>
+         <optional>true</optional>
+      </dependency>
+
+      <dependency>
+         <groupId>org.jboss.seam.mail</groupId>
+         <artifactId>seam-mail-impl-base</artifactId>
+         <optional>true</optional>
+      </dependency>
+
+      <dependency>
+         <groupId>org.jboss.seam.mail</groupId>
+         <artifactId>seam-mail-impl-base</artifactId>
+         <version>${project.version}</version>
+         <classifier>sources</classifier>
+         <optional>true</optional>
+      </dependency>
+
+      <dependency>
+         <groupId>org.jboss.seam.mail</groupId>
+         <artifactId>seam-mail-impl-velocity</artifactId>
+         <optional>true</optional>
+      </dependency>
+
+      <dependency>
+         <groupId>org.jboss.seam.mail</groupId>
+         <artifactId>seam-mail-impl-velocity</artifactId>
+         <version>${project.version}</version>
+         <classifier>sources</classifier>
          <optional>true</optional>
       </dependency>
 
@@ -52,9 +103,9 @@
 
       <dependency>
          <groupId>org.jboss.seam.mail</groupId>
-         <artifactId>seam-mail-examples-sendmail</artifactId>
+         <artifactId>seam-mail-example-sendmail</artifactId>
          <version>${project.version}</version>
-         <type>zip</type>
+         <type>war</type>
          <optional>true</optional>
       </dependency>
 

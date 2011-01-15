@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>org.jboss.seam.mail</groupId>
-	<artifactId>seam-mail-examples-sendmail</artifactId>
+	<artifactId>seam-mail-example-sendmail</artifactId>
 	<version>3.0.0-SNAPSHOT</version>
 	<packaging>war</packaging>
 

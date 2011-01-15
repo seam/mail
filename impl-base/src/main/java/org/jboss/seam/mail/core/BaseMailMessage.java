@@ -455,7 +455,14 @@ public class BaseMailMessage
          {
             try
             {
-               relatedMultipart.addBodyPart(a);
+               if (relatedMultipart.getCount() > 0)
+               {
+                  relatedMultipart.addBodyPart(a);
+               }
+               else
+               {
+                  rootMultipart.addBodyPart(a);
+               }
             }
             catch (MessagingException e)
             {

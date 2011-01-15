@@ -20,7 +20,7 @@ import org.jboss.seam.mail.util.Strings;
  */
 public class MailUtility
 {
-   public static InternetAddress internetAddress(String address)
+   public static InternetAddress internetAddress(String address) throws InvalidAddressException
    {
       try
       {
@@ -32,7 +32,7 @@ public class MailUtility
       }
    }
 
-   public static InternetAddress internetAddress(String name, String address)
+   public static InternetAddress internetAddress(String name, String address) throws InvalidAddressException
    {
       InternetAddress internetAddress;
       try

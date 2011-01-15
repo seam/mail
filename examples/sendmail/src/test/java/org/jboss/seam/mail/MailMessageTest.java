@@ -17,6 +17,7 @@ import org.jboss.arquillian.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.seam.mail.api.MailMessage;
 import org.jboss.seam.mail.core.EmailMessage;
+import org.jboss.seam.mail.core.InvalidAddressException;
 import org.jboss.seam.mail.core.MailConfig;
 import org.jboss.seam.mail.core.MailTestUtil;
 import org.jboss.seam.mail.core.MailUtility;
@@ -300,6 +301,43 @@ public class MailMessageTest
    
          mailMessage.get()
             .from(fromName, fromAddress)
+            .replyTo(replyToAddress)
+            .to(toName, toAddress)
+            .subject(subject)
+            .textBody(text)
+            .importance(MessagePriority.HIGH)
+            .messageId(messageId)
+            .send(session);
+      }
+      finally
+      {
+         stop(wiser);
+      }      
+   }
+   
+   @Test(expected=InvalidAddressException.class)
+   public void testTextMailMessageInvalidAddress() throws SendFailedException
+   {
+      String subject = "Text Message from Seam Mail - " + java.util.UUID.randomUUID().toString();
+
+      mailConfig.setServerHost("localHost");
+      mailConfig.setServerPort(8977);
+      
+      String messageId = "1234@seam.test.com";
+
+      //Port is one off so this should fail
+      Wiser wiser = new Wiser(mailConfig.getServerPort()+1);
+      
+      try
+      {
+         wiser.start();
+   
+   
+         person.setName(toName);
+         person.setEmail(toAddress);
+   
+         mailMessage.get()
+            .from(fromName, "seam seamerson@test.com")
             .replyTo(replyToAddress)
             .to(toName, toAddress)
             .subject(subject)

@@ -56,7 +56,7 @@ public class MailMessageImpl implements MailMessage
       emailMessage.addFromAddress(emailAddress);
       return this;
    }
-   
+
    public MailMessage from(Collection<InternetAddress> emailAddresses)
    {
       emailMessage.addFromAddresses(emailAddresses);

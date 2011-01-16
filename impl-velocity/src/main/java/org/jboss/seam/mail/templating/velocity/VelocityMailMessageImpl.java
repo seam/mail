@@ -28,13 +28,15 @@ import org.jboss.seam.mail.core.SendFailedException;
 import org.jboss.seam.mail.core.enumurations.ContentDisposition;
 import org.jboss.seam.mail.core.enumurations.MessagePriority;
 import org.jboss.seam.mail.templating.MailTemplate;
+import org.jboss.seam.mail.templating.TemplatingException;
 import org.jboss.seam.mail.templating.VelocityMailMessage;
 import org.jboss.seam.mail.util.EmailAttachmentUtil;
 import org.jboss.seam.solder.resourceLoader.ResourceProvider;
+
 /**
  * 
  * @author Cody Lerum
- *
+ * 
  */
 public class VelocityMailMessageImpl implements VelocityMailMessage
 {
@@ -79,7 +81,7 @@ public class VelocityMailMessageImpl implements VelocityMailMessage
       emailMessage.addFromAddress(emailAddress);
       return this;
    }
-   
+
    public VelocityMailMessage from(Collection<InternetAddress> emailAddresses)
    {
       emailMessage.addFromAddresses(emailAddresses);
@@ -383,7 +385,7 @@ public class VelocityMailMessageImpl implements VelocityMailMessage
       }
       catch (UnsupportedEncodingException e)
       {
-         throw new RuntimeException("Unable to create template from rawText", e);
+         throw new TemplatingException("Unable to create template from rawText", e);
       }
 
       MailTemplate template = new MailTemplate("rawInput", inputStream);
@@ -401,7 +403,7 @@ public class VelocityMailMessageImpl implements VelocityMailMessage
       }
       catch (FileNotFoundException e)
       {
-         throw new RuntimeException("Unable to find template " + templateFile.getName(), e);
+         throw new TemplatingException("Unable to find template " + templateFile.getName(), e);
       }
 
       MailTemplate template = new MailTemplate(templateFile.getName(), inputStream);
@@ -419,19 +421,19 @@ public class VelocityMailMessageImpl implements VelocityMailMessage
       }
       catch (ResourceNotFoundException e)
       {
-         throw new RuntimeException("Unable to find template", e);
+         throw new TemplatingException("Unable to find template", e);
       }
       catch (ParseErrorException e)
       {
-         throw new RuntimeException("Unable to find template", e);
+         throw new TemplatingException("Unable to find template", e);
       }
       catch (MethodInvocationException e)
       {
-         throw new RuntimeException("Error processing method referenced in context", e);
+         throw new TemplatingException("Error processing method referenced in context", e);
       }
       catch (IOException e)
       {
-         throw new RuntimeException("Error rendering output", e);
+         throw new TemplatingException("Error rendering output", e);
       }
 
       return writer.toString();
@@ -448,7 +450,7 @@ public class VelocityMailMessageImpl implements VelocityMailMessage
       return emailMessage;
    }
 
-   public VelocityMailMessageImpl mergeTemplates()
+   private VelocityMailMessageImpl mergeTemplates()
    {
       if (!templatesMerged)
       {
@@ -475,11 +477,11 @@ public class VelocityMailMessageImpl implements VelocityMailMessage
       }
       else
       {
-         throw new RuntimeException("Email Templates Already Merged");
+         throw new TemplatingException("Email Templates Already Merged");
       }
    }
 
-   public EmailMessage send(Session session) throws SendFailedException
+   public EmailMessage send(Session session) throws SendFailedException, TemplatingException
    {
       if (!templatesMerged)
       {

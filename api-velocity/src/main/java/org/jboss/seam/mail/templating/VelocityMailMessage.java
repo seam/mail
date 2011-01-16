@@ -9,6 +9,7 @@ import javax.mail.internet.InternetAddress;
 
 import org.jboss.seam.mail.core.EmailAttachment;
 import org.jboss.seam.mail.core.EmailMessage;
+import org.jboss.seam.mail.core.InvalidAddressException;
 import org.jboss.seam.mail.core.SendFailedException;
 import org.jboss.seam.mail.core.enumurations.ContentDisposition;
 import org.jboss.seam.mail.core.enumurations.MessagePriority;
@@ -24,112 +25,263 @@ public interface VelocityMailMessage
 // Begin Recipients
 
    /**
-    * Convenience method to set the FROM address
+    * Convenience method to add a FROM address
     * 
     * @param address Email address of the recipient eq "john.doe@example.com"
+    * @throws InvalidAddressException if address is in invalid format
     */
    public VelocityMailMessage from(String address);
 
    /**
-    * Convenience method to set the FROM name and address using UTF-8 charset
+    * Convenience method to add a FROM address
     * 
     * @param name Personal name of the recipient eg "John Doe"
     * @param address Email address of the recipient eg "john.doe@example.com"
+    * @throws InvalidAddressException if address is in invalid format
     */
    public VelocityMailMessage from(String name, String address);
 
+   /**
+    * Adds a From Address
+    * 
+    * @param emailAddress {@link InternetAddress} of the address to be added
+    */
    public VelocityMailMessage from(InternetAddress emailAddress);
-   
+
+   /**
+    * Adds a Collection of {@link InternetAddress} as FROM addresses
+    * 
+    * @param emailAddresses Collection of {@link InternetAddress} to be added
+    */
    public VelocityMailMessage from(Collection<InternetAddress> emailAddresses);
 
    /**
-    * Convenience method to set the REPLY-TO address
+    * Convenience method to add a REPLY-TO address
     * 
-    * @param address Email address of the recipient eq "john.doe@example.com"
+    * @param address Email address of the recipient eq "john.doe@example.com
+    * @throws InvalidAddressException if address is in invalid format"
     */
    public VelocityMailMessage replyTo(String address);
 
    /**
-    * Convenience method to set the REPLY-TO name and address using UTF-8
-    * charset
+    * Convenience method to add a REPLY-TO name and address
     * 
     * @param name Personal name of the recipient eg "John Doe"
     * @param address Email address of the recipient eg "john.doe@example.com"
+    * @throws InvalidAddressException if address is in invalid format
     */
    public VelocityMailMessage replyTo(String name, String address);
 
+   /**
+    * Adds a REPLY-TO Address
+    * 
+    * @param emailAddress {@link InternetAddress} of the address to be added
+    */
+   public VelocityMailMessage replyTo(InternetAddress emailAddress);
+
+   /**
+    * Adds a Collection of {@link InternetAddress} as REPLY-TO addresses
+    * 
+    * @param emailAddresses Collection of {@link InternetAddress} to be added
+    */
+   public VelocityMailMessage replyTo(Collection<InternetAddress> emailAddresses);
+
+   /**
+    * Convenience method to add a TO address
+    * 
+    * @param address Email address of the recipient eq "john.doe@example.com"
+    * @throws InvalidAddressException if address is in invalid format
+    */
    public VelocityMailMessage to(String address);
 
    /**
-    * Convenience method to add a TO recipient using UTF-8 charset
+    * Convenience method to add a TO recipient
     * 
     * @param name Personal name of the recipient eg "John Doe"
     * @param address Email address of the recipient eg "john.doe@example.com"
+    * @throws InvalidAddressException if address is in invalid format
     */
    public VelocityMailMessage to(String name, String address);
 
    /**
-    * Add TO recipient using InternetAddress
+    * Add TO recipient
     * 
-    * @param InternetAddress
-    * @return
+    * @param emailAddress {@link InternetAddress} of the address to be added
     */
    public VelocityMailMessage to(InternetAddress emailAddress);
 
    /**
-    * Convenience method to add a TO recipients using a collection of
-    * InternetAddress
+    * Convenience method to add a TO recipients using a collection of InternetAddress
     * 
-    * @param name Personal name of the recipient eg "John Doe"
-    * @param address Email address of the recipient eg "john.doe@example.com"
+    * @param emailAddresses Collection of {@link InternetAddress} to be added
     */
-   public VelocityMailMessage to(Collection<InternetAddress> emailAddress);
+   public VelocityMailMessage to(Collection<InternetAddress> emailAddresses);
 
    /**
-    * Convenience method to add a CC (Carbon Copy) recipient using UTF-8 charset
+    * Convenience method to add a CC (Carbon Copy) recipient
     * 
-    * @param name Personal name of the recipient eg "John Doe"
     * @param address Email address of the recipient eg "john.doe@example.com"
+    * @throws InvalidAddressException if address is in invalid format
     * 
     */
    public VelocityMailMessage cc(String address);
 
    /**
-    * Convenience method to add a CC (Carbon Copy) recipient using UTF-8 charset
+    * Convenience method to add a CC (Carbon Copy) recipient
     * 
     * @param name Personal name of the recipient eg "John Doe"
     * @param address Email address of the recipient eg "john.doe@example.com"
-    * 
+    * @throws InvalidAddressException if address is in invalid format
     */
    public VelocityMailMessage cc(String name, String address);
 
+   /**
+    * Add CC (Carbon Copy) recipient
+    * 
+    * @param emailAddress {@link InternetAddress} of the address to be added
+    */
    public VelocityMailMessage cc(InternetAddress emailAddress);
 
    /**
-    * Add collection of CC recipients
+    * Add collection of CC (Carbon Copy) recipients
     * 
-    * @param InternetAddress Collection of InternetAddress
-    * @return
+    * @param emailAddresses Collection of {@link InternetAddress} to be added
     */
    public VelocityMailMessage cc(Collection<InternetAddress> emailAddresses);
 
+   /**
+    * Convenience method to add a BCC (Blind Carbon Copy) recipient
+    * 
+    * @param address Email address of the recipient eg "john.doe@example.com"
+    * @throws InvalidAddressException if address is in invalid format
+    */
    public VelocityMailMessage bcc(String address);
 
    /**
-    * Convenience method to add a BCC (Blind Carbon Copy) recipient using UTF-8
-    * charset
+    * Convenience method to add a BCC (Blind Carbon Copy) recipient
     * 
     * @param name Personal name of the recipient eg "John Doe"
     * @param address Email address of the recipient eg "john.doe@example.com"
-    * 
+    * @throws InvalidAddressException if address is in invalid format
     */
    public VelocityMailMessage bcc(String name, String address);
 
-   public VelocityMailMessage bcc(InternetAddress emailAddresses);
+   /**
+    * Add BCC (Blind Carbon Copy) recipient
+    * 
+    * @param emailAddress {@link InternetAddress} of the address to be added
+    */
+   public VelocityMailMessage bcc(InternetAddress emailAddress);
 
+   /**
+    * Add collection of BCC (Blind Carbon Copy) recipients
+    * 
+    * @param emailAddresses Collection of {@link InternetAddress} to be added
+    */
    public VelocityMailMessage bcc(Collection<InternetAddress> emailAddresses);
 
    // End Recipients
+
+   // Begin Attachments
+
+   /**
+    * Add a given {@link File} with a given {@link ContentDisposition}
+    * 
+    * @param fileName Full path to the file
+    * @param contentDisposition Disposition of the attachment
+    * 
+    */
+   public VelocityMailMessage addAttachment(File fileName, ContentDisposition contentDisposition);
+
+   /**
+    * Add a file via the fileName. The classpath is searched for the specified fileName and it is added to the message with a given mimeType and a given
+    * {@link ContentDisposition}
+    * 
+    * @param fileName Name of the file to be attached.
+    * @param mimeType MimeType of the file eg "application/octetStream"
+    * @param contentDisposition Disposition of the attachment
+    * 
+    */
+   public VelocityMailMessage addAttachment(String fileName, String mimeType, ContentDisposition contentDisposition);
+
+   /**
+    * Adds a file to the message which can be found at the given {@link URL}
+    * 
+    * @param url {@link URL} where the file can be found
+    * @param fileName Name which the attachment should be called
+    * @param contentDisposition Disposition of the attachment
+    * 
+    */
+   public VelocityMailMessage addAttachment(URL url, String fileName, ContentDisposition contentDisposition);
+
+   /**
+    * Adds Attachment to the message with given {@link ContentDisposition}
+    * 
+    * @param bytes Data of the file
+    * @param fileName Name which the attachment should be called
+    * @param mimeType MimeType of the file eg "application/octetStream"
+    * @param contentDisposition Disposition of the attachment
+    */
+   public VelocityMailMessage addAttachment(byte[] bytes, String fileName, String mimeType, ContentDisposition contentDisposition);
+
+   /**
+    * Adds Attachment to the message
+    * 
+    * @param attachment {@link EmailAttachment} to be added
+    */
+   public VelocityMailMessage addAttachment(EmailAttachment attachment);
+
+   // End Attachements
+
+   // Begin Flags
+
+   /**
+    * Sets the importance level of the message with a given {@link MessagePriority}
+    * 
+    * @param messagePriority The priority level of the message.
+    * 
+    */
+   public VelocityMailMessage importance(MessagePriority messagePriority);
+
+   /**
+    * Request a delivery receipt "Return-Receipt-To" to the given address
+    * 
+    * @param address Email address the receipt should be sent to
+    * @throws InvalidAddressException if address is in invalid format
+    */
+   public VelocityMailMessage deliveryReceipt(String address);
+
+   /**
+    * Request a read receipt "Disposition-Notification-To" to a given address
+    * 
+    * @param address Email address the receipt should be sent to
+    * @throws InvalidAddressException if address is in invalid format
+    */
+   public VelocityMailMessage readReceipt(String address);
+
+   /**
+    * Set the Message-ID for the message.
+    * 
+    * @param messageId
+    */
+   public VelocityMailMessage messageId(String messageId);
+
+   // End Flags
+
+   // Begin Calendar
+
+   /**
+    * Used for creating iCal Calendar Invites.
+    * 
+    * @param htmlSummary Summary of the invite to be displayed in the body of the email messages.
+    * @param bytes iCal data which will be attached to the message
+    * 
+    */
+   public VelocityMailMessage iCal(String htmlSummary, byte[] bytes);
+
+   // End Calendar
+
+   // Begin Core
 
    /**
     * Set the subject on the message
@@ -140,8 +292,7 @@ public interface VelocityMailMessage
    public VelocityMailMessage subject(String value);
 
    /**
-    * Sets the body of the message a plan text body represented by the supplied
-    * string
+    * Sets the body of the message a plan text body represented by the supplied string
     * 
     * @param text Plain text body
     * 
@@ -149,8 +300,7 @@ public interface VelocityMailMessage
    public VelocityMailMessage textBody(String text);
 
    /**
-    * Sets the body of the message a HTML body represented by the supplied
-    * string
+    * Sets the body of the message a HTML body represented by the supplied string
     * 
     * @param html HTML body
     * 
@@ -166,164 +316,122 @@ public interface VelocityMailMessage
     */
    public VelocityMailMessage htmlBodyTextAlt(String html, String text);
 
-   // Begin Attachments 
+   // End Core
 
    /**
-    * Add a file via the fileName. The classpath is searched for the specified
-    * fileName and it is added to the message with a given mimeType and a given
-    * {@link ContentDisposition}
+    * Get the {@link EmailMessage} representing this {@link VelocityMailMessage}
     * 
-    * @param fileName Name of the file to be attached.
-    * @param mimeType MimeType of the file eg "application/octetStream"
-    * @param contentDisposition Disposition of the attachment
-    * 
+    * @return {@link EmailMessage} representing this {@link VelocityMailMessage}
     */
-   public VelocityMailMessage addAttachment(String fileName, String mimeType, ContentDisposition contentDisposition);
-
-   /**
-    * Adds a file to the message which can be found at the given {@link URL}
-    * 
-    * @param url URL where the file can be found
-    * @param fileName Name which the attachment should be called
-    * @param contentDisposition Disposition of the attachment
-    * 
-    */
-   public VelocityMailMessage addAttachment(URL url, String fileName, ContentDisposition contentDisposition);
-
-   public VelocityMailMessage addAttachment(byte[] bytes, String fileName, String mimeType, ContentDisposition contentDisposition);
-
-   public VelocityMailMessage addAttachment(EmailAttachment attachment);
-
-   // End Attachements
-
-   // Begin Calendar
-
-   /**
-    * Calendar invites require a special format.
-    * 
-    * @param htmlSummary Summary of the invite to be displayed in the message
-    * @param bytes Calendar data
-    * 
-    */
-   public VelocityMailMessage iCal(String htmlSummary, byte[] bytes);
-
-   // End Calendar
-
-   // Begin Flags
-
-   /**
-    * Sets the importance level of the message with a given
-    * {@link MessagePriority}
-    * 
-    * @param messagePriority The priority level of the message.
-    * 
-    */
-   public VelocityMailMessage importance(MessagePriority messagePriority);
-
-   /**
-    * Request a delivery receipt "Return-Receipt-To" to the given address
-    * 
-    * @param address Email address the receipt should be sent to
-    * 
-    */
-   public VelocityMailMessage deliveryReceipt(String address);
-
-   /**
-    * Request a read receipt "Disposition-Notification-To" to a given address
-    * 
-    * @param address Email address the receipt should be sent to
-    * 
-    */
-   public VelocityMailMessage readReceipt(String address);
-   
-   /**
-    * Set the Message-ID for the message. Will only be used once. Attempts to send message again with same id will fail.
-    * @param messageId
-    * @return
-    */
-   public VelocityMailMessage messageId(String messageId);
-
-   // End Flags
-   
    public EmailMessage getEmailMessage();
-   
-   public VelocityMailMessage mergeTemplates();
 
    /**
     * Send the Message
-    * @throws SendFailedException 
-    */
-   public EmailMessage send(Session session) throws SendFailedException;
-
-   public VelocityMailMessage templateSubject(String text);
-   
-   public VelocityMailMessage templateText(String text);
-   
-   public VelocityMailMessage templateHTML(String html);
-   
-   public VelocityMailMessage templateHTMLTextAlt(String html, String text);
-   
-   
-   public VelocityMailMessage templateSubject(File file);
-   
-   /**
-    * Sets the body of the message to the plain text output of the given
-    * template
     * 
-    * @param file File of the template classpath
-    * @throws SeamMailException
+    * @return {@link EmailMessage} which represents the {@link VelocityMailMessage} as sent
+    * @throws TemplatingException - If errors occur during template processing
+    * @throws SendFailedException If the messages fails to be sent.
+    */
+   public EmailMessage send(Session session);
+
+   // Begin Velocity Specific
+
+   /**
+    * Set the template to be used for the message subject
+    * 
+    * @param text Template text to be used
+    * @throws TemplatingException
+    */
+   public VelocityMailMessage templateSubject(String text);
+
+   /**
+    * Set the template text to be used for the plain text body of the message
+    * 
+    * @param text Template text to be used
+    * @throws TemplatingException
+    */
+   public VelocityMailMessage templateText(String text);
+
+   /**
+    * Set the template text to be used for the HTML body of the message
+    * 
+    * @param html Template text to be used
+    * @throws TemplatingException
+    */
+   public VelocityMailMessage templateHTML(String html);
+
+   /**
+    * Set the template text to be used for the HTML body and plain text alternative body
+    * 
+    * @param html Template text to be used for HTML body
+    * @param text Template text to be used plain text alternative
+    * @throws TemplatingException
+    */
+   public VelocityMailMessage templateHTMLTextAlt(String html, String text);
+
+   /**
+    * Set the template to be used for the message subject
+    * 
+    * @param file {@link File} of the template
+    * @throws TemplatingException
+    */
+   public VelocityMailMessage templateSubject(File file);
+
+   /**
+    * Sets the text body of the message to the plain text output of the given template
+    * 
+    * @param file {@link File} of the template
+    * @throws TemplatingException
     */
    public VelocityMailMessage templateText(File file);
 
    /**
-    * Sets the body of the message to the HTML output of the given template
+    * Sets the HTML body of the message to the HTML output of the given template
     * 
-    * @param file File of the template
-    * 
-    * @throws SeamMailException
+    * @param file {@link File} of the template
+    * @throws TemplatingException
     */
    public VelocityMailMessage templateHTML(File file);
 
    /**
-    * Sets the body of the message to a HTML body with a plain text alternative
-    * output of the given templates
+    * Sets the body of the message to a HTML body with a plain text alternative output of the given templates
     * 
-    * @param htmlFile File of the template for HTML body part
-    * @param textFile File of the template for Text body part
-    * @throws SeamMailException
+    * @param htmlFile {@link File} of the template for HTML body part
+    * @param textFile {@link File} of the template for Text body part
+    * @throws TemplatingException
     */
    public VelocityMailMessage templateHTMLTextAlt(File htmlFile, File textFile);
 
-   public VelocityMailMessage templateSubjectFromClassPath(String fileName);
-   
    /**
-    * Sets the body of the message to the plain text output of the given
-    * template
+    * Sets the subject of the message to the plain text output of the given template
     * 
-    * @param templateFileName Filename of the template to be found in the
-    *           classpath
-    * @throws SeamMailException
+    * @param templateFileName Filename of the template to be found in the classpath
+    * @throws TemplatingException
+    */
+   public VelocityMailMessage templateSubjectFromClassPath(String templateFileName);
+
+   /**
+    * Sets the body of the message to the plain text output of the given template
+    * 
+    * @param templateFileName Filename of the template to be found in the classpath
+    * @throws TemplatingException
     */
    public VelocityMailMessage templateTextFromClassPath(String templateFileName);
 
    /**
     * Sets the body of the message to the HTML output of the given template
     * 
-    * @param templateFileName Filename of the template to be found in the
-    *           classpath
-    * @throws SeamMailException
+    * @param templateFileName Filename of the template to be found in the classpath
+    * @throws TemplatingException
     */
    public VelocityMailMessage templateHTMLFromClassPath(String templateFileName);
 
    /**
-    * Sets the body of the message to a HTML body with a plain text alternative
-    * output of the given templates
+    * Sets the body of the message to a HTML body with a plain text alternative output of the given templates
     * 
-    * @param htmlTemplateFileName Filename of the template to be found in the
-    *           classpath
-    * @param textTemplateFileName Filename of the template to be found in the
-    *           classpath
-    * @throws SeamMailException
+    * @param htmlTemplateFileName Filename of the template to be found in the classpath
+    * @param textTemplateFileName Filename of the template to be found in the classpath
+    * @throws TemplatingException
     */
    public VelocityMailMessage templateHTMLTextAltFromClassPath(String htmlTemplateFileName, String textTemplateFileName);
 

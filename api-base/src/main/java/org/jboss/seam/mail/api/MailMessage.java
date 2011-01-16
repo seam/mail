@@ -5,11 +5,11 @@ import java.net.URL;
 import java.util.Collection;
 
 import javax.mail.Session;
-import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 
 import org.jboss.seam.mail.core.EmailAttachment;
 import org.jboss.seam.mail.core.EmailMessage;
+import org.jboss.seam.mail.core.InvalidAddressException;
 import org.jboss.seam.mail.core.SendFailedException;
 import org.jboss.seam.mail.core.enumurations.ContentDisposition;
 import org.jboss.seam.mail.core.enumurations.MessagePriority;
@@ -25,110 +25,159 @@ public interface MailMessage
    // Begin Recipients
 
    /**
-    * Convenience method to set the FROM address
+    * Convenience method to add a FROM address
     * 
     * @param address Email address of the recipient eq "john.doe@example.com"
-    * @throws AddressException 
+    * @throws InvalidAddressException if address is in invalid format
     */
-   public MailMessage from(String address) throws AddressException;
+   public MailMessage from(String address);
 
    /**
-    * Convenience method to set the FROM name and address using UTF-8 charset
+    * Convenience method to add a FROM address
     * 
     * @param name Personal name of the recipient eg "John Doe"
     * @param address Email address of the recipient eg "john.doe@example.com"
+    * @throws InvalidAddressException if address is in invalid format
     */
    public MailMessage from(String name, String address);
 
+   /**
+    * Adds a From Address
+    * 
+    * @param emailAddress {@link InternetAddress} of the address to be added
+    */
    public MailMessage from(InternetAddress emailAddress);
-   
+
+   /**
+    * Adds a Collection of {@link InternetAddress} as FROM addresses
+    * 
+    * @param emailAddresses Collection of {@link InternetAddress} to be added
+    */
    public MailMessage from(Collection<InternetAddress> emailAddresses);
 
    /**
-    * Convenience method to set the REPLY-TO address
+    * Convenience method to add a REPLY-TO address
     * 
-    * @param address Email address of the recipient eq "john.doe@example.com"
+    * @param address Email address of the recipient eq "john.doe@example.com
+    * @throws InvalidAddressException if address is in invalid format"
     */
    public MailMessage replyTo(String address);
 
    /**
-    * Convenience method to set the REPLY-TO name and address using UTF-8
-    * charset
+    * Convenience method to add a REPLY-TO name and address
     * 
     * @param name Personal name of the recipient eg "John Doe"
     * @param address Email address of the recipient eg "john.doe@example.com"
+    * @throws InvalidAddressException if address is in invalid format
     */
    public MailMessage replyTo(String name, String address);
 
+   /**
+    * Adds a REPLY-TO Address
+    * 
+    * @param emailAddress {@link InternetAddress} of the address to be added
+    */
+   public MailMessage replyTo(InternetAddress emailAddress);
+
+   /**
+    * Adds a Collection of {@link InternetAddress} as REPLY-TO addresses
+    * 
+    * @param emailAddresses Collection of {@link InternetAddress} to be added
+    */
+   public MailMessage replyTo(Collection<InternetAddress> emailAddresses);
+
+   /**
+    * Convenience method to add a TO address
+    * 
+    * @param address Email address of the recipient eq "john.doe@example.com"
+    * @throws InvalidAddressException if address is in invalid format
+    */
    public MailMessage to(String address);
 
    /**
-    * Convenience method to add a TO recipient using UTF-8 charset
+    * Convenience method to add a TO recipient
     * 
     * @param name Personal name of the recipient eg "John Doe"
     * @param address Email address of the recipient eg "john.doe@example.com"
+    * @throws InvalidAddressException if address is in invalid format
     */
    public MailMessage to(String name, String address);
 
    /**
-    * Add TO recipient using InternetAddress
+    * Add TO recipient
     * 
-    * @param InternetAddress
-    * @return
+    * @param emailAddress {@link InternetAddress} of the address to be added
     */
    public MailMessage to(InternetAddress emailAddress);
 
    /**
-    * Convenience method to add a TO recipients using a collection of
-    * InternetAddress
+    * Convenience method to add a TO recipients using a collection of InternetAddress
     * 
-    * @param name Personal name of the recipient eg "John Doe"
-    * @param address Email address of the recipient eg "john.doe@example.com"
+    * @param emailAddresses Collection of {@link InternetAddress} to be added
     */
-   public MailMessage to(Collection<InternetAddress> emailAddress);
+   public MailMessage to(Collection<InternetAddress> emailAddresses);
 
    /**
-    * Convenience method to add a CC (Carbon Copy) recipient using UTF-8 charset
+    * Convenience method to add a CC (Carbon Copy) recipient
     * 
-    * @param name Personal name of the recipient eg "John Doe"
     * @param address Email address of the recipient eg "john.doe@example.com"
+    * @throws InvalidAddressException if address is in invalid format
     * 
     */
    public MailMessage cc(String address);
 
    /**
-    * Convenience method to add a CC (Carbon Copy) recipient using UTF-8 charset
+    * Convenience method to add a CC (Carbon Copy) recipient
     * 
     * @param name Personal name of the recipient eg "John Doe"
     * @param address Email address of the recipient eg "john.doe@example.com"
-    * 
+    * @throws InvalidAddressException if address is in invalid format
     */
    public MailMessage cc(String name, String address);
 
+   /**
+    * Add CC (Carbon Copy) recipient
+    * 
+    * @param emailAddress {@link InternetAddress} of the address to be added
+    */
    public MailMessage cc(InternetAddress emailAddress);
 
    /**
-    * Add collection of CC recipients
+    * Add collection of CC (Carbon Copy) recipients
     * 
-    * @param InternetAddress Collection of InternetAddress
-    * @return
+    * @param emailAddresses Collection of {@link InternetAddress} to be added
     */
    public MailMessage cc(Collection<InternetAddress> emailAddresses);
 
+   /**
+    * Convenience method to add a BCC (Blind Carbon Copy) recipient
+    * 
+    * @param address Email address of the recipient eg "john.doe@example.com"
+    * @throws InvalidAddressException if address is in invalid format
+    */
    public MailMessage bcc(String address);
 
    /**
-    * Convenience method to add a BCC (Blind Carbon Copy) recipient using UTF-8
-    * charset
+    * Convenience method to add a BCC (Blind Carbon Copy) recipient
     * 
     * @param name Personal name of the recipient eg "John Doe"
     * @param address Email address of the recipient eg "john.doe@example.com"
-    * 
+    * @throws InvalidAddressException if address is in invalid format
     */
    public MailMessage bcc(String name, String address);
 
-   public MailMessage bcc(InternetAddress emailAddresses);
+   /**
+    * Add BCC (Blind Carbon Copy) recipient
+    * 
+    * @param emailAddress {@link InternetAddress} of the address to be added
+    */
+   public MailMessage bcc(InternetAddress emailAddress);
 
+   /**
+    * Add collection of BCC (Blind Carbon Copy) recipients
+    * 
+    * @param emailAddresses Collection of {@link InternetAddress} to be added
+    */
    public MailMessage bcc(Collection<InternetAddress> emailAddresses);
 
    // End Recipients
@@ -145,8 +194,7 @@ public interface MailMessage
    public MailMessage addAttachment(File fileName, ContentDisposition contentDisposition);
 
    /**
-    * Add a file via the fileName. The classpath is searched for the specified
-    * fileName and it is added to the message with a given mimeType and a given
+    * Add a file via the fileName. The classpath is searched for the specified fileName and it is added to the message with a given mimeType and a given
     * {@link ContentDisposition}
     * 
     * @param fileName Name of the file to be attached.
@@ -159,15 +207,28 @@ public interface MailMessage
    /**
     * Adds a file to the message which can be found at the given {@link URL}
     * 
-    * @param url URL where the file can be found
+    * @param url {@link URL} where the file can be found
     * @param fileName Name which the attachment should be called
     * @param contentDisposition Disposition of the attachment
     * 
     */
    public MailMessage addAttachment(URL url, String fileName, ContentDisposition contentDisposition);
 
+   /**
+    * Adds Attachment to the message with given {@link ContentDisposition}
+    * 
+    * @param bytes Data of the file
+    * @param fileName Name which the attachment should be called
+    * @param mimeType MimeType of the file eg "application/octetStream"
+    * @param contentDisposition Disposition of the attachment
+    */
    public MailMessage addAttachment(byte[] bytes, String fileName, String mimeType, ContentDisposition contentDisposition);
 
+   /**
+    * Adds Attachment to the message
+    * 
+    * @param attachment {@link EmailAttachment} to be added
+    */
    public MailMessage addAttachment(EmailAttachment attachment);
 
    // End Attachements
@@ -175,8 +236,7 @@ public interface MailMessage
    // Begin Flags
 
    /**
-    * Sets the importance level of the message with a given
-    * {@link MessagePriority}
+    * Sets the importance level of the message with a given {@link MessagePriority}
     * 
     * @param messagePriority The priority level of the message.
     * 
@@ -187,7 +247,7 @@ public interface MailMessage
     * Request a delivery receipt "Return-Receipt-To" to the given address
     * 
     * @param address Email address the receipt should be sent to
-    * 
+    * @throws InvalidAddressException if address is in invalid format
     */
    public MailMessage deliveryReceipt(String address);
 
@@ -195,14 +255,14 @@ public interface MailMessage
     * Request a read receipt "Disposition-Notification-To" to a given address
     * 
     * @param address Email address the receipt should be sent to
-    * 
+    * @throws InvalidAddressException if address is in invalid format
     */
    public MailMessage readReceipt(String address);
-   
+
    /**
-    * Set the Message-ID for the message. Will only be used once. Attempts to send message again with same id will fail.
+    * Set the Message-ID for the message.
+    * 
     * @param messageId
-    * @return
     */
    public MailMessage messageId(String messageId);
 
@@ -211,10 +271,10 @@ public interface MailMessage
    // Begin Calendar
 
    /**
-    * Calendar invites require a special format.
+    * Used for creating iCal Calendar Invites.
     * 
-    * @param htmlSummary Summary of the invite to be displayed in the message
-    * @param bytes Calendar data
+    * @param htmlSummary Summary of the invite to be displayed in the body of the email messages.
+    * @param bytes iCal data which will be attached to the message
     * 
     */
    public MailMessage iCal(String htmlSummary, byte[] bytes);
@@ -232,8 +292,7 @@ public interface MailMessage
    public MailMessage subject(String value);
 
    /**
-    * Sets the body of the message a plan text body represented by the supplied
-    * string
+    * Sets the body of the message a plan text body represented by the supplied string
     * 
     * @param text Plain text body
     * 
@@ -241,8 +300,7 @@ public interface MailMessage
    public MailMessage textBody(String text);
 
    /**
-    * Sets the body of the message a HTML body represented by the supplied
-    * string
+    * Sets the body of the message a HTML body represented by the supplied string
     * 
     * @param html HTML body
     * 
@@ -260,14 +318,19 @@ public interface MailMessage
 
    // End Core
 
+   /**
+    * Get the {@link EmailMessage} representing this {@link MailMessage}
+    * 
+    * @return {@link EmailMessage} representing this {@link MailMessage}
+    */
    public EmailMessage getEmailMessage();
-   
+
    /**
     * Send the Message
     * 
-    * @return
-    * @throws SendFailedException 
+    * @return {@link EmailMessage} which represents the {@link MailMessage} as sent
+    * @throws SendFailedException If the messages fails to be sent.
     */
-   public EmailMessage send(Session session) throws SendFailedException;
+   public EmailMessage send(Session session);
 
 }

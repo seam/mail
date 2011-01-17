@@ -30,8 +30,6 @@
 		<dependency>
 			<groupId>org.apache.velocity</groupId>
 			<artifactId>velocity</artifactId>
-         <!-- remove version when switch to seam-parent 7 -->
-			<version>1.6.4</version>
 		</dependency>
 
 		<dependency>

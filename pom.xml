@@ -39,12 +39,14 @@
 				<groupId>org.jboss.seam.mail</groupId>
 				<artifactId>seam-mail-api-base</artifactId>
 				<version>${project.version}</version>
+            <scope>compile</scope>
 			</dependency>
 
 			<dependency>
 				<groupId>org.jboss.seam.mail</groupId>
 				<artifactId>seam-mail-api-velocity</artifactId>
 				<version>${project.version}</version>
+            <scope>compile</scope>
 			</dependency>
 
 			<dependency>
@@ -98,8 +100,8 @@
 				</property>
 			</activation>
 			<modules>
-				<module>docs</module>
 				<module>examples/sendmail</module>
+				<module>docs</module>
 				<module>dist</module>
 			</modules>
 		</profile>

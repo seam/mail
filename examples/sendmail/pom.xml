@@ -72,6 +72,8 @@
 			<groupId>org.jboss.seam.mail</groupId>
 			<artifactId>seam-mail-impl-base</artifactId>
 			<version>${project.version}</version>
+         <!-- FIXME implementation should not be required at compilation time -->
+         <scope>compile</scope>
 		</dependency>
 
 		<dependency>

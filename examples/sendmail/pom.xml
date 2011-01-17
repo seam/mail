@@ -28,8 +28,6 @@
 		<!-- By default, we assign it to the value of the JBOSS_HOME envrionment variable -->
 		<jboss.home>${env.JBOSS_HOME}</jboss.home>
 		<jboss.domain>default</jboss.domain>
-		<arquillian.version>1.0.0.Alpha4</arquillian.version>
-		<jboss-javaee6-spec.version>1.0.0.Beta7</jboss-javaee6-spec.version>
 	</properties>
 
 	<repositories>
@@ -141,20 +139,17 @@
 		<dependency>
 			<groupId>javax.mail</groupId>
 			<artifactId>mail</artifactId>
-			<version>1.4.3</version>
 			<scope>provided</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>org.apache.velocity</groupId>
 			<artifactId>velocity</artifactId>
-			<version>1.6.4</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.subethamail</groupId>
 			<artifactId>subethasmtp</artifactId>
-			<version>3.1.4</version>
 			<scope>test</scope>
 		</dependency>
 
@@ -206,7 +201,6 @@
 				<dependency>
 					<groupId>org.jboss.spec</groupId>
 					<artifactId>jboss-javaee-6.0</artifactId>
-					<version>${jboss-javaee6-spec.version}</version>
 					<type>pom</type>
 					<scope>provided</scope>
 				</dependency>
@@ -243,11 +237,15 @@
 
 		<profile>
 			<id>weld-ee-embedded-1.1</id>
+			<activation>
+				<property>
+					<name>integration-test</name>
+				</property>
+			</activation>
 			<dependencies>
 				<dependency>
-					<groupId>org.jboss.arquillian.container</groupId>
+					<groupId>org.jboss.weld.arquillian.container</groupId>
 					<artifactId>arquillian-weld-ee-embedded-1.1</artifactId>
-					<version>${arquillian.version}</version>
 				</dependency>
 				<dependency>
 					<groupId>org.jboss.weld</groupId>
@@ -264,22 +262,10 @@
 				<dependency>
 					<groupId>org.jboss.spec</groupId>
 					<artifactId>jboss-javaee-6.0</artifactId>
-					<version>${jboss-javaee6-spec.version}</version>
 					<type>pom</type>
 					<scope>test</scope>
 				</dependency>
-			</dependencies>
-			<dependencyManagement>
-				<dependencies>
-					<dependency>
-						<groupId>org.jboss.weld</groupId>
-						<artifactId>weld-core-bom</artifactId>
-						<version>1.1.0.Beta1</version>
-						<type>pom</type>
-						<scope>import</scope>
-					</dependency>
-				</dependencies>
-			</dependencyManagement>
+			</dependencies>			
 		</profile>
 
 		<profile>
@@ -290,7 +276,6 @@
 				<dependency>
 					<groupId>org.jboss.arquillian.container</groupId>
 					<artifactId>arquillian-jbossas-remote-6</artifactId>
-					<version>${arquillian.version}</version>
 					<scope>test</scope>
 				</dependency>
 				<!-- Java EE Specification POM -->
@@ -298,7 +283,6 @@
 				<dependency>
 					<groupId>org.jboss.spec</groupId>
 					<artifactId>jboss-javaee-6.0</artifactId>
-					<version>${jboss-javaee6-spec.version}</version>
 					<type>pom</type>
 					<scope>provided</scope>
 				</dependency>

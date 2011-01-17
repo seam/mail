@@ -22,6 +22,8 @@
 		<module>impl-base</module>
 		<module>api-velocity</module>
 		<module>impl-velocity</module>
+		<module>examples/sendMail</module>
+		
 	</modules>
 
 	<dependencyManagement>
@@ -90,6 +92,14 @@
 	</dependencies>
 
 	<profiles>
+		<profile>
+			<id>integration-test</id>
+			<activation>
+				<property>
+					<name>integration-test</name>
+				</property>
+			</activation>
+		</profile>
 		<profile>
 			<id>distribution</id>
 			<activation>

@@ -22,7 +22,7 @@
 		<module>impl-base</module>
 		<module>api-velocity</module>
 		<module>impl-velocity</module>
-		<module>examples/sendMail</module>
+		<module>examples/sendmail</module>
 		
 	</modules>
 

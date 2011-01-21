@@ -2,22 +2,27 @@ package org.jboss.seam.mail.core;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 
 import javax.mail.internet.InternetAddress;
 
 import org.jboss.seam.mail.core.enumurations.MessagePriority;
-
+/**
+ * 
+ * @author Cody Lerum
+ *
+ */
 public class EmailMessage
 {
    private String rootSubType = "mixed";
    private EmailMessageType type = EmailMessageType.STANDARD;
    private String messageId;
    private String lastMessageId;
-   private Collection<InternetAddress> fromAddresses = new ArrayList<InternetAddress>();
-   private Collection<InternetAddress> replyToAddresses = new ArrayList<InternetAddress>();
-   private Collection<InternetAddress> toAddresses = new ArrayList<InternetAddress>();
-   private Collection<InternetAddress> ccAddresses = new ArrayList<InternetAddress>();
-   private Collection<InternetAddress> bccAddresses = new ArrayList<InternetAddress>();
+   private Collection<InternetAddress> fromAddresses = new HashSet<InternetAddress>();
+   private Collection<InternetAddress> replyToAddresses = new HashSet<InternetAddress>();
+   private Collection<InternetAddress> toAddresses = new HashSet<InternetAddress>();
+   private Collection<InternetAddress> ccAddresses = new HashSet<InternetAddress>();
+   private Collection<InternetAddress> bccAddresses = new HashSet<InternetAddress>();
    private Collection<Header> headers = new ArrayList<Header>();
 
    private String subject;

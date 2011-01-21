@@ -63,15 +63,15 @@ public class BaseMailMessage
       initializeMessageId();
    }
 
-   public void addRecipient(RecipientType recipientType, InternetAddress emailContact)
+   public void addRecipient(RecipientType recipientType, InternetAddress emailAddress)
    {
       try
       {
-         rootMimeMessage.addRecipient(recipientType.getRecipientType(), emailContact);
+         rootMimeMessage.addRecipient(recipientType.getRecipientType(), emailAddress);
       }
       catch (MessagingException e)
       {
-         throw new RuntimeException("Unable to add recipient " + recipientType + ": " + emailContact.toString() + " to MIME message", e);
+         throw new RuntimeException("Unable to add recipient " + recipientType + ": " + emailAddress.toString() + " to MIME message", e);
       }
    }
 
@@ -136,18 +136,18 @@ public class BaseMailMessage
       setReplyTo(MailUtility.internetAddress(name, address));
    }
 
-   public void setReplyTo(InternetAddress emailContact)
+   public void setReplyTo(InternetAddress emailAddress)
    {
-      List<InternetAddress> emailContacts = new ArrayList<InternetAddress>();
-      emailContacts.add(emailContact);
-      setReplyTo(emailContacts);
+      List<InternetAddress> emailAddresses = new ArrayList<InternetAddress>();
+      emailAddresses.add(emailAddress);
+      setReplyTo(emailAddresses);
    }
 
-   public void setReplyTo(Collection<InternetAddress> emailContacts)
+   public void setReplyTo(Collection<InternetAddress> emailAddresses)
    {
       try
       {
-         rootMimeMessage.setReplyTo(MailUtility.getInternetAddressses(emailContacts));
+         rootMimeMessage.setReplyTo(MailUtility.getInternetAddressses(emailAddresses));
       }
       catch (MessagingException e)
       {

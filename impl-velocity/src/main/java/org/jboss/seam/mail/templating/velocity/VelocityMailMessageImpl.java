@@ -194,13 +194,13 @@ public class VelocityMailMessageImpl implements VelocityMailMessage
 
    public VelocityMailMessage deliveryReceipt(String address)
    {
-      emailMessage.addDeliveryReceiptAddress(address);
+      emailMessage.addDeliveryReceiptAddress(MailUtility.internetAddress(address));
       return this;
    }
 
    public VelocityMailMessage readReceipt(String address)
    {
-      emailMessage.addReadReceiptAddress(address);
+      emailMessage.addReadReceiptAddress(MailUtility.internetAddress(address));
       return this;
    }
 

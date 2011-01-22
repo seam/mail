@@ -3,6 +3,7 @@ package org.jboss.seam.mail.core.enumurations;
 public enum MessagePriority
 {
    LOW("5", "non-urgent", "low"),
+   NORMAL("3", "normal", "normal"),
    HIGH("1", "urgent", "high");
    
    private String xPriority;

@@ -5,6 +5,7 @@ import java.net.URL;
 import java.util.Collection;
 
 import javax.mail.Session;
+import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 
 import org.jboss.seam.mail.core.EmailAttachment;
@@ -111,7 +112,8 @@ public interface MailMessage
    public MailMessage to(InternetAddress emailAddress);
 
    /**
-    * Convenience method to add a TO recipients using a collection of InternetAddress
+    * Convenience method to add a TO recipients using a collection of
+    * InternetAddress
     * 
     * @param emailAddresses Collection of {@link InternetAddress} to be added
     */
@@ -194,7 +196,8 @@ public interface MailMessage
    public MailMessage addAttachment(File fileName, ContentDisposition contentDisposition);
 
    /**
-    * Add a file via the fileName. The classpath is searched for the specified fileName and it is added to the message with a given mimeType and a given
+    * Add a file via the fileName. The classpath is searched for the specified
+    * fileName and it is added to the message with a given mimeType and a given
     * {@link ContentDisposition}
     * 
     * @param fileName Name of the file to be attached.
@@ -236,7 +239,8 @@ public interface MailMessage
    // Begin Flags
 
    /**
-    * Sets the importance level of the message with a given {@link MessagePriority}
+    * Sets the importance level of the message with a given
+    * {@link MessagePriority}
     * 
     * @param messagePriority The priority level of the message.
     * 
@@ -257,7 +261,7 @@ public interface MailMessage
     * @param address Email address the receipt should be sent to
     * @throws InvalidAddressException if address is in invalid format
     */
-   public MailMessage readReceipt(String address);
+   public MailMessage readReceipt(String address) throws AddressException;
 
    /**
     * Set the Message-ID for the message.
@@ -273,7 +277,8 @@ public interface MailMessage
    /**
     * Used for creating iCal Calendar Invites.
     * 
-    * @param htmlSummary Summary of the invite to be displayed in the body of the email messages.
+    * @param htmlSummary Summary of the invite to be displayed in the body of
+    *           the email messages.
     * @param bytes iCal data which will be attached to the message
     * 
     */
@@ -292,7 +297,8 @@ public interface MailMessage
    public MailMessage subject(String value);
 
    /**
-    * Sets the body of the message a plan text body represented by the supplied string
+    * Sets the body of the message a plan text body represented by the supplied
+    * string
     * 
     * @param text Plain text body
     * 
@@ -300,7 +306,8 @@ public interface MailMessage
    public MailMessage textBody(String text);
 
    /**
-    * Sets the body of the message a HTML body represented by the supplied string
+    * Sets the body of the message a HTML body represented by the supplied
+    * string
     * 
     * @param html HTML body
     * 
@@ -328,7 +335,8 @@ public interface MailMessage
    /**
     * Send the Message
     * 
-    * @return {@link EmailMessage} which represents the {@link MailMessage} as sent
+    * @return {@link EmailMessage} which represents the {@link MailMessage} as
+    *         sent
     * @throws SendFailedException If the messages fails to be sent.
     */
    public EmailMessage send(Session session);

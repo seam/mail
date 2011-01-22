@@ -32,9 +32,9 @@ public class MailMessageImpl implements MailMessage
       emailMessage = new EmailMessage();
    }
 
-   public MailMessageImpl(String rootSubType)
+   public MailMessageImpl(ContentType rootContentType)
    {
-      emailMessage = new EmailMessage(rootSubType);
+      emailMessage = new EmailMessage(rootContentType);
    }
 
    // Begin Addressing
@@ -169,13 +169,13 @@ public class MailMessageImpl implements MailMessage
 
    public MailMessage deliveryReceipt(String address)
    {
-      emailMessage.addDeliveryReceiptAddress(address);
+      emailMessage.addDeliveryReceiptAddress(MailUtility.internetAddress(address));
       return this;
    }
 
    public MailMessage readReceipt(String address)
    {
-      emailMessage.addReadReceiptAddress(address);
+      emailMessage.addReadReceiptAddress(MailUtility.internetAddress(address));
       return this;
    }
 

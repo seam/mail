@@ -26,28 +26,28 @@ public class BaseMailMessage
 {
    private RootMimeMessage rootMimeMessage;
    private String charset;
-   private String rootSubType;
+   private ContentType rootContentType;
    private Map<String, AttachmentPart> attachments = new HashMap<String, AttachmentPart>();
    private MimeMultipart rootMultipart;
-   private MimeMultipart relatedMultipart = new MimeMultipart("related");
+   private MimeMultipart relatedMultipart = new MimeMultipart(ContentType.RELATED.getValue());
    private Session session;
 
-   public BaseMailMessage(Session session, String rootSubType)
+   public BaseMailMessage(Session session, ContentType rootContentType)
    {
       this.session = session;
-      this.rootSubType = rootSubType;
+      this.rootContentType = rootContentType;
       initialize();
    }
 
    public BaseMailMessage(Session session)
    {
-      this(session, "mixed");
+      this(session, ContentType.MIXED);
    }
 
    private void initialize()
    {
       rootMimeMessage = new RootMimeMessage(session);
-      rootMultipart = new MimeMultipart(rootSubType);
+      rootMultipart = new MimeMultipart(rootContentType.getValue());
       charset = "UTF-8";
       setSentDate(new Date());
 
@@ -61,6 +61,7 @@ public class BaseMailMessage
       }
 
       initializeMessageId();
+
    }
 
    public void addRecipient(RecipientType recipientType, InternetAddress emailAddress)
@@ -203,19 +204,19 @@ public class BaseMailMessage
       }
    }
 
-   public void addDeliveryRecieptAddresses(Collection<String> addresses)
+   public void addDeliveryRecieptAddresses(Collection<InternetAddress> addresses)
    {
-      for (String address : addresses)
+      for (InternetAddress address : addresses)
       {
-         addDeliveryReciept(address);
+         addDeliveryReciept(address.getAddress());
       }
    }
 
-   public void addReadRecieptAddresses(Collection<String> addresses)
+   public void addReadRecieptAddresses(Collection<InternetAddress> addresses)
    {
-      for (String address : addresses)
+      for (InternetAddress address : addresses)
       {
-         addReadReciept(address);
+         addReadReciept(address.getAddress());
       }
    }
 
@@ -231,7 +232,7 @@ public class BaseMailMessage
 
    public void setImportance(MessagePriority messagePriority)
    {
-      if (messagePriority != null)
+      if (messagePriority != null && messagePriority != MessagePriority.NORMAL)
       {
          setHeader(new Header("X-Priority", messagePriority.getX_priority()));
          setHeader(new Header("Priority", messagePriority.getPriority()));
@@ -316,7 +317,7 @@ public class BaseMailMessage
 
       MimeBodyPart relatedBodyPart = new MimeBodyPart();
 
-      MimeMultipart alternativeMultiPart = new MimeMultipart("alternative");
+      MimeMultipart alternativeMultiPart = new MimeMultipart(ContentType.ALTERNATIVE.getValue());
 
       try
       {

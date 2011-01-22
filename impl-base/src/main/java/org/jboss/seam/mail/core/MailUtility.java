@@ -135,7 +135,7 @@ public class MailUtility
 
    public static void send(EmailMessage e, Session session) throws SendFailedException
    {
-      BaseMailMessage b = new BaseMailMessage(session, e.getRootSubType());
+      BaseMailMessage b = new BaseMailMessage(session, e.getRootContentType());
 
       if (!Strings.isNullOrBlank(e.getMessageId()))
       {

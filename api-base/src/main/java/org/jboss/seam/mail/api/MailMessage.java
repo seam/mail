@@ -5,7 +5,6 @@ import java.net.URL;
 import java.util.Collection;
 
 import javax.mail.Session;
-import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 
 import org.jboss.seam.mail.core.EmailAttachment;
@@ -261,7 +260,7 @@ public interface MailMessage
     * @param address Email address the receipt should be sent to
     * @throws InvalidAddressException if address is in invalid format
     */
-   public MailMessage readReceipt(String address) throws AddressException;
+   public MailMessage readReceipt(String address);
 
    /**
     * Set the Message-ID for the message.

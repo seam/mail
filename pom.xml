@@ -2,9 +2,9 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<artifactId>seam-parent</artifactId>
-		<groupId>org.jboss.seam</groupId>
-		<version>7</version>
+          <artifactId>seam-parent</artifactId>
+	  <groupId>org.jboss.seam</groupId>
+	  <version>8</version>
 	</parent>
 
 	<groupId>org.jboss.seam.mail</groupId>
@@ -14,7 +14,7 @@
 	<name>Seam Mail Module</name>
 
 	<properties>
-		<seam.version>3.0.0.b06</seam.version>
+          <seam.version>3.0.0.b07</seam.version>
 	</properties>
 
 	<modules>

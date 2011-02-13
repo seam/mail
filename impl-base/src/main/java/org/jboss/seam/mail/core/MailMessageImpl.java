@@ -43,6 +43,9 @@ public class MailMessageImpl implements MailMessage
 
    @Inject
    private ResourceProvider resourceProvider;
+   
+   @Inject 
+   private Session session;
 
    public MailMessageImpl()
    {
@@ -64,7 +67,7 @@ public class MailMessageImpl implements MailMessage
 
    public MailMessage from(String name, String address)
    {
-      emailMessage.addFromAddress(MailUtility.internetAddress(name, address));
+      emailMessage.addFromAddress(MailUtility.internetAddress(address, name));
       return this;
    }
 
@@ -73,10 +76,16 @@ public class MailMessageImpl implements MailMessage
       emailMessage.addFromAddress(emailAddress);
       return this;
    }
-
-   public MailMessage from(Collection<InternetAddress> emailAddresses)
+   
+   public MailMessage from(EmailContact emailContact)
    {
-      emailMessage.addFromAddresses(emailAddresses);
+      emailMessage.addFromAddress(MailUtility.internetAddress(emailContact));
+      return this;
+   }
+   
+   public MailMessage from(Collection<EmailContact> emailContacts)
+   {
+      emailMessage.addFromAddresses(MailUtility.internetAddress(emailContacts));
       return this;
    }
 
@@ -88,7 +97,7 @@ public class MailMessageImpl implements MailMessage
 
    public MailMessage replyTo(String name, String address)
    {
-      emailMessage.addReplyToAddress(MailUtility.internetAddress(name, address));
+      emailMessage.addReplyToAddress(MailUtility.internetAddress(address, name));
       return this;
    }
 
@@ -97,13 +106,19 @@ public class MailMessageImpl implements MailMessage
       emailMessage.addReplyToAddress(emailAddress);
       return this;
    }
-
-   public MailMessage replyTo(Collection<InternetAddress> emailAddresses)
+   
+   public MailMessage replyTo(EmailContact emailContact)
    {
-      emailMessage.addReplyToAddresses(emailAddresses);
+      emailMessage.addReplyToAddress(MailUtility.internetAddress(emailContact));
       return this;
    }
-
+   
+   public MailMessage replyTo(Collection<EmailContact> emailContacts)
+   {
+      emailMessage.addReplyToAddresses(MailUtility.internetAddress(emailContacts));
+      return this;
+   }
+   
    public MailMessage to(String address)
    {
       emailMessage.addToAddress(MailUtility.internetAddress(address));
@@ -112,7 +127,7 @@ public class MailMessageImpl implements MailMessage
 
    public MailMessage to(String name, String address)
    {
-      emailMessage.addToAddress(MailUtility.internetAddress(name, address));
+      emailMessage.addToAddress(MailUtility.internetAddress(address, name));
       return this;
    }
 
@@ -121,10 +136,16 @@ public class MailMessageImpl implements MailMessage
       emailMessage.addToAddress(emailAddress);
       return this;
    }
-
-   public MailMessage to(Collection<InternetAddress> emailAddresses)
+   
+   public MailMessage to(EmailContact emailContact)
    {
-      emailMessage.addToAddresses(emailAddresses);
+      emailMessage.addToAddress(MailUtility.internetAddress(emailContact));
+      return this;
+   }
+
+   public MailMessage to(Collection<EmailContact> emailContacts)
+   {
+      emailMessage.addToAddresses(MailUtility.internetAddress(emailContacts));
       return this;
    }
 
@@ -136,7 +157,7 @@ public class MailMessageImpl implements MailMessage
 
    public MailMessage cc(String name, String address)
    {
-      emailMessage.addCcAddress(MailUtility.internetAddress(name, address));
+      emailMessage.addCcAddress(MailUtility.internetAddress(address, name));
       return this;
    }
 
@@ -145,10 +166,16 @@ public class MailMessageImpl implements MailMessage
       emailMessage.addCcAddress(emailAddress);
       return this;
    }
-
-   public MailMessage cc(Collection<InternetAddress> emailAddresses)
+   
+   public MailMessage cc(EmailContact emailContact)
    {
-      emailMessage.addCcAddresses(emailAddresses);
+      emailMessage.addCcAddress(MailUtility.internetAddress(emailContact));
+      return this;
+   }
+
+   public MailMessage cc(Collection<EmailContact> emailContacts)
+   {
+      emailMessage.addCcAddresses(MailUtility.internetAddress(emailContacts));
       return this;
    }
 
@@ -160,7 +187,7 @@ public class MailMessageImpl implements MailMessage
 
    public MailMessage bcc(String name, String address)
    {
-      emailMessage.addBccAddress(MailUtility.internetAddress(name, address));
+      emailMessage.addBccAddress(MailUtility.internetAddress(address, name));
       return this;
    }
 
@@ -169,10 +196,16 @@ public class MailMessageImpl implements MailMessage
       emailMessage.addBccAddress(emailAddress);
       return this;
    }
-
-   public MailMessage bcc(Collection<InternetAddress> emailAddresses)
+   
+   public MailMessage bcc(EmailContact emailContact)
    {
-      emailMessage.addBccAddresses(emailAddresses);
+      emailMessage.addBccAddress(MailUtility.internetAddress(emailContact));
+      return this;
+   }
+
+   public MailMessage bcc(Collection<EmailContact> emailContacts)
+   {
+      emailMessage.addBccAddresses(MailUtility.internetAddress(emailContacts));
       return this;
    }
 
@@ -292,6 +325,13 @@ public class MailMessageImpl implements MailMessage
    }
 
    public EmailMessage send(Session session) throws SendFailedException
+   {
+      MailUtility.send(emailMessage, session);
+
+      return emailMessage;
+   }
+   
+   public EmailMessage send() throws SendFailedException
    {
       MailUtility.send(emailMessage, session);
 

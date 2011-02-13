@@ -22,22 +22,24 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
+import org.jboss.seam.mail.core.EmailContact;
+
 /**
  * 
  * @author Cody Lerum
- *
+ * 
  */
 @Model
-public class Person
+public class Person implements EmailContact
 {
    private String name;
    private String email;
 
    public Person()
    {
-      
+
    }
-   
+
    public Person(String name, String email)
    {
       this.name = name;
@@ -67,5 +69,11 @@ public class Person
    public void setEmail(String email)
    {
       this.email = email;
+   }
+
+   @Override
+   public String getAddress()
+   {
+      return getEmail();
    }
 }

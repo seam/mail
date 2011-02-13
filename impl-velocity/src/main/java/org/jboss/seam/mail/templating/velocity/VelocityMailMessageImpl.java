@@ -89,7 +89,7 @@ public class VelocityMailMessageImpl implements VelocityMailMessage
 
    public VelocityMailMessage from(String name, String address)
    {
-      emailMessage.addFromAddress(MailUtility.internetAddress(name, address));
+      emailMessage.addFromAddress(MailUtility.internetAddress(address, name));
       return this;
    }
 
@@ -113,7 +113,7 @@ public class VelocityMailMessageImpl implements VelocityMailMessage
 
    public VelocityMailMessage replyTo(String name, String address)
    {
-      emailMessage.addReplyToAddress(MailUtility.internetAddress(name, address));
+      emailMessage.addReplyToAddress(MailUtility.internetAddress(address, name));
       return this;
    }
 
@@ -137,7 +137,7 @@ public class VelocityMailMessageImpl implements VelocityMailMessage
 
    public VelocityMailMessage to(String name, String address)
    {
-      emailMessage.addToAddress(MailUtility.internetAddress(name, address));
+      emailMessage.addToAddress(MailUtility.internetAddress(address, name));
       return this;
    }
 
@@ -161,7 +161,7 @@ public class VelocityMailMessageImpl implements VelocityMailMessage
 
    public VelocityMailMessage cc(String name, String address)
    {
-      emailMessage.addCcAddress(MailUtility.internetAddress(name, address));
+      emailMessage.addCcAddress(MailUtility.internetAddress(address, name));
       return this;
    }
 
@@ -185,7 +185,7 @@ public class VelocityMailMessageImpl implements VelocityMailMessage
 
    public VelocityMailMessage bcc(String name, String address)
    {
-      emailMessage.addBccAddress(MailUtility.internetAddress(name, address));
+      emailMessage.addBccAddress(MailUtility.internetAddress(address, name));
       return this;
    }
 

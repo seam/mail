@@ -20,12 +20,11 @@ package org.jboss.mail.core.test;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import javax.mail.internet.InternetAddress;
-
 import org.jboss.seam.mail.api.MailMessage;
+import org.jboss.seam.mail.core.BasicEmailContact;
+import org.jboss.seam.mail.core.EmailContact;
 import org.jboss.seam.mail.core.InvalidAddressException;
 import org.jboss.seam.mail.core.MailMessageImpl;
-import org.jboss.seam.mail.core.MailUtility;
 import org.junit.Test;
 /**
  * 
@@ -39,10 +38,10 @@ public class InternetAddressTest
    {
       MailMessage m = new MailMessageImpl();
 
-      InternetAddress seam = MailUtility.internetAddress("seam@domain.test");
-      InternetAddress seamey = MailUtility.internetAddress("seamey@domain.test");
+      BasicEmailContact seam = new BasicEmailContact("seam@domain.test");
+      BasicEmailContact seamey = new BasicEmailContact("seamey@domain.test");
 
-      Collection<InternetAddress> addresses = new ArrayList<InternetAddress>();
+      Collection<EmailContact> addresses = new ArrayList<EmailContact>();
       addresses.add(seamey);
 
       m.from("Seam Seamerson", "seam@domain.test");

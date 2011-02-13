@@ -63,7 +63,7 @@ public class MailMessageTest
       Archive<?> ar = ShrinkWrap.create(WebArchive.class, "test.war")
       .addResource("template.text.vm", "WEB-INF/classes/template.text.vm")
       .addPackages(true, MailMessageTest.class.getPackage())
-      .addLibraries(MavenArtifactResolver.resolve("org.jboss.seam.solder:seam-solder:3.0.0.Beta1"),
+      .addLibraries(MavenArtifactResolver.resolve("org.jboss.seam.solder:seam-solder:3.0.0.Beta3"),
             MavenArtifactResolver.resolve("org.subethamail:subethasmtp:3.1.4"),
             MavenArtifactResolver.resolve("org.apache.velocity:velocity:1.6.4"))
       .addWebResource(EmptyAsset.INSTANCE, "beans.xml");
@@ -371,6 +371,57 @@ public class MailMessageTest
       {
          stop(wiser);
       }      
+   }
+   
+   @Test
+   public void testTextMailMessageUsingPerson() throws MessagingException
+   {
+      String subject = "Text Message from Seam Mail - " + java.util.UUID.randomUUID().toString();
+
+      mailConfig.setServerHost("localHost");
+      mailConfig.setServerPort(8977);
+      
+      String messageId = "1234@seam.test.com";
+
+      Wiser wiser = new Wiser(mailConfig.getServerPort());
+      try
+      {
+         wiser.start();   
+   
+         person.setName(toName);
+         person.setEmail(toAddress);
+   
+         mailMessage.get()
+            .from(fromName, fromAddress)
+            .replyTo(replyToAddress)
+            .to(person)
+            .subject(subject)
+            .textBody(text)
+            .importance(MessagePriority.HIGH)
+            .messageId(messageId)
+            .send(session);
+      }
+      finally
+      {
+         stop(wiser);
+      }
+
+      Assert.assertTrue("Didn't receive the expected amount of messages. Expected 1 got " + wiser.getMessages().size(), wiser.getMessages().size() == 1);
+
+      MimeMessage mess = wiser.getMessages().get(0).getMimeMessage();
+      
+      Assert.assertEquals(MailTestUtil.getAddressHeader(fromName, fromAddress), mess.getHeader("From", null));
+      Assert.assertEquals(MailTestUtil.getAddressHeader(replyToAddress), mess.getHeader("Reply-To", null));
+      Assert.assertEquals(MailTestUtil.getAddressHeader(toName, toAddress), mess.getHeader("To", null));
+      Assert.assertEquals("Subject has been modified", subject, MimeUtility.unfold(mess.getHeader("Subject", null)));
+      Assert.assertEquals(MessagePriority.HIGH.getPriority(), mess.getHeader("Priority", null));
+      Assert.assertEquals(MessagePriority.HIGH.getX_priority(), mess.getHeader("X-Priority", null));
+      Assert.assertEquals(MessagePriority.HIGH.getImportance(), mess.getHeader("Importance", null));
+      Assert.assertTrue(mess.getHeader("Content-Type", null).startsWith("multipart/mixed"));
+      Assert.assertEquals(messageId, MailUtility.headerStripper(mess.getHeader("Message-ID", null)));
+
+
+      // TODO Verify MimeBodyPart hierarchy and $person resolution is happening. 
    }
    
    /**

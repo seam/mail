@@ -25,6 +25,7 @@ import javax.mail.Session;
 import javax.mail.internet.InternetAddress;
 
 import org.jboss.seam.mail.core.EmailAttachment;
+import org.jboss.seam.mail.core.EmailContact;
 import org.jboss.seam.mail.core.EmailMessage;
 import org.jboss.seam.mail.core.InvalidAddressException;
 import org.jboss.seam.mail.core.SendFailedException;
@@ -66,11 +67,18 @@ public interface MailMessage
    public MailMessage from(InternetAddress emailAddress);
 
    /**
-    * Adds a Collection of {@link InternetAddress} as FROM addresses
+    * Adds a From Address
     * 
-    * @param emailAddresses Collection of {@link InternetAddress} to be added
+    * @param emailContact {@link EmailContact} of the address to be added
     */
-   public MailMessage from(Collection<InternetAddress> emailAddresses);
+   public MailMessage from(EmailContact emailContact);
+
+   /**
+    * Adds a Collection of {@link EmailContact} as FROM addresses
+    * 
+    * @param emailContacts Collection of {@link EmailContact} to be added
+    */
+   public MailMessage from(Collection<EmailContact> emailContacts);
 
    /**
     * Convenience method to add a REPLY-TO address
@@ -97,11 +105,18 @@ public interface MailMessage
    public MailMessage replyTo(InternetAddress emailAddress);
 
    /**
-    * Adds a Collection of {@link InternetAddress} as REPLY-TO addresses
+    * Adds a REPLY-TO Address
     * 
-    * @param emailAddresses Collection of {@link InternetAddress} to be added
+    * @param emailContact {@link EmailContact} of the address to be added
     */
-   public MailMessage replyTo(Collection<InternetAddress> emailAddresses);
+   public MailMessage replyTo(EmailContact emailContact);
+
+   /**
+    * Adds a Collection of {@link EmailContact} as REPLY-TO addresses
+    * 
+    * @param emailContacts Collection of {@link EmailContact} to be added
+    */
+   public MailMessage replyTo(Collection<EmailContact> emailContacts);
 
    /**
     * Convenience method to add a TO address
@@ -128,12 +143,18 @@ public interface MailMessage
    public MailMessage to(InternetAddress emailAddress);
 
    /**
-    * Convenience method to add a TO recipients using a collection of
-    * InternetAddress
+    * Add TO recipient
     * 
-    * @param emailAddresses Collection of {@link InternetAddress} to be added
+    * @param emailContact {@link EmailContact} of the address to be added
     */
-   public MailMessage to(Collection<InternetAddress> emailAddresses);
+   public MailMessage to(EmailContact emailContact);
+
+   /**
+    * Convenience method to add a TO recipients
+    * 
+    * @param emailContacts Collection of {@link EmailContact} to be added
+    */
+   public MailMessage to(Collection<EmailContact> emailContacts);
 
    /**
     * Convenience method to add a CC (Carbon Copy) recipient
@@ -161,11 +182,18 @@ public interface MailMessage
    public MailMessage cc(InternetAddress emailAddress);
 
    /**
+    * Add CC recipient
+    * 
+    * @param emailContact {@link EmailContact} of the address to be added
+    */
+   public MailMessage cc(EmailContact emailContact);
+
+   /**
     * Add collection of CC (Carbon Copy) recipients
     * 
-    * @param emailAddresses Collection of {@link InternetAddress} to be added
+    * @param emailContacts Collection of {@link EmailContact} to be added
     */
-   public MailMessage cc(Collection<InternetAddress> emailAddresses);
+   public MailMessage cc(Collection<EmailContact> emailContacts);
 
    /**
     * Convenience method to add a BCC (Blind Carbon Copy) recipient
@@ -192,11 +220,18 @@ public interface MailMessage
    public MailMessage bcc(InternetAddress emailAddress);
 
    /**
+    * Add BCC recipient
+    * 
+    * @param emailContact {@link EmailContact} of the address to be added
+    */
+   public MailMessage bcc(EmailContact emailContact);
+
+   /**
     * Add collection of BCC (Blind Carbon Copy) recipients
     * 
-    * @param emailAddresses Collection of {@link InternetAddress} to be added
+    * @param emailContacts Collection of {@link EmailContact} to be added
     */
-   public MailMessage bcc(Collection<InternetAddress> emailAddresses);
+   public MailMessage bcc(Collection<EmailContact> emailContacts);
 
    // End Recipients
 

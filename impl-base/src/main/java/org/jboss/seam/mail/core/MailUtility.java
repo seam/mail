@@ -20,7 +20,9 @@ package org.jboss.seam.mail.core;
 import java.io.UnsupportedEncodingException;
 import java.net.UnknownHostException;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Properties;
+import java.util.Set;
 
 import javax.mail.MessagingException;
 import javax.mail.Session;
@@ -49,7 +51,7 @@ public class MailUtility
       }
    }
 
-   public static InternetAddress internetAddress(String name, String address) throws InvalidAddressException
+   public static InternetAddress internetAddress(String address, String name) throws InvalidAddressException
    {
       InternetAddress internetAddress;
       try
@@ -66,6 +68,30 @@ public class MailUtility
       {
          throw new InvalidAddressException(e);
       }
+   }
+
+   public static InternetAddress internetAddress(EmailContact emailContact) throws InvalidAddressException
+   {
+      if (Strings.isNullOrBlank(emailContact.getName()))
+      {
+         return MailUtility.internetAddress(emailContact.getAddress());
+      }
+      else
+      {
+         return MailUtility.internetAddress(emailContact.getName(), emailContact.getAddress());
+      }
+   }
+
+   public static Collection<InternetAddress> internetAddress(Collection<EmailContact> emailContacts) throws InvalidAddressException
+   {
+      Set<InternetAddress> internetAddresses = new HashSet<InternetAddress>();
+
+      for (EmailContact ec : emailContacts)
+      {
+         internetAddresses.add(MailUtility.internetAddress(ec));
+      }
+
+      return internetAddresses;
    }
 
    public static InternetAddress[] getInternetAddressses(InternetAddress emaiAddress)

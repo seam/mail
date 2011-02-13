@@ -155,7 +155,7 @@ public class BaseMailMessage
 
    public void setReplyTo(String name, String address)
    {
-      setReplyTo(MailUtility.internetAddress(name, address));
+      setReplyTo(MailUtility.internetAddress(address, name));
    }
 
    public void setReplyTo(InternetAddress emailAddress)

@@ -64,7 +64,7 @@ public class VelocityMailMessageTest
       .addResource("template.text.vm", "WEB-INF/classes/template.text.vm")
       .addResource("template.html.vm", "WEB-INF/classes/template.text.vm")
       .addPackages(true, VelocityMailMessageTest.class.getPackage())
-      .addLibraries(MavenArtifactResolver.resolve("org.jboss.seam.solder:seam-solder:3.0.0.Beta1"),
+      .addLibraries(MavenArtifactResolver.resolve("org.jboss.seam.solder:seam-solder:3.0.0.Beta2"),
             MavenArtifactResolver.resolve("org.subethamail:subethasmtp:3.1.4"),
             MavenArtifactResolver.resolve("org.apache.velocity:velocity:1.6.4"),
             MavenArtifactResolver.resolve("commons-lang:commons-lang:2.4"))

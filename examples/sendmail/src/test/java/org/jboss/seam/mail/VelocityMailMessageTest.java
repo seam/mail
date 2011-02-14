@@ -62,9 +62,9 @@ public class VelocityMailMessageTest
    {
       Archive<?> ar = ShrinkWrap.create(WebArchive.class, "test.war")
       .addResource("template.text.vm", "WEB-INF/classes/template.text.vm")
-      .addResource("template.html.vm", "WEB-INF/classes/template.text.vm")
+      .addResource("template.html.vm", "WEB-INF/classes/template.html.vm")
       .addPackages(true, VelocityMailMessageTest.class.getPackage())
-      .addLibraries(MavenArtifactResolver.resolve("org.jboss.seam.solder:seam-solder:3.0.0.Beta3"),
+      .addLibraries(MavenArtifactResolver.resolve("org.jboss.seam.solder:seam-solder:3.0.0.Beta2"),
             MavenArtifactResolver.resolve("org.subethamail:subethasmtp:3.1.4"),
             MavenArtifactResolver.resolve("org.apache.velocity:velocity:1.6.4"),
             MavenArtifactResolver.resolve("commons-lang:commons-lang:2.4"))
@@ -79,7 +79,7 @@ public class VelocityMailMessageTest
    private MailConfig mailConfig;
    
    @Inject 
-   private Session session;
+   private Instance<Session> session;
    
    @Gmail
    @Inject 
@@ -123,7 +123,7 @@ public class VelocityMailMessageTest
             .templateTextFromClassPath("template.text.vm")
             .put("version", version)
             .importance(MessagePriority.HIGH)
-            .send(session);
+            .send(session.get());
       }
       finally
       {
@@ -172,7 +172,7 @@ public class VelocityMailMessageTest
             .put("version", "Seam 3")
             .importance(MessagePriority.HIGH)
             .addAttachment(new URL("http://www.seamframework.org/themes/sfwkorg/img/seam_icon_large.png"), "seamLogo.png", ContentDisposition.INLINE)
-            .send(session);
+            .send(session.get());
       }
       finally
       {
@@ -222,7 +222,7 @@ public class VelocityMailMessageTest
             .readReceipt("seam.test")
             .addAttachment("template.html.vm", "text/html", ContentDisposition.ATTACHMENT)
             .addAttachment(new URL("http://www.seamframework.org/themes/sfwkorg/img/seam_icon_large.png"), "seamLogo.png", ContentDisposition.INLINE)
-            .send(session);
+            .send(session.get());
       }
       finally
       {
@@ -314,7 +314,7 @@ public class VelocityMailMessageTest
             .templateTextFromClassPath("template.text.vm")
             .put("version", version)
             .importance(MessagePriority.HIGH)
-            .send(session);
+            .send(session.get());
       }
       finally
       {

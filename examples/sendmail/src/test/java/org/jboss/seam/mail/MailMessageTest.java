@@ -63,7 +63,7 @@ public class MailMessageTest
       Archive<?> ar = ShrinkWrap.create(WebArchive.class, "test.war")
       .addResource("template.text.vm", "WEB-INF/classes/template.text.vm")
       .addPackages(true, MailMessageTest.class.getPackage())
-      .addLibraries(MavenArtifactResolver.resolve("org.jboss.seam.solder:seam-solder:3.0.0.Beta3"),
+      .addLibraries(MavenArtifactResolver.resolve("org.jboss.seam.solder:seam-solder:3.0.0.Beta2"),
             MavenArtifactResolver.resolve("org.subethamail:subethasmtp:3.1.4"),
             MavenArtifactResolver.resolve("org.apache.velocity:velocity:1.6.4"))
       .addWebResource(EmptyAsset.INSTANCE, "beans.xml");
@@ -74,7 +74,7 @@ public class MailMessageTest
    private Instance<MailMessage> mailMessage;
    
    @Inject 
-   private Session session;
+   private Instance<Session> session;
 
    @Inject
    private MailConfig mailConfig;
@@ -121,7 +121,7 @@ public class MailMessageTest
             .textBody(text)
             .importance(MessagePriority.HIGH)
             .messageId(messageId)
-            .send(session);
+            .send(session.get());
       }
       finally
       {
@@ -173,7 +173,7 @@ public class MailMessageTest
             .htmlBody("<html><body>Hello World!</body></html>")
             .importance(MessagePriority.HIGH)
             .addAttachment(new URL("http://www.seamframework.org/themes/sfwkorg/img/seam_icon_large.png"), "seamLogo.png", ContentDisposition.INLINE)
-            .send(session);
+            .send(session.get());
       }
       finally
       {
@@ -223,7 +223,7 @@ public class MailMessageTest
             .readReceipt("seam.test")
             .addAttachment("template.text.vm", "text/plain", ContentDisposition.ATTACHMENT)
             .addAttachment(new URL("http://www.seamframework.org/themes/sfwkorg/img/seam_icon_large.png"), "seamLogo.png", ContentDisposition.INLINE)
-            .send(session);
+            .send(session.get());
       }
       finally
       {
@@ -276,7 +276,7 @@ public class MailMessageTest
             .subject(subject)
             .textBody(text)
             .importance(MessagePriority.HIGH)
-            .send(session);
+            .send(session.get());
       }
       finally
       {
@@ -328,7 +328,7 @@ public class MailMessageTest
             .textBody(text)
             .importance(MessagePriority.HIGH)
             .messageId(messageId)
-            .send(session);
+            .send(session.get());
       }
       finally
       {
@@ -365,7 +365,7 @@ public class MailMessageTest
             .textBody(text)
             .importance(MessagePriority.HIGH)
             .messageId(messageId)
-            .send(session);
+            .send(session.get());
       }
       finally
       {
@@ -399,7 +399,7 @@ public class MailMessageTest
             .textBody(text)
             .importance(MessagePriority.HIGH)
             .messageId(messageId)
-            .send(session);
+            .send(session.get());
       }
       finally
       {

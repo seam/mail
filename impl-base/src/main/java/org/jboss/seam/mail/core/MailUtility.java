@@ -78,7 +78,7 @@ public class MailUtility
       }
       else
       {
-         return MailUtility.internetAddress(emailContact.getName(), emailContact.getAddress());
+         return MailUtility.internetAddress(emailContact.getAddress(), emailContact.getName());
       }
    }
 

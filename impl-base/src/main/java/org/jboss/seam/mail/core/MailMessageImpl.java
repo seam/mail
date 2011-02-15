@@ -22,6 +22,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.Collection;
 
+import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
 import javax.mail.Session;
 import javax.mail.internet.InternetAddress;
@@ -45,7 +46,7 @@ public class MailMessageImpl implements MailMessage
    private ResourceProvider resourceProvider;
 
    @Inject
-   private Session session;
+   private Instance<Session> session;
 
    public MailMessageImpl()
    {
@@ -333,8 +334,6 @@ public class MailMessageImpl implements MailMessage
 
    public EmailMessage send() throws SendFailedException
    {
-      MailUtility.send(emailMessage, session);
-
-      return emailMessage;
+      return this.send(session.get());
    }
 }

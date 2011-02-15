@@ -424,6 +424,57 @@ public class MailMessageTest
       // TODO Verify MimeBodyPart hierarchy and $person resolution is happening. 
    }
    
+   @Test
+   public void testTextMailMessageUsingDefaultSession() throws MessagingException
+   {
+      String subject = "Text Message from Seam Mail - " + java.util.UUID.randomUUID().toString();
+
+      mailConfig.setServerHost("localHost");
+      mailConfig.setServerPort(8977);
+      
+      String messageId = "1234@seam.test.com";
+
+      Wiser wiser = new Wiser(mailConfig.getServerPort());
+      try
+      {
+         wiser.start();   
+   
+         person.setName(toName);
+         person.setEmail(toAddress);
+   
+         mailMessage.get()
+            .from(fromAddress, fromName)
+            .replyTo(replyToAddress)
+            .to(person)
+            .subject(subject)
+            .textBody(text)
+            .importance(MessagePriority.HIGH)
+            .messageId(messageId)
+            .send();
+      }
+      finally
+      {
+         stop(wiser);
+      }
+
+      Assert.assertTrue("Didn't receive the expected amount of messages. Expected 1 got " + wiser.getMessages().size(), wiser.getMessages().size() == 1);
+
+      MimeMessage mess = wiser.getMessages().get(0).getMimeMessage();
+      
+      Assert.assertEquals(MailTestUtil.getAddressHeader(fromName, fromAddress), mess.getHeader("From", null));
+      Assert.assertEquals(MailTestUtil.getAddressHeader(replyToAddress), mess.getHeader("Reply-To", null));
+      Assert.assertEquals(MailTestUtil.getAddressHeader(toName, toAddress), mess.getHeader("To", null));
+      Assert.assertEquals("Subject has been modified", subject, MimeUtility.unfold(mess.getHeader("Subject", null)));
+      Assert.assertEquals(MessagePriority.HIGH.getPriority(), mess.getHeader("Priority", null));
+      Assert.assertEquals(MessagePriority.HIGH.getX_priority(), mess.getHeader("X-Priority", null));
+      Assert.assertEquals(MessagePriority.HIGH.getImportance(), mess.getHeader("Importance", null));
+      Assert.assertTrue(mess.getHeader("Content-Type", null).startsWith("multipart/mixed"));
+      Assert.assertEquals(messageId, MailUtility.headerStripper(mess.getHeader("Message-ID", null)));
+
+
+      // TODO Verify MimeBodyPart hierarchy and $person resolution is happening. 
+   }
+   
    /**
     * Wiser takes a fraction of a second to shutdown, so let it finish.
     */

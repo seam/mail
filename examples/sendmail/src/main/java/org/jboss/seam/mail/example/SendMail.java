@@ -46,7 +46,7 @@ public class SendMail
    private Instance<VelocityMailMessage> velocityMailMessage;
    
    @Inject
-   private Session session;
+   private Instance<Session> session;
    
    @Inject
    private Person person;   
@@ -54,32 +54,32 @@ public class SendMail
    public void sendText()
    {
       mailMessage.get()
-            .from("Seam Framework", "seam@jboss.org")
-            .to(person.getName(), person.getEmail())
+            .from("seam@test.test", "Seam Framework")
+            .to( person.getEmail(), person.getName())
             .subject("Text Message from Seam Mail - " + java.util.UUID.randomUUID().toString())
             .textBody(text)
-            .send(session);
+            .send();
    }
 
    public void sendHTML() throws MalformedURLException
    {
       VelocityMailMessage vmm = velocityMailMessage.get();
       
-      vmm.from("Seam Framework", "seam@jboss.org")
-            .to(person.getName(), person.getEmail())
+      vmm.from("seam@test.test", "Seam Framework")
+            .to(person)
             .subject("HTML Message from Seam Mail - " + java.util.UUID.randomUUID().toString())
             .templateHTMLFromClassPath("template.html.vm")
             .put("version", "Seam 3")
             .importance(MessagePriority.HIGH)
             .addAttachment(new URL("http://www.seamframework.org/themes/sfwkorg/img/seam_icon_large.png"), "seamLogo.png", ContentDisposition.INLINE);
-            vmm.send(session);
+            vmm.send(session.get());
    }
 
    public void sendHTMLwithAlternative() throws MalformedURLException
    {
       velocityMailMessage.get()
-            .from("Seam Framework", "seam@jboss.org")
-            .to(person.getName(), person.getEmail())
+            .from("seam@test.test", "Seam Framework")
+            .to(person.getEmail(), person.getName())
             .subject("HTML+Text Message from Seam Mail - " + java.util.UUID.randomUUID().toString())
             .put("version", "Seam 3")
             .templateHTMLTextAltFromClassPath("template.html.vm", "template.text.vm")
@@ -88,6 +88,6 @@ public class SendMail
             .readReceipt("seam@jboss.org")
             .addAttachment("template.html.vm", "text/html", ContentDisposition.ATTACHMENT)
             .addAttachment(new URL("http://www.seamframework.org/themes/sfwkorg/img/seam_icon_large.png"), "seamLogo.png", ContentDisposition.INLINE)
-            .send(session);
+            .send(session.get());
    }
 }

@@ -46,7 +46,7 @@ public class MailContext
       }
       else
       {
-         return "cid:" + attachment.getUid();
+         return "cid:" + attachment.getContentId();
       }
    }
 }

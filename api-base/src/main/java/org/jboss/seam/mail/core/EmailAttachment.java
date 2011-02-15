@@ -30,7 +30,7 @@ import org.jboss.seam.mail.core.enumurations.ContentDisposition;
  */
 public class EmailAttachment
 {
-   private String uid;
+   private String contentId;
    private String fileName;
    private String mimeType;
    private ContentDisposition contentDisposition;
@@ -39,16 +39,16 @@ public class EmailAttachment
 
    public EmailAttachment(String fileName, String mimeType, ContentDisposition contentDisposition, byte[] bytes)
    {
-      this.uid = UUID.randomUUID().toString();
+      this.contentId = UUID.randomUUID().toString();
       this.fileName = fileName;
       this.mimeType = mimeType;
       this.contentDisposition = contentDisposition;
       this.bytes = bytes;
    }
 
-   public String getUid()
+   public String getContentId()
    {
-      return uid;
+      return contentId;
    }
 
    public String getFileName()

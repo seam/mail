@@ -410,7 +410,7 @@ public class BaseMailMessage
 
    public void addAttachment(EmailAttachment emailAttachment)
    {
-      AttachmentPart attachment = new AttachmentPart(emailAttachment.getBytes(), emailAttachment.getUid(), emailAttachment.getFileName(), emailAttachment.getMimeType(), emailAttachment.getHeaders(), emailAttachment.getContentDisposition());
+      AttachmentPart attachment = new AttachmentPart(emailAttachment.getBytes(), emailAttachment.getContentId(), emailAttachment.getFileName(), emailAttachment.getMimeType(), emailAttachment.getHeaders(), emailAttachment.getContentDisposition());
       attachments.put(attachment.getAttachmentFileName(), attachment);
    }
 

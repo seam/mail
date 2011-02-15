@@ -24,6 +24,7 @@ import java.util.Collection;
 import javax.mail.Session;
 import javax.mail.internet.InternetAddress;
 
+import org.jboss.seam.mail.api.MailMessage;
 import org.jboss.seam.mail.core.EmailAttachment;
 import org.jboss.seam.mail.core.EmailContact;
 import org.jboss.seam.mail.core.EmailMessage;
@@ -392,6 +393,15 @@ public interface VelocityMailMessage
     * @throws SendFailedException If the messages fails to be sent.
     */
    public EmailMessage send(Session session);
+   
+   /**
+    * Send the Message
+    * 
+    * @return {@link EmailMessage} which represents the {@link MailMessage} as
+    *         sent
+    * @throws SendFailedException If the messages fails to be sent.
+    */
+   public EmailMessage send();
 
    // Begin Velocity Specific
 

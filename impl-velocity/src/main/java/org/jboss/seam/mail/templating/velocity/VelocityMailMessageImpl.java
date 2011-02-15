@@ -29,6 +29,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.util.Collection;
 
+import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
 import javax.mail.Session;
 import javax.mail.internet.InternetAddress;
@@ -70,6 +71,9 @@ public class VelocityMailMessageImpl implements VelocityMailMessage
 
    @Inject
    private ResourceProvider resourceProvider;
+
+   @Inject
+   private Instance<Session> session;
 
    @Inject
    public VelocityMailMessageImpl(SeamCDIVelocityContext seamCDIVelocityContext)
@@ -539,5 +543,10 @@ public class VelocityMailMessageImpl implements VelocityMailMessage
       MailUtility.send(emailMessage, session);
 
       return emailMessage;
+   }
+
+   public EmailMessage send() throws SendFailedException, TemplatingException
+   {
+      return this.send(session.get());     
    }
 }

@@ -90,24 +90,7 @@
 					<artifactId>cdi-api</artifactId>
 				</exclusion>
 			</exclusions>
-		</dependency>
-
-		<!-- Weld Extensions provides convenient, portable CDI extensions such as an injectable logger -->
-		<dependency>
-			<groupId>org.jboss.seam.solder</groupId>
-			<artifactId>seam-solder</artifactId>
-			<version>3.0.0.Beta2</version>
-			<exclusions>
-				<exclusion>
-					<groupId>javax.el</groupId>
-					<artifactId>el-api</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>javax.transaction</groupId>
-					<artifactId>jta</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
+		</dependency>	
 
 		<!-- Need to use the injectable logger in Weld Extensions -->
 		<!-- Both JBoss AS and GlassFish provide this API -->

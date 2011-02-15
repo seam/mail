@@ -38,6 +38,7 @@ import org.apache.velocity.exception.MethodInvocationException;
 import org.apache.velocity.exception.ParseErrorException;
 import org.apache.velocity.exception.ResourceNotFoundException;
 import org.jboss.seam.mail.core.EmailAttachment;
+import org.jboss.seam.mail.core.EmailContact;
 import org.jboss.seam.mail.core.EmailMessage;
 import org.jboss.seam.mail.core.MailContext;
 import org.jboss.seam.mail.core.MailUtility;
@@ -87,7 +88,7 @@ public class VelocityMailMessageImpl implements VelocityMailMessage
       return this;
    }
 
-   public VelocityMailMessage from(String name, String address)
+   public VelocityMailMessage from(String address, String name)
    {
       emailMessage.addFromAddress(MailUtility.internetAddress(address, name));
       return this;
@@ -99,9 +100,15 @@ public class VelocityMailMessageImpl implements VelocityMailMessage
       return this;
    }
 
-   public VelocityMailMessage from(Collection<InternetAddress> emailAddresses)
+   public VelocityMailMessage from(EmailContact emailContact)
    {
-      emailMessage.addFromAddresses(emailAddresses);
+      emailMessage.addFromAddress(MailUtility.internetAddress(emailContact));
+      return this;
+   }
+
+   public VelocityMailMessage from(Collection<EmailContact> emailContacts)
+   {
+      emailMessage.addFromAddresses(MailUtility.internetAddress(emailContacts));
       return this;
    }
 
@@ -111,7 +118,7 @@ public class VelocityMailMessageImpl implements VelocityMailMessage
       return this;
    }
 
-   public VelocityMailMessage replyTo(String name, String address)
+   public VelocityMailMessage replyTo(String address, String name)
    {
       emailMessage.addReplyToAddress(MailUtility.internetAddress(address, name));
       return this;
@@ -123,9 +130,15 @@ public class VelocityMailMessageImpl implements VelocityMailMessage
       return this;
    }
 
-   public VelocityMailMessage replyTo(Collection<InternetAddress> emailAddresses)
+   public VelocityMailMessage replyTo(EmailContact emailContact)
    {
-      emailMessage.addReplyToAddresses(emailAddresses);
+      emailMessage.addReplyToAddress(MailUtility.internetAddress(emailContact));
+      return this;
+   }
+
+   public VelocityMailMessage replyTo(Collection<EmailContact> emailContacts)
+   {
+      emailMessage.addReplyToAddresses(MailUtility.internetAddress(emailContacts));
       return this;
    }
 
@@ -135,7 +148,7 @@ public class VelocityMailMessageImpl implements VelocityMailMessage
       return this;
    }
 
-   public VelocityMailMessage to(String name, String address)
+   public VelocityMailMessage to(String address, String name)
    {
       emailMessage.addToAddress(MailUtility.internetAddress(address, name));
       return this;
@@ -147,9 +160,15 @@ public class VelocityMailMessageImpl implements VelocityMailMessage
       return this;
    }
 
-   public VelocityMailMessage to(Collection<InternetAddress> emailAddresses)
+   public VelocityMailMessage to(EmailContact emailContact)
    {
-      emailMessage.addToAddresses(emailAddresses);
+      emailMessage.addToAddress(MailUtility.internetAddress(emailContact));
+      return this;
+   }
+
+   public VelocityMailMessage to(Collection<EmailContact> emailContacts)
+   {
+      emailMessage.addToAddresses(MailUtility.internetAddress(emailContacts));
       return this;
    }
 
@@ -159,7 +178,7 @@ public class VelocityMailMessageImpl implements VelocityMailMessage
       return this;
    }
 
-   public VelocityMailMessage cc(String name, String address)
+   public VelocityMailMessage cc(String address, String name)
    {
       emailMessage.addCcAddress(MailUtility.internetAddress(address, name));
       return this;
@@ -171,9 +190,15 @@ public class VelocityMailMessageImpl implements VelocityMailMessage
       return this;
    }
 
-   public VelocityMailMessage cc(Collection<InternetAddress> emailAddresses)
+   public VelocityMailMessage cc(EmailContact emailContact)
    {
-      emailMessage.addCcAddresses(emailAddresses);
+      emailMessage.addCcAddress(MailUtility.internetAddress(emailContact));
+      return this;
+   }
+
+   public VelocityMailMessage cc(Collection<EmailContact> emailContacts)
+   {
+      emailMessage.addCcAddresses(MailUtility.internetAddress(emailContacts));
       return this;
    }
 
@@ -183,7 +208,7 @@ public class VelocityMailMessageImpl implements VelocityMailMessage
       return this;
    }
 
-   public VelocityMailMessage bcc(String name, String address)
+   public VelocityMailMessage bcc(String address, String name)
    {
       emailMessage.addBccAddress(MailUtility.internetAddress(address, name));
       return this;
@@ -195,9 +220,15 @@ public class VelocityMailMessageImpl implements VelocityMailMessage
       return this;
    }
 
-   public VelocityMailMessage bcc(Collection<InternetAddress> emailAddresses)
+   public VelocityMailMessage bcc(EmailContact emailContact)
    {
-      emailMessage.addBccAddresses(emailAddresses);
+      emailMessage.addBccAddress(MailUtility.internetAddress(emailContact));
+      return this;
+   }
+
+   public VelocityMailMessage bcc(Collection<EmailContact> emailContacts)
+   {
+      emailMessage.addBccAddresses(MailUtility.internetAddress(emailContacts));
       return this;
    }
 

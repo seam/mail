@@ -57,7 +57,7 @@ public interface MailMessage
     * @param address Email address of the recipient eg "john.doe@example.com"
     * @throws InvalidAddressException if address is in invalid format
     */
-   public MailMessage from(String name, String address);
+   public MailMessage from(String address, String name);
 
    /**
     * Adds a From Address
@@ -95,7 +95,7 @@ public interface MailMessage
     * @param address Email address of the recipient eg "john.doe@example.com"
     * @throws InvalidAddressException if address is in invalid format
     */
-   public MailMessage replyTo(String name, String address);
+   public MailMessage replyTo(String address, String name);
 
    /**
     * Adds a REPLY-TO Address
@@ -133,7 +133,7 @@ public interface MailMessage
     * @param address Email address of the recipient eg "john.doe@example.com"
     * @throws InvalidAddressException if address is in invalid format
     */
-   public MailMessage to(String name, String address);
+   public MailMessage to(String address, String name);
 
    /**
     * Add TO recipient
@@ -172,7 +172,7 @@ public interface MailMessage
     * @param address Email address of the recipient eg "john.doe@example.com"
     * @throws InvalidAddressException if address is in invalid format
     */
-   public MailMessage cc(String name, String address);
+   public MailMessage cc(String address, String name);
 
    /**
     * Add CC (Carbon Copy) recipient
@@ -210,7 +210,7 @@ public interface MailMessage
     * @param address Email address of the recipient eg "john.doe@example.com"
     * @throws InvalidAddressException if address is in invalid format
     */
-   public MailMessage bcc(String name, String address);
+   public MailMessage bcc(String address, String name);
 
    /**
     * Add BCC (Blind Carbon Copy) recipient

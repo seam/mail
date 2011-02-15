@@ -116,9 +116,9 @@ public class VelocityMailMessageTest
          person.setEmail(toAddress);
    
          velocityMailMessage.get()
-            .from(fromName, fromAddress)
+            .from(fromAddress, fromName)
             .replyTo(replyToAddress)
-            .to(toName, toAddress)
+            .to(toAddress, toName)
             .templateSubject(subject)
             .templateTextFromClassPath("template.text.vm")
             .put("version", version)
@@ -164,9 +164,9 @@ public class VelocityMailMessageTest
          person.setEmail(toAddress);
    
          velocityMailMessage.get()
-            .from(fromName, fromAddress)
-            .replyTo(replyToName, replyToAddress)
-            .to(person.getName(), person.getEmail())
+            .from(fromAddress, fromName)
+            .replyTo(replyToAddress, replyToName)
+            .to(person)
             .subject(subject)
             .templateHTMLFromClassPath("template.html.vm")
             .put("version", "Seam 3")
@@ -212,8 +212,8 @@ public class VelocityMailMessageTest
          person.setEmail(toAddress);
    
          velocityMailMessage.get()
-            .from(fromName, fromAddress)
-            .to(person.getName(), person.getEmail())
+            .from(fromAddress, fromName)
+            .to(person.getEmail(), person.getName())
             .subject(subject)
             .put("version", "Seam 3")
             .templateHTMLTextAltFromClassPath("template.html.vm", "template.text.vm")
@@ -263,8 +263,8 @@ public class VelocityMailMessageTest
          person.setEmail(toAddress);
    
          velocityMailMessage.get()
-            .from(fromName, fromAddress)
-            .to(person.getName(), person.getEmail())
+            .from(fromAddress, fromName)
+            .to(person.getEmail(), person.getName())
             .subject(subject)
             .put("version", "Seam 3")
             .templateHTMLTextAltFromClassPath("template.html.vm", "template.text.vm")
@@ -307,9 +307,9 @@ public class VelocityMailMessageTest
          person.setEmail(toAddress);
    
          velocityMailMessage.get()
-            .from(fromName, fromAddress)
+            .from(fromAddress, fromName)
             .replyTo(replyToAddress)
-            .to(toName, toAddress)
+            .to(toAddress, toName)
             .templateSubject(subject)
             .templateTextFromClassPath("template.text.vm")
             .put("version", version)

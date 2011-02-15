@@ -114,9 +114,9 @@ public class MailMessageTest
          person.setEmail(toAddress);
    
          mailMessage.get()
-            .from(fromName, fromAddress)
+            .from(fromAddress, fromName)
             .replyTo(replyToAddress)
-            .to(toName, toAddress)
+            .to(toAddress, toName)
             .subject(subject)
             .textBody(text)
             .importance(MessagePriority.HIGH)
@@ -166,9 +166,9 @@ public class MailMessageTest
          person.setEmail(toAddress);
    
          emailMessage = mailMessage.get()
-            .from(fromName, fromAddress)
-            .replyTo(replyToName, replyToAddress)
-            .to(person.getName(), person.getEmail())
+            .from(fromAddress, fromName)
+            .replyTo(replyToAddress, replyToName)
+            .to(person.getEmail(), person.getName())
             .subject(subject)
             .htmlBody("<html><body>Hello World!</body></html>")
             .importance(MessagePriority.HIGH)
@@ -214,8 +214,8 @@ public class MailMessageTest
          person.setEmail(toAddress);
    
          mailMessage.get()
-            .from(fromName, fromAddress)
-            .to(person.getName(), person.getEmail())
+            .from(fromAddress, fromName)
+            .to(person.getEmail(), person.getName())
             .subject(subject)
             .htmlBodyTextAlt(html, text)
             .importance(MessagePriority.LOW)
@@ -270,9 +270,9 @@ public class MailMessageTest
          person.setEmail(longToAddress);
    
          mailMessage.get()
-            .from(longFromName, longFromAddress)
-            .to(longToName, longToAddress)
-            .cc(longCcName, longCcAddress)
+            .from(longFromAddress, longFromName)
+            .to(longToAddress, longToName)
+            .cc(longCcAddress, longCcName)
             .subject(subject)
             .textBody(text)
             .importance(MessagePriority.HIGH)
@@ -321,9 +321,9 @@ public class MailMessageTest
          person.setEmail(toAddress);
    
          mailMessage.get()
-            .from(fromName, fromAddress)
+            .from(fromAddress, fromName)
             .replyTo(replyToAddress)
-            .to(toName, toAddress)
+            .to(toAddress, toName)
             .subject(subject)
             .textBody(text)
             .importance(MessagePriority.HIGH)
@@ -358,9 +358,9 @@ public class MailMessageTest
          person.setEmail(toAddress);
    
          mailMessage.get()
-            .from(fromName, "seam seamerson@test.com")
+            .from("seam seamerson@test.com", fromName)
             .replyTo(replyToAddress)
-            .to(toName, toAddress)
+            .to(toAddress, toName)
             .subject(subject)
             .textBody(text)
             .importance(MessagePriority.HIGH)
@@ -392,7 +392,7 @@ public class MailMessageTest
          person.setEmail(toAddress);
    
          mailMessage.get()
-            .from(fromName, fromAddress)
+            .from(fromAddress, fromName)
             .replyTo(replyToAddress)
             .to(person)
             .subject(subject)

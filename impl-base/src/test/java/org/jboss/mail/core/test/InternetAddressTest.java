@@ -44,27 +44,27 @@ public class InternetAddressTest
       Collection<EmailContact> addresses = new ArrayList<EmailContact>();
       addresses.add(seamey);
 
-      m.from("Seam Seamerson", "seam@domain.test");
+      m.from("seam@domain.test", "Seam Seamerson");
       m.from("seam@domain.test");
       m.from(seam);
       m.from(addresses);
 
-      m.to("Seam Seamerson", "seam@domain.test");
+      m.to("seam@domain.test", "Seam Seamerson");
       m.to("seam@domain.test");
       m.to(seam);
       m.to(addresses);
 
-      m.cc("Seam Seamerson", "seam@domain.test");
+      m.cc("seam@domain.test", "Seam Seamerson");
       m.cc("seam@domain.test");
       m.cc(seam);
       m.cc(addresses);
 
-      m.bcc("Seam Seamerson", "seam@domain.test");
+      m.bcc("seam@domain.test", "Seam Seamerson");
       m.bcc("seam@domain.test");
       m.bcc(seam);
       m.bcc(addresses);
 
-      m.replyTo("Seam Seamerson", "seam@domain.test");
+      m.replyTo("seam@domain.test", "Seam Seamerson");
       m.replyTo("seam@domain.test");
       m.replyTo(seam);
       m.replyTo(addresses);
@@ -83,7 +83,7 @@ public class InternetAddressTest
    {
       MailMessage m = new MailMessageImpl();
 
-      m.from("Woo", "foo @bar.com");
+      m.from("foo @bar.com", "Woo");
    }
 
    @Test(expected = InvalidAddressException.class)
@@ -99,7 +99,7 @@ public class InternetAddressTest
    {
       MailMessage m = new MailMessageImpl();
 
-      m.to("Woo", "foo @bar.com");
+      m.to("foo @bar.com", "Woo");
    }
 
    @Test(expected = InvalidAddressException.class)
@@ -115,7 +115,7 @@ public class InternetAddressTest
    {
       MailMessage m = new MailMessageImpl();
 
-      m.cc("Woo", "foo @bar.com");
+      m.cc("foo @bar.com", "Woo");
    }
 
    @Test(expected = InvalidAddressException.class)
@@ -131,7 +131,7 @@ public class InternetAddressTest
    {
       MailMessage m = new MailMessageImpl();
 
-      m.bcc("Woo", "foo @bar.com");
+      m.bcc("foo @bar.com", "Woo");
    }
 
    @Test(expected = InvalidAddressException.class)
@@ -147,7 +147,7 @@ public class InternetAddressTest
    {
       MailMessage m = new MailMessageImpl();
 
-      m.replyTo("Woo", "foo @bar.com");
+      m.replyTo("foo @bar.com", "Woo");
    }
 
    @Test(expected = InvalidAddressException.class)

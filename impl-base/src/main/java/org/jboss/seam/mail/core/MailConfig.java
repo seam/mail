@@ -22,7 +22,7 @@ import javax.enterprise.context.ApplicationScoped;
 import com.google.common.base.Strings;
 
 /**
- * Bean which holds Mail Session configuraiton options. Can be configured via
+ * Bean which holds Mail Session configuration options. Can be configured via
  * Seam XML
  * 
  * @author Cody Lerum
@@ -36,8 +36,9 @@ public class MailConfig
    private String domainName;
    private String username;
    private String password;
-   private boolean tls = true;
-   private boolean ssl = false;
+   private boolean enableTls = false;
+   private boolean requireTls = false;
+   private boolean enableSsl = false;
    private boolean auth = false;
 
    public String getServerHost()
@@ -90,26 +91,36 @@ public class MailConfig
       this.password = password;
    }
 
-   public boolean isTls()
+   public boolean isEnableTls()
    {
-      return tls;
+      return enableTls;
    }
 
-   public void setTls(boolean tls)
+   public void setEnableTls(boolean enableTls)
    {
-      this.tls = tls;
+      this.enableTls = enableTls;
    }
 
-   public boolean isSsl()
+   public boolean isRequireTls()
    {
-      return ssl;
+      return requireTls;
    }
 
-   public void setSsl(boolean ssl)
+   public void setRequireTls(boolean requireTls)
    {
-      this.ssl = ssl;
+      this.requireTls = requireTls;
    }
 
+   public boolean isEnableSsl()
+   {
+      return enableSsl;
+   }
+
+   public void setEnableSsl(boolean enableSsl)
+   {
+      this.enableSsl = enableSsl;
+   }
+  
    public boolean isAuth()
    {
       return auth;

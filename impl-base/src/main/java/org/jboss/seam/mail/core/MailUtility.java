@@ -131,8 +131,9 @@ public class MailUtility
       {
          props.put("mail.smtp.host", mailConfig.getServerHost());
          props.put("mail.smtp.port", mailConfig.getServerPort());
-         props.put("mail.smtp.starttls.enable", mailConfig.isTls());
-         props.put("mail.smtp.ssl.enable", mailConfig.isSsl());
+         props.put("mail.smtp.starttls.enable", mailConfig.isEnableTls());
+         props.put("mail.smtp.starttls.required", mailConfig.isRequireTls());
+         props.put("mail.smtp.ssl.enable", mailConfig.isEnableSsl());
          props.put("mail.smtp.auth", mailConfig.isAuth());
       }
       else

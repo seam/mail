@@ -325,6 +325,11 @@ public class MailMessageImpl implements MailMessage
       return emailMessage;
    }
 
+   public void setEmailMessage(EmailMessage emailMessage)
+   {
+      this.emailMessage = emailMessage;
+   }
+
    public EmailMessage send(Session session) throws SendFailedException
    {
       MailUtility.send(emailMessage, session);

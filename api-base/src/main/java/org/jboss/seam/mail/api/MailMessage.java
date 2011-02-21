@@ -382,6 +382,12 @@ public interface MailMessage
     * @return {@link EmailMessage} representing this {@link MailMessage}
     */
    public EmailMessage getEmailMessage();
+   
+   /**
+    * Set the {@link EmailMessage} representing this {@link MailMessage}
+    * 
+    */
+   public void setEmailMessage(EmailMessage emailMessage);
 
    /**
     * Send the Message

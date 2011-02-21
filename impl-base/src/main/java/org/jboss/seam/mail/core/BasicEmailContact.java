@@ -1,6 +1,5 @@
 package org.jboss.seam.mail.core;
 
-
 /**
  * 
  * @author Cody Lerum
@@ -42,5 +41,32 @@ public class BasicEmailContact implements EmailContact
    public void setName(String name)
    {
       this.name = name;
+   }
+
+   @Override
+   public boolean equals(Object o)
+   {
+      EmailContact e = (EmailContact) o;
+
+      return toString().equals(e.toString());
+   }
+
+   @Override
+   public int hashCode()
+   {
+      return toString().hashCode();
+   }
+
+   @Override
+   public String toString()
+   {
+      if (name == null || name.length() == 0)
+      {
+         return address;
+      }
+      else
+      {
+         return name + " <" + address + ">";
+      }
    }
 }

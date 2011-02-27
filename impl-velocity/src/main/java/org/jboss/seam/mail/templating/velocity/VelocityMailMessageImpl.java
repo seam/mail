@@ -17,15 +17,11 @@
 
 package org.jboss.seam.mail.templating.velocity;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringWriter;
-import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.util.Collection;
 
@@ -49,6 +45,7 @@ import org.jboss.seam.mail.core.enumurations.MessagePriority;
 import org.jboss.seam.mail.templating.MailTemplate;
 import org.jboss.seam.mail.templating.TemplatingException;
 import org.jboss.seam.mail.templating.VelocityMailMessage;
+import org.jboss.seam.mail.templating.VelocityTemplate;
 import org.jboss.seam.mail.util.EmailAttachmentUtil;
 import org.jboss.seam.solder.resourceLoader.ResourceProvider;
 
@@ -268,19 +265,19 @@ public class VelocityMailMessageImpl implements VelocityMailMessage
       return this;
    }
 
-   public VelocityMailMessage textBody(String text)
+   public VelocityMailMessage bodyText(String text)
    {
       emailMessage.setTextBody(text);
       return this;
    }
 
-   public VelocityMailMessage htmlBody(String html)
+   public VelocityMailMessage bodyHtml(String html)
    {
       emailMessage.setHtmlBody(html);
       return this;
    }
 
-   public VelocityMailMessage htmlBodyTextAlt(String html, String text)
+   public VelocityMailMessage bodyHtmlTextAlt(String html, String text)
    {
       emailMessage.setTextBody(text);
       emailMessage.setHtmlBody(html);
@@ -345,124 +342,36 @@ public class VelocityMailMessageImpl implements VelocityMailMessage
 
    // End Calendar
 
-   public VelocityMailMessage templateSubject(String text)
+   public VelocityMailMessage subject(VelocityTemplate subject)
    {
-      subjectTemplate = createTemplate(text);
+      subjectTemplate = createTemplate(subject);
       return this;
    }
 
-   public VelocityMailMessageImpl templateText(String text)
+   public VelocityMailMessageImpl bodyText(VelocityTemplate textBody)
    {
-      textTemplate = createTemplate(text);
+      textTemplate = createTemplate(textBody);
       return this;
    }
 
-   public VelocityMailMessageImpl templateHTML(String html)
+   public VelocityMailMessageImpl bodyHtml(VelocityTemplate htmlBody)
    {
-      htmlTemplate = createTemplate(html);
+      htmlTemplate = createTemplate(htmlBody);
       return this;
    }
 
-   public VelocityMailMessageImpl templateHTMLTextAlt(String html, String text)
+   public VelocityMailMessageImpl bodyHtmlTextAlt(VelocityTemplate htmlBody, VelocityTemplate textBody)
    {
-      templateHTML(html);
-      templateText(text);
+      bodyHtml(htmlBody);
+      bodyText(textBody);
       return this;
-   }
-
-   public VelocityMailMessage templateSubjectFromClassPath(String fileName)
+   }  
+   
+   private MailTemplate createTemplate(VelocityTemplate velocityTemplate)
    {
-      subjectTemplate = createTemplateFromClassPath(fileName);
-      return this;
+      return new MailTemplate("rawInput", velocityTemplate.getInputStream());
    }
-
-   public VelocityMailMessage templateTextFromClassPath(String fileName)
-   {
-      textTemplate = createTemplateFromClassPath(fileName);
-      return this;
-   }
-
-   public VelocityMailMessage templateHTMLFromClassPath(String fileName)
-   {
-      htmlTemplate = createTemplateFromClassPath(fileName);
-      return this;
-   }
-
-   public VelocityMailMessage templateHTMLTextAltFromClassPath(String htmlFileName, String textFileName)
-   {
-      htmlTemplate = createTemplateFromClassPath(htmlFileName);
-      textTemplate = createTemplateFromClassPath(textFileName);
-      return this;
-   }
-
-   public VelocityMailMessage templateSubject(File file)
-   {
-      subjectTemplate = createTemplate(file);
-      return this;
-   }
-
-   public VelocityMailMessage templateText(File file)
-   {
-      textTemplate = createTemplate(file);
-      return this;
-   }
-
-   public VelocityMailMessage templateHTML(File file)
-   {
-      htmlTemplate = createTemplate(file);
-      return this;
-   }
-
-   public VelocityMailMessage templateHTMLTextAlt(File htmlFile, File textFile)
-   {
-      templateHTML(htmlFile);
-      templateText(textFile);
-      return this;
-   }
-
-   private MailTemplate createTemplateFromClassPath(String classPathFileName)
-   {
-      InputStream inputStream = resourceProvider.loadResourceStream(classPathFileName);
-
-      return new MailTemplate("rawInput", inputStream);
-   }
-
-   private MailTemplate createTemplate(String rawText)
-   {
-      InputStream inputStream;
-
-      try
-      {
-         inputStream = new ByteArrayInputStream(rawText.getBytes("UTF-8"));
-      }
-      catch (UnsupportedEncodingException e)
-      {
-         throw new TemplatingException("Unable to create template from rawText", e);
-      }
-
-      MailTemplate template = new MailTemplate("rawInput", inputStream);
-
-      return template;
-   }
-
-   private MailTemplate createTemplate(File templateFile)
-   {
-      InputStream inputStream;
-
-      try
-      {
-         inputStream = new FileInputStream(templateFile);
-      }
-      catch (FileNotFoundException e)
-      {
-         throw new TemplatingException("Unable to find template " + templateFile.getName(), e);
-      }
-
-      MailTemplate template = new MailTemplate(templateFile.getName(), inputStream);
-
-      return template;
-   }
-
+   
    private String mergeTemplate(MailTemplate template)
    {
       StringWriter writer = new StringWriter();

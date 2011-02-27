@@ -39,6 +39,8 @@ import org.jboss.seam.mail.core.enumurations.MessagePriority;
 import org.jboss.seam.mail.example.Gmail;
 import org.jboss.seam.mail.example.Person;
 import org.jboss.seam.mail.templating.VelocityMailMessage;
+import org.jboss.seam.mail.templating.velocity.VelocityClassPathTemplate;
+import org.jboss.seam.mail.templating.velocity.VelocityTextTemplate;
 import org.jboss.seam.mail.util.MavenArtifactResolver;
 import org.jboss.seam.mail.util.SMTPAuthenticator;
 import org.jboss.shrinkwrap.api.Archive;
@@ -119,8 +121,8 @@ public class VelocityMailMessageTest
             .from(fromAddress, fromName)
             .replyTo(replyToAddress)
             .to(toAddress, toName)
-            .templateSubject(subject)
-            .templateTextFromClassPath("template.text.vm")
+            .subject(new VelocityTextTemplate(subject))
+            .bodyText(new VelocityClassPathTemplate("template.text.vm"))
             .put("version", version)
             .importance(MessagePriority.HIGH)
             .send(session.get());
@@ -168,7 +170,7 @@ public class VelocityMailMessageTest
             .replyTo(replyToAddress, replyToName)
             .to(person)
             .subject(subject)
-            .templateHTMLFromClassPath("template.html.vm")
+            .bodyHtml(new VelocityClassPathTemplate("template.html.vm"))
             .put("version", "Seam 3")
             .importance(MessagePriority.HIGH)
             .addAttachment(new URL("http://www.seamframework.org/themes/sfwkorg/img/seam_icon_large.png"), "seamLogo.png", ContentDisposition.INLINE)
@@ -216,7 +218,7 @@ public class VelocityMailMessageTest
             .to(person.getEmail(), person.getName())
             .subject(subject)
             .put("version", "Seam 3")
-            .templateHTMLTextAltFromClassPath("template.html.vm", "template.text.vm")
+            .bodyHtmlTextAlt(new VelocityClassPathTemplate("template.html.vm"), new VelocityClassPathTemplate("template.text.vm"))
             .importance(MessagePriority.LOW)
             .deliveryReceipt(fromAddress)
             .readReceipt("seam.test")
@@ -267,7 +269,7 @@ public class VelocityMailMessageTest
             .to(person.getEmail(), person.getName())
             .subject(subject)
             .put("version", "Seam 3")
-            .templateHTMLTextAltFromClassPath("template.html.vm", "template.text.vm")
+            .bodyHtmlTextAlt(new VelocityClassPathTemplate("template.html.vm"), new VelocityClassPathTemplate("template.text.vm"))
             .importance(MessagePriority.LOW)
             .deliveryReceipt(fromAddress)
             .readReceipt("seam.test")
@@ -310,8 +312,8 @@ public class VelocityMailMessageTest
             .from(fromAddress, fromName)
             .replyTo(replyToAddress)
             .to(toAddress, toName)
-            .templateSubject(subject)
-            .templateTextFromClassPath("template.text.vm")
+            .subject(new VelocityTextTemplate(subject))
+            .bodyText(new VelocityClassPathTemplate("template.text.vm"))
             .put("version", version)
             .importance(MessagePriority.HIGH)
             .send(session.get());

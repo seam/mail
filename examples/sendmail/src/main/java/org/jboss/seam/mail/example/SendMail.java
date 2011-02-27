@@ -29,6 +29,8 @@ import org.jboss.seam.mail.api.MailMessage;
 import org.jboss.seam.mail.core.enumurations.ContentDisposition;
 import org.jboss.seam.mail.core.enumurations.MessagePriority;
 import org.jboss.seam.mail.templating.VelocityMailMessage;
+import org.jboss.seam.mail.templating.velocity.VelocityClassPathTemplate;
+import org.jboss.seam.mail.example.Person;
 /**
  * 
  * @author Cody Lerum
@@ -68,7 +70,7 @@ public class SendMail
       vmm.from("seam@test.test", "Seam Framework")
             .to(person)
             .subject("HTML Message from Seam Mail - " + java.util.UUID.randomUUID().toString())
-            .templateHTMLFromClassPath("template.html.vm")
+            .bodyHtml(new VelocityClassPathTemplate("template.html.vm"))
             .put("version", "Seam 3")
             .importance(MessagePriority.HIGH)
             .addAttachment(new URL("http://www.seamframework.org/themes/sfwkorg/img/seam_icon_large.png"), "seamLogo.png", ContentDisposition.INLINE);
@@ -82,7 +84,7 @@ public class SendMail
             .to(person.getEmail(), person.getName())
             .subject("HTML+Text Message from Seam Mail - " + java.util.UUID.randomUUID().toString())
             .put("version", "Seam 3")
-            .templateHTMLTextAltFromClassPath("template.html.vm", "template.text.vm")
+            .bodyHtmlTextAlt(new VelocityClassPathTemplate("template.html.vm"), new VelocityClassPathTemplate("template.text.vm"))
             .importance(MessagePriority.LOW)
             .deliveryReceipt("seam@jboss.org")
             .readReceipt("seam@jboss.org")

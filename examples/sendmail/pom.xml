@@ -78,6 +78,7 @@
 			<groupId>org.jboss.seam.mail</groupId>
 			<artifactId>seam-mail-impl-velocity</artifactId>
 			<version>${project.version}</version>
+			<scope>compile</scope>			
 		</dependency>
 
 		<dependency>

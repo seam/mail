@@ -41,7 +41,7 @@ import org.jboss.seam.mail.core.enumurations.MessagePriority;
 public interface VelocityMailMessage
 {
 
-// Begin Recipients
+   // Begin Recipients
 
    /**
     * Convenience method to add a FROM address
@@ -355,7 +355,7 @@ public interface VelocityMailMessage
     * @param text Plain text body
     * 
     */
-   public VelocityMailMessage textBody(String text);
+   public VelocityMailMessage bodyText(String text);
 
    /**
     * Sets the body of the message a HTML body represented by the supplied
@@ -364,7 +364,7 @@ public interface VelocityMailMessage
     * @param html HTML body
     * 
     */
-   public VelocityMailMessage htmlBody(String html);
+   public VelocityMailMessage bodyHtml(String html);
 
    /**
     * Sets the body of the message to a HTML body with a plain text alternative
@@ -373,7 +373,7 @@ public interface VelocityMailMessage
     * @param text Plain text body
     * 
     */
-   public VelocityMailMessage htmlBodyTextAlt(String html, String text);
+   public VelocityMailMessage bodyHtmlTextAlt(String html, String text);
 
    // End Core
 
@@ -393,7 +393,7 @@ public interface VelocityMailMessage
     * @throws SendFailedException If the messages fails to be sent.
     */
    public EmailMessage send(Session session);
-   
+
    /**
     * Send the Message
     * 
@@ -408,112 +408,39 @@ public interface VelocityMailMessage
    /**
     * Set the template to be used for the message subject
     * 
-    * @param text Template text to be used
+    * @param subject {@link VelocityTemplate} to use
     * @throws TemplatingException
     */
-   public VelocityMailMessage templateSubject(String text);
-
-   /**
-    * Set the template text to be used for the plain text body of the message
-    * 
-    * @param text Template text to be used
-    * @throws TemplatingException
-    */
-   public VelocityMailMessage templateText(String text);
-
-   /**
-    * Set the template text to be used for the HTML body of the message
-    * 
-    * @param html Template text to be used
-    * @throws TemplatingException
-    */
-   public VelocityMailMessage templateHTML(String html);
-
-   /**
-    * Set the template text to be used for the HTML body and plain text
-    * alternative body
-    * 
-    * @param html Template text to be used for HTML body
-    * @param text Template text to be used plain text alternative
-    * @throws TemplatingException
-    */
-   public VelocityMailMessage templateHTMLTextAlt(String html, String text);
-
-   /**
-    * Set the template to be used for the message subject
-    * 
-    * @param file {@link File} of the template
-    * @throws TemplatingException
-    */
-   public VelocityMailMessage templateSubject(File file);
+   public VelocityMailMessage subject(VelocityTemplate subject);
 
    /**
     * Sets the text body of the message to the plain text output of the given
     * template
     * 
-    * @param file {@link File} of the template
+    * @param textBody {@link VelocityTemplate} to use
     * @throws TemplatingException
     */
-   public VelocityMailMessage templateText(File file);
+   public VelocityMailMessage bodyText(VelocityTemplate textbody);
 
    /**
     * Sets the HTML body of the message to the HTML output of the given template
     * 
-    * @param file {@link File} of the template
+    * @param htmlBody {@link VelocityTemplate} to use
     * @throws TemplatingException
     */
-   public VelocityMailMessage templateHTML(File file);
+   public VelocityMailMessage bodyHtml(VelocityTemplate htmlBody);
 
    /**
     * Sets the body of the message to a HTML body with a plain text alternative
     * output of the given templates
     * 
-    * @param htmlFile {@link File} of the template for HTML body part
-    * @param textFile {@link File} of the template for Text body part
+    * @param htmlBody {@link VelocityTemplate} to use for HTML portion of
+    *           message
+    * @param textBody {@link VelocityTemplate} to use for Text alternative
+    *           portion of message
     * @throws TemplatingException
     */
-   public VelocityMailMessage templateHTMLTextAlt(File htmlFile, File textFile);
-
-   /**
-    * Sets the subject of the message to the plain text output of the given
-    * template
-    * 
-    * @param templateFileName Filename of the template to be found in the
-    *           classpath
-    * @throws TemplatingException
-    */
-   public VelocityMailMessage templateSubjectFromClassPath(String templateFileName);
-
-   /**
-    * Sets the body of the message to the plain text output of the given
-    * template
-    * 
-    * @param templateFileName Filename of the template to be found in the
-    *           classpath
-    * @throws TemplatingException
-    */
-   public VelocityMailMessage templateTextFromClassPath(String templateFileName);
-
-   /**
-    * Sets the body of the message to the HTML output of the given template
-    * 
-    * @param templateFileName Filename of the template to be found in the
-    *           classpath
-    * @throws TemplatingException
-    */
-   public VelocityMailMessage templateHTMLFromClassPath(String templateFileName);
-
-   /**
-    * Sets the body of the message to a HTML body with a plain text alternative
-    * output of the given templates
-    * 
-    * @param htmlTemplateFileName Filename of the template to be found in the
-    *           classpath
-    * @param textTemplateFileName Filename of the template to be found in the
-    *           classpath
-    * @throws TemplatingException
-    */
-   public VelocityMailMessage templateHTMLTextAltFromClassPath(String htmlTemplateFileName, String textTemplateFileName);
+   public VelocityMailMessage bodyHtmlTextAlt(VelocityTemplate htmlBody, VelocityTemplate textbody);
 
    /**
     * Places a variable in the templating engines context

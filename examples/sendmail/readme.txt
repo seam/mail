@@ -147,4 +147,5 @@
 
 Testing
 =============
-mvn test -Pweld-ee-embedded-1.1
+mvn test -Pweld-ee-embedded-1.1 -- Currently Broken
+mvn test -Pjbossas-remote-6

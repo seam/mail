@@ -11,9 +11,9 @@ import org.jboss.seam.solder.resourceLoader.ResourceProvider;
 
 import com.google.common.io.ByteStreams;
 
-public class EmailAttachmentFromClassPath extends BaseEmailAttachment
+public class ClassPathEmailAttachment extends BaseEmailAttachment
 {
-   public EmailAttachmentFromClassPath(String fileName, String mimeType, ContentDisposition contentDisposition)
+   public ClassPathEmailAttachment(String fileName, String mimeType, ContentDisposition contentDisposition)
    {
       super();     
 
@@ -30,7 +30,7 @@ public class EmailAttachmentFromClassPath extends BaseEmailAttachment
       }
    }
 
-   public EmailAttachmentFromClassPath(String fileName, String mimeType, ContentDisposition contentDisposition, String contentClass)
+   public ClassPathEmailAttachment(String fileName, String mimeType, ContentDisposition contentDisposition, String contentClass)
    {
       this(fileName, mimeType, contentDisposition);
       super.addHeader(new Header("Content-Class", contentClass));

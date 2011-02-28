@@ -30,11 +30,11 @@ import junit.framework.Assert;
 
 import org.jboss.arquillian.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
-import org.jboss.seam.mail.core.EmailAttachmentFromClassPath;
-import org.jboss.seam.mail.core.EmailAttachmentFromURL;
+import org.jboss.seam.mail.core.ClassPathEmailAttachment;
 import org.jboss.seam.mail.core.MailConfig;
 import org.jboss.seam.mail.core.MailTestUtil;
 import org.jboss.seam.mail.core.SendFailedException;
+import org.jboss.seam.mail.core.URLEmailAttachment;
 import org.jboss.seam.mail.core.enumurations.ContentDisposition;
 import org.jboss.seam.mail.core.enumurations.MessagePriority;
 import org.jboss.seam.mail.example.Gmail;
@@ -174,7 +174,7 @@ public class VelocityMailMessageTest
             .bodyHtml(new VelocityClassPathTemplate("template.html.vm"))
             .put("version", "Seam 3")
             .importance(MessagePriority.HIGH)
-            .addAttachment(new EmailAttachmentFromURL("http://www.seamframework.org/themes/sfwkorg/img/seam_icon_large.png", "seamLogo.png", ContentDisposition.INLINE))
+            .addAttachment(new URLEmailAttachment("http://www.seamframework.org/themes/sfwkorg/img/seam_icon_large.png", "seamLogo.png", ContentDisposition.INLINE))
             .send(session.get());
       }
       finally
@@ -223,8 +223,8 @@ public class VelocityMailMessageTest
             .importance(MessagePriority.LOW)
             .deliveryReceipt(fromAddress)
             .readReceipt("seam.test")
-            .addAttachment(new EmailAttachmentFromClassPath("template.html.vm", "text/html", ContentDisposition.ATTACHMENT))
-            .addAttachment(new EmailAttachmentFromURL("http://www.seamframework.org/themes/sfwkorg/img/seam_icon_large.png", "seamLogo.png", ContentDisposition.INLINE))
+            .addAttachment(new ClassPathEmailAttachment("template.html.vm", "text/html", ContentDisposition.ATTACHMENT))
+            .addAttachment(new URLEmailAttachment("http://www.seamframework.org/themes/sfwkorg/img/seam_icon_large.png", "seamLogo.png", ContentDisposition.INLINE))
             .send();
       }
       finally
@@ -274,8 +274,8 @@ public class VelocityMailMessageTest
             .importance(MessagePriority.LOW)
             .deliveryReceipt(fromAddress)
             .readReceipt("seam.test")
-            .addAttachment(new EmailAttachmentFromClassPath("template.html.vm", "text/html", ContentDisposition.ATTACHMENT))
-            .addAttachment(new EmailAttachmentFromURL("http://www.seamframework.org/themes/sfwkorg/img/seam_icon_large.png", "seamLogo.png", ContentDisposition.INLINE))
+            .addAttachment(new ClassPathEmailAttachment("template.html.vm", "text/html", ContentDisposition.ATTACHMENT))
+            .addAttachment(new URLEmailAttachment("http://www.seamframework.org/themes/sfwkorg/img/seam_icon_large.png", "seamLogo.png", ContentDisposition.INLINE))
             .send(gmailSession);
       }
       finally

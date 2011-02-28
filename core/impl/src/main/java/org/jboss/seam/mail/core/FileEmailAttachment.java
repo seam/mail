@@ -14,9 +14,9 @@ import com.google.common.io.Files;
  * @author Cody Lerum
  * 
  */
-public class EmailAttachmentFromFile extends BaseEmailAttachment
+public class FileEmailAttachment extends BaseEmailAttachment
 {
-   public EmailAttachmentFromFile(File file, ContentDisposition contentDisposition)
+   public FileEmailAttachment(File file, ContentDisposition contentDisposition)
    {
       super();
 
@@ -35,7 +35,7 @@ public class EmailAttachmentFromFile extends BaseEmailAttachment
       }
    }
 
-   public EmailAttachmentFromFile(File file, ContentDisposition contentDisposition, String contentClass)
+   public FileEmailAttachment(File file, ContentDisposition contentDisposition, String contentClass)
    {
       this(file, contentDisposition);
       super.addHeader(new Header("Content-Class", contentClass));

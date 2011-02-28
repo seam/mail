@@ -8,9 +8,9 @@ import javax.activation.URLDataSource;
 
 import org.jboss.seam.mail.core.enumurations.ContentDisposition;
 
-public class EmailAttachmentFromURL extends BaseEmailAttachment
+public class URLEmailAttachment extends BaseEmailAttachment
 {
-   public EmailAttachmentFromURL(String url, String fileName, ContentDisposition contentDisposition)
+   public URLEmailAttachment(String url, String fileName, ContentDisposition contentDisposition)
    {
       super();
 
@@ -38,7 +38,7 @@ public class EmailAttachmentFromURL extends BaseEmailAttachment
       }
    }
 
-   public EmailAttachmentFromURL(String url, String fileName, ContentDisposition contentDisposition, String contentClass)
+   public URLEmailAttachment(String url, String fileName, ContentDisposition contentDisposition, String contentClass)
    {
       this(url, fileName, contentDisposition);
       super.addHeader(new Header("Content-Class", contentClass));

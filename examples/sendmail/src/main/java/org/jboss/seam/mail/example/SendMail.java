@@ -25,8 +25,8 @@ import javax.inject.Inject;
 import javax.mail.Session;
 
 import org.jboss.seam.mail.api.MailMessage;
-import org.jboss.seam.mail.core.EmailAttachmentFromClassPath;
-import org.jboss.seam.mail.core.EmailAttachmentFromURL;
+import org.jboss.seam.mail.core.ClassPathEmailAttachment;
+import org.jboss.seam.mail.core.URLEmailAttachment;
 import org.jboss.seam.mail.core.enumurations.ContentDisposition;
 import org.jboss.seam.mail.core.enumurations.MessagePriority;
 import org.jboss.seam.mail.templating.VelocityMailMessage;
@@ -73,7 +73,7 @@ public class SendMail
             .bodyHtml(new VelocityClassPathTemplate("template.html.vm"))
             .put("version", "Seam 3")
             .importance(MessagePriority.HIGH)
-            .addAttachment(new EmailAttachmentFromURL("http://www.seamframework.org/themes/sfwkorg/img/seam_icon_large.png", "seamLogo.png", ContentDisposition.INLINE))
+            .addAttachment(new URLEmailAttachment("http://www.seamframework.org/themes/sfwkorg/img/seam_icon_large.png", "seamLogo.png", ContentDisposition.INLINE))
             .send(session.get());
    }
 
@@ -88,8 +88,8 @@ public class SendMail
             .importance(MessagePriority.LOW)
             .deliveryReceipt("seam@jboss.org")
             .readReceipt("seam@jboss.org")
-            .addAttachment(new EmailAttachmentFromClassPath("template.html.vm", "text/html", ContentDisposition.ATTACHMENT))
-            .addAttachment(new EmailAttachmentFromURL("http://www.seamframework.org/themes/sfwkorg/img/seam_icon_large.png", "seamLogo.png", ContentDisposition.INLINE))
+            .addAttachment(new ClassPathEmailAttachment("template.html.vm", "text/html", ContentDisposition.ATTACHMENT))
+            .addAttachment(new URLEmailAttachment("http://www.seamframework.org/themes/sfwkorg/img/seam_icon_large.png", "seamLogo.png", ContentDisposition.INLINE))
             .send(session.get());
    }
 }

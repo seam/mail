@@ -23,6 +23,8 @@ import java.util.HashSet;
 
 import javax.mail.internet.InternetAddress;
 
+import org.jboss.seam.mail.core.enumurations.ContentType;
+import org.jboss.seam.mail.core.enumurations.EmailMessageType;
 import org.jboss.seam.mail.core.enumurations.MessagePriority;
 
 /**

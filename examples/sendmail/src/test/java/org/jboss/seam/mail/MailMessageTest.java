@@ -31,14 +31,14 @@ import junit.framework.Assert;
 import org.jboss.arquillian.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.seam.mail.api.MailMessage;
-import org.jboss.seam.mail.core.EmailAttachmentFromClassPath;
-import org.jboss.seam.mail.core.EmailAttachmentFromURL;
+import org.jboss.seam.mail.core.ClassPathEmailAttachment;
 import org.jboss.seam.mail.core.EmailMessage;
 import org.jboss.seam.mail.core.InvalidAddressException;
 import org.jboss.seam.mail.core.MailConfig;
 import org.jboss.seam.mail.core.MailTestUtil;
 import org.jboss.seam.mail.core.MailUtility;
 import org.jboss.seam.mail.core.SendFailedException;
+import org.jboss.seam.mail.core.URLEmailAttachment;
 import org.jboss.seam.mail.core.enumurations.ContentDisposition;
 import org.jboss.seam.mail.core.enumurations.MessagePriority;
 import org.jboss.seam.mail.example.Person;
@@ -173,7 +173,7 @@ public class MailMessageTest
             .subject(subject)
             .htmlBody("<html><body>Hello World!</body></html>")
             .importance(MessagePriority.HIGH)
-            .addAttachment(new EmailAttachmentFromURL("http://www.seamframework.org/themes/sfwkorg/img/seam_icon_large.png", "seamLogo.png", ContentDisposition.INLINE))
+            .addAttachment(new URLEmailAttachment("http://www.seamframework.org/themes/sfwkorg/img/seam_icon_large.png", "seamLogo.png", ContentDisposition.INLINE))
             .send(session.get());
       }
       finally
@@ -222,8 +222,8 @@ public class MailMessageTest
             .importance(MessagePriority.LOW)
             .deliveryReceipt(fromAddress)
             .readReceipt("seam.test")
-            .addAttachment(new EmailAttachmentFromClassPath("template.text.vm", "text/plain", ContentDisposition.ATTACHMENT))
-            .addAttachment(new EmailAttachmentFromURL("http://www.seamframework.org/themes/sfwkorg/img/seam_icon_large.png", "seamLogo.png", ContentDisposition.INLINE))
+            .addAttachment(new ClassPathEmailAttachment("template.text.vm", "text/plain", ContentDisposition.ATTACHMENT))
+            .addAttachment(new URLEmailAttachment("http://www.seamframework.org/themes/sfwkorg/img/seam_icon_large.png", "seamLogo.png", ContentDisposition.INLINE))
             .send(session.get());
       }
       finally

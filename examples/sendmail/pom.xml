@@ -68,7 +68,7 @@
 
 		<dependency>
 			<groupId>org.jboss.seam.mail</groupId>
-			<artifactId>seam-mail-impl-base</artifactId>
+			<artifactId>seam-mail-core-impl</artifactId>
 			<version>${project.version}</version>
          <!-- FIXME implementation should not be required at compilation time -->
          <scope>compile</scope>
@@ -76,7 +76,7 @@
 
 		<dependency>
 			<groupId>org.jboss.seam.mail</groupId>
-			<artifactId>seam-mail-impl-velocity</artifactId>
+			<artifactId>seam-mail-velocity-impl</artifactId>
 			<version>${project.version}</version>
 			<scope>compile</scope>			
 		</dependency>

@@ -18,10 +18,10 @@
 	</properties>
 
 	<modules>
-		<module>api-base</module>
-		<module>impl-base</module>
-		<module>api-velocity</module>
-		<module>impl-velocity</module>
+		<module>core/api</module>
+		<module>core/impl</module>
+		<module>velocity/api</module>
+		<module>velocity/impl</module>
 		<module>examples/sendmail</module>
 		
 	</modules>
@@ -39,28 +39,28 @@
          <!-- Override versions from seam-bom for this module's artifacts -->
 			<dependency>
 				<groupId>org.jboss.seam.mail</groupId>
-				<artifactId>seam-mail-api-base</artifactId>
+				<artifactId>seam-mail-core-api</artifactId>
 				<version>${project.version}</version>
             <scope>compile</scope>
 			</dependency>
 
 			<dependency>
 				<groupId>org.jboss.seam.mail</groupId>
-				<artifactId>seam-mail-api-velocity</artifactId>
+				<artifactId>seam-mail-velocity-api</artifactId>
 				<version>${project.version}</version>
             <scope>compile</scope>
 			</dependency>
 
 			<dependency>
 				<groupId>org.jboss.seam.mail</groupId>
-				<artifactId>seam-mail-impl-base</artifactId>
+				<artifactId>seam-mail-core-impl</artifactId>
 				<version>${project.version}</version>
             <scope>runtime</scope>
 			</dependency>
 
 			<dependency>
 				<groupId>org.jboss.seam.mail</groupId>
-				<artifactId>seam-mail-impl-velocity</artifactId>
+				<artifactId>seam-mail-velocity-impl</artifactId>
 				<version>${project.version}</version>
             <scope>runtime</scope>
 			</dependency>

@@ -24,7 +24,6 @@ import javax.enterprise.inject.spi.BeanManager;
 
 import org.jboss.seam.mail.templating.VelocityTemplate;
 import org.jboss.seam.solder.beanManager.BeanManagerAware;
-import org.jboss.seam.solder.beanManager.BeanManagerLocator;
 import org.jboss.seam.solder.resourceLoader.ResourceProvider;
 
 /**
@@ -43,9 +42,9 @@ public class VelocityClassPathTemplate extends BeanManagerAware implements Veloc
 
    public InputStream getInputStream()
    {
-      BeanManager beanManager = new BeanManagerLocator().getBeanManager();
-      Bean<?> bean = beanManager.resolve(beanManager.getBeans(ResourceProvider.class));
-      ResourceProvider resourceProvider = (ResourceProvider) beanManager.getReference(bean, bean.getBeanClass(), beanManager.createCreationalContext(bean));
+      BeanManager bm = getBeanManager();
+      Bean<?> bean = bm.resolve(bm.getBeans(ResourceProvider.class));
+      ResourceProvider resourceProvider = (ResourceProvider) bm.getReference(bean, bean.getBeanClass(), bm.createCreationalContext(bean));
       return resourceProvider.loadResourceStream(fileName);
    }
 

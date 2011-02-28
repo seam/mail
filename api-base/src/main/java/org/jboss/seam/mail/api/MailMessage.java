@@ -17,8 +17,6 @@
 
 package org.jboss.seam.mail.api;
 
-import java.io.File;
-import java.net.URL;
 import java.util.Collection;
 
 import javax.mail.Session;
@@ -29,7 +27,6 @@ import org.jboss.seam.mail.core.EmailContact;
 import org.jboss.seam.mail.core.EmailMessage;
 import org.jboss.seam.mail.core.InvalidAddressException;
 import org.jboss.seam.mail.core.SendFailedException;
-import org.jboss.seam.mail.core.enumurations.ContentDisposition;
 import org.jboss.seam.mail.core.enumurations.MessagePriority;
 
 /**
@@ -238,52 +235,18 @@ public interface MailMessage
    // Begin Attachments
 
    /**
-    * Add a given {@link File} with a given {@link ContentDisposition}
-    * 
-    * @param fileName Full path to the file
-    * @param contentDisposition Disposition of the attachment
-    * 
-    */
-   public MailMessage addAttachment(File fileName, ContentDisposition contentDisposition);
-
-   /**
-    * Add a file via the fileName. The classpath is searched for the specified
-    * fileName and it is added to the message with a given mimeType and a given
-    * {@link ContentDisposition}
-    * 
-    * @param fileName Name of the file to be attached.
-    * @param mimeType MimeType of the file eg "application/octetStream"
-    * @param contentDisposition Disposition of the attachment
-    * 
-    */
-   public MailMessage addAttachment(String fileName, String mimeType, ContentDisposition contentDisposition);
-
-   /**
-    * Adds a file to the message which can be found at the given {@link URL}
-    * 
-    * @param url {@link URL} where the file can be found
-    * @param fileName Name which the attachment should be called
-    * @param contentDisposition Disposition of the attachment
-    * 
-    */
-   public MailMessage addAttachment(URL url, String fileName, ContentDisposition contentDisposition);
-
-   /**
-    * Adds Attachment to the message with given {@link ContentDisposition}
-    * 
-    * @param bytes Data of the file
-    * @param fileName Name which the attachment should be called
-    * @param mimeType MimeType of the file eg "application/octetStream"
-    * @param contentDisposition Disposition of the attachment
-    */
-   public MailMessage addAttachment(byte[] bytes, String fileName, String mimeType, ContentDisposition contentDisposition);
-
-   /**
     * Adds Attachment to the message
     * 
     * @param attachment {@link EmailAttachment} to be added
     */
    public MailMessage addAttachment(EmailAttachment attachment);
+
+   /**
+    * Adds a Collection of Attachments to the message
+    * 
+    * @param attachments
+    */
+   public MailMessage addAttachment(Collection<EmailAttachment> attachments);
 
    // End Attachements
 
@@ -382,7 +345,7 @@ public interface MailMessage
     * @return {@link EmailMessage} representing this {@link MailMessage}
     */
    public EmailMessage getEmailMessage();
-   
+
    /**
     * Set the {@link EmailMessage} representing this {@link MailMessage}
     * 

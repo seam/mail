@@ -15,33 +15,28 @@
  * limitations under the License.
  */
 
-package org.jboss.seam.mail.util;
-
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-
-import org.jboss.seam.mail.core.EmailAttachment;
+package org.jboss.seam.mail.core.enumurations;
 
 /**
  * 
  * @author Cody Lerum
  * 
  */
-public class EmailAttachmentUtil
+public enum ContentType
 {
-   public static Map<String, EmailAttachment> getEmailAttachmentMap(Collection<EmailAttachment> attachments)
+   ALTERNATIVE("alternative"),
+   MIXED("mixed"),
+   RELATED("related");
+
+   private String value;
+
+   private ContentType(String value)
    {
-      Map<String, EmailAttachment> emailAttachmentMap = new HashMap<String, EmailAttachment>();
+      this.value = value;
+   }
 
-      for (EmailAttachment ea : attachments)
-      {
-         if (!Strings.isNullOrBlank(ea.getFileName()))
-         {
-            emailAttachmentMap.put(ea.getFileName(), ea);
-         }
-      }
-
-      return emailAttachmentMap;
+   public String getValue()
+   {
+      return value;
    }
 }

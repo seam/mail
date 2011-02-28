@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package org.jboss.seam.mail.core;
+package org.jboss.seam.mail.core.enumurations;
 /**
  * 
  * @author Cody Lerum
@@ -24,5 +24,5 @@ package org.jboss.seam.mail.core;
 public enum EmailMessageType
 {
    STANDARD,
-   ICAL_INVITE;
+   INVITE_ICAL;
 }

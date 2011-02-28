@@ -18,25 +18,32 @@
 package org.jboss.seam.mail.core;
 
 /**
+ * Thrown when an email address fails to validate as RFC822
  * 
  * @author Cody Lerum
  * 
  */
-public enum ContentType
+public class AttachmentException extends MailException
 {
-   ALTERNATIVE("alternative"),
-   MIXED("mixed"),
-   RELATED("related");
+   private static final long serialVersionUID = 1L;
 
-   private String value;
-
-   private ContentType(String value)
+   public AttachmentException()
    {
-      this.value = value;
+      super();
    }
 
-   public String getValue()
+   public AttachmentException(String message, Throwable cause)
    {
-      return value;
+      super(message, cause);
+   }
+
+   public AttachmentException(String message)
+   {
+      super(message);
+   }
+
+   public AttachmentException(Throwable cause)
+   {
+      super(cause);
    }
 }

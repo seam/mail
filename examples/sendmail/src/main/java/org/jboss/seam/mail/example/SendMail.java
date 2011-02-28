@@ -18,7 +18,6 @@
 package org.jboss.seam.mail.example;
 
 import java.net.MalformedURLException;
-import java.net.URL;
 
 import javax.enterprise.inject.Instance;
 import javax.enterprise.inject.Model;
@@ -26,11 +25,12 @@ import javax.inject.Inject;
 import javax.mail.Session;
 
 import org.jboss.seam.mail.api.MailMessage;
+import org.jboss.seam.mail.core.EmailAttachmentFromClassPath;
+import org.jboss.seam.mail.core.EmailAttachmentFromURL;
 import org.jboss.seam.mail.core.enumurations.ContentDisposition;
 import org.jboss.seam.mail.core.enumurations.MessagePriority;
 import org.jboss.seam.mail.templating.VelocityMailMessage;
 import org.jboss.seam.mail.templating.velocity.VelocityClassPathTemplate;
-import org.jboss.seam.mail.example.Person;
 /**
  * 
  * @author Cody Lerum
@@ -73,8 +73,8 @@ public class SendMail
             .bodyHtml(new VelocityClassPathTemplate("template.html.vm"))
             .put("version", "Seam 3")
             .importance(MessagePriority.HIGH)
-            .addAttachment(new URL("http://www.seamframework.org/themes/sfwkorg/img/seam_icon_large.png"), "seamLogo.png", ContentDisposition.INLINE);
-            vmm.send(session.get());
+            .addAttachment(new EmailAttachmentFromURL("http://www.seamframework.org/themes/sfwkorg/img/seam_icon_large.png", "seamLogo.png", ContentDisposition.INLINE))
+            .send(session.get());
    }
 
    public void sendHTMLwithAlternative() throws MalformedURLException
@@ -88,8 +88,8 @@ public class SendMail
             .importance(MessagePriority.LOW)
             .deliveryReceipt("seam@jboss.org")
             .readReceipt("seam@jboss.org")
-            .addAttachment("template.html.vm", "text/html", ContentDisposition.ATTACHMENT)
-            .addAttachment(new URL("http://www.seamframework.org/themes/sfwkorg/img/seam_icon_large.png"), "seamLogo.png", ContentDisposition.INLINE)
+            .addAttachment(new EmailAttachmentFromClassPath("template.html.vm", "text/html", ContentDisposition.ATTACHMENT))
+            .addAttachment(new EmailAttachmentFromURL("http://www.seamframework.org/themes/sfwkorg/img/seam_icon_large.png", "seamLogo.png", ContentDisposition.INLINE))
             .send(session.get());
    }
 }

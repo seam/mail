@@ -17,12 +17,9 @@
 
 package org.jboss.seam.mail.templating.velocity;
 
-import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringWriter;
-import java.net.URL;
 import java.util.Collection;
 
 import javax.enterprise.inject.Instance;
@@ -34,6 +31,7 @@ import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.exception.MethodInvocationException;
 import org.apache.velocity.exception.ParseErrorException;
 import org.apache.velocity.exception.ResourceNotFoundException;
+import org.jboss.seam.mail.core.BaseEmailAttachment;
 import org.jboss.seam.mail.core.EmailAttachment;
 import org.jboss.seam.mail.core.EmailContact;
 import org.jboss.seam.mail.core.EmailMessage;
@@ -41,13 +39,13 @@ import org.jboss.seam.mail.core.MailContext;
 import org.jboss.seam.mail.core.MailUtility;
 import org.jboss.seam.mail.core.SendFailedException;
 import org.jboss.seam.mail.core.enumurations.ContentDisposition;
+import org.jboss.seam.mail.core.enumurations.EmailMessageType;
 import org.jboss.seam.mail.core.enumurations.MessagePriority;
 import org.jboss.seam.mail.templating.MailTemplate;
 import org.jboss.seam.mail.templating.TemplatingException;
 import org.jboss.seam.mail.templating.VelocityMailMessage;
 import org.jboss.seam.mail.templating.VelocityTemplate;
 import org.jboss.seam.mail.util.EmailAttachmentUtil;
-import org.jboss.seam.solder.resourceLoader.ResourceProvider;
 
 /**
  * 
@@ -65,9 +63,6 @@ public class VelocityMailMessageImpl implements VelocityMailMessage
    private MailTemplate htmlTemplate;
 
    private boolean templatesMerged = false;
-
-   @Inject
-   private ResourceProvider resourceProvider;
 
    @Inject
    private Instance<Session> session;
@@ -286,37 +281,6 @@ public class VelocityMailMessageImpl implements VelocityMailMessage
 
    // Begin Attachments
 
-   public VelocityMailMessage addAttachment(File file, ContentDisposition contentDisposition)
-   {
-      emailMessage.addAttachment(EmailAttachmentUtil.getEmailAttachment(file, contentDisposition));
-      return this;
-   }
-
-   public VelocityMailMessage addAttachment(String fileName, String mimeType, ContentDisposition contentDisposition)
-   {
-      InputStream inputStream = resourceProvider.loadResourceStream(fileName);
-      emailMessage.addAttachment(EmailAttachmentUtil.getEmailAttachment(fileName, inputStream, mimeType, contentDisposition));
-      return this;
-   }
-
-   public VelocityMailMessage addAttachment(URL url, String fileName, ContentDisposition contentDisposition)
-   {
-      emailMessage.addAttachment(EmailAttachmentUtil.getEmailAttachment(url, fileName, contentDisposition));
-      return this;
-   }
-
-   public VelocityMailMessage addAttachment(byte[] bytes, String fileName, String mimeType, String contentClass, ContentDisposition contentDisposition)
-   {
-      emailMessage.addAttachment(EmailAttachmentUtil.getEmailAttachment(bytes, fileName, mimeType, contentClass, contentDisposition));
-      return this;
-   }
-
-   public VelocityMailMessage addAttachment(byte[] bytes, String fileName, String mimeType, ContentDisposition contentDisposition)
-   {
-      emailMessage.addAttachment(EmailAttachmentUtil.getEmailAttachment(bytes, fileName, mimeType, contentDisposition));
-      return this;
-   }
-
    public VelocityMailMessage addAttachment(EmailAttachment attachment)
    {
       emailMessage.addAttachment(attachment);
@@ -335,8 +299,9 @@ public class VelocityMailMessageImpl implements VelocityMailMessage
 
    public VelocityMailMessage iCal(String html, byte[] bytes)
    {
+      emailMessage.setType(EmailMessageType.INVITE_ICAL);
       emailMessage.setHtmlBody(html);
-      emailMessage.addAttachment(EmailAttachmentUtil.getEmailAttachment(bytes, null, "text/calendar;method=CANCEL", "urn:content-classes:calendarmessage", ContentDisposition.INLINE));
+      emailMessage.addAttachment(new BaseEmailAttachment(null, "text/calendar;method=CANCEL", ContentDisposition.INLINE, bytes, "urn:content-classes:calendarmessage"));
       return this;
    }
 

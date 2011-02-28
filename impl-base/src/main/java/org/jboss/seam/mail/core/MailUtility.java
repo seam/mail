@@ -29,6 +29,7 @@ import javax.mail.Session;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 
+import org.jboss.seam.mail.core.enumurations.EmailMessageType;
 import org.jboss.seam.mail.core.enumurations.RecipientType;
 import org.jboss.seam.mail.util.Strings;
 
@@ -222,7 +223,7 @@ public class MailUtility
 
          b.addAttachments(e.getAttachments());
       }
-      else if (e.getType() == EmailMessageType.ICAL_INVITE)
+      else if (e.getType() == EmailMessageType.INVITE_ICAL)
       {
          b.setHTMLNotRelated(e.getHtmlBody());
          b.addAttachments(e.getAttachments());

@@ -17,13 +17,18 @@
 
 package org.jboss.seam.mail;
 
+import java.io.File;
+import java.io.IOException;
 import java.net.MalformedURLException;
+import java.nio.charset.Charset;
 
 import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
+import javax.mail.BodyPart;
 import javax.mail.MessagingException;
 import javax.mail.Session;
 import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
 import javax.mail.internet.MimeUtility;
 
 import junit.framework.Assert;
@@ -31,6 +36,7 @@ import junit.framework.Assert;
 import org.jboss.arquillian.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.seam.mail.core.ClassPathEmailAttachment;
+import org.jboss.seam.mail.core.EmailMessage;
 import org.jboss.seam.mail.core.MailConfig;
 import org.jboss.seam.mail.core.MailTestUtil;
 import org.jboss.seam.mail.core.SendFailedException;
@@ -42,6 +48,7 @@ import org.jboss.seam.mail.example.Person;
 import org.jboss.seam.mail.templating.VelocityMailMessage;
 import org.jboss.seam.mail.templating.velocity.VelocityClassPathTemplate;
 import org.jboss.seam.mail.templating.velocity.VelocityTextTemplate;
+import org.jboss.seam.mail.util.EmailAttachmentUtil;
 import org.jboss.seam.mail.util.MavenArtifactResolver;
 import org.jboss.seam.mail.util.SMTPAuthenticator;
 import org.jboss.shrinkwrap.api.Archive;
@@ -52,6 +59,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.subethamail.smtp.auth.EasyAuthenticationHandlerFactory;
 import org.subethamail.wiser.Wiser;
+
+import com.google.common.io.Files;
 /**
  * 
  * @author Cody Lerum
@@ -99,7 +108,7 @@ public class VelocityMailMessageTest
    String toAddress = "seamy.seamerson@seam-mail.test";
 
    @Test
-   public void testVelocityTextMailMessage() throws MessagingException
+   public void testVelocityTextMailMessage() throws MessagingException, IOException
    {
       String uuid = java.util.UUID.randomUUID().toString();
       String subject = "Text Message from $version Mail - " + uuid;
@@ -146,14 +155,22 @@ public class VelocityMailMessageTest
       Assert.assertEquals(MessagePriority.HIGH.getImportance(), mess.getHeader("Importance", null));
       Assert.assertTrue(mess.getHeader("Content-Type", null).startsWith("multipart/mixed"));
       
-      // TODO Verify MimeBodyPart hierarchy and $person resolution is happening.
+      MimeMultipart mixed = (MimeMultipart) mess.getContent();
+      BodyPart text = mixed.getBodyPart(0);
+      
+      Assert.assertTrue(mixed.getContentType().startsWith("multipart/mixed"));
+      Assert.assertEquals(1, mixed.getCount());
+      
+      Assert.assertTrue(text.getContentType().startsWith("text/plain; charset=UTF-8"));
+      Assert.assertEquals(expectedTextBody(person.getName(), version), MailTestUtil.getStringContent(text));
    }
 
    @Test
-   public void testVelocityHTMLMailMessage() throws MalformedURLException, MessagingException
+   public void testVelocityHTMLMailMessage() throws MessagingException, IOException
    {
       String subject = "HTML Message from Seam Mail - " + java.util.UUID.randomUUID().toString();
-    
+      String version = "Seam 3";
+      EmailMessage emailMessage;
       mailConfig.setServerHost("localHost");
       mailConfig.setServerPort(8977);
 
@@ -166,13 +183,13 @@ public class VelocityMailMessageTest
          person.setName(toName);
          person.setEmail(toAddress);
    
-         velocityMailMessage.get()
+         emailMessage = velocityMailMessage.get()
             .from(fromAddress, fromName)
             .replyTo(replyToAddress, replyToName)
             .to(person)
             .subject(subject)
             .bodyHtml(new VelocityClassPathTemplate("template.html.vm"))
-            .put("version", "Seam 3")
+            .put("version", version)
             .importance(MessagePriority.HIGH)
             .addAttachment(new URLEmailAttachment("http://www.seamframework.org/themes/sfwkorg/img/seam_icon_large.png", "seamLogo.png", ContentDisposition.INLINE))
             .send(session.get());
@@ -195,14 +212,31 @@ public class VelocityMailMessageTest
       Assert.assertEquals(MessagePriority.HIGH.getImportance(), mess.getHeader("Importance", null));
       Assert.assertTrue(mess.getHeader("Content-Type", null).startsWith("multipart/mixed"));
 
-      // TODO Verify MimeBodyPart hierarchy and $person resolution is happening.
+      MimeMultipart mixed = (MimeMultipart) mess.getContent();
+      MimeMultipart related = (MimeMultipart) mixed.getBodyPart(0).getContent();
+      BodyPart html = related.getBodyPart(0);
+      BodyPart attachment1 = related.getBodyPart(1);
+
+      Assert.assertTrue(mixed.getContentType().startsWith("multipart/mixed"));
+      Assert.assertEquals(1, mixed.getCount());
+      
+      Assert.assertTrue(related.getContentType().startsWith("multipart/related"));
+      Assert.assertEquals(2, related.getCount());
+      
+      Assert.assertTrue(html.getContentType().startsWith("text/html"));
+      Assert.assertEquals(expectedHtmlBody(emailMessage, person.getName(), person.getEmail(), version), MailTestUtil.getStringContent(html));
+      
+
+      Assert.assertTrue(attachment1.getContentType().startsWith("image/png;"));
+      Assert.assertEquals("seamLogo.png", attachment1.getFileName());
    }
 
    @Test
-   public void testVelocityHTMLTextAltMailMessage() throws MessagingException, MalformedURLException
+   public void testVelocityHTMLTextAltMailMessage() throws MessagingException, IOException
    {
       String subject = "HTML+Text Message from Seam Mail - " + java.util.UUID.randomUUID().toString();
-    
+      String version = "Seam 3";
+      EmailMessage emailMessage;
       mailConfig.setServerHost("localHost");
       mailConfig.setServerPort(8977);
 
@@ -214,11 +248,11 @@ public class VelocityMailMessageTest
          person.setName(toName);
          person.setEmail(toAddress);
    
-         velocityMailMessage.get()
+         emailMessage = velocityMailMessage.get()
             .from(fromAddress, fromName)
             .to(person.getEmail(), person.getName())
             .subject(subject)
-            .put("version", "Seam 3")
+            .put("version", version)
             .bodyHtmlTextAlt(new VelocityClassPathTemplate("template.html.vm"), new VelocityClassPathTemplate("template.text.vm"))
             .importance(MessagePriority.LOW)
             .deliveryReceipt(fromAddress)
@@ -244,7 +278,35 @@ public class VelocityMailMessageTest
       Assert.assertEquals(MessagePriority.LOW.getImportance(), mess.getHeader("Importance", null));
       Assert.assertTrue(mess.getHeader("Content-Type", null).startsWith("multipart/mixed"));
 
-      // TODO Verify MimeBodyPart hierarchy and $person resolution is happening.
+      MimeMultipart mixed = (MimeMultipart) mess.getContent();
+      MimeMultipart related = (MimeMultipart) mixed.getBodyPart(0).getContent();
+      MimeMultipart alternative = (MimeMultipart) related.getBodyPart(0).getContent(); 
+      BodyPart attachment = mixed.getBodyPart(1);
+      BodyPart inlineAttachment = related.getBodyPart(1);
+      
+      BodyPart textAlt = alternative.getBodyPart(0);
+      BodyPart html = alternative.getBodyPart(1);
+
+      Assert.assertTrue(mixed.getContentType().startsWith("multipart/mixed"));
+      Assert.assertEquals(2, mixed.getCount());
+      
+      Assert.assertTrue(related.getContentType().startsWith("multipart/related"));
+      Assert.assertEquals(2, related.getCount());
+      
+      Assert.assertTrue(html.getContentType().startsWith("text/html"));
+      Assert.assertEquals(expectedHtmlBody(emailMessage, person.getName(), person.getEmail(), version), MailTestUtil.getStringContent(html));
+      
+      Files.write(expectedTextBody(person.getName(), version), new File("c:/tmp/expected.txt"), Charset.defaultCharset());
+      Files.write(MailTestUtil.getStringContent(textAlt), new File("c:/tmp/actual.txt"), Charset.defaultCharset());
+      
+      Assert.assertTrue(textAlt.getContentType().startsWith("text/plain"));
+      Assert.assertEquals(expectedTextBody(person.getName(), version), MailTestUtil.getStringContent(textAlt));     
+
+      Assert.assertTrue(attachment.getContentType().startsWith("text/html"));
+      Assert.assertEquals("template.html.vm", attachment.getFileName());
+      
+      Assert.assertTrue(inlineAttachment.getContentType().startsWith("image/png;"));
+      Assert.assertEquals("seamLogo.png", inlineAttachment.getFileName());
    }
    
    @Test
@@ -339,5 +401,33 @@ public class VelocityMailMessageTest
       {
          throw new RuntimeException(e);
       }
+   }
+   
+   
+   private static String expectedHtmlBody(EmailMessage emailMessage, String name, String email, String version)
+   {
+      StringBuilder sb = new StringBuilder();
+      
+      sb.append("<html xmlns=\"http://www.w3.org/1999/xhtml\">" + "\r\n");
+      sb.append("<body>" + "\r\n");
+      sb.append("<p><b>Dear <a href=\"mailto:" + email + "\">" + name + "</a>,</b></p>" + "\r\n");
+      sb.append("<p>This is an example <i>HTML</i> email sent by " + version + ".</p>" + "\r\n");
+      sb.append("<p><img src=\"cid:" + EmailAttachmentUtil.getEmailAttachmentMap(emailMessage.getAttachments()).get("seamLogo.png").getContentId() +"\" /></p>" + "\r\n");
+      sb.append("<p>It has an alternative text body for mail readers that don't support html.</p>" + "\r\n");
+      sb.append("</body>" + "\r\n");
+      sb.append("</html>");
+
+      return sb.toString();
+   }
+   
+   private static String expectedTextBody(String name, String version)
+   {
+      StringBuilder sb = new StringBuilder();
+      
+      sb.append("Hello " + name +",\r\n");
+      sb.append("\r\n");
+      sb.append("This is the alternative text body for mail readers that don't support html. This was sent with " + version);
+
+      return sb.toString();
    }
 }

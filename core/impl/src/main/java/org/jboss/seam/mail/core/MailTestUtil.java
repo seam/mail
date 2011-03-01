@@ -16,10 +16,20 @@
  */
 
 package org.jboss.seam.mail.core;
+
+import java.io.IOException;
+import java.io.InputStreamReader;
+
+import javax.mail.BodyPart;
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMultipart;
+
+import com.google.common.io.CharStreams;
+
 /**
  * 
  * @author Cody Lerum
- *
+ * 
  */
 public class MailTestUtil
 {
@@ -31,5 +41,15 @@ public class MailTestUtil
    public static String getAddressHeader(String name, String address)
    {
       return name + " <" + address + ">";
+   }
+
+   public static String getStringContent(MimeMultipart mmp, int index) throws IOException, MessagingException
+   {
+      return getStringContent(mmp.getBodyPart(index));
+   }
+
+   public static String getStringContent(BodyPart bodyPart) throws IOException, MessagingException
+   {
+      return CharStreams.toString(new InputStreamReader(bodyPart.getInputStream()));
    }
 }

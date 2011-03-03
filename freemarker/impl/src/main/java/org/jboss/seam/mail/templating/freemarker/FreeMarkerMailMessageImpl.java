@@ -340,7 +340,7 @@ public class FreeMarkerMailMessageImpl implements FreeMarkerMailMessage
 
       try
       {
-         Template template = new Template("rawTemplate", new InputStreamReader(mailTemplate.getInputStream()), configuration);
+         Template template = new Template(mailTemplate.getTemplateName() , new InputStreamReader(mailTemplate.getInputStream()), configuration);
          template.process(rootMap, writer);
       }
       catch (IOException e)

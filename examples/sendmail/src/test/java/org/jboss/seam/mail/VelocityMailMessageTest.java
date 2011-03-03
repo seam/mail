@@ -296,8 +296,9 @@ public class VelocityMailMessageTest
       Assert.assertTrue(html.getContentType().startsWith("text/html"));
       Assert.assertEquals(expectedHtmlBody(emailMessage, person.getName(), person.getEmail(), version), MailTestUtil.getStringContent(html));
       
-      Files.write(expectedTextBody(person.getName(), version), new File("c:/tmp/expected.txt"), Charset.defaultCharset());
-      Files.write(MailTestUtil.getStringContent(textAlt), new File("c:/tmp/actual.txt"), Charset.defaultCharset());
+      final File sysTempDir = new File(System.getProperty("java.io.tmpdir"));
+      Files.write(expectedTextBody(person.getName(), version), new File(sysTempDir,"expected.txt"), Charset.defaultCharset());
+      Files.write(MailTestUtil.getStringContent(textAlt), new File(sysTempDir,"actual.txt"), Charset.defaultCharset());
       
       Assert.assertTrue(textAlt.getContentType().startsWith("text/plain"));
       Assert.assertEquals(expectedTextBody(person.getName(), version), MailTestUtil.getStringContent(textAlt));     

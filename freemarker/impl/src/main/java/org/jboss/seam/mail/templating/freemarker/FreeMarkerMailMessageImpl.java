@@ -29,7 +29,7 @@ import javax.inject.Inject;
 import javax.mail.Session;
 import javax.mail.internet.InternetAddress;
 
-import org.jboss.seam.mail.core.BaseEmailAttachment;
+import org.jboss.seam.mail.attachments.BaseEmailAttachment;
 import org.jboss.seam.mail.core.EmailAttachment;
 import org.jboss.seam.mail.core.EmailContact;
 import org.jboss.seam.mail.core.EmailMessage;
@@ -58,7 +58,7 @@ public class FreeMarkerMailMessageImpl implements FreeMarkerMailMessage
 {
    private EmailMessage emailMessage;
 
-   private org.jboss.seam.mail.core.MailTemplate subjectTemplate;
+   private MailTemplate subjectTemplate;
    private MailTemplate textTemplate;
    private MailTemplate htmlTemplate;
 

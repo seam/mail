@@ -25,10 +25,10 @@ import javax.inject.Inject;
 import javax.mail.Session;
 
 import org.jboss.seam.mail.api.MailMessage;
-import org.jboss.seam.mail.core.URLEmailAttachment;
+import org.jboss.seam.mail.attachments.ClassPathEmailAttachment;
+import org.jboss.seam.mail.attachments.URLEmailAttachment;
 import org.jboss.seam.mail.core.enumurations.ContentDisposition;
 import org.jboss.seam.mail.core.enumurations.MessagePriority;
-import org.jboss.seam.mail.templating.ClassPathEmailAttachment;
 import org.jboss.seam.mail.templating.ClassPathTemplate;
 import org.jboss.seam.mail.templating.FreeMarkerMailMessage;
 import org.jboss.seam.mail.templating.VelocityMailMessage;

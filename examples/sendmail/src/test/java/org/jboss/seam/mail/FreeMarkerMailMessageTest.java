@@ -33,16 +33,16 @@ import junit.framework.Assert;
 
 import org.jboss.arquillian.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
+import org.jboss.seam.mail.attachments.ClassPathEmailAttachment;
+import org.jboss.seam.mail.attachments.URLEmailAttachment;
 import org.jboss.seam.mail.core.EmailMessage;
 import org.jboss.seam.mail.core.MailConfig;
 import org.jboss.seam.mail.core.MailTestUtil;
 import org.jboss.seam.mail.core.SendFailedException;
-import org.jboss.seam.mail.core.URLEmailAttachment;
 import org.jboss.seam.mail.core.enumurations.ContentDisposition;
 import org.jboss.seam.mail.core.enumurations.MessagePriority;
 import org.jboss.seam.mail.example.Gmail;
 import org.jboss.seam.mail.example.Person;
-import org.jboss.seam.mail.templating.ClassPathEmailAttachment;
 import org.jboss.seam.mail.templating.ClassPathTemplate;
 import org.jboss.seam.mail.templating.FreeMarkerMailMessage;
 import org.jboss.seam.mail.templating.TextTemplate;

@@ -31,7 +31,7 @@ import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.exception.MethodInvocationException;
 import org.apache.velocity.exception.ParseErrorException;
 import org.apache.velocity.exception.ResourceNotFoundException;
-import org.jboss.seam.mail.core.BaseEmailAttachment;
+import org.jboss.seam.mail.attachments.BaseEmailAttachment;
 import org.jboss.seam.mail.core.EmailAttachment;
 import org.jboss.seam.mail.core.EmailContact;
 import org.jboss.seam.mail.core.EmailMessage;

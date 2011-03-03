@@ -5,6 +5,7 @@ import java.io.IOException;
 
 import javax.activation.FileDataSource;
 
+import org.jboss.seam.mail.attachments.BaseEmailAttachment;
 import org.jboss.seam.mail.core.enumurations.ContentDisposition;
 
 import com.google.common.io.Files;

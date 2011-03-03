@@ -1,4 +1,4 @@
-package org.jboss.seam.mail.templating;
+package org.jboss.seam.mail.attachments;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -7,7 +7,6 @@ import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
 
 import org.jboss.seam.mail.core.AttachmentException;
-import org.jboss.seam.mail.core.BaseEmailAttachment;
 import org.jboss.seam.mail.core.Header;
 import org.jboss.seam.mail.core.enumurations.ContentDisposition;
 import org.jboss.seam.solder.resourceLoader.ResourceProvider;

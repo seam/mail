@@ -1,4 +1,4 @@
-package org.jboss.seam.mail.core;
+package org.jboss.seam.mail.attachments;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -6,6 +6,8 @@ import java.net.URL;
 
 import javax.activation.URLDataSource;
 
+import org.jboss.seam.mail.core.AttachmentException;
+import org.jboss.seam.mail.core.Header;
 import org.jboss.seam.mail.core.enumurations.ContentDisposition;
 
 public class URLEmailAttachment extends BaseEmailAttachment

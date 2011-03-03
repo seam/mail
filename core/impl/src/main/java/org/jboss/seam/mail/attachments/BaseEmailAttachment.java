@@ -15,12 +15,14 @@
  * limitations under the License.
  */
 
-package org.jboss.seam.mail.core;
+package org.jboss.seam.mail.attachments;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.UUID;
 
+import org.jboss.seam.mail.core.EmailAttachment;
+import org.jboss.seam.mail.core.Header;
 import org.jboss.seam.mail.core.enumurations.ContentDisposition;
 import org.jboss.seam.solder.beanManager.BeanManagerAware;
 

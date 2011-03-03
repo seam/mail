@@ -17,10 +17,8 @@
 
 package org.jboss.seam.mail;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.nio.charset.Charset;
 
 import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
@@ -59,8 +57,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.subethamail.smtp.auth.EasyAuthenticationHandlerFactory;
 import org.subethamail.wiser.Wiser;
-
-import com.google.common.io.Files;
 /**
  * 
  * @author Cody Lerum
@@ -295,9 +291,6 @@ public class VelocityMailMessageTest
       
       Assert.assertTrue(html.getContentType().startsWith("text/html"));
       Assert.assertEquals(expectedHtmlBody(emailMessage, person.getName(), person.getEmail(), version), MailTestUtil.getStringContent(html));
-      
-      Files.write(expectedTextBody(person.getName(), version), new File("c:/tmp/expected.txt"), Charset.defaultCharset());
-      Files.write(MailTestUtil.getStringContent(textAlt), new File("c:/tmp/actual.txt"), Charset.defaultCharset());
       
       Assert.assertTrue(textAlt.getContentType().startsWith("text/plain"));
       Assert.assertEquals(expectedTextBody(person.getName(), version), MailTestUtil.getStringContent(textAlt));     

@@ -27,6 +27,7 @@ import org.jboss.seam.mail.core.EmailAttachment;
 import org.jboss.seam.mail.core.EmailContact;
 import org.jboss.seam.mail.core.EmailMessage;
 import org.jboss.seam.mail.core.InvalidAddressException;
+import org.jboss.seam.mail.core.MailTemplate;
 import org.jboss.seam.mail.core.SendFailedException;
 import org.jboss.seam.mail.core.enumurations.MessagePriority;
 
@@ -35,7 +36,7 @@ import org.jboss.seam.mail.core.enumurations.MessagePriority;
  * 
  * @author Cody Lerum
  */
-public interface VelocityMailMessage
+public interface FreeMarkerMailMessage
 {
 
    // Begin Recipients
@@ -46,7 +47,7 @@ public interface VelocityMailMessage
     * @param address Email address of the recipient eq "john.doe@example.com"
     * @throws InvalidAddressException if address is in invalid format
     */
-   public VelocityMailMessage from(String address);
+   public FreeMarkerMailMessage from(String address);
 
    /**
     * Convenience method to add a FROM address
@@ -55,28 +56,28 @@ public interface VelocityMailMessage
     * @param address Email address of the recipient eg "john.doe@example.com"
     * @throws InvalidAddressException if address is in invalid format
     */
-   public VelocityMailMessage from(String address, String name);
+   public FreeMarkerMailMessage from(String address, String name);
 
    /**
     * Adds a From Address
     * 
     * @param emailAddress {@link InternetAddress} of the address to be added
     */
-   public VelocityMailMessage from(InternetAddress emailAddress);
+   public FreeMarkerMailMessage from(InternetAddress emailAddress);
 
    /**
     * Adds a From Address
     * 
     * @param emailContact {@link EmailContact} of the address to be added
     */
-   public VelocityMailMessage from(EmailContact emailContact);
+   public FreeMarkerMailMessage from(EmailContact emailContact);
 
    /**
     * Adds a Collection of {@link EmailContact} as FROM addresses
     * 
     * @param emailContacts Collection of {@link EmailContact} to be added
     */
-   public VelocityMailMessage from(Collection<EmailContact> emailContacts);
+   public FreeMarkerMailMessage from(Collection<EmailContact> emailContacts);
 
    /**
     * Convenience method to add a REPLY-TO address
@@ -84,7 +85,7 @@ public interface VelocityMailMessage
     * @param address Email address of the recipient eq "john.doe@example.com
     * @throws InvalidAddressException if address is in invalid format"
     */
-   public VelocityMailMessage replyTo(String address);
+   public FreeMarkerMailMessage replyTo(String address);
 
    /**
     * Convenience method to add a REPLY-TO name and address
@@ -93,28 +94,28 @@ public interface VelocityMailMessage
     * @param address Email address of the recipient eg "john.doe@example.com"
     * @throws InvalidAddressException if address is in invalid format
     */
-   public VelocityMailMessage replyTo(String address, String name);
+   public FreeMarkerMailMessage replyTo(String address, String name);
 
    /**
     * Adds a REPLY-TO Address
     * 
     * @param emailAddress {@link InternetAddress} of the address to be added
     */
-   public VelocityMailMessage replyTo(InternetAddress emailAddress);
+   public FreeMarkerMailMessage replyTo(InternetAddress emailAddress);
 
    /**
     * Adds a REPLY-TO Address
     * 
     * @param emailContact {@link EmailContact} of the address to be added
     */
-   public VelocityMailMessage replyTo(EmailContact emailContact);
+   public FreeMarkerMailMessage replyTo(EmailContact emailContact);
 
    /**
     * Adds a Collection of {@link EmailContact} as REPLY-TO addresses
     * 
     * @param emailContacts Collection of {@link EmailContact} to be added
     */
-   public VelocityMailMessage replyTo(Collection<EmailContact> emailContacts);
+   public FreeMarkerMailMessage replyTo(Collection<EmailContact> emailContacts);
 
    /**
     * Convenience method to add a TO address
@@ -122,7 +123,7 @@ public interface VelocityMailMessage
     * @param address Email address of the recipient eq "john.doe@example.com"
     * @throws InvalidAddressException if address is in invalid format
     */
-   public VelocityMailMessage to(String address);
+   public FreeMarkerMailMessage to(String address);
 
    /**
     * Convenience method to add a TO recipient
@@ -131,28 +132,28 @@ public interface VelocityMailMessage
     * @param address Email address of the recipient eg "john.doe@example.com"
     * @throws InvalidAddressException if address is in invalid format
     */
-   public VelocityMailMessage to(String address, String name);
+   public FreeMarkerMailMessage to(String address, String name);
 
    /**
     * Add TO recipient
     * 
     * @param emailAddress {@link InternetAddress} of the address to be added
     */
-   public VelocityMailMessage to(InternetAddress emailAddress);
+   public FreeMarkerMailMessage to(InternetAddress emailAddress);
 
    /**
     * Add TO recipient
     * 
     * @param emailContact {@link EmailContact} of the address to be added
     */
-   public VelocityMailMessage to(EmailContact emailContact);
+   public FreeMarkerMailMessage to(EmailContact emailContact);
 
    /**
     * Convenience method to add a TO recipients
     * 
     * @param emailContacts Collection of {@link EmailContact} to be added
     */
-   public VelocityMailMessage to(Collection<EmailContact> emailContacts);
+   public FreeMarkerMailMessage to(Collection<EmailContact> emailContacts);
 
    /**
     * Convenience method to add a CC (Carbon Copy) recipient
@@ -161,7 +162,7 @@ public interface VelocityMailMessage
     * @throws InvalidAddressException if address is in invalid format
     * 
     */
-   public VelocityMailMessage cc(String address);
+   public FreeMarkerMailMessage cc(String address);
 
    /**
     * Convenience method to add a CC (Carbon Copy) recipient
@@ -170,28 +171,28 @@ public interface VelocityMailMessage
     * @param address Email address of the recipient eg "john.doe@example.com"
     * @throws InvalidAddressException if address is in invalid format
     */
-   public VelocityMailMessage cc(String address, String name);
+   public FreeMarkerMailMessage cc(String address, String name);
 
    /**
     * Add CC (Carbon Copy) recipient
     * 
     * @param emailAddress {@link InternetAddress} of the address to be added
     */
-   public VelocityMailMessage cc(InternetAddress emailAddress);
+   public FreeMarkerMailMessage cc(InternetAddress emailAddress);
 
    /**
     * Add CC recipient
     * 
     * @param emailContact {@link EmailContact} of the address to be added
     */
-   public VelocityMailMessage cc(EmailContact emailContact);
+   public FreeMarkerMailMessage cc(EmailContact emailContact);
 
    /**
     * Add collection of CC (Carbon Copy) recipients
     * 
     * @param emailContacts Collection of {@link EmailContact} to be added
     */
-   public VelocityMailMessage cc(Collection<EmailContact> emailContacts);
+   public FreeMarkerMailMessage cc(Collection<EmailContact> emailContacts);
 
    /**
     * Convenience method to add a BCC (Blind Carbon Copy) recipient
@@ -199,7 +200,7 @@ public interface VelocityMailMessage
     * @param address Email address of the recipient eg "john.doe@example.com"
     * @throws InvalidAddressException if address is in invalid format
     */
-   public VelocityMailMessage bcc(String address);
+   public FreeMarkerMailMessage bcc(String address);
 
    /**
     * Convenience method to add a BCC (Blind Carbon Copy) recipient
@@ -208,28 +209,28 @@ public interface VelocityMailMessage
     * @param address Email address of the recipient eg "john.doe@example.com"
     * @throws InvalidAddressException if address is in invalid format
     */
-   public VelocityMailMessage bcc(String address, String name);
+   public FreeMarkerMailMessage bcc(String address, String name);
 
    /**
     * Add BCC (Blind Carbon Copy) recipient
     * 
     * @param emailAddress {@link InternetAddress} of the address to be added
     */
-   public VelocityMailMessage bcc(InternetAddress emailAddress);
+   public FreeMarkerMailMessage bcc(InternetAddress emailAddress);
 
    /**
     * Add BCC recipient
     * 
     * @param emailContact {@link EmailContact} of the address to be added
     */
-   public VelocityMailMessage bcc(EmailContact emailContact);
+   public FreeMarkerMailMessage bcc(EmailContact emailContact);
 
    /**
     * Add collection of BCC (Blind Carbon Copy) recipients
     * 
     * @param emailContacts Collection of {@link EmailContact} to be added
     */
-   public VelocityMailMessage bcc(Collection<EmailContact> emailContacts);
+   public FreeMarkerMailMessage bcc(Collection<EmailContact> emailContacts);
 
    // End Recipients
 
@@ -240,7 +241,7 @@ public interface VelocityMailMessage
     * 
     * @param attachment {@link EmailAttachment} to be added
     */
-   public VelocityMailMessage addAttachment(EmailAttachment attachment);
+   public FreeMarkerMailMessage addAttachment(EmailAttachment attachment);
 
    // End Attachements
 
@@ -253,7 +254,7 @@ public interface VelocityMailMessage
     * @param messagePriority The priority level of the message.
     * 
     */
-   public VelocityMailMessage importance(MessagePriority messagePriority);
+   public FreeMarkerMailMessage importance(MessagePriority messagePriority);
 
    /**
     * Request a delivery receipt "Return-Receipt-To" to the given address
@@ -261,7 +262,7 @@ public interface VelocityMailMessage
     * @param address Email address the receipt should be sent to
     * @throws InvalidAddressException if address is in invalid format
     */
-   public VelocityMailMessage deliveryReceipt(String address);
+   public FreeMarkerMailMessage deliveryReceipt(String address);
 
    /**
     * Request a read receipt "Disposition-Notification-To" to a given address
@@ -269,14 +270,14 @@ public interface VelocityMailMessage
     * @param address Email address the receipt should be sent to
     * @throws InvalidAddressException if address is in invalid format
     */
-   public VelocityMailMessage readReceipt(String address);
+   public FreeMarkerMailMessage readReceipt(String address);
 
    /**
     * Set the Message-ID for the message.
     * 
     * @param messageId
     */
-   public VelocityMailMessage messageId(String messageId);
+   public FreeMarkerMailMessage messageId(String messageId);
 
    // End Flags
 
@@ -290,7 +291,7 @@ public interface VelocityMailMessage
     * @param bytes iCal data which will be attached to the message
     * 
     */
-   public VelocityMailMessage iCal(String htmlSummary, byte[] bytes);
+   public FreeMarkerMailMessage iCal(String htmlSummary, byte[] bytes);
 
    // End Calendar
 
@@ -302,7 +303,7 @@ public interface VelocityMailMessage
     * @param value Subject of the message
     * 
     */
-   public VelocityMailMessage subject(String value);
+   public FreeMarkerMailMessage subject(String value);
 
    /**
     * Sets the body of the message a plan text body represented by the supplied
@@ -311,7 +312,7 @@ public interface VelocityMailMessage
     * @param text Plain text body
     * 
     */
-   public VelocityMailMessage bodyText(String text);
+   public FreeMarkerMailMessage bodyText(String text);
 
    /**
     * Sets the body of the message a HTML body represented by the supplied
@@ -320,7 +321,7 @@ public interface VelocityMailMessage
     * @param html HTML body
     * 
     */
-   public VelocityMailMessage bodyHtml(String html);
+   public FreeMarkerMailMessage bodyHtml(String html);
 
    /**
     * Sets the body of the message to a HTML body with a plain text alternative
@@ -329,14 +330,14 @@ public interface VelocityMailMessage
     * @param text Plain text body
     * 
     */
-   public VelocityMailMessage bodyHtmlTextAlt(String html, String text);
+   public FreeMarkerMailMessage bodyHtmlTextAlt(String html, String text);
 
    // End Core
 
    /**
-    * Get the {@link EmailMessage} representing this {@link VelocityMailMessage}
+    * Get the {@link EmailMessage} representing this {@link FreeMarkerMailMessage}
     * 
-    * @return {@link EmailMessage} representing this {@link VelocityMailMessage}
+    * @return {@link EmailMessage} representing this {@link FreeMarkerMailMessage}
     */
    public EmailMessage getEmailMessage();
 
@@ -344,7 +345,7 @@ public interface VelocityMailMessage
     * Send the Message
     * 
     * @return {@link EmailMessage} which represents the
-    *         {@link VelocityMailMessage} as sent
+    *         {@link FreeMarkerMailMessage} as sent
     * @throws TemplatingException - If errors occur during template processing
     * @throws SendFailedException If the messages fails to be sent.
     */
@@ -359,44 +360,44 @@ public interface VelocityMailMessage
     */
    public EmailMessage send();
 
-   // Begin Velocity Specific
+   // Begin Template Specific
 
    /**
     * Set the template to be used for the message subject
     * 
-    * @param subject {@link VelocityTemplate} to use
+    * @param subject {@link MailTemplate} to use
     * @throws TemplatingException
     */
-   public VelocityMailMessage subject(VelocityTemplate subject);
+   public FreeMarkerMailMessage subject(MailTemplate  subject);
 
    /**
     * Sets the text body of the message to the plain text output of the given
     * template
     * 
-    * @param textBody {@link VelocityTemplate} to use
+    * @param textBody {@link MailTemplate} to use
     * @throws TemplatingException
     */
-   public VelocityMailMessage bodyText(VelocityTemplate textbody);
+   public FreeMarkerMailMessage bodyText(MailTemplate textbody);
 
    /**
     * Sets the HTML body of the message to the HTML output of the given template
     * 
-    * @param htmlBody {@link VelocityTemplate} to use
+    * @param htmlBody {@link MailTemplate} to use
     * @throws TemplatingException
     */
-   public VelocityMailMessage bodyHtml(VelocityTemplate htmlBody);
+   public FreeMarkerMailMessage bodyHtml(MailTemplate htmlBody);
 
    /**
     * Sets the body of the message to a HTML body with a plain text alternative
     * output of the given templates
     * 
-    * @param htmlBody {@link VelocityTemplate} to use for HTML portion of
+    * @param htmlBody {@link MailTemplate} to use for HTML portion of
     *           message
-    * @param textBody {@link VelocityTemplate} to use for Text alternative
+    * @param textBody {@link MailTemplate} to use for Text alternative
     *           portion of message
     * @throws TemplatingException
     */
-   public VelocityMailMessage bodyHtmlTextAlt(VelocityTemplate htmlBody, VelocityTemplate textbody);
+   public FreeMarkerMailMessage bodyHtmlTextAlt(MailTemplate htmlBody, MailTemplate textbody);
 
    /**
     * Places a variable in the templating engines context  
@@ -404,5 +405,5 @@ public interface VelocityMailMessage
     * @param name Reference name of the object
     * @param value the Object being placed in the context
     */
-   public VelocityMailMessage put(String name, Object value);
+   public FreeMarkerMailMessage put(String name, Object value);
 }

@@ -15,30 +15,43 @@
  * limitations under the License.
  */
 
-package org.jboss.seam.mail.templating.velocity;
+package org.jboss.seam.mail.templating;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 
+import org.jboss.seam.mail.core.MailTemplate;
 import org.jboss.seam.mail.templating.TemplatingException;
-import org.jboss.seam.mail.templating.VelocityTemplate;
 
 /**
  * 
  * @author Cody Lerum
  * 
  */
-public class FileTemplate implements VelocityTemplate
+public class FileTemplate implements MailTemplate
 {
-   public File file;
+   private String templateName;
+   private File file;
 
    public FileTemplate(File file)
    {
+      this.templateName = file.getName();
+      this.file = file;
+   }
+   
+   public FileTemplate(File file, String templateName)
+   {
+      this.templateName = file.getName();
       this.file = file;
    }
 
+   public String getTemplateName()
+   {
+      return templateName;
+   }
+   
    public InputStream getInputStream()
    {
       try

@@ -15,14 +15,14 @@
  * limitations under the License.
  */
 
-package org.jboss.seam.mail.templating.velocity;
+package org.jboss.seam.mail.templating;
 
 import java.io.InputStream;
 
 import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
 
-import org.jboss.seam.mail.templating.VelocityTemplate;
+import org.jboss.seam.mail.core.MailTemplate;
 import org.jboss.seam.solder.beanManager.BeanManagerAware;
 import org.jboss.seam.solder.resourceLoader.ResourceProvider;
 
@@ -31,12 +31,20 @@ import org.jboss.seam.solder.resourceLoader.ResourceProvider;
  * @author Cody Lerum
  * 
  */
-public class ClassPathTemplate extends BeanManagerAware implements VelocityTemplate
+public class ClassPathTemplate extends BeanManagerAware implements MailTemplate
 {
-   public String fileName;
+   private String templateName;
+   private String fileName;
 
    public ClassPathTemplate(String fileName)
    {
+      this.templateName = fileName;
+      this.fileName = fileName;
+   }
+
+   public ClassPathTemplate(String fileName, String templateName)
+   {
+      this.templateName = templateName;
       this.fileName = fileName;
    }
 
@@ -48,13 +56,8 @@ public class ClassPathTemplate extends BeanManagerAware implements VelocityTempl
       return resourceProvider.loadResourceStream(fileName);
    }
 
-   public String getFileName()
+   public String getTemplateName()
    {
-      return fileName;
-   }
-
-   public void setFileName(String fileName)
-   {
-      this.fileName = fileName;
+      return templateName;
    }
 }

@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package org.jboss.seam.mail.templating;
+package org.jboss.seam.mail.core;
 
 import java.io.InputStream;
 /**
@@ -23,7 +23,9 @@ import java.io.InputStream;
  * @author Cody Lerum
  *
  */
-public interface VelocityTemplate
+public interface MailTemplate
 {
+   public String getTemplateName();
+
    public InputStream getInputStream();
 }

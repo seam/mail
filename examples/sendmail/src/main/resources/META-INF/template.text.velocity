@@ -1,3 +1,0 @@
-Hello $person.name,
-
-This is the alternative text body for mail readers that don't support html. This was sent with $version

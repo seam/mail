@@ -32,8 +32,16 @@
          </table>
          <p>
             <h:commandButton action="#{sendMail.sendText}" value="Send Text Email" onclick="value='Sending...';"/>
-            <h:commandButton action="#{sendMail.sendHTML}" value="Send HTML Email" onclick="value='Sending...';"/>
-            <h:commandButton action="#{sendMail.sendHTMLwithAlternative}" value="Send HTML+Text Email" onclick="value='Sending...';"/>           
+         </p>
+         <p>
+           	<h:commandButton action="#{sendMail.sendHTMLFreeMarker}" value="Send HTML Email with FreeMarker" onclick="value='Sending...';"/>
+            <h:commandButton action="#{sendMail.sendHTMLwithAlternativeFreeMarker}" value="Send HTML+Text Email with FreeMarker" onclick="value='Sending...';"/>
+        </p>
+        <p> 
+            <h:commandButton action="#{sendMail.sendHTMLVelocity}" value="Send HTML Email with Velocity" onclick="value='Sending...';"/>
+            <h:commandButton action="#{sendMail.sendHTMLwithAlternativeVelocity}" value="Send HTML+Text Email with Velocity" onclick="value='Sending...';"/>
+        </p>
+        <p>           
             <h:outputText value="Message Sent!" rendered="#{facesContext.postback and empty facesContext.messageList}" style="color: green;"/>
          </p>
       </h:form>

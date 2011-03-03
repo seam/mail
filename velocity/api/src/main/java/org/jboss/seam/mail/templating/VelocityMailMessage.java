@@ -27,6 +27,7 @@ import org.jboss.seam.mail.core.EmailAttachment;
 import org.jboss.seam.mail.core.EmailContact;
 import org.jboss.seam.mail.core.EmailMessage;
 import org.jboss.seam.mail.core.InvalidAddressException;
+import org.jboss.seam.mail.core.MailTemplate;
 import org.jboss.seam.mail.core.SendFailedException;
 import org.jboss.seam.mail.core.enumurations.MessagePriority;
 
@@ -364,39 +365,39 @@ public interface VelocityMailMessage
    /**
     * Set the template to be used for the message subject
     * 
-    * @param subject {@link VelocityTemplate} to use
+    * @param subject {@link MailTemplate} to use
     * @throws TemplatingException
     */
-   public VelocityMailMessage subject(VelocityTemplate subject);
+   public VelocityMailMessage subject(MailTemplate subject);
 
    /**
     * Sets the text body of the message to the plain text output of the given
     * template
     * 
-    * @param textBody {@link VelocityTemplate} to use
+    * @param textBody {@link MailTemplate} to use
     * @throws TemplatingException
     */
-   public VelocityMailMessage bodyText(VelocityTemplate textbody);
+   public VelocityMailMessage bodyText(MailTemplate textbody);
 
    /**
     * Sets the HTML body of the message to the HTML output of the given template
     * 
-    * @param htmlBody {@link VelocityTemplate} to use
+    * @param htmlBody {@link MailTemplate} to use
     * @throws TemplatingException
     */
-   public VelocityMailMessage bodyHtml(VelocityTemplate htmlBody);
+   public VelocityMailMessage bodyHtml(MailTemplate htmlBody);
 
    /**
     * Sets the body of the message to a HTML body with a plain text alternative
     * output of the given templates
     * 
-    * @param htmlBody {@link VelocityTemplate} to use for HTML portion of
+    * @param htmlBody {@link MailTemplate} to use for HTML portion of
     *           message
-    * @param textBody {@link VelocityTemplate} to use for Text alternative
+    * @param textBody {@link MailTemplate} to use for Text alternative
     *           portion of message
     * @throws TemplatingException
     */
-   public VelocityMailMessage bodyHtmlTextAlt(VelocityTemplate htmlBody, VelocityTemplate textbody);
+   public VelocityMailMessage bodyHtmlTextAlt(MailTemplate htmlBody, MailTemplate textbody);
 
    /**
     * Places a variable in the templating engines context  

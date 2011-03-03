@@ -15,27 +15,40 @@
  * limitations under the License.
  */
 
-package org.jboss.seam.mail.templating.velocity;
+package org.jboss.seam.mail.templating;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 
+import org.jboss.seam.mail.core.MailTemplate;
 import org.jboss.seam.mail.templating.TemplatingException;
-import org.jboss.seam.mail.templating.VelocityTemplate;
 
 /**
  * 
  * @author Cody Lerum
  * 
  */
-public class TextTemplate implements VelocityTemplate
+public class TextTemplate implements MailTemplate
 {
-   public String content;
+   private String templateName;
+   private String content;
 
    public TextTemplate(String content)
    {
+      this.templateName = "textTemplate";
       this.content = content;
+   }
+
+   public TextTemplate(String content, String templateName)
+   {
+      this.templateName = templateName;
+      this.content = content;
+   }
+
+   public String getTemplateName()
+   {
+      return templateName;
    }
 
    public InputStream getInputStream()
@@ -49,4 +62,5 @@ public class TextTemplate implements VelocityTemplate
          throw new TemplatingException("Unable to create template from String value", e);
       }
    }
+
 }

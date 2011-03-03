@@ -36,15 +36,14 @@ import org.jboss.seam.mail.core.EmailAttachment;
 import org.jboss.seam.mail.core.EmailContact;
 import org.jboss.seam.mail.core.EmailMessage;
 import org.jboss.seam.mail.core.MailContext;
+import org.jboss.seam.mail.core.MailTemplate;
 import org.jboss.seam.mail.core.MailUtility;
 import org.jboss.seam.mail.core.SendFailedException;
 import org.jboss.seam.mail.core.enumurations.ContentDisposition;
 import org.jboss.seam.mail.core.enumurations.EmailMessageType;
 import org.jboss.seam.mail.core.enumurations.MessagePriority;
-import org.jboss.seam.mail.templating.MailTemplate;
 import org.jboss.seam.mail.templating.TemplatingException;
 import org.jboss.seam.mail.templating.VelocityMailMessage;
-import org.jboss.seam.mail.templating.VelocityTemplate;
 import org.jboss.seam.mail.util.EmailAttachmentUtil;
 
 /**
@@ -307,34 +306,29 @@ public class VelocityMailMessageImpl implements VelocityMailMessage
 
    // End Calendar
 
-   public VelocityMailMessage subject(VelocityTemplate subject)
+   public VelocityMailMessage subject(MailTemplate subject)
    {
-      subjectTemplate = createTemplate(subject);
+      subjectTemplate = subject;
       return this;
    }
 
-   public VelocityMailMessageImpl bodyText(VelocityTemplate textBody)
+   public VelocityMailMessageImpl bodyText(MailTemplate textBody)
    {
-      textTemplate = createTemplate(textBody);
+      textTemplate = textBody;
       return this;
    }
 
-   public VelocityMailMessageImpl bodyHtml(VelocityTemplate htmlBody)
+   public VelocityMailMessageImpl bodyHtml(MailTemplate htmlBody)
    {
-      htmlTemplate = createTemplate(htmlBody);
+      htmlTemplate = htmlBody;
       return this;
    }
 
-   public VelocityMailMessageImpl bodyHtmlTextAlt(VelocityTemplate htmlBody, VelocityTemplate textBody)
+   public VelocityMailMessageImpl bodyHtmlTextAlt(MailTemplate htmlBody, MailTemplate textBody)
    {
       bodyHtml(htmlBody);
       bodyText(textBody);
       return this;
-   }
-
-   private MailTemplate createTemplate(VelocityTemplate velocityTemplate)
-   {
-      return new MailTemplate("rawInput", velocityTemplate.getInputStream());
    }
 
    private String mergeTemplate(MailTemplate template)
@@ -343,7 +337,7 @@ public class VelocityMailMessageImpl implements VelocityMailMessage
 
       try
       {
-         velocityEngine.evaluate(context, writer, template.getName(), new InputStreamReader(template.getInputStream()));
+         velocityEngine.evaluate(context, writer, template.getTemplateName(), new InputStreamReader(template.getInputStream()));
       }
       catch (ResourceNotFoundException e)
       {

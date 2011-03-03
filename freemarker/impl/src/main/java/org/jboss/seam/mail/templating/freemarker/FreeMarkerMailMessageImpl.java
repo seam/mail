@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package org.jboss.seam.mail.templating.velocity;
+package org.jboss.seam.mail.templating.freemarker;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -33,15 +33,16 @@ import org.jboss.seam.mail.core.BaseEmailAttachment;
 import org.jboss.seam.mail.core.EmailAttachment;
 import org.jboss.seam.mail.core.EmailContact;
 import org.jboss.seam.mail.core.EmailMessage;
+import org.jboss.seam.mail.core.MailContext;
+import org.jboss.seam.mail.core.MailTemplate;
 import org.jboss.seam.mail.core.MailUtility;
 import org.jboss.seam.mail.core.SendFailedException;
 import org.jboss.seam.mail.core.enumurations.ContentDisposition;
 import org.jboss.seam.mail.core.enumurations.EmailMessageType;
 import org.jboss.seam.mail.core.enumurations.MessagePriority;
-import org.jboss.seam.mail.templating.MailTemplate;
 import org.jboss.seam.mail.templating.TemplatingException;
-import org.jboss.seam.mail.templating.VelocityMailMessage;
-import org.jboss.seam.mail.templating.VelocityTemplate;
+import org.jboss.seam.mail.templating.FreeMarkerMailMessage;
+import org.jboss.seam.mail.util.EmailAttachmentUtil;
 
 import freemarker.template.Configuration;
 import freemarker.template.DefaultObjectWrapper;
@@ -53,11 +54,11 @@ import freemarker.template.TemplateException;
  * @author Cody Lerum
  * 
  */
-public class FreeMarkerMailMessageImpl implements VelocityMailMessage
+public class FreeMarkerMailMessageImpl implements FreeMarkerMailMessage
 {
    private EmailMessage emailMessage;
 
-   private MailTemplate subjectTemplate;
+   private org.jboss.seam.mail.core.MailTemplate subjectTemplate;
    private MailTemplate textTemplate;
    private MailTemplate htmlTemplate;
 
@@ -79,151 +80,151 @@ public class FreeMarkerMailMessageImpl implements VelocityMailMessage
 
    // Begin Addressing
 
-   public VelocityMailMessage from(String address)
+   public FreeMarkerMailMessage from(String address)
    {
       emailMessage.addFromAddress(MailUtility.internetAddress(address));
       return this;
    }
 
-   public VelocityMailMessage from(String address, String name)
+   public FreeMarkerMailMessage from(String address, String name)
    {
       emailMessage.addFromAddress(MailUtility.internetAddress(address, name));
       return this;
    }
 
-   public VelocityMailMessage from(InternetAddress emailAddress)
+   public FreeMarkerMailMessage from(InternetAddress emailAddress)
    {
       emailMessage.addFromAddress(emailAddress);
       return this;
    }
 
-   public VelocityMailMessage from(EmailContact emailContact)
+   public FreeMarkerMailMessage from(EmailContact emailContact)
    {
       emailMessage.addFromAddress(MailUtility.internetAddress(emailContact));
       return this;
    }
 
-   public VelocityMailMessage from(Collection<EmailContact> emailContacts)
+   public FreeMarkerMailMessage from(Collection<EmailContact> emailContacts)
    {
       emailMessage.addFromAddresses(MailUtility.internetAddress(emailContacts));
       return this;
    }
 
-   public VelocityMailMessage replyTo(String address)
+   public FreeMarkerMailMessage replyTo(String address)
    {
       emailMessage.addReplyToAddress(MailUtility.internetAddress(address));
       return this;
    }
 
-   public VelocityMailMessage replyTo(String address, String name)
+   public FreeMarkerMailMessage replyTo(String address, String name)
    {
       emailMessage.addReplyToAddress(MailUtility.internetAddress(address, name));
       return this;
    }
 
-   public VelocityMailMessage replyTo(InternetAddress emailAddress)
+   public FreeMarkerMailMessage replyTo(InternetAddress emailAddress)
    {
       emailMessage.addReplyToAddress(emailAddress);
       return this;
    }
 
-   public VelocityMailMessage replyTo(EmailContact emailContact)
+   public FreeMarkerMailMessage replyTo(EmailContact emailContact)
    {
       emailMessage.addReplyToAddress(MailUtility.internetAddress(emailContact));
       return this;
    }
 
-   public VelocityMailMessage replyTo(Collection<EmailContact> emailContacts)
+   public FreeMarkerMailMessage replyTo(Collection<EmailContact> emailContacts)
    {
       emailMessage.addReplyToAddresses(MailUtility.internetAddress(emailContacts));
       return this;
    }
 
-   public VelocityMailMessage to(String address)
+   public FreeMarkerMailMessage to(String address)
    {
       emailMessage.addToAddress(MailUtility.internetAddress(address));
       return this;
    }
 
-   public VelocityMailMessage to(String address, String name)
+   public FreeMarkerMailMessage to(String address, String name)
    {
       emailMessage.addToAddress(MailUtility.internetAddress(address, name));
       return this;
    }
 
-   public VelocityMailMessage to(InternetAddress emailAddress)
+   public FreeMarkerMailMessage to(InternetAddress emailAddress)
    {
       emailMessage.addToAddress(emailAddress);
       return this;
    }
 
-   public VelocityMailMessage to(EmailContact emailContact)
+   public FreeMarkerMailMessage to(EmailContact emailContact)
    {
       emailMessage.addToAddress(MailUtility.internetAddress(emailContact));
       return this;
    }
 
-   public VelocityMailMessage to(Collection<EmailContact> emailContacts)
+   public FreeMarkerMailMessage to(Collection<EmailContact> emailContacts)
    {
       emailMessage.addToAddresses(MailUtility.internetAddress(emailContacts));
       return this;
    }
 
-   public VelocityMailMessage cc(String address)
+   public FreeMarkerMailMessage cc(String address)
    {
       emailMessage.addCcAddress(MailUtility.internetAddress(address));
       return this;
    }
 
-   public VelocityMailMessage cc(String address, String name)
+   public FreeMarkerMailMessage cc(String address, String name)
    {
       emailMessage.addCcAddress(MailUtility.internetAddress(address, name));
       return this;
    }
 
-   public VelocityMailMessage cc(InternetAddress emailAddress)
+   public FreeMarkerMailMessage cc(InternetAddress emailAddress)
    {
       emailMessage.addCcAddress(emailAddress);
       return this;
    }
 
-   public VelocityMailMessage cc(EmailContact emailContact)
+   public FreeMarkerMailMessage cc(EmailContact emailContact)
    {
       emailMessage.addCcAddress(MailUtility.internetAddress(emailContact));
       return this;
    }
 
-   public VelocityMailMessage cc(Collection<EmailContact> emailContacts)
+   public FreeMarkerMailMessage cc(Collection<EmailContact> emailContacts)
    {
       emailMessage.addCcAddresses(MailUtility.internetAddress(emailContacts));
       return this;
    }
 
-   public VelocityMailMessage bcc(String address)
+   public FreeMarkerMailMessage bcc(String address)
    {
       emailMessage.addBccAddress(MailUtility.internetAddress(address));
       return this;
    }
 
-   public VelocityMailMessage bcc(String address, String name)
+   public FreeMarkerMailMessage bcc(String address, String name)
    {
       emailMessage.addBccAddress(MailUtility.internetAddress(address, name));
       return this;
    }
 
-   public VelocityMailMessage bcc(InternetAddress emailAddress)
+   public FreeMarkerMailMessage bcc(InternetAddress emailAddress)
    {
       emailMessage.addBccAddress(emailAddress);
       return this;
    }
 
-   public VelocityMailMessage bcc(EmailContact emailContact)
+   public FreeMarkerMailMessage bcc(EmailContact emailContact)
    {
       emailMessage.addBccAddress(MailUtility.internetAddress(emailContact));
       return this;
    }
 
-   public VelocityMailMessage bcc(Collection<EmailContact> emailContacts)
+   public FreeMarkerMailMessage bcc(Collection<EmailContact> emailContacts)
    {
       emailMessage.addBccAddresses(MailUtility.internetAddress(emailContacts));
       return this;
@@ -231,49 +232,49 @@ public class FreeMarkerMailMessageImpl implements VelocityMailMessage
 
    // End Addressing
 
-   public VelocityMailMessage subject(String value)
+   public FreeMarkerMailMessage subject(String value)
    {
       emailMessage.setSubject(value);
       return this;
    }
 
-   public VelocityMailMessage deliveryReceipt(String address)
+   public FreeMarkerMailMessage deliveryReceipt(String address)
    {
       emailMessage.addDeliveryReceiptAddress(MailUtility.internetAddress(address));
       return this;
    }
 
-   public VelocityMailMessage readReceipt(String address)
+   public FreeMarkerMailMessage readReceipt(String address)
    {
       emailMessage.addReadReceiptAddress(MailUtility.internetAddress(address));
       return this;
    }
 
-   public VelocityMailMessage importance(MessagePriority messagePriority)
+   public FreeMarkerMailMessage importance(MessagePriority messagePriority)
    {
       emailMessage.setImportance(messagePriority);
       return this;
    }
 
-   public VelocityMailMessage messageId(String messageId)
+   public FreeMarkerMailMessage messageId(String messageId)
    {
       emailMessage.setMessageId(messageId);
       return this;
    }
 
-   public VelocityMailMessage bodyText(String text)
+   public FreeMarkerMailMessage bodyText(String text)
    {
       emailMessage.setTextBody(text);
       return this;
    }
 
-   public VelocityMailMessage bodyHtml(String html)
+   public FreeMarkerMailMessage bodyHtml(String html)
    {
       emailMessage.setHtmlBody(html);
       return this;
    }
 
-   public VelocityMailMessage bodyHtmlTextAlt(String html, String text)
+   public FreeMarkerMailMessage bodyHtmlTextAlt(String html, String text)
    {
       emailMessage.setTextBody(text);
       emailMessage.setHtmlBody(html);
@@ -282,13 +283,13 @@ public class FreeMarkerMailMessageImpl implements VelocityMailMessage
 
    // Begin Attachments
 
-   public VelocityMailMessage addAttachment(EmailAttachment attachment)
+   public FreeMarkerMailMessage addAttachment(EmailAttachment attachment)
    {
       emailMessage.addAttachment(attachment);
       return this;
    }
 
-   public VelocityMailMessage addAttachment(Collection<EmailAttachment> attachments)
+   public FreeMarkerMailMessage addAttachment(Collection<EmailAttachment> attachments)
    {
       emailMessage.addAttachments(attachments);
       return this;
@@ -298,7 +299,7 @@ public class FreeMarkerMailMessageImpl implements VelocityMailMessage
 
    // Begin Calendar
 
-   public VelocityMailMessage iCal(String html, byte[] bytes)
+   public FreeMarkerMailMessage iCal(String html, byte[] bytes)
    {
       emailMessage.setType(EmailMessageType.INVITE_ICAL);
       emailMessage.setHtmlBody(html);
@@ -308,35 +309,30 @@ public class FreeMarkerMailMessageImpl implements VelocityMailMessage
 
    // End Calendar
 
-   public VelocityMailMessage subject(VelocityTemplate subject)
+   public FreeMarkerMailMessage subject(MailTemplate subject)
    {
-      subjectTemplate = createTemplate(subject);
+      subjectTemplate = subject;
       return this;
    }
 
-   public FreeMarkerMailMessageImpl bodyText(VelocityTemplate textBody)
+   public FreeMarkerMailMessageImpl bodyText(MailTemplate textBody)
    {
-      textTemplate = createTemplate(textBody);
+      textTemplate = textBody;
       return this;
    }
 
-   public FreeMarkerMailMessageImpl bodyHtml(VelocityTemplate htmlBody)
+   public FreeMarkerMailMessageImpl bodyHtml(MailTemplate htmlBody)
    {
-      htmlTemplate = createTemplate(htmlBody);
+      htmlTemplate = htmlBody;
       return this;
    }
 
-   public FreeMarkerMailMessageImpl bodyHtmlTextAlt(VelocityTemplate htmlBody, VelocityTemplate textBody)
+   public FreeMarkerMailMessageImpl bodyHtmlTextAlt(MailTemplate htmlBody, MailTemplate textBody)
    {
       bodyHtml(htmlBody);
       bodyText(textBody);
       return this;
    }  
-   
-   private MailTemplate createTemplate(VelocityTemplate velocityTemplate)
-   {
-      return new MailTemplate("rawInput", velocityTemplate.getInputStream());
-   }
    
    private String mergeTemplate(MailTemplate mailTemplate)
    {
@@ -349,13 +345,11 @@ public class FreeMarkerMailMessageImpl implements VelocityMailMessage
       }
       catch (IOException e)
       {
-         // TODO Auto-generated catch block
-         e.printStackTrace();
+         throw new TemplatingException("Error creating template", e);
       }
       catch (TemplateException e)
       {
-         // TODO Auto-generated catch block
-         e.printStackTrace();
+         throw new TemplatingException("Error rendering output", e);
       }
 
       return writer.toString();
@@ -376,17 +370,8 @@ public class FreeMarkerMailMessageImpl implements VelocityMailMessage
    {
       if (!templatesMerged)
       {
-         for (EmailAttachment ea : emailMessage.getAttachments())
-         {
-            if (ea.getContentDisposition() == ContentDisposition.INLINE)
-            {
-               if (ea.getFileName() != null && ea.getFileName().length() > 0)
-               {
-                  put("attach:" + ea.getFileName(), ea.getContentId());
-               }
-            }
-         }
-
+         put("mailContext", new MailContext(EmailAttachmentUtil.getEmailAttachmentMap(emailMessage.getAttachments())));
+         
          if (subjectTemplate != null)
          {
             emailMessage.setSubject(mergeTemplate(subjectTemplate));

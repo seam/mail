@@ -17,35 +17,33 @@
 
 package org.jboss.seam.mail.templating;
 
-import org.jboss.seam.mail.core.MailException;
+import java.io.InputStream;
+
+import org.jboss.seam.mail.core.MailTemplate;
 
 /**
- * Thrown when a error occurs during template processing
  * 
  * @author Cody Lerum
  * 
  */
-public class TemplatingException extends MailException
+public class InputStreamMailTemplate implements MailTemplate
 {
-   private static final long serialVersionUID = 1L;
+   private String templateName;
+   private InputStream inputStream;
 
-   public TemplatingException()
+   public InputStreamMailTemplate(InputStream inputStream, String templateName)
    {
-      super();
+      this.templateName = templateName;
+      this.inputStream = inputStream;
    }
 
-   public TemplatingException(String message, Throwable cause)
+   public String getTemplateName()
    {
-      super(message, cause);
+      return templateName;
    }
 
-   public TemplatingException(String message)
+   public InputStream getInputStream()
    {
-      super(message);
-   }
-
-   public TemplatingException(Throwable cause)
-   {
-      super(cause);
+      return inputStream;
    }
 }

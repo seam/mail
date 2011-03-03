@@ -44,8 +44,8 @@ import org.jboss.seam.mail.example.Gmail;
 import org.jboss.seam.mail.example.Person;
 import org.jboss.seam.mail.templating.ClassPathEmailAttachment;
 import org.jboss.seam.mail.templating.ClassPathTemplate;
+import org.jboss.seam.mail.templating.FreeMarkerMailMessage;
 import org.jboss.seam.mail.templating.TextTemplate;
-import org.jboss.seam.mail.templating.VelocityMailMessage;
 import org.jboss.seam.mail.util.EmailAttachmentUtil;
 import org.jboss.seam.mail.util.MavenArtifactResolver;
 import org.jboss.seam.mail.util.SMTPAuthenticator;
@@ -63,25 +63,25 @@ import org.subethamail.wiser.Wiser;
  *
  */
 @RunWith(Arquillian.class)
-public class VelocityMailMessageTest
+public class FreeMarkerMailMessageTest
 {
    @Deployment
    public static Archive<?> createTestArchive()
    {
       Archive<?> ar = ShrinkWrap.create(WebArchive.class, "test.war")
-      .addResource("template.text.velocity", "WEB-INF/classes/template.text.velocity")
-      .addResource("template.html.velocity", "WEB-INF/classes/template.html.velocity")
-      .addPackages(true, VelocityMailMessageTest.class.getPackage())
+      .addResource("template.text.freemarker", "WEB-INF/classes/template.text.freemarker")
+      .addResource("template.html.freemarker", "WEB-INF/classes/template.html.freemarker")
+      .addPackages(true, FreeMarkerMailMessageTest.class.getPackage())
       .addLibraries(MavenArtifactResolver.resolve("org.jboss.seam.solder:seam-solder:3.0.0.Beta4"),
             MavenArtifactResolver.resolve("org.subethamail:subethasmtp:3.1.4"),
-            MavenArtifactResolver.resolve("org.apache.velocity:velocity:1.6.4"),
+            MavenArtifactResolver.resolve("org.freemarker:freemarker:2.3.16"),
             MavenArtifactResolver.resolve("commons-lang:commons-lang:2.4"))
       .addWebResource(EmptyAsset.INSTANCE, "beans.xml");
       return ar;
    }
 
    @Inject
-   private Instance<VelocityMailMessage> velocityMailMessage;
+   private Instance<FreeMarkerMailMessage> freeMarkerMailMessage;
 
    @Inject
    private MailConfig mailConfig;
@@ -104,10 +104,10 @@ public class VelocityMailMessageTest
    String toAddress = "seamy.seamerson@seam-mail.test";
 
    @Test
-   public void testVelocityTextMailMessage() throws MessagingException, IOException
+   public void testFreeMarkerTextMailMessage() throws MessagingException, IOException
    {
       String uuid = java.util.UUID.randomUUID().toString();
-      String subject = "Text Message from $version Mail - " + uuid;
+      String subject = "Text Message from ${version} Mail - " + uuid;
       String version = "Seam 3";
       String mergedSubject = "Text Message from " + version + " Mail - " + uuid;
 
@@ -123,12 +123,13 @@ public class VelocityMailMessageTest
          person.setName(toName);
          person.setEmail(toAddress);
    
-         velocityMailMessage.get()
+         freeMarkerMailMessage.get()
             .from(fromAddress, fromName)
             .replyTo(replyToAddress)
             .to(toAddress, toName)
             .subject(new TextTemplate(subject))
-            .bodyText(new ClassPathTemplate("template.text.velocity"))
+            .bodyText(new ClassPathTemplate("template.text.freemarker"))
+            .put("person", person)
             .put("version", version)
             .importance(MessagePriority.HIGH)
             .send(session.get());
@@ -162,7 +163,7 @@ public class VelocityMailMessageTest
    }
 
    @Test
-   public void testVelocityHTMLMailMessage() throws MessagingException, IOException
+   public void testFreeMarkerHTMLMailMessage() throws MessagingException, IOException
    {
       String subject = "HTML Message from Seam Mail - " + java.util.UUID.randomUUID().toString();
       String version = "Seam 3";
@@ -179,12 +180,13 @@ public class VelocityMailMessageTest
          person.setName(toName);
          person.setEmail(toAddress);
    
-         emailMessage = velocityMailMessage.get()
+         emailMessage = freeMarkerMailMessage.get()
             .from(fromAddress, fromName)
             .replyTo(replyToAddress, replyToName)
             .to(person)
             .subject(subject)
-            .bodyHtml(new ClassPathTemplate("template.html.velocity"))
+            .bodyHtml(new ClassPathTemplate("template.html.freemarker"))
+            .put("person", person)
             .put("version", version)
             .importance(MessagePriority.HIGH)
             .addAttachment(new URLEmailAttachment("http://www.seamframework.org/themes/sfwkorg/img/seam_icon_large.png", "seamLogo.png", ContentDisposition.INLINE))
@@ -228,7 +230,7 @@ public class VelocityMailMessageTest
    }
 
    @Test
-   public void testVelocityHTMLTextAltMailMessage() throws MessagingException, IOException
+   public void testFreeMarkerHTMLTextAltMailMessage() throws MessagingException, IOException
    {
       String subject = "HTML+Text Message from Seam Mail - " + java.util.UUID.randomUUID().toString();
       String version = "Seam 3";
@@ -244,16 +246,17 @@ public class VelocityMailMessageTest
          person.setName(toName);
          person.setEmail(toAddress);
    
-         emailMessage = velocityMailMessage.get()
+         emailMessage = freeMarkerMailMessage.get()
             .from(fromAddress, fromName)
             .to(person.getEmail(), person.getName())
             .subject(subject)
+            .put("person", person)
             .put("version", version)
-            .bodyHtmlTextAlt(new ClassPathTemplate("template.html.velocity"), new ClassPathTemplate("template.text.velocity"))
+            .bodyHtmlTextAlt(new ClassPathTemplate("template.html.freemarker"), new ClassPathTemplate("template.text.freemarker"))
             .importance(MessagePriority.LOW)
             .deliveryReceipt(fromAddress)
             .readReceipt("seam.test")
-            .addAttachment(new ClassPathEmailAttachment("template.html.velocity", "text/html", ContentDisposition.ATTACHMENT))
+            .addAttachment(new ClassPathEmailAttachment("template.html.freemarker", "text/html", ContentDisposition.ATTACHMENT))
             .addAttachment(new URLEmailAttachment("http://www.seamframework.org/themes/sfwkorg/img/seam_icon_large.png", "seamLogo.png", ContentDisposition.INLINE))
             .send();
       }
@@ -296,7 +299,7 @@ public class VelocityMailMessageTest
       Assert.assertEquals(expectedTextBody(person.getName(), version), MailTestUtil.getStringContent(textAlt));     
 
       Assert.assertTrue(attachment.getContentType().startsWith("text/html"));
-      Assert.assertEquals("template.html.velocity", attachment.getFileName());
+      Assert.assertEquals("template.html.freemarker", attachment.getFileName());
       
       Assert.assertTrue(inlineAttachment.getContentType().startsWith("image/png;"));
       Assert.assertEquals("seamLogo.png", inlineAttachment.getFileName());
@@ -320,16 +323,17 @@ public class VelocityMailMessageTest
          person.setName(toName);
          person.setEmail(toAddress);
    
-         velocityMailMessage.get()
+         freeMarkerMailMessage.get()
             .from(fromAddress, fromName)
             .to(person.getEmail(), person.getName())
             .subject(subject)
+            .put("person", person)
             .put("version", "Seam 3")
-            .bodyHtmlTextAlt(new ClassPathTemplate("template.html.velocity"), new ClassPathTemplate("template.text.velocity"))
+            .bodyHtmlTextAlt(new ClassPathTemplate("template.html.freemarker"), new ClassPathTemplate("template.text.freemarker"))
             .importance(MessagePriority.LOW)
             .deliveryReceipt(fromAddress)
             .readReceipt("seam.test")
-            .addAttachment(new ClassPathEmailAttachment("template.html.velocity", "text/html", ContentDisposition.ATTACHMENT))
+            .addAttachment(new ClassPathEmailAttachment("template.html.freemarker", "text/html", ContentDisposition.ATTACHMENT))
             .addAttachment(new URLEmailAttachment("http://www.seamframework.org/themes/sfwkorg/img/seam_icon_large.png", "seamLogo.png", ContentDisposition.INLINE))
             .send(gmailSession);
       }
@@ -346,7 +350,7 @@ public class VelocityMailMessageTest
    }
    
    @Test(expected=SendFailedException.class)
-   public void testVelocityTextMailMessageSendFailed()
+   public void testFreeMarkerTextMailMessageSendFailed()
    {
       String uuid = java.util.UUID.randomUUID().toString();
       String subject = "Text Message from $version Mail - " + uuid;
@@ -364,12 +368,13 @@ public class VelocityMailMessageTest
          person.setName(toName);
          person.setEmail(toAddress);
    
-         velocityMailMessage.get()
+         freeMarkerMailMessage.get()
             .from(fromAddress, fromName)
             .replyTo(replyToAddress)
             .to(toAddress, toName)
             .subject(new TextTemplate(subject))
-            .bodyText(new ClassPathTemplate("template.text.velocity"))
+            .bodyText(new ClassPathTemplate("template.text.freemarker"))
+            .put("person", person)
             .put("version", version)
             .importance(MessagePriority.HIGH)
             .send(session.get());
@@ -404,7 +409,7 @@ public class VelocityMailMessageTest
       sb.append("<html xmlns=\"http://www.w3.org/1999/xhtml\">" + "\r\n");
       sb.append("<body>" + "\r\n");
       sb.append("<p><b>Dear <a href=\"mailto:" + email + "\">" + name + "</a>,</b></p>" + "\r\n");
-      sb.append("<p>This is an example <i>HTML</i> email sent by " + version + " and Velocity.</p>" + "\r\n");
+      sb.append("<p>This is an example <i>HTML</i> email sent by " + version + " and FreeMarker.</p>" + "\r\n");
       sb.append("<p><img src=\"cid:" + EmailAttachmentUtil.getEmailAttachmentMap(emailMessage.getAttachments()).get("seamLogo.png").getContentId() +"\" /></p>" + "\r\n");
       sb.append("<p>It has an alternative text body for mail readers that don't support html.</p>" + "\r\n");
       sb.append("</body>" + "\r\n");
@@ -419,7 +424,7 @@ public class VelocityMailMessageTest
       
       sb.append("Hello " + name +",\r\n");
       sb.append("\r\n");
-      sb.append("This is the alternative text body for mail readers that don't support html. This was sent with " + version + " and Velocity.");
+      sb.append("This is the alternative text body for mail readers that don't support html. This was sent with " + version + " and FreeMarker.");
 
       return sb.toString();
    }

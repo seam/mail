@@ -63,7 +63,7 @@ public class MailMessageTest
    @Deployment
    public static Archive<?> createTestArchive()
    {
-      Archive<?> ar = ShrinkWrap.create(WebArchive.class, "test.war").addResource("template.text.vm", "WEB-INF/classes/template.text.vm").addPackages(true, MailMessageTest.class.getPackage()).addLibraries(MavenArtifactResolver.resolve("org.jboss.seam.solder:seam-solder:3.0.0.Beta4"), MavenArtifactResolver.resolve("org.subethamail:subethasmtp:3.1.4"), MavenArtifactResolver.resolve("org.apache.velocity:velocity:1.6.4")).addWebResource(EmptyAsset.INSTANCE, "beans.xml");
+      Archive<?> ar = ShrinkWrap.create(WebArchive.class, "test.war").addResource("template.text.velocity", "WEB-INF/classes/template.text.velocity").addPackages(true, MailMessageTest.class.getPackage()).addLibraries(MavenArtifactResolver.resolve("org.jboss.seam.solder:seam-solder:3.0.0.Beta4"), MavenArtifactResolver.resolve("org.subethamail:subethasmtp:3.1.4"), MavenArtifactResolver.resolve("org.apache.velocity:velocity:1.6.4")).addWebResource(EmptyAsset.INSTANCE, "beans.xml");
       return ar;
    }
 
@@ -237,7 +237,7 @@ public class MailMessageTest
          .importance(MessagePriority.LOW)
          .deliveryReceipt(fromAddress)
          .readReceipt("seam.test")
-         .addAttachment(new ClassPathEmailAttachment("template.text.vm", "text/plain", ContentDisposition.ATTACHMENT))
+         .addAttachment(new ClassPathEmailAttachment("template.text.velocity", "text/plain", ContentDisposition.ATTACHMENT))
          .addAttachment(new URLEmailAttachment("http://www.seamframework.org/themes/sfwkorg/img/seam_icon_large.png", "seamLogo.png", ContentDisposition.INLINE))
          .send(session.get());
       }
@@ -280,7 +280,7 @@ public class MailMessageTest
       Assert.assertEquals(textBody, MailTestUtil.getStringContent(textAlt));
 
       Assert.assertTrue(attachment.getContentType().startsWith("text/plain"));
-      Assert.assertEquals("template.text.vm", attachment.getFileName());
+      Assert.assertEquals("template.text.velocity", attachment.getFileName());
       
       Assert.assertTrue(inlineAttachment.getContentType().startsWith("image/png;"));
       Assert.assertEquals("seamLogo.png", inlineAttachment.getFileName());

@@ -73,8 +73,8 @@ public class VelocityMailMessageTest
    public static Archive<?> createTestArchive()
    {
       Archive<?> ar = ShrinkWrap.create(WebArchive.class, "test.war")
-      .addResource("template.text.vm", "WEB-INF/classes/template.text.vm")
-      .addResource("template.html.vm", "WEB-INF/classes/template.html.vm")
+      .addResource("template.text.velocity", "WEB-INF/classes/template.text.velocity")
+      .addResource("template.html.velocity", "WEB-INF/classes/template.html.velocity")
       .addPackages(true, VelocityMailMessageTest.class.getPackage())
       .addLibraries(MavenArtifactResolver.resolve("org.jboss.seam.solder:seam-solder:3.0.0.Beta4"),
             MavenArtifactResolver.resolve("org.subethamail:subethasmtp:3.1.4"),
@@ -132,7 +132,7 @@ public class VelocityMailMessageTest
             .replyTo(replyToAddress)
             .to(toAddress, toName)
             .subject(new VelocityTextTemplate(subject))
-            .bodyText(new VelocityClassPathTemplate("template.text.vm"))
+            .bodyText(new VelocityClassPathTemplate("template.text.velocity"))
             .put("version", version)
             .importance(MessagePriority.HIGH)
             .send(session.get());
@@ -188,7 +188,7 @@ public class VelocityMailMessageTest
             .replyTo(replyToAddress, replyToName)
             .to(person)
             .subject(subject)
-            .bodyHtml(new VelocityClassPathTemplate("template.html.vm"))
+            .bodyHtml(new VelocityClassPathTemplate("template.html.velocity"))
             .put("version", version)
             .importance(MessagePriority.HIGH)
             .addAttachment(new URLEmailAttachment("http://www.seamframework.org/themes/sfwkorg/img/seam_icon_large.png", "seamLogo.png", ContentDisposition.INLINE))
@@ -253,11 +253,11 @@ public class VelocityMailMessageTest
             .to(person.getEmail(), person.getName())
             .subject(subject)
             .put("version", version)
-            .bodyHtmlTextAlt(new VelocityClassPathTemplate("template.html.vm"), new VelocityClassPathTemplate("template.text.vm"))
+            .bodyHtmlTextAlt(new VelocityClassPathTemplate("template.html.velocity"), new VelocityClassPathTemplate("template.text.velocity"))
             .importance(MessagePriority.LOW)
             .deliveryReceipt(fromAddress)
             .readReceipt("seam.test")
-            .addAttachment(new ClassPathEmailAttachment("template.html.vm", "text/html", ContentDisposition.ATTACHMENT))
+            .addAttachment(new ClassPathEmailAttachment("template.html.velocity", "text/html", ContentDisposition.ATTACHMENT))
             .addAttachment(new URLEmailAttachment("http://www.seamframework.org/themes/sfwkorg/img/seam_icon_large.png", "seamLogo.png", ContentDisposition.INLINE))
             .send();
       }
@@ -303,7 +303,7 @@ public class VelocityMailMessageTest
       Assert.assertEquals(expectedTextBody(person.getName(), version), MailTestUtil.getStringContent(textAlt));     
 
       Assert.assertTrue(attachment.getContentType().startsWith("text/html"));
-      Assert.assertEquals("template.html.vm", attachment.getFileName());
+      Assert.assertEquals("template.html.velocity", attachment.getFileName());
       
       Assert.assertTrue(inlineAttachment.getContentType().startsWith("image/png;"));
       Assert.assertEquals("seamLogo.png", inlineAttachment.getFileName());
@@ -332,11 +332,11 @@ public class VelocityMailMessageTest
             .to(person.getEmail(), person.getName())
             .subject(subject)
             .put("version", "Seam 3")
-            .bodyHtmlTextAlt(new VelocityClassPathTemplate("template.html.vm"), new VelocityClassPathTemplate("template.text.vm"))
+            .bodyHtmlTextAlt(new VelocityClassPathTemplate("template.html.velocity"), new VelocityClassPathTemplate("template.text.velocity"))
             .importance(MessagePriority.LOW)
             .deliveryReceipt(fromAddress)
             .readReceipt("seam.test")
-            .addAttachment(new ClassPathEmailAttachment("template.html.vm", "text/html", ContentDisposition.ATTACHMENT))
+            .addAttachment(new ClassPathEmailAttachment("template.html.velocity", "text/html", ContentDisposition.ATTACHMENT))
             .addAttachment(new URLEmailAttachment("http://www.seamframework.org/themes/sfwkorg/img/seam_icon_large.png", "seamLogo.png", ContentDisposition.INLINE))
             .send(gmailSession);
       }
@@ -376,7 +376,7 @@ public class VelocityMailMessageTest
             .replyTo(replyToAddress)
             .to(toAddress, toName)
             .subject(new VelocityTextTemplate(subject))
-            .bodyText(new VelocityClassPathTemplate("template.text.vm"))
+            .bodyText(new VelocityClassPathTemplate("template.text.velocity"))
             .put("version", version)
             .importance(MessagePriority.HIGH)
             .send(session.get());

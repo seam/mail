@@ -21,21 +21,18 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.StringWriter;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
 import javax.mail.Session;
 import javax.mail.internet.InternetAddress;
 
-import org.apache.velocity.app.VelocityEngine;
-import org.apache.velocity.exception.MethodInvocationException;
-import org.apache.velocity.exception.ParseErrorException;
-import org.apache.velocity.exception.ResourceNotFoundException;
 import org.jboss.seam.mail.core.BaseEmailAttachment;
 import org.jboss.seam.mail.core.EmailAttachment;
 import org.jboss.seam.mail.core.EmailContact;
 import org.jboss.seam.mail.core.EmailMessage;
-import org.jboss.seam.mail.core.MailContext;
 import org.jboss.seam.mail.core.MailUtility;
 import org.jboss.seam.mail.core.SendFailedException;
 import org.jboss.seam.mail.core.enumurations.ContentDisposition;
@@ -45,35 +42,39 @@ import org.jboss.seam.mail.templating.MailTemplate;
 import org.jboss.seam.mail.templating.TemplatingException;
 import org.jboss.seam.mail.templating.VelocityMailMessage;
 import org.jboss.seam.mail.templating.VelocityTemplate;
-import org.jboss.seam.mail.util.EmailAttachmentUtil;
+
+import freemarker.template.Configuration;
+import freemarker.template.DefaultObjectWrapper;
+import freemarker.template.Template;
+import freemarker.template.TemplateException;
 
 /**
  * 
  * @author Cody Lerum
  * 
  */
-public class VelocityMailMessageImpl implements VelocityMailMessage
+public class FreeMarkerMailMessageImpl implements VelocityMailMessage
 {
    private EmailMessage emailMessage;
-   private VelocityEngine velocityEngine;
-   private SeamBaseVelocityContext context;
 
    private MailTemplate subjectTemplate;
    private MailTemplate textTemplate;
    private MailTemplate htmlTemplate;
 
+   private Configuration configuration;
+   private Map<String, Object> rootMap = new HashMap<String, Object>();
+   
    private boolean templatesMerged = false;
 
    @Inject
    private Instance<Session> session;
 
-   @Inject
-   public VelocityMailMessageImpl(SeamCDIVelocityContext seamCDIVelocityContext)
+   
+   public FreeMarkerMailMessageImpl()
    {
       emailMessage = new EmailMessage();
-      velocityEngine = new VelocityEngine();
-      velocityEngine.setProperty("runtime.log.logsystem.class", "org.apache.velocity.runtime.log.SimpleLog4JLogSystem");
-      context = new SeamBaseVelocityContext(this, seamCDIVelocityContext);
+      configuration = new Configuration();
+      configuration.setObjectWrapper(new DefaultObjectWrapper());
    }
 
    // Begin Addressing
@@ -313,61 +314,56 @@ public class VelocityMailMessageImpl implements VelocityMailMessage
       return this;
    }
 
-   public VelocityMailMessageImpl bodyText(VelocityTemplate textBody)
+   public FreeMarkerMailMessageImpl bodyText(VelocityTemplate textBody)
    {
       textTemplate = createTemplate(textBody);
       return this;
    }
 
-   public VelocityMailMessageImpl bodyHtml(VelocityTemplate htmlBody)
+   public FreeMarkerMailMessageImpl bodyHtml(VelocityTemplate htmlBody)
    {
       htmlTemplate = createTemplate(htmlBody);
       return this;
    }
 
-   public VelocityMailMessageImpl bodyHtmlTextAlt(VelocityTemplate htmlBody, VelocityTemplate textBody)
+   public FreeMarkerMailMessageImpl bodyHtmlTextAlt(VelocityTemplate htmlBody, VelocityTemplate textBody)
    {
       bodyHtml(htmlBody);
       bodyText(textBody);
       return this;
-   }
-
+   }  
+   
    private MailTemplate createTemplate(VelocityTemplate velocityTemplate)
    {
       return new MailTemplate("rawInput", velocityTemplate.getInputStream());
    }
-
-   private String mergeTemplate(MailTemplate template)
+   
+   private String mergeTemplate(MailTemplate mailTemplate)
    {
-      StringWriter writer = new StringWriter();
+      StringWriter writer = new StringWriter();      
 
       try
       {
-         velocityEngine.evaluate(context, writer, template.getName(), new InputStreamReader(template.getInputStream()));
-      }
-      catch (ResourceNotFoundException e)
-      {
-         throw new TemplatingException("Unable to find template", e);
-      }
-      catch (ParseErrorException e)
-      {
-         throw new TemplatingException("Unable to find template", e);
-      }
-      catch (MethodInvocationException e)
-      {
-         throw new TemplatingException("Error processing method referenced in context", e);
+         Template template = new Template("rawTemplate", new InputStreamReader(mailTemplate.getInputStream()), configuration);
+         template.process(rootMap, writer);
       }
       catch (IOException e)
       {
-         throw new TemplatingException("Error rendering output", e);
+         // TODO Auto-generated catch block
+         e.printStackTrace();
+      }
+      catch (TemplateException e)
+      {
+         // TODO Auto-generated catch block
+         e.printStackTrace();
       }
 
       return writer.toString();
    }
 
-   public VelocityMailMessageImpl put(String key, Object value)
+   public FreeMarkerMailMessageImpl put(String key, Object value)
    {
-      context.put(key, value);
+      rootMap.put(key, value);
       return this;
    }
 
@@ -376,11 +372,20 @@ public class VelocityMailMessageImpl implements VelocityMailMessage
       return emailMessage;
    }
 
-   private VelocityMailMessageImpl mergeTemplates()
+   private FreeMarkerMailMessageImpl mergeTemplates()
    {
       if (!templatesMerged)
       {
-         put("mailContext", new MailContext(EmailAttachmentUtil.getEmailAttachmentMap(emailMessage.getAttachments())));
+         for (EmailAttachment ea : emailMessage.getAttachments())
+         {
+            if (ea.getContentDisposition() == ContentDisposition.INLINE)
+            {
+               if (ea.getFileName() != null && ea.getFileName().length() > 0)
+               {
+                  put("attach:" + ea.getFileName(), ea.getContentId());
+               }
+            }
+         }
 
          if (subjectTemplate != null)
          {
@@ -421,6 +426,6 @@ public class VelocityMailMessageImpl implements VelocityMailMessage
 
    public EmailMessage send() throws SendFailedException, TemplatingException
    {
-      return this.send(session.get());
+      return this.send(session.get());     
    }
 }

@@ -2,9 +2,9 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-          <artifactId>seam-parent</artifactId>
-	  <groupId>org.jboss.seam</groupId>
-	  <version>8</version>
+		<artifactId>seam-parent</artifactId>
+		<groupId>org.jboss.seam</groupId>
+		<version>8</version>
 	</parent>
 
 	<groupId>org.jboss.seam.mail</groupId>
@@ -14,16 +14,18 @@
 	<name>Seam Mail Module</name>
 
 	<properties>
-          <seam.version>3.0.0.b09</seam.version>
+		<seam.version>3.0.0.b09</seam.version>
 	</properties>
 
 	<modules>
 		<module>core/api</module>
 		<module>core/impl</module>
+		<module>freemarker/api</module>
+		<module>freemarker/impl</module>
 		<module>velocity/api</module>
 		<module>velocity/impl</module>
 		<module>examples/sendmail</module>
-		
+
 	</modules>
 
 	<dependencyManagement>
@@ -36,33 +38,47 @@
 				<scope>import</scope>
 			</dependency>
 
-         <!-- Override versions from seam-bom for this module's artifacts -->
+			<!-- Override versions from seam-bom for this module's artifacts -->
 			<dependency>
 				<groupId>org.jboss.seam.mail</groupId>
 				<artifactId>seam-mail-core-api</artifactId>
 				<version>${project.version}</version>
-            <scope>compile</scope>
+				<scope>compile</scope>
 			</dependency>
 
 			<dependency>
 				<groupId>org.jboss.seam.mail</groupId>
+				<artifactId>seam-mail-freemarker-api</artifactId>
+				<version>${project.version}</version>
+				<scope>compile</scope>
+			</dependency>
+			
+			<dependency>
+				<groupId>org.jboss.seam.mail</groupId>
 				<artifactId>seam-mail-velocity-api</artifactId>
 				<version>${project.version}</version>
-            <scope>compile</scope>
+				<scope>compile</scope>
 			</dependency>
 
 			<dependency>
 				<groupId>org.jboss.seam.mail</groupId>
 				<artifactId>seam-mail-core-impl</artifactId>
 				<version>${project.version}</version>
-            <scope>runtime</scope>
+				<scope>runtime</scope>
+			</dependency>
+
+			<dependency>
+				<groupId>org.jboss.seam.mail</groupId>
+				<artifactId>seam-mail-freemarker-impl</artifactId>
+				<version>${project.version}</version>
+				<scope>runtime</scope>
 			</dependency>
 
 			<dependency>
 				<groupId>org.jboss.seam.mail</groupId>
 				<artifactId>seam-mail-velocity-impl</artifactId>
 				<version>${project.version}</version>
-            <scope>runtime</scope>
+				<scope>runtime</scope>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
@@ -164,25 +180,25 @@
 		<url>http://github.com/seam/mail</url>
 	</scm>
 
-   <issueManagement>
-      <system>JIRA</system>
-      <url>http://issues.jboss.org/browse/SEAMMAIL</url>
-   </issueManagement>
+	<issueManagement>
+		<system>JIRA</system>
+		<url>http://issues.jboss.org/browse/SEAMMAIL</url>
+	</issueManagement>
 
-   <ciManagement>
-      <system>Hudson</system>
-      <url>http://hudson.jboss.org/hudson/view/Seam/job/Seam-3.X-mail-CI</url>
-   </ciManagement>
+	<ciManagement>
+		<system>Hudson</system>
+		<url>http://hudson.jboss.org/hudson/view/Seam/job/Seam-3.X-mail-CI</url>
+	</ciManagement>
 
-   <developers>
-      <developer>
-         <name>Cody Lerum</name>
-         <url>http://community.jboss.org/people/clerum</url>
-         <timezone>MST</timezone>
-         <roles>
-            <role>Project Lead</role>
-         </roles>
-      </developer>
-   </developers>
+	<developers>
+		<developer>
+			<name>Cody Lerum</name>
+			<url>http://community.jboss.org/people/clerum</url>
+			<timezone>MST</timezone>
+			<roles>
+				<role>Project Lead</role>
+			</roles>
+		</developer>
+	</developers>
 
 </project>

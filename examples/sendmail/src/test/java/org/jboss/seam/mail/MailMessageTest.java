@@ -33,8 +33,8 @@ import junit.framework.Assert;
 import org.jboss.arquillian.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.seam.mail.api.MailMessage;
-import org.jboss.seam.mail.attachments.ClassPathEmailAttachment;
-import org.jboss.seam.mail.attachments.URLEmailAttachment;
+import org.jboss.seam.mail.attachments.InputStreamAttachment;
+import org.jboss.seam.mail.attachments.URLAttachment;
 import org.jboss.seam.mail.core.EmailMessage;
 import org.jboss.seam.mail.core.InvalidAddressException;
 import org.jboss.seam.mail.core.MailConfig;
@@ -45,6 +45,7 @@ import org.jboss.seam.mail.core.enumurations.ContentDisposition;
 import org.jboss.seam.mail.core.enumurations.MessagePriority;
 import org.jboss.seam.mail.example.Person;
 import org.jboss.seam.mail.util.MavenArtifactResolver;
+import org.jboss.seam.solder.resourceLoader.ResourceProvider;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
@@ -63,7 +64,13 @@ public class MailMessageTest
    @Deployment
    public static Archive<?> createTestArchive()
    {
-      Archive<?> ar = ShrinkWrap.create(WebArchive.class, "test.war").addResource("template.text.velocity", "WEB-INF/classes/template.text.velocity").addPackages(true, MailMessageTest.class.getPackage()).addLibraries(MavenArtifactResolver.resolve("org.jboss.seam.solder:seam-solder:3.0.0.Beta4"), MavenArtifactResolver.resolve("org.subethamail:subethasmtp:3.1.4"), MavenArtifactResolver.resolve("org.apache.velocity:velocity:1.6.4")).addWebResource(EmptyAsset.INSTANCE, "beans.xml");
+      Archive<?> ar = ShrinkWrap.create(WebArchive.class, "test.war")
+      .addResource("template.text.velocity", "WEB-INF/classes/template.text.velocity")
+      .addPackages(true, MailMessageTest.class.getPackage())
+      .addLibraries(MavenArtifactResolver.resolve("org.jboss.seam.solder:seam-solder:3.0.0.Beta4"),
+            MavenArtifactResolver.resolve("org.subethamail:subethasmtp:3.1.4"), 
+            MavenArtifactResolver.resolve("org.apache.velocity:velocity:1.6.4"))
+      .addWebResource(EmptyAsset.INSTANCE, "beans.xml");
       return ar;
    }
 
@@ -72,6 +79,9 @@ public class MailMessageTest
 
    @Inject
    private Instance<Session> session;
+   
+   @Inject 
+   private ResourceProvider resourceProvider;
 
    @Inject
    private MailConfig mailConfig;
@@ -173,7 +183,7 @@ public class MailMessageTest
          .subject(subject)
          .htmlBody(htmlBody)
          .importance(MessagePriority.HIGH)
-         .addAttachment(new URLEmailAttachment("http://www.seamframework.org/themes/sfwkorg/img/seam_icon_large.png", "seamLogo.png", ContentDisposition.INLINE)).send(session.get());
+         .addAttachment(new URLAttachment("http://www.seamframework.org/themes/sfwkorg/img/seam_icon_large.png", "seamLogo.png", ContentDisposition.INLINE)).send(session.get());
       }
       finally
       {
@@ -237,8 +247,8 @@ public class MailMessageTest
          .importance(MessagePriority.LOW)
          .deliveryReceipt(fromAddress)
          .readReceipt("seam.test")
-         .addAttachment(new ClassPathEmailAttachment("template.text.velocity", "text/plain", ContentDisposition.ATTACHMENT))
-         .addAttachment(new URLEmailAttachment("http://www.seamframework.org/themes/sfwkorg/img/seam_icon_large.png", "seamLogo.png", ContentDisposition.INLINE))
+         .addAttachment(new InputStreamAttachment(resourceProvider.loadResourceStream("template.text.velocity"), "template.text.velocity", "text/plain", ContentDisposition.ATTACHMENT))
+         .addAttachment(new URLAttachment("http://www.seamframework.org/themes/sfwkorg/img/seam_icon_large.png", "seamLogo.png", ContentDisposition.INLINE))
          .send(session.get());
       }
       finally

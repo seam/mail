@@ -25,13 +25,14 @@ import javax.inject.Inject;
 import javax.mail.Session;
 
 import org.jboss.seam.mail.api.MailMessage;
-import org.jboss.seam.mail.attachments.ClassPathEmailAttachment;
-import org.jboss.seam.mail.attachments.URLEmailAttachment;
+import org.jboss.seam.mail.attachments.InputStreamAttachment;
+import org.jboss.seam.mail.attachments.URLAttachment;
 import org.jboss.seam.mail.core.enumurations.ContentDisposition;
 import org.jboss.seam.mail.core.enumurations.MessagePriority;
-import org.jboss.seam.mail.templating.ClassPathTemplate;
 import org.jboss.seam.mail.templating.FreeMarkerMailMessage;
+import org.jboss.seam.mail.templating.InputStreamTemplate;
 import org.jboss.seam.mail.templating.VelocityMailMessage;
+import org.jboss.seam.solder.resourceLoader.ResourceProvider;
 /**
  * 
  * @author Cody Lerum
@@ -50,6 +51,9 @@ public class SendMail
    
    @Inject
    private Instance<FreeMarkerMailMessage> freeMarkerMailMessage;
+   
+   @Inject
+   private ResourceProvider resourceProvider;
    
    @Inject
    private Instance<Session> session;
@@ -73,11 +77,11 @@ public class SendMail
             .from("seam@test.test", "Seam Framework")
             .to(person)
             .subject("HTML Message from Seam Mail - " + java.util.UUID.randomUUID().toString())
-            .bodyHtml(new ClassPathTemplate("template.html.freemarker"))
+            .bodyHtml(new InputStreamTemplate(resourceProvider.loadResourceStream("template.html.freemarker")))
             .put("person", person)
             .put("version", "Seam 3")
             .importance(MessagePriority.HIGH)
-            .addAttachment(new URLEmailAttachment("http://www.seamframework.org/themes/sfwkorg/img/seam_icon_large.png", "seamLogo.png", ContentDisposition.INLINE))
+            .addAttachment(new URLAttachment("http://www.seamframework.org/themes/sfwkorg/img/seam_icon_large.png", "seamLogo.png", ContentDisposition.INLINE))
             .send(session.get());
    }
 
@@ -89,12 +93,12 @@ public class SendMail
             .subject("HTML+Text Message from Seam Mail - " + java.util.UUID.randomUUID().toString())
             .put("person", person)
             .put("version", "Seam 3")
-            .bodyHtmlTextAlt(new ClassPathTemplate("template.html.freemarker"), new ClassPathTemplate("template.text.freemarker"))
+            .bodyHtmlTextAlt(new InputStreamTemplate(resourceProvider.loadResourceStream("template.html.freemarker")), new InputStreamTemplate(resourceProvider.loadResourceStream("template.text.freemarker")))
             .importance(MessagePriority.LOW)
             .deliveryReceipt("seam@jboss.org")
             .readReceipt("seam@jboss.org")
-            .addAttachment(new ClassPathEmailAttachment("template.html.freemarker", "text/html", ContentDisposition.ATTACHMENT))
-            .addAttachment(new URLEmailAttachment("http://www.seamframework.org/themes/sfwkorg/img/seam_icon_large.png", "seamLogo.png", ContentDisposition.INLINE))
+            .addAttachment(new InputStreamAttachment(resourceProvider.loadResourceStream("template.html.freemarker"),"template.html.freemarker", "text/html", ContentDisposition.ATTACHMENT))
+            .addAttachment(new URLAttachment("http://www.seamframework.org/themes/sfwkorg/img/seam_icon_large.png", "seamLogo.png", ContentDisposition.INLINE))
             .send(session.get());
    }
 
@@ -104,10 +108,10 @@ public class SendMail
             .from("seam@test.test", "Seam Framework")
             .to(person)
             .subject("HTML Message from Seam Mail - " + java.util.UUID.randomUUID().toString())
-            .bodyHtml(new ClassPathTemplate("template.html.velocity"))
+            .bodyHtml(new InputStreamTemplate(resourceProvider.loadResourceStream("template.html.velocity")))
             .put("version", "Seam 3")
             .importance(MessagePriority.HIGH)
-            .addAttachment(new URLEmailAttachment("http://www.seamframework.org/themes/sfwkorg/img/seam_icon_large.png", "seamLogo.png", ContentDisposition.INLINE))
+            .addAttachment(new URLAttachment("http://www.seamframework.org/themes/sfwkorg/img/seam_icon_large.png", "seamLogo.png", ContentDisposition.INLINE))
             .send(session.get());
    }
 
@@ -118,12 +122,12 @@ public class SendMail
             .to(person.getEmail(), person.getName())
             .subject("HTML+Text Message from Seam Mail - " + java.util.UUID.randomUUID().toString())
             .put("version", "Seam 3")
-            .bodyHtmlTextAlt(new ClassPathTemplate("template.html.velocity"), new ClassPathTemplate("template.text.velocity"))
+            .bodyHtmlTextAlt(new InputStreamTemplate(resourceProvider.loadResourceStream("template.html.velocity")), new InputStreamTemplate(resourceProvider.loadResourceStream("template.text.velocity")))
             .importance(MessagePriority.LOW)
             .deliveryReceipt("seam@jboss.org")
             .readReceipt("seam@jboss.org")
-            .addAttachment(new ClassPathEmailAttachment("template.html.velocity", "text/html", ContentDisposition.ATTACHMENT))
-            .addAttachment(new URLEmailAttachment("http://www.seamframework.org/themes/sfwkorg/img/seam_icon_large.png", "seamLogo.png", ContentDisposition.INLINE))
+            .addAttachment(new InputStreamAttachment(resourceProvider.loadResourceStream("template.html.velocity"),"template.html.velocity", "text/html", ContentDisposition.ATTACHMENT))
+            .addAttachment(new URLAttachment("http://www.seamframework.org/themes/sfwkorg/img/seam_icon_large.png", "seamLogo.png", ContentDisposition.INLINE))
             .send(session.get());
    }
 }

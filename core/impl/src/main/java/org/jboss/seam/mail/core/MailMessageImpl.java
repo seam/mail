@@ -25,7 +25,7 @@ import javax.mail.Session;
 import javax.mail.internet.InternetAddress;
 
 import org.jboss.seam.mail.api.MailMessage;
-import org.jboss.seam.mail.attachments.BaseEmailAttachment;
+import org.jboss.seam.mail.attachments.BaseAttachment;
 import org.jboss.seam.mail.core.enumurations.ContentDisposition;
 import org.jboss.seam.mail.core.enumurations.ContentType;
 import org.jboss.seam.mail.core.enumurations.EmailMessageType;
@@ -278,7 +278,7 @@ public class MailMessageImpl implements MailMessage
    {
       emailMessage.setType(EmailMessageType.INVITE_ICAL);
       emailMessage.setHtmlBody(html);
-      emailMessage.addAttachment(new BaseEmailAttachment(null, "text/calendar;method=CANCEL", ContentDisposition.INLINE, bytes, "urn:content-classes:calendarmessage"));
+      emailMessage.addAttachment(new BaseAttachment(null, "text/calendar;method=CANCEL", ContentDisposition.INLINE, bytes, "urn:content-classes:calendarmessage"));
       return this;
    }
 

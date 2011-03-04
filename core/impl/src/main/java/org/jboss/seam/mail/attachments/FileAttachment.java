@@ -1,11 +1,12 @@
-package org.jboss.seam.mail.core;
+package org.jboss.seam.mail.attachments;
 
 import java.io.File;
 import java.io.IOException;
 
 import javax.activation.FileDataSource;
 
-import org.jboss.seam.mail.attachments.BaseAttachment;
+import org.jboss.seam.mail.core.AttachmentException;
+import org.jboss.seam.mail.core.Header;
 import org.jboss.seam.mail.core.enumurations.ContentDisposition;
 
 import com.google.common.io.Files;
@@ -15,9 +16,9 @@ import com.google.common.io.Files;
  * @author Cody Lerum
  * 
  */
-public class FileEmailAttachment extends BaseAttachment
+public class FileAttachment extends BaseAttachment
 {
-   public FileEmailAttachment(File file, ContentDisposition contentDisposition)
+   public FileAttachment(File file, ContentDisposition contentDisposition)
    {
       super();
 
@@ -36,7 +37,7 @@ public class FileEmailAttachment extends BaseAttachment
       }
    }
 
-   public FileEmailAttachment(File file, ContentDisposition contentDisposition, String contentClass)
+   public FileAttachment(File file, ContentDisposition contentDisposition, String contentClass)
    {
       this(file, contentDisposition);
       super.addHeader(new Header("Content-Class", contentClass));

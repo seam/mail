@@ -15,35 +15,41 @@
  * limitations under the License.
  */
 
-package org.jboss.seam.mail.templating;
+package org.jboss.seam.mail.util;
 
-import java.io.InputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 
-import org.jboss.seam.mail.core.MailTemplate;
+import javax.mail.BodyPart;
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMultipart;
+
+import com.google.common.io.CharStreams;
 
 /**
  * 
  * @author Cody Lerum
  * 
  */
-public class InputStreamMailTemplate implements MailTemplate
+public class MailTestUtil
 {
-   private String templateName;
-   private InputStream inputStream;
-
-   public InputStreamMailTemplate(InputStream inputStream, String templateName)
+   public static String getAddressHeader(String address)
    {
-      this.templateName = templateName;
-      this.inputStream = inputStream;
+      return address;
    }
 
-   public String getTemplateName()
+   public static String getAddressHeader(String name, String address)
    {
-      return templateName;
+      return name + " <" + address + ">";
    }
 
-   public InputStream getInputStream()
+   public static String getStringContent(MimeMultipart mmp, int index) throws IOException, MessagingException
    {
-      return inputStream;
+      return getStringContent(mmp.getBodyPart(index));
+   }
+
+   public static String getStringContent(BodyPart bodyPart) throws IOException, MessagingException
+   {
+      return CharStreams.toString(new InputStreamReader(bodyPart.getInputStream()));
    }
 }

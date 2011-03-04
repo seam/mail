@@ -14,9 +14,9 @@ import com.google.common.io.ByteStreams;
  * @author Cody Lerum
  * 
  */
-public class InputStreamEmailAttachment extends BaseEmailAttachment
+public class InputStreamAttachment extends BaseAttachment
 {
-   public InputStreamEmailAttachment(InputStream inputStream, String fileName, String mimeType, ContentDisposition contentDisposition)
+   public InputStreamAttachment(InputStream inputStream, String fileName, String mimeType, ContentDisposition contentDisposition)
    {
       super();
 
@@ -33,7 +33,7 @@ public class InputStreamEmailAttachment extends BaseEmailAttachment
       }
    }
 
-   public InputStreamEmailAttachment(InputStream inputStream, String fileName, String mimeType, ContentDisposition contentDisposition, String contentClass)
+   public InputStreamAttachment(InputStream inputStream, String fileName, String mimeType, ContentDisposition contentDisposition, String contentClass)
    {
       this(inputStream, fileName, mimeType, contentDisposition);
       super.addHeader(new Header("Content-Class", contentClass));

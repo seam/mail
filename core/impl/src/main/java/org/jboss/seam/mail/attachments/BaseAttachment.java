@@ -31,7 +31,7 @@ import org.jboss.seam.solder.beanManager.BeanManagerAware;
  * @author Cody Lerum
  * 
  */
-public class BaseEmailAttachment extends BeanManagerAware implements EmailAttachment 
+public class BaseAttachment extends BeanManagerAware implements EmailAttachment 
 {
    private String contentId;
    private String fileName;
@@ -40,7 +40,7 @@ public class BaseEmailAttachment extends BeanManagerAware implements EmailAttach
    private Collection<Header> headers = new ArrayList<Header>();
    private byte[] bytes;
 
-   public BaseEmailAttachment(String fileName, String mimeType, ContentDisposition contentDisposition, byte[] bytes)
+   public BaseAttachment(String fileName, String mimeType, ContentDisposition contentDisposition, byte[] bytes)
    {
       this();
       this.fileName = fileName;
@@ -49,13 +49,13 @@ public class BaseEmailAttachment extends BeanManagerAware implements EmailAttach
       this.bytes = bytes;
    }
    
-   public BaseEmailAttachment(String fileName, String mimeType, ContentDisposition contentDisposition, byte[] bytes, String contentClass)
+   public BaseAttachment(String fileName, String mimeType, ContentDisposition contentDisposition, byte[] bytes, String contentClass)
    {
       this(fileName, mimeType, contentDisposition, bytes);
       this.addHeader(new Header("Content-Class", contentClass));
    }
 
-   public BaseEmailAttachment()
+   public BaseAttachment()
    {
       this.contentId = UUID.randomUUID().toString();
    }

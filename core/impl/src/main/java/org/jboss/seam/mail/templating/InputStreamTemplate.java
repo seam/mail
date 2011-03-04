@@ -19,45 +19,37 @@ package org.jboss.seam.mail.templating;
 
 import java.io.InputStream;
 
-import javax.enterprise.inject.spi.Bean;
-import javax.enterprise.inject.spi.BeanManager;
-
 import org.jboss.seam.mail.core.MailTemplate;
-import org.jboss.seam.solder.beanManager.BeanManagerAware;
-import org.jboss.seam.solder.resourceLoader.ResourceProvider;
 
 /**
  * 
  * @author Cody Lerum
  * 
  */
-public class ClassPathTemplate extends BeanManagerAware implements MailTemplate
+public class InputStreamTemplate implements MailTemplate
 {
    private String templateName;
-   private String fileName;
+   private InputStream inputStream;
 
-   public ClassPathTemplate(String fileName)
-   {
-      this.templateName = fileName;
-      this.fileName = fileName;
-   }
-
-   public ClassPathTemplate(String fileName, String templateName)
+   public InputStreamTemplate(InputStream inputStream, String templateName)
    {
       this.templateName = templateName;
-      this.fileName = fileName;
+      this.inputStream = inputStream;
    }
-
-   public InputStream getInputStream()
+   
+   public InputStreamTemplate(InputStream inputStream)
    {
-      BeanManager bm = getBeanManager();
-      Bean<?> bean = bm.resolve(bm.getBeans(ResourceProvider.class));
-      ResourceProvider resourceProvider = (ResourceProvider) bm.getReference(bean, bean.getBeanClass(), bm.createCreationalContext(bean));
-      return resourceProvider.loadResourceStream(fileName);
+      this.templateName = "default";
+      this.inputStream = inputStream;
    }
 
    public String getTemplateName()
    {
       return templateName;
+   }
+
+   public InputStream getInputStream()
+   {
+      return inputStream;
    }
 }

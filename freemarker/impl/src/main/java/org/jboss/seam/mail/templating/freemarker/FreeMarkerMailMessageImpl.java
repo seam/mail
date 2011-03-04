@@ -29,7 +29,7 @@ import javax.inject.Inject;
 import javax.mail.Session;
 import javax.mail.internet.InternetAddress;
 
-import org.jboss.seam.mail.attachments.BaseEmailAttachment;
+import org.jboss.seam.mail.attachments.BaseAttachment;
 import org.jboss.seam.mail.core.EmailAttachment;
 import org.jboss.seam.mail.core.EmailContact;
 import org.jboss.seam.mail.core.EmailMessage;
@@ -303,7 +303,7 @@ public class FreeMarkerMailMessageImpl implements FreeMarkerMailMessage
    {
       emailMessage.setType(EmailMessageType.INVITE_ICAL);
       emailMessage.setHtmlBody(html);
-      emailMessage.addAttachment(new BaseEmailAttachment(null, "text/calendar;method=CANCEL", ContentDisposition.INLINE, bytes, "urn:content-classes:calendarmessage"));
+      emailMessage.addAttachment(new BaseAttachment(null, "text/calendar;method=CANCEL", ContentDisposition.INLINE, bytes, "urn:content-classes:calendarmessage"));
       return this;
    }
 

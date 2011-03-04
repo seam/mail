@@ -33,8 +33,8 @@ import junit.framework.Assert;
 
 import org.jboss.arquillian.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
-import org.jboss.seam.mail.attachments.ClassPathEmailAttachment;
-import org.jboss.seam.mail.attachments.URLEmailAttachment;
+import org.jboss.seam.mail.attachments.InputStreamAttachment;
+import org.jboss.seam.mail.attachments.URLAttachment;
 import org.jboss.seam.mail.core.EmailMessage;
 import org.jboss.seam.mail.core.MailConfig;
 import org.jboss.seam.mail.core.MailTestUtil;
@@ -43,12 +43,13 @@ import org.jboss.seam.mail.core.enumurations.ContentDisposition;
 import org.jboss.seam.mail.core.enumurations.MessagePriority;
 import org.jboss.seam.mail.example.Gmail;
 import org.jboss.seam.mail.example.Person;
-import org.jboss.seam.mail.templating.ClassPathTemplate;
 import org.jboss.seam.mail.templating.FreeMarkerMailMessage;
+import org.jboss.seam.mail.templating.InputStreamTemplate;
 import org.jboss.seam.mail.templating.TextTemplate;
 import org.jboss.seam.mail.util.EmailAttachmentUtil;
 import org.jboss.seam.mail.util.MavenArtifactResolver;
 import org.jboss.seam.mail.util.SMTPAuthenticator;
+import org.jboss.seam.solder.resourceLoader.ResourceProvider;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
@@ -83,6 +84,9 @@ public class FreeMarkerMailMessageTest
    @Inject
    private Instance<FreeMarkerMailMessage> freeMarkerMailMessage;
 
+   @Inject
+   private ResourceProvider resourceProvider;
+   
    @Inject
    private MailConfig mailConfig;
    
@@ -128,7 +132,7 @@ public class FreeMarkerMailMessageTest
             .replyTo(replyToAddress)
             .to(toAddress, toName)
             .subject(new TextTemplate(subject))
-            .bodyText(new ClassPathTemplate("template.text.freemarker"))
+            .bodyText(new InputStreamTemplate(resourceProvider.loadResourceStream("template.text.freemarker")))
             .put("person", person)
             .put("version", version)
             .importance(MessagePriority.HIGH)
@@ -185,11 +189,11 @@ public class FreeMarkerMailMessageTest
             .replyTo(replyToAddress, replyToName)
             .to(person)
             .subject(subject)
-            .bodyHtml(new ClassPathTemplate("template.html.freemarker"))
+            .bodyHtml(new InputStreamTemplate(resourceProvider.loadResourceStream("template.html.freemarker")))
             .put("person", person)
             .put("version", version)
             .importance(MessagePriority.HIGH)
-            .addAttachment(new URLEmailAttachment("http://www.seamframework.org/themes/sfwkorg/img/seam_icon_large.png", "seamLogo.png", ContentDisposition.INLINE))
+            .addAttachment(new URLAttachment("http://www.seamframework.org/themes/sfwkorg/img/seam_icon_large.png", "seamLogo.png", ContentDisposition.INLINE))
             .send(session.get());
       }
       finally
@@ -252,12 +256,12 @@ public class FreeMarkerMailMessageTest
             .subject(subject)
             .put("person", person)
             .put("version", version)
-            .bodyHtmlTextAlt(new ClassPathTemplate("template.html.freemarker"), new ClassPathTemplate("template.text.freemarker"))
+            .bodyHtmlTextAlt(new InputStreamTemplate(resourceProvider.loadResourceStream("template.html.freemarker")), new InputStreamTemplate(resourceProvider.loadResourceStream("template.text.freemarker")))
             .importance(MessagePriority.LOW)
             .deliveryReceipt(fromAddress)
             .readReceipt("seam.test")
-            .addAttachment(new ClassPathEmailAttachment("template.html.freemarker", "text/html", ContentDisposition.ATTACHMENT))
-            .addAttachment(new URLEmailAttachment("http://www.seamframework.org/themes/sfwkorg/img/seam_icon_large.png", "seamLogo.png", ContentDisposition.INLINE))
+            .addAttachment(new InputStreamAttachment(resourceProvider.loadResourceStream("template.html.freemarker"), "template.html.freemarker", "text/html", ContentDisposition.ATTACHMENT))
+            .addAttachment(new URLAttachment("http://www.seamframework.org/themes/sfwkorg/img/seam_icon_large.png", "seamLogo.png", ContentDisposition.INLINE))
             .send();
       }
       finally
@@ -329,12 +333,12 @@ public class FreeMarkerMailMessageTest
             .subject(subject)
             .put("person", person)
             .put("version", "Seam 3")
-            .bodyHtmlTextAlt(new ClassPathTemplate("template.html.freemarker"), new ClassPathTemplate("template.text.freemarker"))
+            .bodyHtmlTextAlt(new InputStreamTemplate(resourceProvider.loadResourceStream("template.html.freemarker")), new InputStreamTemplate(resourceProvider.loadResourceStream("template.text.freemarker")))
             .importance(MessagePriority.LOW)
             .deliveryReceipt(fromAddress)
             .readReceipt("seam.test")
-            .addAttachment(new ClassPathEmailAttachment("template.html.freemarker", "text/html", ContentDisposition.ATTACHMENT))
-            .addAttachment(new URLEmailAttachment("http://www.seamframework.org/themes/sfwkorg/img/seam_icon_large.png", "seamLogo.png", ContentDisposition.INLINE))
+            .addAttachment(new InputStreamAttachment(resourceProvider.loadResourceStream("template.html.freemarker"), "template.html.freemarker", "text/html", ContentDisposition.ATTACHMENT))
+            .addAttachment(new URLAttachment("http://www.seamframework.org/themes/sfwkorg/img/seam_icon_large.png", "seamLogo.png", ContentDisposition.INLINE))
             .send(gmailSession);
       }
       finally
@@ -373,7 +377,7 @@ public class FreeMarkerMailMessageTest
             .replyTo(replyToAddress)
             .to(toAddress, toName)
             .subject(new TextTemplate(subject))
-            .bodyText(new ClassPathTemplate("template.text.freemarker"))
+            .bodyText(new InputStreamTemplate(resourceProvider.loadResourceStream("template.text.freemarker")))
             .put("person", person)
             .put("version", version)
             .importance(MessagePriority.HIGH)

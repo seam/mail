@@ -33,11 +33,11 @@ import junit.framework.Assert;
 
 import org.jboss.arquillian.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
+import org.jboss.seam.mail.api.MailMessage;
 import org.jboss.seam.mail.attachments.InputStreamAttachment;
 import org.jboss.seam.mail.attachments.URLAttachment;
 import org.jboss.seam.mail.core.EmailMessage;
 import org.jboss.seam.mail.core.MailConfig;
-import org.jboss.seam.mail.core.MailTestUtil;
 import org.jboss.seam.mail.core.SendFailedException;
 import org.jboss.seam.mail.core.enumurations.ContentDisposition;
 import org.jboss.seam.mail.core.enumurations.MessagePriority;
@@ -45,8 +45,10 @@ import org.jboss.seam.mail.example.Gmail;
 import org.jboss.seam.mail.example.Person;
 import org.jboss.seam.mail.templating.InputStreamTemplate;
 import org.jboss.seam.mail.templating.TextTemplate;
-import org.jboss.seam.mail.templating.VelocityMailMessage;
+import org.jboss.seam.mail.templating.velocity.CDIVelocityContext;
+import org.jboss.seam.mail.templating.velocity.VelocityTemplate;
 import org.jboss.seam.mail.util.EmailAttachmentUtil;
+import org.jboss.seam.mail.util.MailTestUtil;
 import org.jboss.seam.mail.util.MavenArtifactResolver;
 import org.jboss.seam.mail.util.SMTPAuthenticator;
 import org.jboss.seam.solder.resourceLoader.ResourceProvider;
@@ -83,10 +85,13 @@ public class VelocityMailMessageTest
    }
 
    @Inject
-   private Instance<VelocityMailMessage> velocityMailMessage;
+   private Instance<MailMessage> mailMessage;
 
    @Inject
    private ResourceProvider resourceProvider;
+   
+   @Inject
+   private Instance<CDIVelocityContext> cDIVelocityContext;
    
    @Inject
    private MailConfig mailConfig;
@@ -128,12 +133,12 @@ public class VelocityMailMessageTest
          person.setName(toName);
          person.setEmail(toAddress);
    
-         velocityMailMessage.get()
+         mailMessage.get()
             .from(fromAddress, fromName)
             .replyTo(replyToAddress)
             .to(toAddress, toName)
-            .subject(new TextTemplate(subject))
-            .bodyText(new InputStreamTemplate(resourceProvider.loadResourceStream("template.text.velocity")))
+            .subject(new VelocityTemplate(new TextTemplate(subject), cDIVelocityContext.get()))
+            .bodyText(new VelocityTemplate(new InputStreamTemplate(resourceProvider.loadResourceStream("template.text.velocity")), cDIVelocityContext.get()))
             .put("version", version)
             .importance(MessagePriority.HIGH)
             .send(session.get());
@@ -184,12 +189,12 @@ public class VelocityMailMessageTest
          person.setName(toName);
          person.setEmail(toAddress);
    
-         emailMessage = velocityMailMessage.get()
+         emailMessage = mailMessage.get()
             .from(fromAddress, fromName)
             .replyTo(replyToAddress, replyToName)
             .to(person)
             .subject(subject)
-            .bodyHtml(new InputStreamTemplate(resourceProvider.loadResourceStream("template.html.velocity")))
+            .bodyHtml(new VelocityTemplate(new InputStreamTemplate(resourceProvider.loadResourceStream("template.html.velocity")), cDIVelocityContext.get()))
             .put("version", version)
             .importance(MessagePriority.HIGH)
             .addAttachment(new URLAttachment("http://www.seamframework.org/themes/sfwkorg/img/seam_icon_large.png", "seamLogo.png", ContentDisposition.INLINE))
@@ -249,12 +254,14 @@ public class VelocityMailMessageTest
          person.setName(toName);
          person.setEmail(toAddress);
    
-         emailMessage = velocityMailMessage.get()
+         emailMessage = mailMessage.get()
             .from(fromAddress, fromName)
             .to(person.getEmail(), person.getName())
             .subject(subject)
             .put("version", version)
-            .bodyHtmlTextAlt(new InputStreamTemplate(resourceProvider.loadResourceStream("template.html.velocity")), new InputStreamTemplate(resourceProvider.loadResourceStream("template.text.velocity")))
+            .bodyHtmlTextAlt(
+                  new VelocityTemplate(new InputStreamTemplate(resourceProvider.loadResourceStream("template.html.velocity")), cDIVelocityContext.get()), 
+                  new VelocityTemplate(new InputStreamTemplate(resourceProvider.loadResourceStream("template.text.velocity")), cDIVelocityContext.get()))
             .importance(MessagePriority.LOW)
             .deliveryReceipt(fromAddress)
             .readReceipt("seam.test")
@@ -325,12 +332,14 @@ public class VelocityMailMessageTest
          person.setName(toName);
          person.setEmail(toAddress);
    
-         velocityMailMessage.get()
+         mailMessage.get()
             .from(fromAddress, fromName)
             .to(person.getEmail(), person.getName())
             .subject(subject)
             .put("version", "Seam 3")
-            .bodyHtmlTextAlt(new InputStreamTemplate(resourceProvider.loadResourceStream("template.html.velocity")), new InputStreamTemplate(resourceProvider.loadResourceStream("template.text.velocity")))
+            .bodyHtmlTextAlt(
+                  new VelocityTemplate(new InputStreamTemplate(resourceProvider.loadResourceStream("template.html.velocity")), cDIVelocityContext.get()), 
+                  new VelocityTemplate(new InputStreamTemplate(resourceProvider.loadResourceStream("template.text.velocity")), cDIVelocityContext.get()))
             .importance(MessagePriority.LOW)
             .deliveryReceipt(fromAddress)
             .readReceipt("seam.test")
@@ -369,12 +378,12 @@ public class VelocityMailMessageTest
          person.setName(toName);
          person.setEmail(toAddress);
    
-         velocityMailMessage.get()
+         mailMessage.get()
             .from(fromAddress, fromName)
             .replyTo(replyToAddress)
             .to(toAddress, toName)
-            .subject(new TextTemplate(subject))
-            .bodyText(new InputStreamTemplate(resourceProvider.loadResourceStream("template.text.velocity")))
+            .subject(new VelocityTemplate(new TextTemplate(subject), cDIVelocityContext.get()))
+            .bodyText(new VelocityTemplate(new InputStreamTemplate(resourceProvider.loadResourceStream("template.text.velocity")), cDIVelocityContext.get()))
             .put("version", version)
             .importance(MessagePriority.HIGH)
             .send(session.get());

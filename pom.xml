@@ -20,9 +20,7 @@
 	<modules>
 		<module>core/api</module>
 		<module>core/impl</module>
-		<module>freemarker/api</module>
 		<module>freemarker/impl</module>
-		<module>velocity/api</module>
 		<module>velocity/impl</module>
 		<module>examples/sendmail</module>
 
@@ -45,21 +43,7 @@
 				<version>${project.version}</version>
 				<scope>compile</scope>
 			</dependency>
-
-			<dependency>
-				<groupId>org.jboss.seam.mail</groupId>
-				<artifactId>seam-mail-freemarker-api</artifactId>
-				<version>${project.version}</version>
-				<scope>compile</scope>
-			</dependency>
 			
-			<dependency>
-				<groupId>org.jboss.seam.mail</groupId>
-				<artifactId>seam-mail-velocity-api</artifactId>
-				<version>${project.version}</version>
-				<scope>compile</scope>
-			</dependency>
-
 			<dependency>
 				<groupId>org.jboss.seam.mail</groupId>
 				<artifactId>seam-mail-core-impl</artifactId>

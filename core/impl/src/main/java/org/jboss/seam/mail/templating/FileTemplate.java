@@ -22,7 +22,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 
-import org.jboss.seam.mail.core.MailTemplate;
 import org.jboss.seam.mail.templating.TemplatingException;
 
 /**
@@ -32,7 +31,7 @@ import org.jboss.seam.mail.templating.TemplatingException;
  */
 public class FileTemplate implements MailTemplate
 {
-   private String templateName;
+   private String templateName;   
    private File file;
 
    public FileTemplate(File file)

@@ -33,20 +33,21 @@ import junit.framework.Assert;
 
 import org.jboss.arquillian.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
+import org.jboss.seam.mail.api.MailMessage;
 import org.jboss.seam.mail.attachments.InputStreamAttachment;
 import org.jboss.seam.mail.attachments.URLAttachment;
 import org.jboss.seam.mail.core.EmailMessage;
 import org.jboss.seam.mail.core.MailConfig;
-import org.jboss.seam.mail.core.MailTestUtil;
 import org.jboss.seam.mail.core.SendFailedException;
 import org.jboss.seam.mail.core.enumurations.ContentDisposition;
 import org.jboss.seam.mail.core.enumurations.MessagePriority;
 import org.jboss.seam.mail.example.Gmail;
 import org.jboss.seam.mail.example.Person;
-import org.jboss.seam.mail.templating.FreeMarkerMailMessage;
 import org.jboss.seam.mail.templating.InputStreamTemplate;
 import org.jboss.seam.mail.templating.TextTemplate;
+import org.jboss.seam.mail.templating.freemarker.FreeMarkerTemplate;
 import org.jboss.seam.mail.util.EmailAttachmentUtil;
+import org.jboss.seam.mail.util.MailTestUtil;
 import org.jboss.seam.mail.util.MavenArtifactResolver;
 import org.jboss.seam.mail.util.SMTPAuthenticator;
 import org.jboss.seam.solder.resourceLoader.ResourceProvider;
@@ -82,7 +83,7 @@ public class FreeMarkerMailMessageTest
    }
 
    @Inject
-   private Instance<FreeMarkerMailMessage> freeMarkerMailMessage;
+   private Instance<MailMessage> mailMessage;
 
    @Inject
    private ResourceProvider resourceProvider;
@@ -127,12 +128,12 @@ public class FreeMarkerMailMessageTest
          person.setName(toName);
          person.setEmail(toAddress);
    
-         freeMarkerMailMessage.get()
+         mailMessage.get()
             .from(fromAddress, fromName)
             .replyTo(replyToAddress)
             .to(toAddress, toName)
-            .subject(new TextTemplate(subject))
-            .bodyText(new InputStreamTemplate(resourceProvider.loadResourceStream("template.text.freemarker")))
+            .subject(new FreeMarkerTemplate(new TextTemplate(subject)))
+            .bodyText(new FreeMarkerTemplate(new InputStreamTemplate(resourceProvider.loadResourceStream("template.text.freemarker"))))
             .put("person", person)
             .put("version", version)
             .importance(MessagePriority.HIGH)
@@ -184,12 +185,12 @@ public class FreeMarkerMailMessageTest
          person.setName(toName);
          person.setEmail(toAddress);
    
-         emailMessage = freeMarkerMailMessage.get()
+         emailMessage = mailMessage.get()
             .from(fromAddress, fromName)
             .replyTo(replyToAddress, replyToName)
             .to(person)
             .subject(subject)
-            .bodyHtml(new InputStreamTemplate(resourceProvider.loadResourceStream("template.html.freemarker")))
+            .bodyHtml(new FreeMarkerTemplate(new InputStreamTemplate(resourceProvider.loadResourceStream("template.html.freemarker"))))
             .put("person", person)
             .put("version", version)
             .importance(MessagePriority.HIGH)
@@ -250,13 +251,15 @@ public class FreeMarkerMailMessageTest
          person.setName(toName);
          person.setEmail(toAddress);
    
-         emailMessage = freeMarkerMailMessage.get()
+         emailMessage = mailMessage.get()
             .from(fromAddress, fromName)
             .to(person.getEmail(), person.getName())
             .subject(subject)
             .put("person", person)
             .put("version", version)
-            .bodyHtmlTextAlt(new InputStreamTemplate(resourceProvider.loadResourceStream("template.html.freemarker")), new InputStreamTemplate(resourceProvider.loadResourceStream("template.text.freemarker")))
+            .bodyHtmlTextAlt(
+                  new FreeMarkerTemplate(new InputStreamTemplate(resourceProvider.loadResourceStream("template.html.freemarker"))), 
+                  new FreeMarkerTemplate(new InputStreamTemplate(resourceProvider.loadResourceStream("template.text.freemarker"))))
             .importance(MessagePriority.LOW)
             .deliveryReceipt(fromAddress)
             .readReceipt("seam.test")
@@ -327,13 +330,15 @@ public class FreeMarkerMailMessageTest
          person.setName(toName);
          person.setEmail(toAddress);
    
-         freeMarkerMailMessage.get()
+         mailMessage.get()
             .from(fromAddress, fromName)
             .to(person.getEmail(), person.getName())
             .subject(subject)
             .put("person", person)
             .put("version", "Seam 3")
-            .bodyHtmlTextAlt(new InputStreamTemplate(resourceProvider.loadResourceStream("template.html.freemarker")), new InputStreamTemplate(resourceProvider.loadResourceStream("template.text.freemarker")))
+            .bodyHtmlTextAlt(
+                  new FreeMarkerTemplate(new InputStreamTemplate(resourceProvider.loadResourceStream("template.html.freemarker"))), 
+                  new FreeMarkerTemplate(new InputStreamTemplate(resourceProvider.loadResourceStream("template.text.freemarker"))))
             .importance(MessagePriority.LOW)
             .deliveryReceipt(fromAddress)
             .readReceipt("seam.test")
@@ -372,12 +377,12 @@ public class FreeMarkerMailMessageTest
          person.setName(toName);
          person.setEmail(toAddress);
    
-         freeMarkerMailMessage.get()
+         mailMessage.get()
             .from(fromAddress, fromName)
             .replyTo(replyToAddress)
             .to(toAddress, toName)
-            .subject(new TextTemplate(subject))
-            .bodyText(new InputStreamTemplate(resourceProvider.loadResourceStream("template.text.freemarker")))
+            .subject(new FreeMarkerTemplate(new TextTemplate(subject)))
+            .bodyText(new FreeMarkerTemplate(new InputStreamTemplate(resourceProvider.loadResourceStream("template.text.freemarker"))))
             .put("person", person)
             .put("version", version)
             .importance(MessagePriority.HIGH)

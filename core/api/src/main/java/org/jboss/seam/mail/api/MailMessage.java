@@ -28,6 +28,8 @@ import org.jboss.seam.mail.core.EmailMessage;
 import org.jboss.seam.mail.core.InvalidAddressException;
 import org.jboss.seam.mail.core.SendFailedException;
 import org.jboss.seam.mail.core.enumurations.MessagePriority;
+import org.jboss.seam.mail.templating.MailTemplate;
+import org.jboss.seam.mail.templating.TemplateImpl;
 
 /**
  * Base interface for creating email messages.
@@ -371,4 +373,51 @@ public interface MailMessage
     */
    public EmailMessage send();
 
+   
+   //Templating Specific
+
+   /**
+    * Set the template to be used for the message subject
+    * 
+    * @param subject {@link MailTemplate} to use
+    * @throws TemplatingException
+    */
+   public MailMessage subject(TemplateImpl subject);
+
+   /**
+    * Sets the text body of the message to the plain text output of the given
+    * template
+    * 
+    * @param textBody {@link MailTemplate} to use
+    * @throws TemplatingException
+    */
+   public MailMessage bodyText(TemplateImpl textbody);
+
+   /**
+    * Sets the HTML body of the message to the HTML output of the given template
+    * 
+    * @param htmlBody {@link MailTemplate} to use
+    * @throws TemplatingException
+    */
+   public MailMessage bodyHtml(TemplateImpl htmlBody);
+
+   /**
+    * Sets the body of the message to a HTML body with a plain text alternative
+    * output of the given templates
+    * 
+    * @param htmlBody {@link MailTemplate} to use for HTML portion of
+    *           message
+    * @param textBody {@link MailTemplate} to use for Text alternative
+    *           portion of message
+    * @throws TemplatingException
+    */
+   public MailMessage bodyHtmlTextAlt(TemplateImpl htmlBody, TemplateImpl textbody);
+
+   /**
+    * Places a variable in the templating engines context  
+    * 
+    * @param name Reference name of the object
+    * @param value the Object being placed in the context
+    */
+   public MailMessage put(String name, Object value);
 }

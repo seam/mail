@@ -31,7 +31,7 @@ import org.jboss.logging.Logger;
  * @author Cody Lerum
  * 
  */
-public class SeamCDIVelocityContext extends AbstractContext
+public class CDIVelocityContext extends AbstractContext
 {
    @Inject
    private Logger log;
@@ -39,8 +39,7 @@ public class SeamCDIVelocityContext extends AbstractContext
    @Inject
    private BeanManager beanManager;
 
-   @Inject
-   public SeamCDIVelocityContext()
+   public CDIVelocityContext()
    {
       super();
    }

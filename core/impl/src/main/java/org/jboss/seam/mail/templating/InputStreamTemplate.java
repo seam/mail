@@ -19,7 +19,6 @@ package org.jboss.seam.mail.templating;
 
 import java.io.InputStream;
 
-import org.jboss.seam.mail.core.MailTemplate;
 
 /**
  * 

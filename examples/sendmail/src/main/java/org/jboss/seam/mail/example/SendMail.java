@@ -29,9 +29,10 @@ import org.jboss.seam.mail.attachments.InputStreamAttachment;
 import org.jboss.seam.mail.attachments.URLAttachment;
 import org.jboss.seam.mail.core.enumurations.ContentDisposition;
 import org.jboss.seam.mail.core.enumurations.MessagePriority;
-import org.jboss.seam.mail.templating.FreeMarkerMailMessage;
 import org.jboss.seam.mail.templating.InputStreamTemplate;
-import org.jboss.seam.mail.templating.VelocityMailMessage;
+import org.jboss.seam.mail.templating.freemarker.FreeMarkerTemplate;
+import org.jboss.seam.mail.templating.velocity.CDIVelocityContext;
+import org.jboss.seam.mail.templating.velocity.VelocityTemplate;
 import org.jboss.seam.solder.resourceLoader.ResourceProvider;
 /**
  * 
@@ -47,11 +48,8 @@ public class SendMail
    private Instance<MailMessage> mailMessage;
    
    @Inject
-   private Instance<VelocityMailMessage> velocityMailMessage;
-   
-   @Inject
-   private Instance<FreeMarkerMailMessage> freeMarkerMailMessage;
-   
+   private Instance<CDIVelocityContext> cDIVelocityContext;
+
    @Inject
    private ResourceProvider resourceProvider;
    
@@ -73,11 +71,11 @@ public class SendMail
    
    public void sendHTMLFreeMarker() throws MalformedURLException
    {      
-      freeMarkerMailMessage.get()
+      mailMessage.get()
             .from("seam@test.test", "Seam Framework")
             .to(person)
             .subject("HTML Message from Seam Mail - " + java.util.UUID.randomUUID().toString())
-            .bodyHtml(new InputStreamTemplate(resourceProvider.loadResourceStream("template.html.freemarker")))
+            .bodyHtml(new FreeMarkerTemplate(new InputStreamTemplate(resourceProvider.loadResourceStream("template.html.freemarker"))))
             .put("person", person)
             .put("version", "Seam 3")
             .importance(MessagePriority.HIGH)
@@ -87,13 +85,15 @@ public class SendMail
 
    public void sendHTMLwithAlternativeFreeMarker() throws MalformedURLException
    {
-      freeMarkerMailMessage.get()
+      mailMessage.get()
             .from("seam@test.test", "Seam Framework")
             .to(person.getEmail(), person.getName())
             .subject("HTML+Text Message from Seam Mail - " + java.util.UUID.randomUUID().toString())
             .put("person", person)
             .put("version", "Seam 3")
-            .bodyHtmlTextAlt(new InputStreamTemplate(resourceProvider.loadResourceStream("template.html.freemarker")), new InputStreamTemplate(resourceProvider.loadResourceStream("template.text.freemarker")))
+            .bodyHtmlTextAlt(
+                  new FreeMarkerTemplate(new InputStreamTemplate(resourceProvider.loadResourceStream("template.html.freemarker"))), 
+                  new FreeMarkerTemplate(new InputStreamTemplate(resourceProvider.loadResourceStream("template.text.freemarker"))))
             .importance(MessagePriority.LOW)
             .deliveryReceipt("seam@jboss.org")
             .readReceipt("seam@jboss.org")
@@ -104,11 +104,11 @@ public class SendMail
 
    public void sendHTMLVelocity() throws MalformedURLException
    {      
-      velocityMailMessage.get()
+      mailMessage.get()
             .from("seam@test.test", "Seam Framework")
             .to(person)
             .subject("HTML Message from Seam Mail - " + java.util.UUID.randomUUID().toString())
-            .bodyHtml(new InputStreamTemplate(resourceProvider.loadResourceStream("template.html.velocity")))
+            .bodyHtml(new VelocityTemplate(new InputStreamTemplate(resourceProvider.loadResourceStream("template.html.velocity")), cDIVelocityContext.get()))
             .put("version", "Seam 3")
             .importance(MessagePriority.HIGH)
             .addAttachment(new URLAttachment("http://www.seamframework.org/themes/sfwkorg/img/seam_icon_large.png", "seamLogo.png", ContentDisposition.INLINE))
@@ -117,12 +117,14 @@ public class SendMail
 
    public void sendHTMLwithAlternativeVelocity() throws MalformedURLException
    {
-      velocityMailMessage.get()
+      mailMessage.get()
             .from("seam@test.test", "Seam Framework")
             .to(person.getEmail(), person.getName())
             .subject("HTML+Text Message from Seam Mail - " + java.util.UUID.randomUUID().toString())
             .put("version", "Seam 3")
-            .bodyHtmlTextAlt(new InputStreamTemplate(resourceProvider.loadResourceStream("template.html.velocity")), new InputStreamTemplate(resourceProvider.loadResourceStream("template.text.velocity")))
+            .bodyHtmlTextAlt(
+                  new VelocityTemplate(new InputStreamTemplate(resourceProvider.loadResourceStream("template.html.velocity")), cDIVelocityContext.get()), 
+                  new VelocityTemplate(new InputStreamTemplate(resourceProvider.loadResourceStream("template.text.velocity")), cDIVelocityContext.get()))
             .importance(MessagePriority.LOW)
             .deliveryReceipt("seam@jboss.org")
             .readReceipt("seam@jboss.org")

@@ -18,6 +18,8 @@
 package org.jboss.seam.mail.core;
 
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
@@ -30,6 +32,10 @@ import org.jboss.seam.mail.core.enumurations.ContentDisposition;
 import org.jboss.seam.mail.core.enumurations.ContentType;
 import org.jboss.seam.mail.core.enumurations.EmailMessageType;
 import org.jboss.seam.mail.core.enumurations.MessagePriority;
+import org.jboss.seam.mail.templating.MailContext;
+import org.jboss.seam.mail.templating.TemplateImpl;
+import org.jboss.seam.mail.util.EmailAttachmentUtil;
+import org.jboss.seam.mail.util.MailUtility;
 
 /**
  * 
@@ -39,7 +45,13 @@ import org.jboss.seam.mail.core.enumurations.MessagePriority;
 public class MailMessageImpl implements MailMessage
 {
    private EmailMessage emailMessage;
-
+   
+   private TemplateImpl subjectTemplate;
+   private TemplateImpl textTemplate;
+   private TemplateImpl htmlTemplate;
+   private Map<String, Object> templateContext = new HashMap<String, Object>();
+   private boolean templatesMerged;
+   
    @Inject
    private Instance<Session> session;
 
@@ -283,6 +295,37 @@ public class MailMessageImpl implements MailMessage
    }
 
    // End Calendar
+   
+   public MailMessage subject(TemplateImpl subject)
+   {
+      subjectTemplate = subject;
+      return this;
+   }
+
+   public MailMessage bodyText(TemplateImpl textBody)
+   {
+      textTemplate = textBody;
+      return this;
+   }
+
+   public MailMessage bodyHtml(TemplateImpl htmlBody)
+   {
+      htmlTemplate = htmlBody;
+      return this;
+   }
+
+   public MailMessage bodyHtmlTextAlt(TemplateImpl htmlBody, TemplateImpl textBody)
+   {
+      bodyHtml(htmlBody);
+      bodyText(textBody);
+      return this;
+   }
+   
+   public MailMessage put(String key, Object value)
+   {
+      templateContext.put(key, value);
+      return this;
+   }
 
    public EmailMessage getEmailMessage()
    {
@@ -293,9 +336,38 @@ public class MailMessageImpl implements MailMessage
    {
       this.emailMessage = emailMessage;
    }
+   
+   public MailMessage mergeTemplates()
+   {
+      put("mailContext", new MailContext(EmailAttachmentUtil.getEmailAttachmentMap(emailMessage.getAttachments())));
+
+      if (subjectTemplate != null)
+      {
+         emailMessage.setSubject(subjectTemplate.merge(templateContext));
+      }
+
+      if (textTemplate != null)
+      {
+         emailMessage.setTextBody(textTemplate.merge(templateContext));
+      }
+
+      if (htmlTemplate != null)
+      {
+         emailMessage.setHtmlBody(htmlTemplate.merge(templateContext));
+      }
+      
+      templatesMerged = true;
+      
+      return this;  
+   }
 
    public EmailMessage send(Session session) throws SendFailedException
    {
+      if(!templatesMerged)
+      {
+         mergeTemplates();
+      }
+      
       MailUtility.send(emailMessage, session);
 
       return emailMessage;

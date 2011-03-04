@@ -39,6 +39,7 @@ import org.jboss.seam.mail.core.enumurations.ContentType;
 import org.jboss.seam.mail.core.enumurations.MailHeader;
 import org.jboss.seam.mail.core.enumurations.MessagePriority;
 import org.jboss.seam.mail.core.enumurations.RecipientType;
+import org.jboss.seam.mail.util.MailUtility;
 /**
  * 
  * @author Cody Lerum

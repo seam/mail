@@ -23,7 +23,7 @@ import javax.mail.Session;
 
 import org.jboss.logging.Logger;
 import org.jboss.seam.mail.core.MailConfig;
-import org.jboss.seam.mail.core.MailUtility;
+import org.jboss.seam.mail.util.MailUtility;
 
 /**
  * 

@@ -21,6 +21,7 @@
 		<module>core/api</module>
 		<module>core/impl</module>
 		<module>freemarker/impl</module>
+		<module>seam-render/impl</module>
 		<module>velocity/impl</module>
 		<module>examples/sendmail</module>
 
@@ -54,6 +55,13 @@
 			<dependency>
 				<groupId>org.jboss.seam.mail</groupId>
 				<artifactId>seam-mail-freemarker-impl</artifactId>
+				<version>${project.version}</version>
+				<scope>runtime</scope>
+			</dependency>
+			
+			<dependency>
+				<groupId>org.jboss.seam.mail</groupId>
+				<artifactId>seam-mail-render-impl</artifactId>
 				<version>${project.version}</version>
 				<scope>runtime</scope>
 			</dependency>

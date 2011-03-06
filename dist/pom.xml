@@ -75,6 +75,20 @@
       
       <dependency>
          <groupId>org.jboss.seam.mail</groupId>
+         <artifactId>seam-mail-render-impl</artifactId>
+         <optional>true</optional>
+      </dependency>
+
+      <dependency>
+         <groupId>org.jboss.seam.mail</groupId>
+         <artifactId>seam-mail-render-impl</artifactId>
+         <version>${project.version}</version>
+         <classifier>sources</classifier>
+         <optional>true</optional>
+      </dependency>
+      
+      <dependency>
+         <groupId>org.jboss.seam.mail</groupId>
          <artifactId>seam-mail-freemarker-impl</artifactId>
          <optional>true</optional>
       </dependency>

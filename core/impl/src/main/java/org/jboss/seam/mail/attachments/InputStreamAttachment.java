@@ -33,7 +33,7 @@ import com.google.common.io.ByteStreams;
  */
 public class InputStreamAttachment extends BaseAttachment
 {
-   public InputStreamAttachment(InputStream inputStream, String fileName, String mimeType, ContentDisposition contentDisposition)
+   public InputStreamAttachment(String fileName, String mimeType, ContentDisposition contentDisposition, InputStream inputStream)
    {
       super();
 
@@ -50,9 +50,9 @@ public class InputStreamAttachment extends BaseAttachment
       }
    }
 
-   public InputStreamAttachment(InputStream inputStream, String fileName, String mimeType, ContentDisposition contentDisposition, String contentClass)
+   public InputStreamAttachment(String fileName, String mimeType, ContentDisposition contentDisposition, InputStream inputStream, String contentClass)
    {
-      this(inputStream, fileName, mimeType, contentDisposition);
+      this(fileName, mimeType, contentDisposition, inputStream);
       super.addHeader(new Header("Content-Class", contentClass));
    }
 }

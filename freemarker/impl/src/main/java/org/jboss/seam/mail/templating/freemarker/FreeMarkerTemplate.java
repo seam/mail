@@ -17,15 +17,20 @@
 
 package org.jboss.seam.mail.templating.freemarker;
 
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.jboss.seam.mail.templating.FileTemplate;
+import org.jboss.seam.mail.templating.InputStreamTemplate;
 import org.jboss.seam.mail.templating.MailTemplate;
 import org.jboss.seam.mail.templating.TemplateImpl;
 import org.jboss.seam.mail.templating.TemplatingException;
+import org.jboss.seam.mail.templating.StringTemplate;
 
 import freemarker.template.Configuration;
 import freemarker.template.DefaultObjectWrapper;
@@ -40,25 +45,40 @@ import freemarker.template.TemplateException;
 public class FreeMarkerTemplate implements TemplateImpl
 {
    private Configuration configuration;
-   private Map<String, Object> rootMap = new HashMap<String, Object>();  
+   private Map<String, Object> rootMap = new HashMap<String, Object>();
    private MailTemplate mailTemplate;
-   
+
    public FreeMarkerTemplate(MailTemplate mailTemplate)
    {
       this.mailTemplate = mailTemplate;
       configuration = new Configuration();
       configuration.setObjectWrapper(new DefaultObjectWrapper());
-   } 
-   
+   }
+
+   public FreeMarkerTemplate(String string)
+   {
+      this(new StringTemplate(string));
+   }
+
+   public FreeMarkerTemplate(InputStream inputStream)
+   {
+      this(new InputStreamTemplate(inputStream));
+   }
+
+   public FreeMarkerTemplate(File file)
+   {
+      this(new FileTemplate(file));
+   }
+
    public String merge(Map<String, Object> context)
    {
       rootMap.putAll(context);
-      
-      StringWriter writer = new StringWriter();      
+
+      StringWriter writer = new StringWriter();
 
       try
       {
-         Template template = new Template(mailTemplate.getTemplateName() , new InputStreamReader(mailTemplate.getInputStream()), configuration);
+         Template template = new Template(mailTemplate.getTemplateName(), new InputStreamReader(mailTemplate.getInputStream()), configuration);
          template.process(rootMap, writer);
       }
       catch (IOException e)

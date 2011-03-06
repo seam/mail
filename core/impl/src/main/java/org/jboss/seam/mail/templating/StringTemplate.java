@@ -28,18 +28,18 @@ import org.jboss.seam.mail.templating.TemplatingException;
  * @author Cody Lerum
  * 
  */
-public class TextTemplate implements MailTemplate
+public class StringTemplate implements MailTemplate
 {
    private String templateName;
    private String content;
 
-   public TextTemplate(String content)
+   public StringTemplate(String content)
    {
-      this.templateName = "textTemplate";
+      this.templateName = "stringTemplate";
       this.content = content;
    }
 
-   public TextTemplate(String content, String templateName)
+   public StringTemplate(String content, String templateName)
    {
       this.templateName = templateName;
       this.content = content;

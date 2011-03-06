@@ -33,7 +33,6 @@ import junit.framework.Assert;
 import org.jboss.arquillian.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.seam.mail.api.MailMessage;
-import org.jboss.seam.mail.attachments.InputStreamAttachment;
 import org.jboss.seam.mail.attachments.URLAttachment;
 import org.jboss.seam.mail.core.EmailMessage;
 import org.jboss.seam.mail.core.InvalidAddressException;
@@ -247,7 +246,7 @@ public class MailMessageTest
          .importance(MessagePriority.LOW)
          .deliveryReceipt(fromAddress)
          .readReceipt("seam.test")
-         .addAttachment(new InputStreamAttachment(resourceProvider.loadResourceStream("template.text.velocity"), "template.text.velocity", "text/plain", ContentDisposition.ATTACHMENT))
+         .addAttachment("template.text.velocity", "text/plain", ContentDisposition.ATTACHMENT, resourceProvider.loadResourceStream("template.text.velocity"))
          .addAttachment(new URLAttachment("http://www.seamframework.org/themes/sfwkorg/img/seam_icon_large.png", "seamLogo.png", ContentDisposition.INLINE))
          .send(session.get());
       }

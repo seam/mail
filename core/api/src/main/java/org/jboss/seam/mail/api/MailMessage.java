@@ -17,6 +17,8 @@
 
 package org.jboss.seam.mail.api;
 
+import java.io.File;
+import java.io.InputStream;
 import java.util.Collection;
 
 import javax.mail.Session;
@@ -27,6 +29,7 @@ import org.jboss.seam.mail.core.EmailContact;
 import org.jboss.seam.mail.core.EmailMessage;
 import org.jboss.seam.mail.core.InvalidAddressException;
 import org.jboss.seam.mail.core.SendFailedException;
+import org.jboss.seam.mail.core.enumurations.ContentDisposition;
 import org.jboss.seam.mail.core.enumurations.MessagePriority;
 import org.jboss.seam.mail.templating.MailTemplate;
 import org.jboss.seam.mail.templating.TemplateImpl;
@@ -250,6 +253,35 @@ public interface MailMessage
     */
    public MailMessage addAttachment(Collection<EmailAttachment> attachments);
 
+   /**
+    * Adds Attachment to the message
+    * 
+    * @param fileName
+    * @param mimeType
+    * @param contentDispostion
+    * @param bytes
+    * @return
+    */
+   public MailMessage addAttachment(String fileName, String mimeType, ContentDisposition contentDispostion, byte[] bytes);
+
+   /**
+    * Adds Attachment to the message
+    * 
+    * @param fileName
+    * @param mimeType
+    * @param contentDispostion
+    * @param inputStream
+    */
+   public MailMessage addAttachment(String fileName, String mimeType, ContentDisposition contentDispostion, InputStream inputStream);
+
+   /**
+    * Adds Attachment to the message
+    * 
+    * @param contentDispostion
+    * @param file
+    */
+   public MailMessage addAttachment(ContentDisposition contentDispostion, File file);
+
    // End Attachements
 
    // Begin Flags
@@ -373,8 +405,7 @@ public interface MailMessage
     */
    public EmailMessage send();
 
-   
-   //Templating Specific
+   // Templating Specific
 
    /**
     * Set the template to be used for the message subject
@@ -405,16 +436,15 @@ public interface MailMessage
     * Sets the body of the message to a HTML body with a plain text alternative
     * output of the given templates
     * 
-    * @param htmlBody {@link MailTemplate} to use for HTML portion of
-    *           message
-    * @param textBody {@link MailTemplate} to use for Text alternative
-    *           portion of message
+    * @param htmlBody {@link MailTemplate} to use for HTML portion of message
+    * @param textBody {@link MailTemplate} to use for Text alternative portion
+    *           of message
     * @throws TemplatingException
     */
    public MailMessage bodyHtmlTextAlt(TemplateImpl htmlBody, TemplateImpl textbody);
 
    /**
-    * Places a variable in the templating engines context  
+    * Places a variable in the templating engines context
     * 
     * @param name Reference name of the object
     * @param value the Object being placed in the context

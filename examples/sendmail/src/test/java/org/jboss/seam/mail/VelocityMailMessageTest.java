@@ -34,7 +34,6 @@ import junit.framework.Assert;
 import org.jboss.arquillian.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.seam.mail.api.MailMessage;
-import org.jboss.seam.mail.attachments.InputStreamAttachment;
 import org.jboss.seam.mail.attachments.URLAttachment;
 import org.jboss.seam.mail.core.EmailMessage;
 import org.jboss.seam.mail.core.MailConfig;
@@ -43,8 +42,6 @@ import org.jboss.seam.mail.core.enumurations.ContentDisposition;
 import org.jboss.seam.mail.core.enumurations.MessagePriority;
 import org.jboss.seam.mail.example.Gmail;
 import org.jboss.seam.mail.example.Person;
-import org.jboss.seam.mail.templating.InputStreamTemplate;
-import org.jboss.seam.mail.templating.TextTemplate;
 import org.jboss.seam.mail.templating.velocity.CDIVelocityContext;
 import org.jboss.seam.mail.templating.velocity.VelocityTemplate;
 import org.jboss.seam.mail.util.EmailAttachmentUtil;
@@ -137,8 +134,8 @@ public class VelocityMailMessageTest
             .from(fromAddress, fromName)
             .replyTo(replyToAddress)
             .to(toAddress, toName)
-            .subject(new VelocityTemplate(new TextTemplate(subject), cDIVelocityContext.get()))
-            .bodyText(new VelocityTemplate(new InputStreamTemplate(resourceProvider.loadResourceStream("template.text.velocity")), cDIVelocityContext.get()))
+            .subject(new VelocityTemplate(subject, cDIVelocityContext.get()))
+            .bodyText(new VelocityTemplate(resourceProvider.loadResourceStream("template.text.velocity"), cDIVelocityContext.get()))
             .put("version", version)
             .importance(MessagePriority.HIGH)
             .send(session.get());
@@ -194,7 +191,7 @@ public class VelocityMailMessageTest
             .replyTo(replyToAddress, replyToName)
             .to(person)
             .subject(subject)
-            .bodyHtml(new VelocityTemplate(new InputStreamTemplate(resourceProvider.loadResourceStream("template.html.velocity")), cDIVelocityContext.get()))
+            .bodyHtml(new VelocityTemplate(resourceProvider.loadResourceStream("template.html.velocity"), cDIVelocityContext.get()))
             .put("version", version)
             .importance(MessagePriority.HIGH)
             .addAttachment(new URLAttachment("http://www.seamframework.org/themes/sfwkorg/img/seam_icon_large.png", "seamLogo.png", ContentDisposition.INLINE))
@@ -260,12 +257,12 @@ public class VelocityMailMessageTest
             .subject(subject)
             .put("version", version)
             .bodyHtmlTextAlt(
-                  new VelocityTemplate(new InputStreamTemplate(resourceProvider.loadResourceStream("template.html.velocity")), cDIVelocityContext.get()), 
-                  new VelocityTemplate(new InputStreamTemplate(resourceProvider.loadResourceStream("template.text.velocity")), cDIVelocityContext.get()))
+                  new VelocityTemplate(resourceProvider.loadResourceStream("template.html.velocity"), cDIVelocityContext.get()), 
+                  new VelocityTemplate(resourceProvider.loadResourceStream("template.text.velocity"), cDIVelocityContext.get()))
             .importance(MessagePriority.LOW)
             .deliveryReceipt(fromAddress)
             .readReceipt("seam.test")
-            .addAttachment(new InputStreamAttachment(resourceProvider.loadResourceStream("template.html.velocity"),"template.html.velocity", "text/html", ContentDisposition.ATTACHMENT))
+            .addAttachment("template.html.velocity", "text/html", ContentDisposition.ATTACHMENT, resourceProvider.loadResourceStream("template.html.velocity"))
             .addAttachment(new URLAttachment("http://www.seamframework.org/themes/sfwkorg/img/seam_icon_large.png", "seamLogo.png", ContentDisposition.INLINE))
             .send();
       }
@@ -338,12 +335,12 @@ public class VelocityMailMessageTest
             .subject(subject)
             .put("version", "Seam 3")
             .bodyHtmlTextAlt(
-                  new VelocityTemplate(new InputStreamTemplate(resourceProvider.loadResourceStream("template.html.velocity")), cDIVelocityContext.get()), 
-                  new VelocityTemplate(new InputStreamTemplate(resourceProvider.loadResourceStream("template.text.velocity")), cDIVelocityContext.get()))
+                  new VelocityTemplate(resourceProvider.loadResourceStream("template.html.velocity"), cDIVelocityContext.get()), 
+                  new VelocityTemplate(resourceProvider.loadResourceStream("template.text.velocity"), cDIVelocityContext.get()))
             .importance(MessagePriority.LOW)
             .deliveryReceipt(fromAddress)
             .readReceipt("seam.test")
-            .addAttachment(new InputStreamAttachment(resourceProvider.loadResourceStream("template.html.velocity"), "template.html.velocity", "text/html", ContentDisposition.ATTACHMENT))
+            .addAttachment("template.html.velocity", "text/html", ContentDisposition.ATTACHMENT, resourceProvider.loadResourceStream("template.html.velocity"))
             .addAttachment(new URLAttachment("http://www.seamframework.org/themes/sfwkorg/img/seam_icon_large.png", "seamLogo.png", ContentDisposition.INLINE))
             .send(gmailSession);
       }
@@ -382,8 +379,8 @@ public class VelocityMailMessageTest
             .from(fromAddress, fromName)
             .replyTo(replyToAddress)
             .to(toAddress, toName)
-            .subject(new VelocityTemplate(new TextTemplate(subject), cDIVelocityContext.get()))
-            .bodyText(new VelocityTemplate(new InputStreamTemplate(resourceProvider.loadResourceStream("template.text.velocity")), cDIVelocityContext.get()))
+            .subject(new VelocityTemplate(subject, cDIVelocityContext.get()))
+            .bodyText(new VelocityTemplate(resourceProvider.loadResourceStream("template.text.velocity"), cDIVelocityContext.get()))
             .put("version", version)
             .importance(MessagePriority.HIGH)
             .send(session.get());

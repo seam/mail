@@ -35,7 +35,7 @@ import com.google.common.io.Files;
  */
 public class FileAttachment extends BaseAttachment
 {
-   public FileAttachment(File file, ContentDisposition contentDisposition)
+   public FileAttachment(ContentDisposition contentDisposition, File file)
    {
       super();
 
@@ -54,9 +54,9 @@ public class FileAttachment extends BaseAttachment
       }
    }
 
-   public FileAttachment(File file, ContentDisposition contentDisposition, String contentClass)
+   public FileAttachment(ContentDisposition contentDisposition, File file, String contentClass)
    {
-      this(file, contentDisposition);
+      this(contentDisposition, file);
       super.addHeader(new Header("Content-Class", contentClass));
    }
 }

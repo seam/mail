@@ -17,6 +17,8 @@
 
 package org.jboss.seam.mail.core;
 
+import java.io.File;
+import java.io.InputStream;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -28,6 +30,8 @@ import javax.mail.internet.InternetAddress;
 
 import org.jboss.seam.mail.api.MailMessage;
 import org.jboss.seam.mail.attachments.BaseAttachment;
+import org.jboss.seam.mail.attachments.FileAttachment;
+import org.jboss.seam.mail.attachments.InputStreamAttachment;
 import org.jboss.seam.mail.core.enumurations.ContentDisposition;
 import org.jboss.seam.mail.core.enumurations.ContentType;
 import org.jboss.seam.mail.core.enumurations.EmailMessageType;
@@ -281,6 +285,24 @@ public class MailMessageImpl implements MailMessage
       emailMessage.addAttachments(attachments);
       return this;
    }
+   
+   public MailMessage addAttachment(String fileName, String mimeType, ContentDisposition contentDispostion, byte[] bytes)
+   {
+      addAttachment(new BaseAttachment(fileName, mimeType, contentDispostion, bytes));
+      return this;
+   }
+   
+   public MailMessage addAttachment(String fileName, String mimeType, ContentDisposition contentDispostion, InputStream inputStream)
+   {
+      addAttachment(new InputStreamAttachment(fileName, mimeType, contentDispostion, inputStream));
+      return this;
+   }
+   
+   public MailMessage addAttachment(ContentDisposition contentDispostion, File file)
+   {
+      addAttachment(new FileAttachment(contentDispostion, file));
+      return this;
+   }
 
    // End Attachments
 
@@ -376,5 +398,5 @@ public class MailMessageImpl implements MailMessage
    public EmailMessage send() throws SendFailedException
    {
       return this.send(session.get());
-   }
+   }  
 }

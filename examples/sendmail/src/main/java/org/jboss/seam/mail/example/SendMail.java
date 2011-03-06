@@ -25,11 +25,9 @@ import javax.inject.Inject;
 import javax.mail.Session;
 
 import org.jboss.seam.mail.api.MailMessage;
-import org.jboss.seam.mail.attachments.InputStreamAttachment;
 import org.jboss.seam.mail.attachments.URLAttachment;
 import org.jboss.seam.mail.core.enumurations.ContentDisposition;
 import org.jboss.seam.mail.core.enumurations.MessagePriority;
-import org.jboss.seam.mail.templating.InputStreamTemplate;
 import org.jboss.seam.mail.templating.freemarker.FreeMarkerTemplate;
 import org.jboss.seam.mail.templating.velocity.CDIVelocityContext;
 import org.jboss.seam.mail.templating.velocity.VelocityTemplate;
@@ -75,7 +73,7 @@ public class SendMail
             .from("seam@test.test", "Seam Framework")
             .to(person)
             .subject("HTML Message from Seam Mail - " + java.util.UUID.randomUUID().toString())
-            .bodyHtml(new FreeMarkerTemplate(new InputStreamTemplate(resourceProvider.loadResourceStream("template.html.freemarker"))))
+            .bodyHtml(new FreeMarkerTemplate(resourceProvider.loadResourceStream("template.html.freemarker")))
             .put("person", person)
             .put("version", "Seam 3")
             .importance(MessagePriority.HIGH)
@@ -92,12 +90,12 @@ public class SendMail
             .put("person", person)
             .put("version", "Seam 3")
             .bodyHtmlTextAlt(
-                  new FreeMarkerTemplate(new InputStreamTemplate(resourceProvider.loadResourceStream("template.html.freemarker"))), 
-                  new FreeMarkerTemplate(new InputStreamTemplate(resourceProvider.loadResourceStream("template.text.freemarker"))))
+                  new FreeMarkerTemplate(resourceProvider.loadResourceStream("template.html.freemarker")), 
+                  new FreeMarkerTemplate(resourceProvider.loadResourceStream("template.text.freemarker")))
             .importance(MessagePriority.LOW)
             .deliveryReceipt("seam@jboss.org")
             .readReceipt("seam@jboss.org")
-            .addAttachment(new InputStreamAttachment(resourceProvider.loadResourceStream("template.html.freemarker"),"template.html.freemarker", "text/html", ContentDisposition.ATTACHMENT))
+            .addAttachment("template.html.freemarker", "text/html", ContentDisposition.ATTACHMENT, resourceProvider.loadResourceStream("template.html.freemarker"))
             .addAttachment(new URLAttachment("http://www.seamframework.org/themes/sfwkorg/img/seam_icon_large.png", "seamLogo.png", ContentDisposition.INLINE))
             .send(session.get());
    }
@@ -108,7 +106,7 @@ public class SendMail
             .from("seam@test.test", "Seam Framework")
             .to(person)
             .subject("HTML Message from Seam Mail - " + java.util.UUID.randomUUID().toString())
-            .bodyHtml(new VelocityTemplate(new InputStreamTemplate(resourceProvider.loadResourceStream("template.html.velocity")), cDIVelocityContext.get()))
+            .bodyHtml(new VelocityTemplate(resourceProvider.loadResourceStream("template.html.velocity"), cDIVelocityContext.get()))
             .put("version", "Seam 3")
             .importance(MessagePriority.HIGH)
             .addAttachment(new URLAttachment("http://www.seamframework.org/themes/sfwkorg/img/seam_icon_large.png", "seamLogo.png", ContentDisposition.INLINE))
@@ -123,12 +121,12 @@ public class SendMail
             .subject("HTML+Text Message from Seam Mail - " + java.util.UUID.randomUUID().toString())
             .put("version", "Seam 3")
             .bodyHtmlTextAlt(
-                  new VelocityTemplate(new InputStreamTemplate(resourceProvider.loadResourceStream("template.html.velocity")), cDIVelocityContext.get()), 
-                  new VelocityTemplate(new InputStreamTemplate(resourceProvider.loadResourceStream("template.text.velocity")), cDIVelocityContext.get()))
+                  new VelocityTemplate(resourceProvider.loadResourceStream("template.html.velocity"), cDIVelocityContext.get()), 
+                  new VelocityTemplate(resourceProvider.loadResourceStream("template.text.velocity"), cDIVelocityContext.get()))
             .importance(MessagePriority.LOW)
             .deliveryReceipt("seam@jboss.org")
             .readReceipt("seam@jboss.org")
-            .addAttachment(new InputStreamAttachment(resourceProvider.loadResourceStream("template.html.velocity"),"template.html.velocity", "text/html", ContentDisposition.ATTACHMENT))
+            .addAttachment("template.html.velocity", "text/html", ContentDisposition.ATTACHMENT, resourceProvider.loadResourceStream("template.html.velocity"))
             .addAttachment(new URLAttachment("http://www.seamframework.org/themes/sfwkorg/img/seam_icon_large.png", "seamLogo.png", ContentDisposition.INLINE))
             .send(session.get());
    }

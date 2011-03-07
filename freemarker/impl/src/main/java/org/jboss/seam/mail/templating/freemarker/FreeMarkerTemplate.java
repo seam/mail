@@ -28,9 +28,9 @@ import java.util.Map;
 import org.jboss.seam.mail.templating.FileTemplate;
 import org.jboss.seam.mail.templating.InputStreamTemplate;
 import org.jboss.seam.mail.templating.MailTemplate;
-import org.jboss.seam.mail.templating.TemplateImpl;
-import org.jboss.seam.mail.templating.TemplatingException;
 import org.jboss.seam.mail.templating.StringTemplate;
+import org.jboss.seam.mail.templating.TemplateProvider;
+import org.jboss.seam.mail.templating.TemplatingException;
 
 import freemarker.template.Configuration;
 import freemarker.template.DefaultObjectWrapper;
@@ -42,7 +42,7 @@ import freemarker.template.TemplateException;
  * @author Cody Lerum
  * 
  */
-public class FreeMarkerTemplate implements TemplateImpl
+public class FreeMarkerTemplate implements TemplateProvider
 {
    private Configuration configuration;
    private Map<String, Object> rootMap = new HashMap<String, Object>();

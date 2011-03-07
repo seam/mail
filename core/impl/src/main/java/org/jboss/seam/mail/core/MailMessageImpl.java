@@ -37,7 +37,7 @@ import org.jboss.seam.mail.core.enumurations.ContentType;
 import org.jboss.seam.mail.core.enumurations.EmailMessageType;
 import org.jboss.seam.mail.core.enumurations.MessagePriority;
 import org.jboss.seam.mail.templating.MailContext;
-import org.jboss.seam.mail.templating.TemplateImpl;
+import org.jboss.seam.mail.templating.TemplateProvider;
 import org.jboss.seam.mail.util.EmailAttachmentUtil;
 import org.jboss.seam.mail.util.MailUtility;
 
@@ -50,9 +50,9 @@ public class MailMessageImpl implements MailMessage
 {
    private EmailMessage emailMessage;
    
-   private TemplateImpl subjectTemplate;
-   private TemplateImpl textTemplate;
-   private TemplateImpl htmlTemplate;
+   private TemplateProvider subjectTemplate;
+   private TemplateProvider textTemplate;
+   private TemplateProvider htmlTemplate;
    private Map<String, Object> templateContext = new HashMap<String, Object>();
    private boolean templatesMerged;
    
@@ -318,25 +318,25 @@ public class MailMessageImpl implements MailMessage
 
    // End Calendar
    
-   public MailMessage subject(TemplateImpl subject)
+   public MailMessage subject(TemplateProvider subject)
    {
       subjectTemplate = subject;
       return this;
    }
 
-   public MailMessage bodyText(TemplateImpl textBody)
+   public MailMessage bodyText(TemplateProvider textBody)
    {
       textTemplate = textBody;
       return this;
    }
 
-   public MailMessage bodyHtml(TemplateImpl htmlBody)
+   public MailMessage bodyHtml(TemplateProvider htmlBody)
    {
       htmlTemplate = htmlBody;
       return this;
    }
 
-   public MailMessage bodyHtmlTextAlt(TemplateImpl htmlBody, TemplateImpl textBody)
+   public MailMessage bodyHtmlTextAlt(TemplateProvider htmlBody, TemplateProvider textBody)
    {
       bodyHtml(htmlBody);
       bodyText(textBody);

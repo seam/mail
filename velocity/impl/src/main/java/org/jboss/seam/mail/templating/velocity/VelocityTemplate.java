@@ -33,7 +33,7 @@ import org.jboss.seam.mail.templating.FileTemplate;
 import org.jboss.seam.mail.templating.InputStreamTemplate;
 import org.jboss.seam.mail.templating.MailTemplate;
 import org.jboss.seam.mail.templating.StringTemplate;
-import org.jboss.seam.mail.templating.TemplateImpl;
+import org.jboss.seam.mail.templating.TemplateProvider;
 import org.jboss.seam.mail.templating.TemplatingException;
 
 /**
@@ -41,7 +41,7 @@ import org.jboss.seam.mail.templating.TemplatingException;
  * @author Cody Lerum
  * 
  */
-public class VelocityTemplate implements TemplateImpl
+public class VelocityTemplate implements TemplateProvider
 {
    private VelocityEngine velocityEngine;
    private VelocityContext velocityContext;

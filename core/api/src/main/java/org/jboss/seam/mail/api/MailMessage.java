@@ -31,8 +31,7 @@ import org.jboss.seam.mail.core.InvalidAddressException;
 import org.jboss.seam.mail.core.SendFailedException;
 import org.jboss.seam.mail.core.enumurations.ContentDisposition;
 import org.jboss.seam.mail.core.enumurations.MessagePriority;
-import org.jboss.seam.mail.templating.MailTemplate;
-import org.jboss.seam.mail.templating.TemplateImpl;
+import org.jboss.seam.mail.templating.TemplateProvider;
 
 /**
  * Base interface for creating email messages.
@@ -410,38 +409,38 @@ public interface MailMessage
    /**
     * Set the template to be used for the message subject
     * 
-    * @param subject {@link MailTemplate} to use
+    * @param subject {@link TemplateProvider} to use
     * @throws TemplatingException
     */
-   public MailMessage subject(TemplateImpl subject);
+   public MailMessage subject(TemplateProvider subject);
 
    /**
     * Sets the text body of the message to the plain text output of the given
     * template
     * 
-    * @param textBody {@link MailTemplate} to use
+    * @param textBody {@link TemplateProvider} to use
     * @throws TemplatingException
     */
-   public MailMessage bodyText(TemplateImpl textbody);
+   public MailMessage bodyText(TemplateProvider textbody);
 
    /**
     * Sets the HTML body of the message to the HTML output of the given template
     * 
-    * @param htmlBody {@link MailTemplate} to use
+    * @param htmlBody {@link TemplateProvider} to use
     * @throws TemplatingException
     */
-   public MailMessage bodyHtml(TemplateImpl htmlBody);
+   public MailMessage bodyHtml(TemplateProvider htmlBody);
 
    /**
     * Sets the body of the message to a HTML body with a plain text alternative
     * output of the given templates
     * 
-    * @param htmlBody {@link MailTemplate} to use for HTML portion of message
-    * @param textBody {@link MailTemplate} to use for Text alternative portion
+    * @param htmlBody {@link TemplateProvider} to use for HTML portion of message
+    * @param textBody {@link TemplateProvider} to use for Text alternative portion
     *           of message
     * @throws TemplatingException
     */
-   public MailMessage bodyHtmlTextAlt(TemplateImpl htmlBody, TemplateImpl textbody);
+   public MailMessage bodyHtmlTextAlt(TemplateProvider htmlBody, TemplateProvider textbody);
 
    /**
     * Places a variable in the templating engines context

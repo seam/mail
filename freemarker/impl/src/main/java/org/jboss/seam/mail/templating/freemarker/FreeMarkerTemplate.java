@@ -17,18 +17,18 @@
 
 package org.jboss.seam.mail.templating.freemarker;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.jboss.seam.mail.templating.FileTemplate;
-import org.jboss.seam.mail.templating.InputStreamTemplate;
-import org.jboss.seam.mail.templating.MailTemplate;
-import org.jboss.seam.mail.templating.StringTemplate;
 import org.jboss.seam.mail.templating.TemplateProvider;
 import org.jboss.seam.mail.templating.TemplatingException;
 
@@ -46,28 +46,23 @@ public class FreeMarkerTemplate implements TemplateProvider
 {
    private Configuration configuration;
    private Map<String, Object> rootMap = new HashMap<String, Object>();
-   private MailTemplate mailTemplate;
+   private InputStream inputStream;
 
-   public FreeMarkerTemplate(MailTemplate mailTemplate)
+   public FreeMarkerTemplate(InputStream inputStream)
    {
-      this.mailTemplate = mailTemplate;
+      this.inputStream = inputStream;
       configuration = new Configuration();
       configuration.setObjectWrapper(new DefaultObjectWrapper());
    }
 
-   public FreeMarkerTemplate(String string)
+   public FreeMarkerTemplate(String string) throws UnsupportedEncodingException
    {
-      this(new StringTemplate(string));
+      this(new ByteArrayInputStream(string.getBytes("UTF-8")));
    }
 
-   public FreeMarkerTemplate(InputStream inputStream)
+   public FreeMarkerTemplate(File file) throws FileNotFoundException
    {
-      this(new InputStreamTemplate(inputStream));
-   }
-
-   public FreeMarkerTemplate(File file)
-   {
-      this(new FileTemplate(file));
+      this(new FileInputStream(file));
    }
 
    public String merge(Map<String, Object> context)
@@ -78,7 +73,7 @@ public class FreeMarkerTemplate implements TemplateProvider
 
       try
       {
-         Template template = new Template(mailTemplate.getTemplateName(), new InputStreamReader(mailTemplate.getInputStream()), configuration);
+         Template template = new Template("mailGenerated", new InputStreamReader(inputStream), configuration);
          template.process(rootMap, writer);
       }
       catch (IOException e)

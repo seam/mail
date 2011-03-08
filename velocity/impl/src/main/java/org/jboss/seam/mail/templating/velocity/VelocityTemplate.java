@@ -17,11 +17,15 @@
 
 package org.jboss.seam.mail.templating.velocity;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.Map;
 
 import org.apache.velocity.VelocityContext;
@@ -29,10 +33,6 @@ import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.exception.MethodInvocationException;
 import org.apache.velocity.exception.ParseErrorException;
 import org.apache.velocity.exception.ResourceNotFoundException;
-import org.jboss.seam.mail.templating.FileTemplate;
-import org.jboss.seam.mail.templating.InputStreamTemplate;
-import org.jboss.seam.mail.templating.MailTemplate;
-import org.jboss.seam.mail.templating.StringTemplate;
 import org.jboss.seam.mail.templating.TemplateProvider;
 import org.jboss.seam.mail.templating.TemplatingException;
 
@@ -46,50 +46,39 @@ public class VelocityTemplate implements TemplateProvider
    private VelocityEngine velocityEngine;
    private VelocityContext velocityContext;
    private CDIVelocityContext cdiContext;
-
-   private MailTemplate mailTemplate;
-
-   public VelocityTemplate(MailTemplate mailTemplate)
-   {
-      velocityEngine = new VelocityEngine();
-      velocityEngine.setProperty("runtime.log.logsystem.class", "org.apache.velocity.runtime.log.SimpleLog4JLogSystem");
-      this.mailTemplate = mailTemplate;
-   }
-
-   public VelocityTemplate(MailTemplate mailTemplate, CDIVelocityContext cdiContext)
-   {
-      this(mailTemplate);
-      this.cdiContext = cdiContext;
-   }
-
-   public VelocityTemplate(String string)
-   {
-      this(new StringTemplate(string));
-   }
-
-   public VelocityTemplate(String string, CDIVelocityContext cdiContext)
-   {
-      this(new StringTemplate(string), cdiContext);
-   }
+   private InputStream inputStream;
 
    public VelocityTemplate(InputStream inputStream)
    {
-      this(new InputStreamTemplate(inputStream));
+      velocityEngine = new VelocityEngine();
+      velocityEngine.setProperty("runtime.log.logsystem.class", "org.apache.velocity.runtime.log.SimpleLog4JLogSystem");
+      this.inputStream = inputStream;
    }
 
    public VelocityTemplate(InputStream inputStream, CDIVelocityContext cdiContext)
    {
-      this(new InputStreamTemplate(inputStream), cdiContext);
+      this(inputStream);
+      this.cdiContext = cdiContext;
    }
-
-   public VelocityTemplate(File file)
+   
+   public VelocityTemplate(String string) throws UnsupportedEncodingException
    {
-      this(new FileTemplate(file));
+      this(new ByteArrayInputStream(string.getBytes("UTF-8")));
+   }  
+
+   public VelocityTemplate(String string, CDIVelocityContext cdiContext) throws UnsupportedEncodingException
+   {
+      this(new ByteArrayInputStream(string.getBytes("UTF-8")), cdiContext);
+   }  
+   
+   public VelocityTemplate(File file) throws FileNotFoundException
+   {
+      this(new FileInputStream(file));
    }
-
-   public VelocityTemplate(File file, CDIVelocityContext cdiContext)
+   
+   public VelocityTemplate(File file, CDIVelocityContext cdiContext) throws FileNotFoundException
    {
-      this(new FileTemplate(file), cdiContext);
+      this(new FileInputStream(file), cdiContext);
    }
 
    public String merge(Map<String, Object> context)
@@ -103,7 +92,7 @@ public class VelocityTemplate implements TemplateProvider
 
       try
       {
-         velocityEngine.evaluate(velocityContext, writer, mailTemplate.getTemplateName(), new InputStreamReader(mailTemplate.getInputStream()));
+         velocityEngine.evaluate(velocityContext, writer, "mailGenerated", new InputStreamReader(inputStream));
       }
       catch (ResourceNotFoundException e)
       {

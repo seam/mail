@@ -18,6 +18,7 @@
 package org.jboss.seam.mail;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 
 import javax.enterprise.inject.Instance;
@@ -356,7 +357,7 @@ public class FreeMarkerMailMessageTest
    }
    
    @Test(expected=SendFailedException.class)
-   public void testFreeMarkerTextMailMessageSendFailed()
+   public void testFreeMarkerTextMailMessageSendFailed() throws UnsupportedEncodingException
    {
       String uuid = java.util.UUID.randomUUID().toString();
       String subject = "Text Message from $version Mail - " + uuid;

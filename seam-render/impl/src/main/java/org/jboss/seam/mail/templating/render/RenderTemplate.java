@@ -17,54 +17,45 @@
 
 package org.jboss.seam.mail.templating.render;
 
-import java.io.File;
-import java.io.InputStream;
-import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.jboss.seam.mail.templating.FileTemplate;
-import org.jboss.seam.mail.templating.InputStreamTemplate;
-import org.jboss.seam.mail.templating.MailTemplate;
-import org.jboss.seam.mail.templating.StringTemplate;
-import org.jboss.seam.mail.templating.TemplateImpl;
+import org.jboss.seam.mail.templating.TemplateProvider;
+import org.jboss.seam.render.TemplateCompiler;
+import org.jboss.seam.render.spi.TemplateResource;
+import org.jboss.seam.render.template.CompiledTemplateResource;
 
 /**
  * 
  * @author Cody Lerum
+ * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
  * 
  */
-public class RenderTemplate implements TemplateImpl
+public class RenderTemplate implements TemplateProvider
 {
-   private Map<String, Object> rootMap = new HashMap<String, Object>();
-   private MailTemplate mailTemplate;
+   private final CompiledTemplateResource template;
 
-   public RenderTemplate(MailTemplate mailTemplate)
+   public RenderTemplate(TemplateCompiler compiler, String path)
    {
-      this.mailTemplate = mailTemplate;
+      template = compiler.compile(path);
    }
 
-   public RenderTemplate(String string)
+   public RenderTemplate(TemplateCompiler compiler, TemplateResource<?> resource)
    {
-      this(new StringTemplate(string));
+      template = compiler.compile(resource);
    }
 
-   public RenderTemplate(InputStream inputStream)
+   public RenderTemplate(CompiledTemplateResource template)
    {
-      this(new InputStreamTemplate(inputStream));
-   }
-
-   public RenderTemplate(File file)
-   {
-      this(new FileTemplate(file));
+      this.template = template;
    }
 
    public String merge(Map<String, Object> context)
    {
-      rootMap.putAll(context);
+      Map<Object, Object> map = new HashMap<Object, Object>();
+      map.putAll(context);
 
-      StringWriter writer = new StringWriter();
-
-      return writer.toString();
+      String rendered = template.render(map);
+      return rendered;
    }
 }

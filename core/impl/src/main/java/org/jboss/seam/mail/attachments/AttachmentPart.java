@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package org.jboss.seam.mail.core;
+package org.jboss.seam.mail.attachments;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -26,6 +26,7 @@ import javax.mail.MessagingException;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.util.ByteArrayDataSource;
 
+import org.jboss.seam.mail.core.Header;
 import org.jboss.seam.mail.core.enumurations.ContentDisposition;
 
 

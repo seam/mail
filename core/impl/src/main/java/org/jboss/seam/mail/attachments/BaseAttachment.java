@@ -24,14 +24,13 @@ import java.util.UUID;
 import org.jboss.seam.mail.core.EmailAttachment;
 import org.jboss.seam.mail.core.Header;
 import org.jboss.seam.mail.core.enumurations.ContentDisposition;
-import org.jboss.seam.solder.beanManager.BeanManagerAware;
 
 /**
  * 
  * @author Cody Lerum
  * 
  */
-public class BaseAttachment extends BeanManagerAware implements EmailAttachment 
+public class BaseAttachment implements EmailAttachment 
 {
    private String contentId;
    private String fileName;

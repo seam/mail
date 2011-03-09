@@ -40,6 +40,10 @@
         <p> 
             <h:commandButton action="#{sendMail.sendHTMLVelocity}" value="Send HTML Email with Velocity" onclick="value='Sending...';"/>
             <h:commandButton action="#{sendMail.sendHTMLwithAlternativeVelocity}" value="Send HTML+Text Email with Velocity" onclick="value='Sending...';"/>
+        </p>        
+        <p> 
+            <h:commandButton action="#{sendMail.sendHTMLRender}" value="Send HTML Email with Seam Render" onclick="value='Sending...';"/>
+            <h:commandButton action="#{sendMail.sendHTMLwithAlternativeRender}" value="Send HTML+Text Email with Seam Render" onclick="value='Sending...';"/>
         </p>
         <p>           
             <h:outputText value="Message Sent!" rendered="#{facesContext.postback and empty facesContext.messageList}" style="color: green;"/>

@@ -87,6 +87,13 @@
 			<version>${project.version}</version>
 			<scope>compile</scope>			
 		</dependency>
+		
+		<dependency>
+			<groupId>org.jboss.seam.mail</groupId>
+			<artifactId>seam-mail-render-impl</artifactId>
+			<version>3.0.0-SNAPSHOT</version>
+			<scope>compile</scope>
+		</dependency>
 
 		<dependency>
 			<groupId>org.jboss.seam.config</groupId>
@@ -148,6 +155,12 @@
 			<groupId>org.subethamail</groupId>
 			<artifactId>subethasmtp</artifactId>
 			<scope>test</scope>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.jboss.weld</groupId>
+			<artifactId>weld-core</artifactId>
+			<scope>test</scope>			
 		</dependency>
 
 		<!-- Needed for running tests (you may also use TestNG) -->

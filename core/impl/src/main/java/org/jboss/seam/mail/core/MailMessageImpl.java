@@ -253,19 +253,19 @@ public class MailMessageImpl implements MailMessage
       return this;
    }
 
-   public MailMessage textBody(String text)
+   public MailMessage bodyText(String text)
    {
       emailMessage.setTextBody(text);
       return this;
    }
 
-   public MailMessage htmlBody(String html)
+   public MailMessage bodyHtml(String html)
    {
       emailMessage.setHtmlBody(html);
       return this;
    }
 
-   public MailMessage htmlBodyTextAlt(String html, String text)
+   public MailMessage bodyHtmlTextAlt(String html, String text)
    {
       emailMessage.setTextBody(text);
       emailMessage.setHtmlBody(html);

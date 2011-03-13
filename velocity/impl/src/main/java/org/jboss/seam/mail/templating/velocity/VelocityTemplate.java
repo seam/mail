@@ -89,6 +89,10 @@ public class VelocityTemplate implements TemplateProvider
       {
          velocityContext = new VelocityContext(context, cdiContext);
       }
+      else
+      {
+         velocityContext = new VelocityContext(context);
+      }
 
       try
       {

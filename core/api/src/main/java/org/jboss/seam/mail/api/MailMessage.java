@@ -350,7 +350,7 @@ public interface MailMessage
     * @param text Plain text body
     * 
     */
-   public MailMessage textBody(String text);
+   public MailMessage bodyText(String text);
 
    /**
     * Sets the body of the message a HTML body represented by the supplied
@@ -359,7 +359,7 @@ public interface MailMessage
     * @param html HTML body
     * 
     */
-   public MailMessage htmlBody(String html);
+   public MailMessage bodyHtml(String html);
 
    /**
     * Sets the body of the message to a HTML body with a plain text alternative
@@ -368,7 +368,7 @@ public interface MailMessage
     * @param text Plain text body
     * 
     */
-   public MailMessage htmlBodyTextAlt(String html, String text);
+   public MailMessage bodyHtmlTextAlt(String html, String text);
 
    // End Core
 

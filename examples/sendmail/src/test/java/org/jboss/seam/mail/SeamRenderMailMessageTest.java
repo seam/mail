@@ -76,7 +76,7 @@ public class SeamRenderMailMessageTest
       .addResource("template.text.render", "WEB-INF/classes/template.text.render")
       .addResource("template.html.render", "WEB-INF/classes/template.html.render")
       .addPackages(true, SeamRenderMailMessageTest.class.getPackage())
-      .addLibraries(MavenArtifactResolver.resolve("org.jboss.seam.solder:seam-solder:3.0.0.Beta4"),
+      .addLibraries(MavenArtifactResolver.resolve("org.jboss.seam.solder:seam-solder:3.0.0.CR2"),
             MavenArtifactResolver.resolve("org.subethamail:subethasmtp:3.1.4"),
             MavenArtifactResolver.resolve("org.jboss.seam.render:seam-render:1.0.0-SNAPSHOT"),
             MavenArtifactResolver.resolve("commons-lang:commons-lang:2.4"))

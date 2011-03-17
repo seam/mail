@@ -72,7 +72,7 @@ public class FreeMarkerMailMessageTest
       .addResource("template.text.freemarker", "WEB-INF/classes/template.text.freemarker")
       .addResource("template.html.freemarker", "WEB-INF/classes/template.html.freemarker")
       .addPackages(true, FreeMarkerMailMessageTest.class.getPackage())
-      .addLibraries(MavenArtifactResolver.resolve("org.jboss.seam.solder:seam-solder:3.0.0.Beta4"),
+      .addLibraries(MavenArtifactResolver.resolve("org.jboss.seam.solder:seam-solder:3.0.0.CR2"),
             MavenArtifactResolver.resolve("org.subethamail:subethasmtp:3.1.4"),
             MavenArtifactResolver.resolve("org.freemarker:freemarker:2.3.16"),
             MavenArtifactResolver.resolve("commons-lang:commons-lang:2.4"))

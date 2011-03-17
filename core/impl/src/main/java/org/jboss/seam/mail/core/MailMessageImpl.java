@@ -348,6 +348,12 @@ public class MailMessageImpl implements MailMessage
       templateContext.put(key, value);
       return this;
    }
+   
+   public MailMessage put(Map<String, Object> values)
+   {
+      templateContext.putAll(values);
+      return this;
+   }
 
    public EmailMessage getEmailMessage()
    {

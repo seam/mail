@@ -4,7 +4,7 @@
 	<parent>
 		<artifactId>seam-parent</artifactId>
 		<groupId>org.jboss.seam</groupId>
-		<version>8</version>
+		<version>9</version>
 	</parent>
 
 	<groupId>org.jboss.seam.mail</groupId>
@@ -14,7 +14,8 @@
 	<name>Seam Mail Module</name>
 
 	<properties>
-		<seam.version>3.0.0.b09</seam.version>
+		<seam.version>3.0.0-SNAPSHOT</seam.version>
+		<jboss.javaee.version>1.0.0.Final</jboss.javaee.version>
 	</properties>
 
 	<modules>
@@ -44,7 +45,7 @@
 				<version>${project.version}</version>
 				<scope>compile</scope>
 			</dependency>
-			
+
 			<dependency>
 				<groupId>org.jboss.seam.mail</groupId>
 				<artifactId>seam-mail-core-impl</artifactId>
@@ -58,7 +59,7 @@
 				<version>${project.version}</version>
 				<scope>runtime</scope>
 			</dependency>
-			
+
 			<dependency>
 				<groupId>org.jboss.seam.mail</groupId>
 				<artifactId>seam-mail-render-impl</artifactId>
@@ -72,7 +73,28 @@
 				<version>${project.version}</version>
 				<scope>runtime</scope>
 			</dependency>
+
+			<!-- import the individual Java EE 6 API spec versions -->
+			<dependency>
+				<groupId>org.jboss.spec</groupId>
+				<artifactId>jboss-javaee-6.0</artifactId>
+				<version>${jboss.javaee.version}</version>
+				<scope>import</scope>
+				<type>pom</type>
+			</dependency>
+
+			<!-- make Java EE 6 API available as stack artifact -->
+			<!-- yes, we really need this one too! -->
+			<dependency>
+				<groupId>org.jboss.spec</groupId>
+				<artifactId>jboss-javaee-6.0</artifactId>
+				<version>${jboss.javaee.version}</version>
+				<scope>provided</scope>
+				<type>pom</type>
+			</dependency>
+
 		</dependencies>
+
 	</dependencyManagement>
 
 	<!-- Dependencies common to the api and implementation(s) -->

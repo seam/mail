@@ -20,6 +20,7 @@ package org.jboss.seam.mail.api;
 import java.io.File;
 import java.io.InputStream;
 import java.util.Collection;
+import java.util.Map;
 
 import javax.mail.Session;
 import javax.mail.internet.InternetAddress;
@@ -449,4 +450,11 @@ public interface MailMessage
     * @param value the Object being placed in the context
     */
    public MailMessage put(String name, Object value);
+   
+   /**
+    * Places a Map of variable in the templating engines context
+    * 
+    * @param values Map<String, Object> containing the variables to be placed in the context
+    */
+   public MailMessage put(Map<String, Object> values);
 }

@@ -123,7 +123,7 @@ public class MailMessageTest
          .replyTo(replyToAddress)
          .to(toAddress, toName)
          .subject(subject)
-         .textBody(textBody)
+         .bodyText(textBody)
          .importance(MessagePriority.HIGH)
          .messageId(messageId)
          .send(session.get());
@@ -180,7 +180,7 @@ public class MailMessageTest
          .replyTo(replyToAddress, replyToName)
          .to(person.getEmail(), person.getName())
          .subject(subject)
-         .htmlBody(htmlBody)
+         .bodyHtml(htmlBody)
          .importance(MessagePriority.HIGH)
          .addAttachment(new URLAttachment("http://www.seamframework.org/themes/sfwkorg/img/seam_icon_large.png", "seamLogo.png", ContentDisposition.INLINE)).send(session.get());
       }
@@ -242,7 +242,7 @@ public class MailMessageTest
          .from(fromAddress, fromName)
          .to(person.getEmail(), person.getName())
          .subject(subject)
-         .htmlBodyTextAlt(htmlBody, textBody)
+         .bodyHtmlTextAlt(htmlBody, textBody)
          .importance(MessagePriority.LOW)
          .deliveryReceipt(fromAddress)
          .readReceipt("seam.test")
@@ -323,7 +323,7 @@ public class MailMessageTest
          .to(longToAddress, longToName)
          .cc(longCcAddress, longCcName)
          .subject(subject)
-         .textBody(textBody)
+         .bodyText(textBody)
          .importance(MessagePriority.HIGH)
          .send(session.get());
       }
@@ -375,7 +375,7 @@ public class MailMessageTest
          person.setName(toName);
          person.setEmail(toAddress);
 
-         mailMessage.get().from(fromAddress, fromName).replyTo(replyToAddress).to(toAddress, toName).subject(subject).textBody(textBody).importance(MessagePriority.HIGH).messageId(messageId).send(session.get());
+         mailMessage.get().from(fromAddress, fromName).replyTo(replyToAddress).to(toAddress, toName).subject(subject).bodyText(textBody).importance(MessagePriority.HIGH).messageId(messageId).send(session.get());
       }
       finally
       {
@@ -403,7 +403,7 @@ public class MailMessageTest
          person.setName(toName);
          person.setEmail(toAddress);
 
-         mailMessage.get().from("seam seamerson@test.com", fromName).replyTo(replyToAddress).to(toAddress, toName).subject(subject).textBody(textBody).importance(MessagePriority.HIGH).messageId(messageId).send(session.get());
+         mailMessage.get().from("seam seamerson@test.com", fromName).replyTo(replyToAddress).to(toAddress, toName).subject(subject).bodyText(textBody).importance(MessagePriority.HIGH).messageId(messageId).send(session.get());
       }
       finally
       {
@@ -434,7 +434,7 @@ public class MailMessageTest
          .replyTo(replyToAddress)
          .to(person)
          .subject(subject)
-         .textBody(textBody)
+         .bodyText(textBody)
          .importance(MessagePriority.HIGH)
          .messageId(messageId)
          .send(session.get());
@@ -491,7 +491,7 @@ public class MailMessageTest
          .replyTo(replyToAddress)
          .to(person)
          .subject(subject)
-         .textBody(textBody)
+         .bodyText(textBody)
          .importance(MessagePriority.HIGH)
          .messageId(messageId)
          .send();

@@ -49,13 +49,13 @@ import org.jboss.seam.mail.util.MailUtility;
 public class MailMessageImpl implements MailMessage
 {
    private EmailMessage emailMessage;
-   
+
    private TemplateProvider subjectTemplate;
    private TemplateProvider textTemplate;
    private TemplateProvider htmlTemplate;
    private Map<String, Object> templateContext = new HashMap<String, Object>();
    private boolean templatesMerged;
-   
+
    @Inject
    private Instance<Session> session;
 
@@ -91,7 +91,10 @@ public class MailMessageImpl implements MailMessage
 
    public MailMessage from(EmailContact emailContact)
    {
-      emailMessage.addFromAddress(MailUtility.internetAddress(emailContact));
+      if (emailContact != null)
+      {
+         emailMessage.addFromAddress(MailUtility.internetAddress(emailContact));
+      }
       return this;
    }
 
@@ -121,7 +124,10 @@ public class MailMessageImpl implements MailMessage
 
    public MailMessage replyTo(EmailContact emailContact)
    {
-      emailMessage.addReplyToAddress(MailUtility.internetAddress(emailContact));
+      if (emailContact != null)
+      {
+         emailMessage.addReplyToAddress(MailUtility.internetAddress(emailContact));
+      }
       return this;
    }
 
@@ -151,7 +157,10 @@ public class MailMessageImpl implements MailMessage
 
    public MailMessage to(EmailContact emailContact)
    {
-      emailMessage.addToAddress(MailUtility.internetAddress(emailContact));
+      if (emailContact != null)
+      {
+         emailMessage.addToAddress(MailUtility.internetAddress(emailContact));
+      }
       return this;
    }
 
@@ -181,7 +190,10 @@ public class MailMessageImpl implements MailMessage
 
    public MailMessage cc(EmailContact emailContact)
    {
-      emailMessage.addCcAddress(MailUtility.internetAddress(emailContact));
+      if (emailContact != null)
+      {
+         emailMessage.addCcAddress(MailUtility.internetAddress(emailContact));
+      }
       return this;
    }
 
@@ -211,7 +223,10 @@ public class MailMessageImpl implements MailMessage
 
    public MailMessage bcc(EmailContact emailContact)
    {
-      emailMessage.addBccAddress(MailUtility.internetAddress(emailContact));
+      if (emailContact != null)
+      {
+         emailMessage.addBccAddress(MailUtility.internetAddress(emailContact));
+      }
       return this;
    }
 
@@ -272,7 +287,7 @@ public class MailMessageImpl implements MailMessage
       return this;
    }
 
-   // Begin Attachments   
+   // Begin Attachments
 
    public MailMessage addAttachment(EmailAttachment attachment)
    {
@@ -285,19 +300,19 @@ public class MailMessageImpl implements MailMessage
       emailMessage.addAttachments(attachments);
       return this;
    }
-   
+
    public MailMessage addAttachment(String fileName, String mimeType, ContentDisposition contentDispostion, byte[] bytes)
    {
       addAttachment(new BaseAttachment(fileName, mimeType, contentDispostion, bytes));
       return this;
    }
-   
+
    public MailMessage addAttachment(String fileName, String mimeType, ContentDisposition contentDispostion, InputStream inputStream)
    {
       addAttachment(new InputStreamAttachment(fileName, mimeType, contentDispostion, inputStream));
       return this;
    }
-   
+
    public MailMessage addAttachment(ContentDisposition contentDispostion, File file)
    {
       addAttachment(new FileAttachment(contentDispostion, file));
@@ -317,7 +332,7 @@ public class MailMessageImpl implements MailMessage
    }
 
    // End Calendar
-   
+
    public MailMessage subject(TemplateProvider subject)
    {
       subjectTemplate = subject;
@@ -342,13 +357,13 @@ public class MailMessageImpl implements MailMessage
       bodyText(textBody);
       return this;
    }
-   
+
    public MailMessage put(String key, Object value)
    {
       templateContext.put(key, value);
       return this;
    }
-   
+
    public MailMessage put(Map<String, Object> values)
    {
       templateContext.putAll(values);
@@ -364,8 +379,8 @@ public class MailMessageImpl implements MailMessage
    {
       this.emailMessage = emailMessage;
    }
-   
-   public MailMessage mergeTemplates()
+
+   public EmailMessage mergeTemplates()
    {
       put("mailContext", new MailContext(EmailAttachmentUtil.getEmailAttachmentMap(emailMessage.getAttachments())));
 
@@ -383,19 +398,19 @@ public class MailMessageImpl implements MailMessage
       {
          emailMessage.setHtmlBody(htmlTemplate.merge(templateContext));
       }
-      
+
       templatesMerged = true;
-      
-      return this;  
+
+      return emailMessage;
    }
 
    public EmailMessage send(Session session) throws SendFailedException
    {
-      if(!templatesMerged)
+      if (!templatesMerged)
       {
          mergeTemplates();
       }
-      
+
       MailUtility.send(emailMessage, session);
 
       return emailMessage;
@@ -404,5 +419,5 @@ public class MailMessageImpl implements MailMessage
    public EmailMessage send() throws SendFailedException
    {
       return this.send(session.get());
-   }  
+   }
 }

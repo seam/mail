@@ -385,6 +385,12 @@ public interface MailMessage
     * 
     */
    public void setEmailMessage(EmailMessage emailMessage);
+   
+   /**
+    * Merge the templates with the context
+    * @return
+    */
+   public EmailMessage mergeTemplates();
 
    /**
     * Send the Message

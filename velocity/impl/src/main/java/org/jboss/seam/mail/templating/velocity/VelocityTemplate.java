@@ -25,7 +25,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringWriter;
-import java.io.UnsupportedEncodingException;
 import java.util.Map;
 
 import org.apache.velocity.VelocityContext;
@@ -61,14 +60,14 @@ public class VelocityTemplate implements TemplateProvider
       this.cdiContext = cdiContext;
    }
    
-   public VelocityTemplate(String string) throws UnsupportedEncodingException
+   public VelocityTemplate(String string)
    {
-      this(new ByteArrayInputStream(string.getBytes("UTF-8")));
+      this(new ByteArrayInputStream(string.getBytes()));
    }  
 
-   public VelocityTemplate(String string, CDIVelocityContext cdiContext) throws UnsupportedEncodingException
+   public VelocityTemplate(String string, CDIVelocityContext cdiContext)
    {
-      this(new ByteArrayInputStream(string.getBytes("UTF-8")), cdiContext);
+      this(new ByteArrayInputStream(string.getBytes()), cdiContext);
    }  
    
    public VelocityTemplate(File file) throws FileNotFoundException

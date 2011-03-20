@@ -25,7 +25,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringWriter;
-import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -55,9 +54,9 @@ public class FreeMarkerTemplate implements TemplateProvider
       configuration.setObjectWrapper(new DefaultObjectWrapper());
    }
 
-   public FreeMarkerTemplate(String string) throws UnsupportedEncodingException
+   public FreeMarkerTemplate(String string)
    {
-      this(new ByteArrayInputStream(string.getBytes("UTF-8")));
+      this(new ByteArrayInputStream(string.getBytes()));
    }
 
    public FreeMarkerTemplate(File file) throws FileNotFoundException

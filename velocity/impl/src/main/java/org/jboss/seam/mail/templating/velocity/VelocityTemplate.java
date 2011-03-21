@@ -50,7 +50,6 @@ public class VelocityTemplate implements TemplateProvider
    public VelocityTemplate(InputStream inputStream)
    {
       velocityEngine = new VelocityEngine();
-      velocityEngine.setProperty("runtime.log.logsystem.class", "org.apache.velocity.runtime.log.SimpleLog4JLogSystem");
       this.inputStream = inputStream;
    }
 

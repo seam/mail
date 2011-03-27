@@ -3,3 +3,4 @@ target
 .project
 .settings
 transaction.log
+**/*/src/main/java/META-INF

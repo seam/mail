@@ -14,8 +14,7 @@
 	<name>Seam Mail Module</name>
 
 	<properties>
-		<seam.version>3.0.0-SNAPSHOT</seam.version>
-		<jboss.javaee.version>1.0.0.Final</jboss.javaee.version>
+		<seam.version>3.0.0.CR6</seam.version>
 	</properties>
 
 	<modules>
@@ -73,26 +72,6 @@
 				<version>${project.version}</version>
 				<scope>runtime</scope>
 			</dependency>
-
-			<!-- import the individual Java EE 6 API spec versions -->
-			<dependency>
-				<groupId>org.jboss.spec</groupId>
-				<artifactId>jboss-javaee-6.0</artifactId>
-				<version>${jboss.javaee.version}</version>
-				<scope>import</scope>
-				<type>pom</type>
-			</dependency>
-
-			<!-- make Java EE 6 API available as stack artifact -->
-			<!-- yes, we really need this one too! -->
-			<dependency>
-				<groupId>org.jboss.spec</groupId>
-				<artifactId>jboss-javaee-6.0</artifactId>
-				<version>${jboss.javaee.version}</version>
-				<scope>provided</scope>
-				<type>pom</type>
-			</dependency>
-
 		</dependencies>
 
 	</dependencyManagement>

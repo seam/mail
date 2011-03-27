@@ -53,6 +53,8 @@ import org.jboss.seam.solder.resourceLoader.ResourceProvider;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
+import org.jboss.shrinkwrap.api.importer.ZipImporter;
+import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -72,14 +74,17 @@ public class SeamRenderMailMessageTest
    public static Archive<?> createTestArchive()
    {
       Archive<?> ar = ShrinkWrap.create(WebArchive.class, "test.war")
-      .addResource("template.text.render", "WEB-INF/classes/template.text.render")
-      .addResource("template.html.render", "WEB-INF/classes/template.html.render")
+      .addAsResource("template.text.render", "template.text.render")
+      .addAsResource("template.html.render", "template.html.render")
       .addPackages(true, SeamRenderMailMessageTest.class.getPackage())
-      .addLibraries(MavenArtifactResolver.resolve("org.jboss.seam.solder:seam-solder:3.0.0.CR2"),
+      // workaround for Weld EE embedded not properly reading Seam Solder jar
+      .addAsLibrary(ShrinkWrap.create(ZipImporter.class, "seam-solder-3.0.0.CR4.jar")
+            .importFrom(MavenArtifactResolver.resolve("org.jboss.seam.solder:seam-solder:3.0.0.CR4")).as(JavaArchive.class))
+      .addAsLibraries(
             MavenArtifactResolver.resolve("org.subethamail:subethasmtp:3.1.4"),
             MavenArtifactResolver.resolve("org.jboss.seam.render:seam-render:1.0.0-SNAPSHOT"),
             MavenArtifactResolver.resolve("commons-lang:commons-lang:2.4"))
-      .addWebResource(EmptyAsset.INSTANCE, "beans.xml");
+      .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
       return ar;
    }
 
@@ -203,7 +208,7 @@ public class SeamRenderMailMessageTest
             .put("person", person)
             .put("version", version)
             .importance(MessagePriority.HIGH)
-            .addAttachment(new URLAttachment("http://www.seamframework.org/themes/sfwkorg/img/seam_icon_large.png", "seamLogo.png", ContentDisposition.INLINE))
+            .addAttachment(new URLAttachment("http://design.jboss.org/seam/logo/final/seam_mail_85px.png", "seamLogo.png", ContentDisposition.INLINE))
             .send(session.get());
       }
       finally
@@ -274,7 +279,7 @@ public class SeamRenderMailMessageTest
             .deliveryReceipt(fromAddress)
             .readReceipt("seam.test")
             .addAttachment(htmlTemplatePath, "text/html", ContentDisposition.ATTACHMENT, resourceProvider.loadResourceStream(htmlTemplatePath))
-            .addAttachment(new URLAttachment("http://www.seamframework.org/themes/sfwkorg/img/seam_icon_large.png", "seamLogo.png", ContentDisposition.INLINE))
+            .addAttachment(new URLAttachment("http://design.jboss.org/seam/logo/final/seam_mail_85px.png", "seamLogo.png", ContentDisposition.INLINE))
             .send();
       }
       finally

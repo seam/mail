@@ -30,46 +30,11 @@
 		<jboss.domain>default</jboss.domain>
 	</properties>
 
-	<repositories>
-		<!-- The JBoss Community public repository is a composite repository of several major repositories -->
-		<!-- see http://community.jboss.org/wiki/MavenGettingStarted-Users -->
-		<!-- At the time of writing, Arquillian and the JBoss Spec POMs are only in the JBoss Community public repository (not Maven central) -->
-		<repository>
-			<id>jboss-public-repository</id>
-			<name>JBoss Repository</name>
-			<url>https://repository.jboss.org/nexus/content/groups/public</url>
-			<!-- These optional flags are designed to speed up your builds by reducing remote server calls -->
-			<releases>
-				<updatePolicy>never</updatePolicy>
-			</releases>
-			<snapshots>
-				<updatePolicy>daily</updatePolicy>
-			</snapshots>
-		</repository>
-	</repositories>
-
-	<pluginRepositories>
-		<pluginRepository>
-			<id>jboss-public-repository</id>
-			<name>JBoss Repository</name>
-			<url>https://repository.jboss.org/nexus/content/groups/public</url>
-			<!-- These optional flags are designed to speed up your builds by reducing remote server calls -->
-			<releases>
-				<updatePolicy>never</updatePolicy>
-			</releases>
-			<snapshots>
-				<!-- Set to true to fix error in which Maven cannot find org.apache.maven.plugins:maven-archetype-plugin:maven-plugin:2.0-alpha-6-SNAPSHOT -->
-				<updatePolicy>daily</updatePolicy>
-			</snapshots>
-		</pluginRepository>
-	</pluginRepositories>
-
 	<dependencies>
 
 		<dependency>
 			<groupId>org.jboss.seam.mail</groupId>
 			<artifactId>seam-mail-core-impl</artifactId>
-			<version>${project.version}</version>
          <!-- FIXME implementation should not be required at compilation time -->
          <scope>compile</scope>
 		</dependency>
@@ -77,14 +42,12 @@
 		<dependency>
 			<groupId>org.jboss.seam.mail</groupId>
 			<artifactId>seam-mail-velocity-impl</artifactId>
-			<version>${project.version}</version>
 			<scope>compile</scope>			
 		</dependency>
 		
 		<dependency>
 			<groupId>org.jboss.seam.mail</groupId>
 			<artifactId>seam-mail-freemarker-impl</artifactId>
-			<version>${project.version}</version>
 			<scope>compile</scope>			
 		</dependency>
 		
@@ -96,15 +59,14 @@
 		</dependency>
 
 		<dependency>
+			<groupId>org.jboss.seam.solder</groupId>
+			<artifactId>seam-solder</artifactId>
+         <version>3.0.0.CR4</version>
+		</dependency>
+
+		<dependency>
 			<groupId>org.jboss.seam.config</groupId>
 			<artifactId>seam-config-xml</artifactId>
-			<version>3.0.0.Beta2</version>
-			<exclusions>
-				<exclusion>
-					<groupId>javax.enterprise</groupId>
-					<artifactId>cdi-api</artifactId>
-				</exclusion>
-			</exclusions>
 		</dependency>	
 
 		<!-- Need to use the injectable logger in Weld Extensions -->
@@ -163,20 +125,16 @@
 			<scope>test</scope>			
 		</dependency>
 
-		<!-- Needed for running tests (you may also use TestNG) -->
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.8.1</version>
 			<scope>test</scope>
 		</dependency>
 
-		<!-- Optional, but highly recommended -->
-		<!-- Arquillian allows you to test enterprise code such as EJBs and Transactional JPA from JUnit/TestNG -->
 		<dependency>
 			<groupId>org.jboss.arquillian</groupId>
 			<artifactId>arquillian-junit</artifactId>
-			<version>${arquillian.version}</version>
+			<version>1.0.0.Alpha5</version>
 			<scope>test</scope>
 		</dependency>
 
@@ -254,8 +212,10 @@
 			</activation>
 			<dependencies>
 				<dependency>
-					<groupId>org.jboss.weld.arquillian.container</groupId>
+					<groupId>org.jboss.arquillian.container</groupId>
 					<artifactId>arquillian-weld-ee-embedded-1.1</artifactId>
+               <version>1.0.0.Alpha5</version>
+					<scope>test</scope>
 				</dependency>
 				<dependency>
 					<groupId>org.jboss.weld</groupId>
@@ -286,6 +246,7 @@
 				<dependency>
 					<groupId>org.jboss.arquillian.container</groupId>
 					<artifactId>arquillian-jbossas-remote-6</artifactId>
+               <version>1.0.0.Alpha5</version>
 					<scope>test</scope>
 				</dependency>
 				<!-- Java EE Specification POM -->
@@ -305,18 +266,6 @@
 					<scope>test</scope>
 				</dependency>
 			</dependencies>
-			<build>
-				<testResources>
-					<testResource>
-						<directory>src/test/resources</directory>
-					</testResource>
-					<!-- Overrides default configuration to use alternate persistence.xml with Hibernate settings and declare a JBoss AS Datasource -->
-					<!-- Used by Arquillian -->
-					<testResource>
-						<directory>src/test/resources-jbossas</directory>
-					</testResource>
-				</testResources>
-			</build>
 		</profile>
 	</profiles>
 </project>

@@ -51,6 +51,8 @@ import org.jboss.seam.solder.resourceLoader.ResourceProvider;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
+import org.jboss.shrinkwrap.api.importer.ZipImporter;
+import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -68,14 +70,17 @@ public class FreeMarkerMailMessageTest
    public static Archive<?> createTestArchive()
    {
       Archive<?> ar = ShrinkWrap.create(WebArchive.class, "test.war")
-      .addResource("template.text.freemarker", "WEB-INF/classes/template.text.freemarker")
-      .addResource("template.html.freemarker", "WEB-INF/classes/template.html.freemarker")
+      .addAsResource("template.text.freemarker", "template.text.freemarker")
+      .addAsResource("template.html.freemarker", "template.html.freemarker")
       .addPackages(true, FreeMarkerMailMessageTest.class.getPackage())
-      .addLibraries(MavenArtifactResolver.resolve("org.jboss.seam.solder:seam-solder:3.0.0.CR2"),
+      // workaround for Weld EE embedded not properly reading Seam Solder jar
+      .addAsLibrary(ShrinkWrap.create(ZipImporter.class, "seam-solder-3.0.0.CR4.jar")
+            .importFrom(MavenArtifactResolver.resolve("org.jboss.seam.solder:seam-solder:3.0.0.CR4")).as(JavaArchive.class))
+      .addAsLibraries(
             MavenArtifactResolver.resolve("org.subethamail:subethasmtp:3.1.4"),
             MavenArtifactResolver.resolve("org.freemarker:freemarker:2.3.16"),
             MavenArtifactResolver.resolve("commons-lang:commons-lang:2.4"))
-      .addWebResource(EmptyAsset.INSTANCE, "beans.xml");
+      .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
       return ar;
    }
 
@@ -191,7 +196,7 @@ public class FreeMarkerMailMessageTest
             .put("person", person)
             .put("version", version)
             .importance(MessagePriority.HIGH)
-            .addAttachment(new URLAttachment("http://www.seamframework.org/themes/sfwkorg/img/seam_icon_large.png", "seamLogo.png", ContentDisposition.INLINE))
+            .addAttachment(new URLAttachment("http://design.jboss.org/seam/logo/final/seam_mail_85px.png", "seamLogo.png", ContentDisposition.INLINE))
             .send(session.get());
       }
       finally
@@ -261,7 +266,7 @@ public class FreeMarkerMailMessageTest
             .deliveryReceipt(fromAddress)
             .readReceipt("seam.test")
             .addAttachment("template.html.freemarker", "text/html", ContentDisposition.ATTACHMENT, resourceProvider.loadResourceStream("template.html.freemarker"))
-            .addAttachment(new URLAttachment("http://www.seamframework.org/themes/sfwkorg/img/seam_icon_large.png", "seamLogo.png", ContentDisposition.INLINE))
+            .addAttachment(new URLAttachment("http://design.jboss.org/seam/logo/final/seam_mail_85px.png", "seamLogo.png", ContentDisposition.INLINE))
             .send();
       }
       finally
@@ -340,7 +345,7 @@ public class FreeMarkerMailMessageTest
             .deliveryReceipt(fromAddress)
             .readReceipt("seam.test")
             .addAttachment("template.html.freemarker", "text/html", ContentDisposition.ATTACHMENT, resourceProvider.loadResourceStream("template.html.freemarker"))
-            .addAttachment(new URLAttachment("http://www.seamframework.org/themes/sfwkorg/img/seam_icon_large.png", "seamLogo.png", ContentDisposition.INLINE))
+            .addAttachment(new URLAttachment("http://design.jboss.org/seam/logo/final/seam_mail_85px.png", "seamLogo.png", ContentDisposition.INLINE))
             .send(gmailSession);
       }
       finally

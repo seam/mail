@@ -64,12 +64,12 @@ public class MailMessageTest
    public static Archive<?> createTestArchive()
    {
       Archive<?> ar = ShrinkWrap.create(WebArchive.class, "test.war")
-      .addResource("template.text.velocity", "WEB-INF/classes/template.text.velocity")
+      .addAsResource("template.text.velocity", "template.text.velocity")
       .addPackages(true, MailMessageTest.class.getPackage())
-      .addLibraries(MavenArtifactResolver.resolve("org.jboss.seam.solder:seam-solder:3.0.0.CR2"),
+      .addAsLibraries(MavenArtifactResolver.resolve("org.jboss.seam.solder:seam-solder:3.0.0.CR4"),
             MavenArtifactResolver.resolve("org.subethamail:subethasmtp:3.1.4"), 
             MavenArtifactResolver.resolve("org.apache.velocity:velocity:1.6.4"))
-      .addWebResource(EmptyAsset.INSTANCE, "beans.xml");
+      .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
       return ar;
    }
 
@@ -182,7 +182,7 @@ public class MailMessageTest
          .subject(subject)
          .bodyHtml(htmlBody)
          .importance(MessagePriority.HIGH)
-         .addAttachment(new URLAttachment("http://www.seamframework.org/themes/sfwkorg/img/seam_icon_large.png", "seamLogo.png", ContentDisposition.INLINE)).send(session.get());
+         .addAttachment(new URLAttachment("http://design.jboss.org/seam/logo/final/seam_mail_85px.png", "seamLogo.png", ContentDisposition.INLINE)).send(session.get());
       }
       finally
       {
@@ -247,7 +247,7 @@ public class MailMessageTest
          .deliveryReceipt(fromAddress)
          .readReceipt("seam.test")
          .addAttachment("template.text.velocity", "text/plain", ContentDisposition.ATTACHMENT, resourceProvider.loadResourceStream("template.text.velocity"))
-         .addAttachment(new URLAttachment("http://www.seamframework.org/themes/sfwkorg/img/seam_icon_large.png", "seamLogo.png", ContentDisposition.INLINE))
+         .addAttachment(new URLAttachment("http://design.jboss.org/seam/logo/final/seam_mail_85px.png", "seamLogo.png", ContentDisposition.INLINE))
          .send(session.get());
       }
       finally

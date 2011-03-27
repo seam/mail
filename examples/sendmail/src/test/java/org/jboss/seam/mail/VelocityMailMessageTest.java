@@ -53,6 +53,8 @@ import org.jboss.seam.solder.resourceLoader.ResourceProvider;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
+import org.jboss.shrinkwrap.api.importer.ZipImporter;
+import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -70,18 +72,21 @@ public class VelocityMailMessageTest
    public static Archive<?> createTestArchive()
    {
       Archive<?> ar = ShrinkWrap.create(WebArchive.class, "test.war")
-      .addResource("template.text.velocity", "WEB-INF/classes/template.text.velocity")
-      .addResource("template.html.velocity", "WEB-INF/classes/template.html.velocity")
+      .addAsResource("template.text.velocity")
+      .addAsResource("template.html.velocity")
+      .addAsWebResource("seam-mail-logo.png")
       .addPackages(true, VelocityMailMessageTest.class.getPackage())
-      .addLibraries(MavenArtifactResolver.resolve("org.jboss.seam.solder:seam-solder:3.0.0.CR2"),
+      // workaround for Weld EE embedded not properly reading Seam Solder jar
+      .addAsLibrary(ShrinkWrap.create(ZipImporter.class, "seam-solder-3.0.0.CR4.jar")
+            .importFrom(MavenArtifactResolver.resolve("org.jboss.seam.solder:seam-solder:3.0.0.CR4")).as(JavaArchive.class))
+      .addAsLibraries(
             MavenArtifactResolver.resolve("org.subethamail:subethasmtp:3.1.4"),
             MavenArtifactResolver.resolve("org.apache.velocity:velocity:1.6.4"),
             MavenArtifactResolver.resolve("commons-lang:commons-lang:2.4"))
-      .addWebResource(EmptyAsset.INSTANCE, "beans.xml");
-
+      .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
       return ar;
    }
-
+   
    @Inject
    private Instance<MailMessage> mailMessage;
 
@@ -195,7 +200,7 @@ public class VelocityMailMessageTest
             .bodyHtml(new VelocityTemplate(resourceProvider.loadResourceStream("template.html.velocity"), cDIVelocityContext.get()))
             .put("version", version)
             .importance(MessagePriority.HIGH)
-            .addAttachment(new URLAttachment("http://www.seamframework.org/themes/sfwkorg/img/seam_icon_large.png", "seamLogo.png", ContentDisposition.INLINE))
+            .addAttachment(new URLAttachment("http://design.jboss.org/seam/logo/final/seam_mail_85px.png", "seamLogo.png", ContentDisposition.INLINE))
             .send(session.get());
       }
       finally
@@ -264,7 +269,7 @@ public class VelocityMailMessageTest
             .deliveryReceipt(fromAddress)
             .readReceipt("seam.test")
             .addAttachment("template.html.velocity", "text/html", ContentDisposition.ATTACHMENT, resourceProvider.loadResourceStream("template.html.velocity"))
-            .addAttachment(new URLAttachment("http://www.seamframework.org/themes/sfwkorg/img/seam_icon_large.png", "seamLogo.png", ContentDisposition.INLINE))
+            .addAttachment(new URLAttachment("http://design.jboss.org/seam/logo/final/seam_mail_85px.png", "seamLogo.png", ContentDisposition.INLINE))
             .send();
       }
       finally
@@ -317,7 +322,7 @@ public class VelocityMailMessageTest
    {
       String subject = "HTML+Text Message from Seam Mail - " + java.util.UUID.randomUUID().toString();
      
-      mailConfig.setServerHost("localHost");
+      mailConfig.setServerHost("localhost");
       mailConfig.setServerPort(8978);
 
       Wiser wiser = new Wiser(mailConfig.getServerPort());
@@ -342,7 +347,7 @@ public class VelocityMailMessageTest
             .deliveryReceipt(fromAddress)
             .readReceipt("seam.test")
             .addAttachment("template.html.velocity", "text/html", ContentDisposition.ATTACHMENT, resourceProvider.loadResourceStream("template.html.velocity"))
-            .addAttachment(new URLAttachment("http://www.seamframework.org/themes/sfwkorg/img/seam_icon_large.png", "seamLogo.png", ContentDisposition.INLINE))
+            .addAttachment(new URLAttachment("http://design.jboss.org/seam/logo/final/seam_mail_85px.png", "seamLogo.png", ContentDisposition.INLINE))
             .send(gmailSession);
       }
       finally

@@ -56,7 +56,6 @@ import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.importer.ZipImporter;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.subethamail.smtp.auth.EasyAuthenticationHandlerFactory;
@@ -120,7 +119,6 @@ public class SeamRenderMailMessageTest
    private String textTemplatePath = "template.text.render";
    private String htmlTemplatePath = "template.html.render";
 
-   @Ignore
    @Test
    public void testTextMailMessage() throws MessagingException, IOException
    {
@@ -180,7 +178,6 @@ public class SeamRenderMailMessageTest
       Assert.assertEquals(expectedTextBody(person.getName(), version), MailTestUtil.getStringContent(text));
    }
 
-   @Ignore
    @Test
    public void testHTMLMailMessage() throws MessagingException, IOException
    {
@@ -248,7 +245,6 @@ public class SeamRenderMailMessageTest
       Assert.assertEquals("seamLogo.png", attachment1.getFileName());
    }
 
-   @Ignore
    @Test
    public void testHTMLTextAltMailMessage() throws MessagingException, IOException
    {
@@ -327,7 +323,6 @@ public class SeamRenderMailMessageTest
       Assert.assertEquals("seamLogo.png", inlineAttachment.getFileName());
    }
    
-   @Ignore
    @Test
    public void testSMTPSessionAuthentication() throws MessagingException, MalformedURLException
    {
@@ -374,7 +369,6 @@ public class SeamRenderMailMessageTest
       Assert.assertEquals("Subject has been modified", subject, MimeUtility.unfold(mess.getHeader("Subject", null)));
    }
    
-   @Ignore
    @Test(expected=SendFailedException.class)
    public void testTextMailMessageSendFailed()
    {

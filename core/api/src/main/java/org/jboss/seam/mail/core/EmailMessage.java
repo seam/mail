@@ -23,9 +23,9 @@ import java.util.HashSet;
 
 import javax.mail.internet.InternetAddress;
 
-import org.jboss.seam.mail.core.enumurations.ContentType;
-import org.jboss.seam.mail.core.enumurations.EmailMessageType;
-import org.jboss.seam.mail.core.enumurations.MessagePriority;
+import org.jboss.seam.mail.core.enumerations.ContentType;
+import org.jboss.seam.mail.core.enumerations.EmailMessageType;
+import org.jboss.seam.mail.core.enumerations.MessagePriority;
 
 /**
  * Stores infomation about an EmailMessage while it is being build and after

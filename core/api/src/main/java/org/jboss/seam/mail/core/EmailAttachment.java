@@ -2,7 +2,7 @@ package org.jboss.seam.mail.core;
 
 import java.util.Collection;
 
-import org.jboss.seam.mail.core.enumurations.ContentDisposition;
+import org.jboss.seam.mail.core.enumerations.ContentDisposition;
 
 public interface EmailAttachment
 {

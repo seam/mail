@@ -23,7 +23,7 @@ import java.util.UUID;
 
 import org.jboss.seam.mail.core.EmailAttachment;
 import org.jboss.seam.mail.core.Header;
-import org.jboss.seam.mail.core.enumurations.ContentDisposition;
+import org.jboss.seam.mail.core.enumerations.ContentDisposition;
 
 /**
  * 

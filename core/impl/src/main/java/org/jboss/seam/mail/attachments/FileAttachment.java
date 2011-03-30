@@ -24,7 +24,7 @@ import javax.activation.FileDataSource;
 
 import org.jboss.seam.mail.core.AttachmentException;
 import org.jboss.seam.mail.core.Header;
-import org.jboss.seam.mail.core.enumurations.ContentDisposition;
+import org.jboss.seam.mail.core.enumerations.ContentDisposition;
 
 import com.google.common.io.Files;
 

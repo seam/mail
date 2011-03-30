@@ -27,7 +27,7 @@ import javax.mail.internet.MimeBodyPart;
 import javax.mail.util.ByteArrayDataSource;
 
 import org.jboss.seam.mail.core.Header;
-import org.jboss.seam.mail.core.enumurations.ContentDisposition;
+import org.jboss.seam.mail.core.enumerations.ContentDisposition;
 
 
 /**

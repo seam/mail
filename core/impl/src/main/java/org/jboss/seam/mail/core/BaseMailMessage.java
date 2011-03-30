@@ -35,11 +35,11 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 
 import org.jboss.seam.mail.attachments.AttachmentPart;
-import org.jboss.seam.mail.core.enumurations.ContentDisposition;
-import org.jboss.seam.mail.core.enumurations.ContentType;
-import org.jboss.seam.mail.core.enumurations.MailHeader;
-import org.jboss.seam.mail.core.enumurations.MessagePriority;
-import org.jboss.seam.mail.core.enumurations.RecipientType;
+import org.jboss.seam.mail.core.enumerations.ContentDisposition;
+import org.jboss.seam.mail.core.enumerations.ContentType;
+import org.jboss.seam.mail.core.enumerations.MailHeader;
+import org.jboss.seam.mail.core.enumerations.MessagePriority;
+import org.jboss.seam.mail.core.enumerations.RecipientType;
 import org.jboss.seam.mail.util.MailUtility;
 /**
  * 

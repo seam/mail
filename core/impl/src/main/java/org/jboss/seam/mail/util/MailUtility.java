@@ -36,8 +36,8 @@ import org.jboss.seam.mail.core.InvalidAddressException;
 import org.jboss.seam.mail.core.MailConfig;
 import org.jboss.seam.mail.core.MailSessionAuthenticator;
 import org.jboss.seam.mail.core.SendFailedException;
-import org.jboss.seam.mail.core.enumurations.EmailMessageType;
-import org.jboss.seam.mail.core.enumurations.RecipientType;
+import org.jboss.seam.mail.core.enumerations.EmailMessageType;
+import org.jboss.seam.mail.core.enumerations.RecipientType;
 
 /**
  * 

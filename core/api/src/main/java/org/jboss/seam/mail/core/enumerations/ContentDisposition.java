@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package org.jboss.seam.mail.core.enumurations;
+package org.jboss.seam.mail.core.enumerations;
 
 import javax.mail.internet.MimeBodyPart;
 

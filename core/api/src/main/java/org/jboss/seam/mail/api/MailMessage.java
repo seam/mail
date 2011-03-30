@@ -30,8 +30,8 @@ import org.jboss.seam.mail.core.EmailContact;
 import org.jboss.seam.mail.core.EmailMessage;
 import org.jboss.seam.mail.core.InvalidAddressException;
 import org.jboss.seam.mail.core.SendFailedException;
-import org.jboss.seam.mail.core.enumurations.ContentDisposition;
-import org.jboss.seam.mail.core.enumurations.MessagePriority;
+import org.jboss.seam.mail.core.enumerations.ContentDisposition;
+import org.jboss.seam.mail.core.enumerations.MessagePriority;
 import org.jboss.seam.mail.templating.TemplateProvider;
 
 /**

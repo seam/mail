@@ -15,27 +15,28 @@
  * limitations under the License.
  */
 
-package org.jboss.seam.mail.core.enumurations;
+package org.jboss.seam.mail.core.enumerations;
+
 /**
  * 
  * @author Cody Lerum
- *
+ * 
  */
-public enum RecipientType
+public enum ContentType
 {
-   TO(javax.mail.Message.RecipientType.TO),
-   CC(javax.mail.Message.RecipientType.CC),
-   BCC(javax.mail.Message.RecipientType.BCC);
-   
-   private javax.mail.Message.RecipientType recipientType;
-   
-   private RecipientType(javax.mail.Message.RecipientType recipientType)
+   ALTERNATIVE("alternative"),
+   MIXED("mixed"),
+   RELATED("related");
+
+   private String value;
+
+   private ContentType(String value)
    {
-      this.recipientType = recipientType;
+      this.value = value;
    }
 
-   public javax.mail.Message.RecipientType getRecipientType()
+   public String getValue()
    {
-      return recipientType;
+      return value;
    }
 }

@@ -26,8 +26,8 @@ import javax.mail.Session;
 
 import org.jboss.seam.mail.api.MailMessage;
 import org.jboss.seam.mail.attachments.URLAttachment;
-import org.jboss.seam.mail.core.enumurations.ContentDisposition;
-import org.jboss.seam.mail.core.enumurations.MessagePriority;
+import org.jboss.seam.mail.core.enumerations.ContentDisposition;
+import org.jboss.seam.mail.core.enumerations.MessagePriority;
 import org.jboss.seam.mail.templating.freemarker.FreeMarkerTemplate;
 import org.jboss.seam.mail.templating.render.RenderTemplate;
 import org.jboss.seam.mail.templating.velocity.CDIVelocityContext;

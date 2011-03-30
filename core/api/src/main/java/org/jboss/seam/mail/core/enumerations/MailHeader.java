@@ -15,28 +15,27 @@
  * limitations under the License.
  */
 
-package org.jboss.seam.mail.core.enumurations;
+package org.jboss.seam.mail.core.enumerations;
 
 /**
+ * Defines the available message receipt headers
  * 
  * @author Cody Lerum
- * 
  */
-public enum ContentType
+public enum MailHeader
 {
-   ALTERNATIVE("alternative"),
-   MIXED("mixed"),
-   RELATED("related");
+   DELIVERY_RECIEPT("Return-Receipt-To"), 
+   READ_RECIEPT("Disposition-Notification-To");
 
-   private String value;
+   private String headerValue;
 
-   private ContentType(String value)
+   private MailHeader(String headerValue)
    {
-      this.value = value;
+      this.headerValue = headerValue;
    }
 
-   public String getValue()
+   public String headerValue()
    {
-      return value;
+      return headerValue;
    }
 }

@@ -81,7 +81,7 @@ public class SeamRenderMailMessageTest
             .importFrom(MavenArtifactResolver.resolve("org.jboss.seam.solder:seam-solder:3.0.0.CR4")).as(JavaArchive.class))
       .addAsLibraries(
             MavenArtifactResolver.resolve("org.subethamail:subethasmtp:3.1.4"),
-            MavenArtifactResolver.resolve("org.jboss.seam.render:seam-render:1.0.0-SNAPSHOT"),
+            MavenArtifactResolver.resolve("org.jboss.seam.render:seam-render:1.0.0.Alpha2"),
             MavenArtifactResolver.resolve("commons-lang:commons-lang:2.4"))
       .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
       return ar;

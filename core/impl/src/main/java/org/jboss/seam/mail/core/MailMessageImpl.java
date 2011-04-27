@@ -420,4 +420,16 @@ public class MailMessageImpl implements MailMessage
    {
       return this.send(session.get());
    }
+
+   //Doesn't Send Async Yet
+   public EmailMessage sendAsynchronously(Session session) throws SendFailedException
+   {
+      return send(session);
+   }
+
+   //Doesn't send Async Yet
+   public EmailMessage sendAsynchronously() throws SendFailedException
+   {
+      return this.send(session.get());
+   }
 }

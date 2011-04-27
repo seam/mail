@@ -409,6 +409,25 @@ public interface MailMessage
     *         sent
     * @throws SendFailedException If the messages fails to be sent.
     */
+   public EmailMessage sendAsynchronously();
+   
+   /**
+    * Send the Message Asynchronously
+    * 
+    * @param session {@link Session} to use to send the {@link MailMessage}
+    * @return {@link EmailMessage} which represents the {@link MailMessage} as
+    *         sent
+    * @throws SendFailedException If the messages fails to be sent.
+    */
+   public EmailMessage sendAsynchronously(Session session);
+
+   /**
+    * Send the Message Asynchronously
+    * 
+    * @return {@link EmailMessage} which represents the {@link MailMessage} as
+    *         sent
+    * @throws SendFailedException If the messages fails to be sent.
+    */
    public EmailMessage send();
 
    // Templating Specific

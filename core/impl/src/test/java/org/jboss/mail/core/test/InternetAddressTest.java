@@ -26,143 +26,128 @@ import org.jboss.seam.mail.core.EmailContact;
 import org.jboss.seam.mail.core.InvalidAddressException;
 import org.jboss.seam.mail.core.MailMessageImpl;
 import org.junit.Test;
+
 /**
- * 
  * @author Cody Lerum
- *
  */
-public class InternetAddressTest
-{
-   @Test
-   public void validAddresses()
-   {
-      MailMessage m = new MailMessageImpl();
+public class InternetAddressTest {
+    @Test
+    public void validAddresses() {
+        MailMessage m = new MailMessageImpl();
 
-      BasicEmailContact seam = new BasicEmailContact("seam@domain.test");
-      BasicEmailContact seamey = new BasicEmailContact("seamey@domain.test");
+        BasicEmailContact seam = new BasicEmailContact("seam@domain.test");
+        BasicEmailContact seamey = new BasicEmailContact("seamey@domain.test");
 
-      Collection<EmailContact> addresses = new ArrayList<EmailContact>();
-      addresses.add(seamey);
+        Collection<EmailContact> addresses = new ArrayList<EmailContact>();
+        addresses.add(seamey);
 
-      m.from("seam@domain.test", "Seam Seamerson");
-      m.from("seam@domain.test");
-      m.from(seam);
-      m.from(addresses);
+        m.from("seam@domain.test", "Seam Seamerson");
+        m.from("seam@domain.test");
+        m.from(seam);
+        m.from(addresses);
 
-      m.to("seam@domain.test", "Seam Seamerson");
-      m.to("seam@domain.test");
-      m.to(seam);
-      m.to(addresses);
+        m.to("seam@domain.test", "Seam Seamerson");
+        m.to("seam@domain.test");
+        m.to(seam);
+        m.to(addresses);
 
-      m.cc("seam@domain.test", "Seam Seamerson");
-      m.cc("seam@domain.test");
-      m.cc(seam);
-      m.cc(addresses);
+        m.cc("seam@domain.test", "Seam Seamerson");
+        m.cc("seam@domain.test");
+        m.cc(seam);
+        m.cc(addresses);
 
-      m.bcc("seam@domain.test", "Seam Seamerson");
-      m.bcc("seam@domain.test");
-      m.bcc(seam);
-      m.bcc(addresses);
+        m.bcc("seam@domain.test", "Seam Seamerson");
+        m.bcc("seam@domain.test");
+        m.bcc(seam);
+        m.bcc(addresses);
 
-      m.replyTo("seam@domain.test", "Seam Seamerson");
-      m.replyTo("seam@domain.test");
-      m.replyTo(seam);
-      m.replyTo(addresses);
-   }
+        m.replyTo("seam@domain.test", "Seam Seamerson");
+        m.replyTo("seam@domain.test");
+        m.replyTo(seam);
+        m.replyTo(addresses);
+    }
 
-   @Test(expected = InvalidAddressException.class)
-   public void invalidFromSimpleAddresses()
-   {
-      MailMessage m = new MailMessageImpl();
+    @Test(expected = InvalidAddressException.class)
+    public void invalidFromSimpleAddresses() {
+        MailMessage m = new MailMessageImpl();
 
-      m.from("woo foo @bar.com");
-   }
+        m.from("woo foo @bar.com");
+    }
 
-   @Test(expected = InvalidAddressException.class)
-   public void invalidFromFullAddresses()
-   {
-      MailMessage m = new MailMessageImpl();
+    @Test(expected = InvalidAddressException.class)
+    public void invalidFromFullAddresses() {
+        MailMessage m = new MailMessageImpl();
 
-      m.from("foo @bar.com", "Woo");
-   }
+        m.from("foo @bar.com", "Woo");
+    }
 
-   @Test(expected = InvalidAddressException.class)
-   public void invalidToSimpleAddresses()
-   {
-      MailMessage m = new MailMessageImpl();
+    @Test(expected = InvalidAddressException.class)
+    public void invalidToSimpleAddresses() {
+        MailMessage m = new MailMessageImpl();
 
-      m.to("woo foo @bar.com");
-   }
+        m.to("woo foo @bar.com");
+    }
 
-   @Test(expected = InvalidAddressException.class)
-   public void invalidToFullAddresses()
-   {
-      MailMessage m = new MailMessageImpl();
+    @Test(expected = InvalidAddressException.class)
+    public void invalidToFullAddresses() {
+        MailMessage m = new MailMessageImpl();
 
-      m.to("foo @bar.com", "Woo");
-   }
+        m.to("foo @bar.com", "Woo");
+    }
 
-   @Test(expected = InvalidAddressException.class)
-   public void invalidCcSimpleAddresses()
-   {
-      MailMessage m = new MailMessageImpl();
+    @Test(expected = InvalidAddressException.class)
+    public void invalidCcSimpleAddresses() {
+        MailMessage m = new MailMessageImpl();
 
-      m.cc("woo foo @bar.com");
-   }
+        m.cc("woo foo @bar.com");
+    }
 
-   @Test(expected = InvalidAddressException.class)
-   public void invalidCcFullAddresses()
-   {
-      MailMessage m = new MailMessageImpl();
+    @Test(expected = InvalidAddressException.class)
+    public void invalidCcFullAddresses() {
+        MailMessage m = new MailMessageImpl();
 
-      m.cc("foo @bar.com", "Woo");
-   }
+        m.cc("foo @bar.com", "Woo");
+    }
 
-   @Test(expected = InvalidAddressException.class)
-   public void invalidBccSimpleAddresses()
-   {
-      MailMessage m = new MailMessageImpl();
+    @Test(expected = InvalidAddressException.class)
+    public void invalidBccSimpleAddresses() {
+        MailMessage m = new MailMessageImpl();
 
-      m.bcc("woo foo @bar.com");
-   }
+        m.bcc("woo foo @bar.com");
+    }
 
-   @Test(expected = InvalidAddressException.class)
-   public void invalidbccFullAddresses()
-   {
-      MailMessage m = new MailMessageImpl();
+    @Test(expected = InvalidAddressException.class)
+    public void invalidbccFullAddresses() {
+        MailMessage m = new MailMessageImpl();
 
-      m.bcc("foo @bar.com", "Woo");
-   }
+        m.bcc("foo @bar.com", "Woo");
+    }
 
-   @Test(expected = InvalidAddressException.class)
-   public void invalidReplyToSimpleAddresses()
-   {
-      MailMessage m = new MailMessageImpl();
+    @Test(expected = InvalidAddressException.class)
+    public void invalidReplyToSimpleAddresses() {
+        MailMessage m = new MailMessageImpl();
 
-      m.replyTo("woo foo @bar.com");
-   }
+        m.replyTo("woo foo @bar.com");
+    }
 
-   @Test(expected = InvalidAddressException.class)
-   public void invalidReplyToFullAddresses()
-   {
-      MailMessage m = new MailMessageImpl();
+    @Test(expected = InvalidAddressException.class)
+    public void invalidReplyToFullAddresses() {
+        MailMessage m = new MailMessageImpl();
 
-      m.replyTo("foo @bar.com", "Woo");
-   }
+        m.replyTo("foo @bar.com", "Woo");
+    }
 
-   @Test(expected = InvalidAddressException.class)
-   public void invalidDeliveryReceipt()
-   {
-      MailMessage m = new MailMessageImpl();
+    @Test(expected = InvalidAddressException.class)
+    public void invalidDeliveryReceipt() {
+        MailMessage m = new MailMessageImpl();
 
-      m.deliveryReceipt("woo foo @bar.com");
-   }
+        m.deliveryReceipt("woo foo @bar.com");
+    }
 
-   @Test(expected = InvalidAddressException.class)
-   public void invalidReadReceipt()
-   {
-      MailMessage m = new MailMessageImpl();
+    @Test(expected = InvalidAddressException.class)
+    public void invalidReadReceipt() {
+        MailMessage m = new MailMessageImpl();
 
-      m.readReceipt("woo foo @bar.com");
-   }
+        m.readReceipt("woo foo @bar.com");
+    }
 }

@@ -16,13 +16,11 @@
  */
 
 package org.jboss.seam.mail.core.enumerations;
+
 /**
- * 
  * @author Cody Lerum
- *
  */
-public enum EmailMessageType
-{
-   STANDARD,
-   INVITE_ICAL;
+public enum EmailMessageType {
+    STANDARD,
+    INVITE_ICAL;
 }

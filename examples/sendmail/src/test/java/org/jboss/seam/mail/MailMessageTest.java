@@ -29,7 +29,6 @@ import javax.mail.internet.MimeMultipart;
 import javax.mail.internet.MimeUtility;
 
 import junit.framework.Assert;
-
 import org.jboss.arquillian.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.seam.mail.api.MailMessage;
@@ -52,492 +51,453 @@ import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.subethamail.wiser.Wiser;
+
 /**
- * 
  * @author Cody Lerum
- * 
  */
 @RunWith(Arquillian.class)
-public class MailMessageTest
-{
-   @Deployment
-   public static Archive<?> createTestArchive()
-   {
-      Archive<?> ar = ShrinkWrap.create(WebArchive.class, "test.war")
-      .addAsResource("template.text.velocity", "template.text.velocity")
-      .addPackages(true, MailMessageTest.class.getPackage())
-      .addAsLibraries(MavenArtifactResolver.resolve("org.jboss.seam.solder:seam-solder:3.0.0.CR4"),
-            MavenArtifactResolver.resolve("org.subethamail:subethasmtp:3.1.4"), 
-            MavenArtifactResolver.resolve("org.apache.velocity:velocity:1.6.4"))
-      .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
-      return ar;
-   }
-
-   @Inject
-   private Instance<MailMessage> mailMessage;
-
-   @Inject
-   private Instance<Session> session;
-   
-   @Inject 
-   private ResourceProvider resourceProvider;
-
-   @Inject
-   private MailConfig mailConfig;
-
-   @Inject
-   private Person person;
-
-   String fromName = "Seam Framework";
-   String fromAddress = "seam@jboss.org";
-   String replyToName = "No Reply";
-   String replyToAddress = "no-reply@seam-mal.test";
-   String toName = "Seamy Seamerson";
-   String toAddress = "seamy.seamerson@seam-mail.test";
-   String ccName = "Red Hatty";
-   String ccAddress = "red.hatty@jboss.org";
-
-   String htmlBody = "<html><body><b>Hello</b> World!</body></html>";
-   String textBody = "This is a Text Body!";
-
-   @Test
-   public void testTextMailMessage() throws MessagingException, IOException
-   {
-      String subject = "Text Message from Seam Mail - " + java.util.UUID.randomUUID().toString();
-
-      mailConfig.setServerHost("localHost");
-      mailConfig.setServerPort(8977);
-
-      String messageId = "1234@seam.test.com";
-
-      Wiser wiser = new Wiser(mailConfig.getServerPort());
-      try
-      {
-         wiser.start();
-
-         person.setName(toName);
-         person.setEmail(toAddress);
-
-         mailMessage.get()
-         .from(fromAddress, fromName)
-         .replyTo(replyToAddress)
-         .to(toAddress, toName)
-         .subject(subject)
-         .bodyText(textBody)
-         .importance(MessagePriority.HIGH)
-         .messageId(messageId)
-         .send(session.get());
-      }
-      finally
-      {
-         stop(wiser);
-      }
-
-      Assert.assertTrue("Didn't receive the expected amount of messages. Expected 1 got " + wiser.getMessages().size(), wiser.getMessages().size() == 1);
-
-      MimeMessage mess = wiser.getMessages().get(0).getMimeMessage();
-
-      Assert.assertEquals(MailTestUtil.getAddressHeader(fromName, fromAddress), mess.getHeader("From", null));
-      Assert.assertEquals(MailTestUtil.getAddressHeader(replyToAddress), mess.getHeader("Reply-To", null));
-      Assert.assertEquals(MailTestUtil.getAddressHeader(toName, toAddress), mess.getHeader("To", null));
-      Assert.assertEquals("Subject has been modified", subject, MimeUtility.unfold(mess.getHeader("Subject", null)));
-      Assert.assertEquals(MessagePriority.HIGH.getPriority(), mess.getHeader("Priority", null));
-      Assert.assertEquals(MessagePriority.HIGH.getX_priority(), mess.getHeader("X-Priority", null));
-      Assert.assertEquals(MessagePriority.HIGH.getImportance(), mess.getHeader("Importance", null));
-      Assert.assertTrue(mess.getHeader("Content-Type", null).startsWith("multipart/mixed"));
-      Assert.assertEquals(messageId, MailUtility.headerStripper(mess.getHeader("Message-ID", null)));
-
-      MimeMultipart mixed = (MimeMultipart) mess.getContent();
-      BodyPart text = mixed.getBodyPart(0);
-      
-      Assert.assertTrue(mixed.getContentType().startsWith("multipart/mixed"));
-      Assert.assertEquals(1, mixed.getCount());
-      
-      Assert.assertTrue(text.getContentType().startsWith("text/plain; charset=UTF-8"));
-      Assert.assertEquals(textBody, MailTestUtil.getStringContent(text));
-   }
-
-   @Test
-   public void testHTMLMailMessage() throws MessagingException, IOException
-   {
-      String subject = "HTML Message from Seam Mail - " + java.util.UUID.randomUUID().toString();
-
-      mailConfig.setServerHost("localHost");
-      mailConfig.setServerPort(8977);
-
-      EmailMessage emailMessage;
-
-      Wiser wiser = new Wiser(mailConfig.getServerPort());
-      try
-      {
-         wiser.start();
-
-         person.setName(toName);
-         person.setEmail(toAddress);
-
-         emailMessage = mailMessage.get()
-         .from(fromAddress, fromName)
-         .replyTo(replyToAddress, replyToName)
-         .to(person.getEmail(), person.getName())
-         .subject(subject)
-         .bodyHtml(htmlBody)
-         .importance(MessagePriority.HIGH)
-         .addAttachment(new URLAttachment("http://design.jboss.org/seam/logo/final/seam_mail_85px.png", "seamLogo.png", ContentDisposition.INLINE)).send(session.get());
-      }
-      finally
-      {
-         stop(wiser);
-      }
-
-      Assert.assertTrue("Didn't receive the expected amount of messages. Expected 1 got " + wiser.getMessages().size(), wiser.getMessages().size() == 1);
-
-      MimeMessage mess = wiser.getMessages().get(0).getMimeMessage();
-
-      Assert.assertEquals(MailTestUtil.getAddressHeader(fromName, fromAddress), mess.getHeader("From", null));
-      Assert.assertEquals(MailTestUtil.getAddressHeader(replyToName, replyToAddress), mess.getHeader("Reply-To", null));
-      Assert.assertEquals(MailTestUtil.getAddressHeader(toName, toAddress), mess.getHeader("To", null));
-      Assert.assertEquals("Subject has been modified", subject, MimeUtility.unfold(mess.getHeader("Subject", null)));
-      Assert.assertEquals(MessagePriority.HIGH.getPriority(), mess.getHeader("Priority", null));
-      Assert.assertEquals(MessagePriority.HIGH.getX_priority(), mess.getHeader("X-Priority", null));
-      Assert.assertEquals(MessagePriority.HIGH.getImportance(), mess.getHeader("Importance", null));
-      Assert.assertEquals(emailMessage.getLastMessageId(), MailUtility.headerStripper(mess.getHeader("Message-ID", null)));
-      Assert.assertTrue(mess.getHeader("Content-Type", null).startsWith("multipart/mixed"));
-
-      MimeMultipart mixed = (MimeMultipart) mess.getContent();
-      MimeMultipart related = (MimeMultipart) mixed.getBodyPart(0).getContent();
-      BodyPart html = related.getBodyPart(0);
-      BodyPart attachment1 = related.getBodyPart(1);
-
-      Assert.assertTrue(mixed.getContentType().startsWith("multipart/mixed"));
-      Assert.assertEquals(1, mixed.getCount());
-      
-      Assert.assertTrue(related.getContentType().startsWith("multipart/related"));
-      Assert.assertEquals(2, related.getCount());
-      
-      Assert.assertTrue(html.getContentType().startsWith("text/html"));
-      Assert.assertEquals(htmlBody, MailTestUtil.getStringContent(html));
-      
-
-      Assert.assertTrue(attachment1.getContentType().startsWith("image/png;"));
-      Assert.assertEquals("seamLogo.png", attachment1.getFileName());
-   }
-
-   @Test
-   public void testHTMLTextAltMailMessage() throws MessagingException, IOException
-   {
-      String subject = "HTML+Text Message from Seam Mail - " + java.util.UUID.randomUUID().toString();
-
-      mailConfig.setServerHost("localHost");
-      mailConfig.setServerPort(8977);
-
-      Wiser wiser = new Wiser(mailConfig.getServerPort());
-      try
-      {
-         wiser.start();
-
-         person.setName(toName);
-         person.setEmail(toAddress);
-
-         mailMessage.get()
-         .from(fromAddress, fromName)
-         .to(person.getEmail(), person.getName())
-         .subject(subject)
-         .bodyHtmlTextAlt(htmlBody, textBody)
-         .importance(MessagePriority.LOW)
-         .deliveryReceipt(fromAddress)
-         .readReceipt("seam.test")
-         .addAttachment("template.text.velocity", "text/plain", ContentDisposition.ATTACHMENT, resourceProvider.loadResourceStream("template.text.velocity"))
-         .addAttachment(new URLAttachment("http://design.jboss.org/seam/logo/final/seam_mail_85px.png", "seamLogo.png", ContentDisposition.INLINE))
-         .send(session.get());
-      }
-      finally
-      {
-         stop(wiser);
-      }
-
-      Assert.assertTrue("Didn't receive the expected amount of messages. Expected 1 got " + wiser.getMessages().size(), wiser.getMessages().size() == 1);
-
-      MimeMessage mess = wiser.getMessages().get(0).getMimeMessage();
-
-      Assert.assertEquals(MailTestUtil.getAddressHeader(fromName, fromAddress), mess.getHeader("From", null));
-      Assert.assertEquals(MailTestUtil.getAddressHeader(toName, toAddress), mess.getHeader("To", null));
-      Assert.assertEquals("Subject has been modified", subject, MimeUtility.unfold(mess.getHeader("Subject", null)));
-      Assert.assertEquals(MessagePriority.LOW.getPriority(), mess.getHeader("Priority", null));
-      Assert.assertEquals(MessagePriority.LOW.getX_priority(), mess.getHeader("X-Priority", null));
-      Assert.assertEquals(MessagePriority.LOW.getImportance(), mess.getHeader("Importance", null));
-      Assert.assertTrue(mess.getHeader("Content-Type", null).startsWith("multipart/mixed"));
-
-      MimeMultipart mixed = (MimeMultipart) mess.getContent();
-      MimeMultipart related = (MimeMultipart) mixed.getBodyPart(0).getContent();
-      MimeMultipart alternative = (MimeMultipart) related.getBodyPart(0).getContent(); 
-      BodyPart attachment = mixed.getBodyPart(1);
-      BodyPart inlineAttachment = related.getBodyPart(1);
-      
-      BodyPart textAlt = alternative.getBodyPart(0);
-      BodyPart html = alternative.getBodyPart(1);
-
-      Assert.assertTrue(mixed.getContentType().startsWith("multipart/mixed"));
-      Assert.assertEquals(2, mixed.getCount());
-      
-      Assert.assertTrue(related.getContentType().startsWith("multipart/related"));
-      Assert.assertEquals(2, related.getCount());
-      
-      Assert.assertTrue(html.getContentType().startsWith("text/html"));
-      Assert.assertEquals(htmlBody, MailTestUtil.getStringContent(html));
-      
-      Assert.assertTrue(textAlt.getContentType().startsWith("text/plain"));
-      Assert.assertEquals(textBody, MailTestUtil.getStringContent(textAlt));
-
-      Assert.assertTrue(attachment.getContentType().startsWith("text/plain"));
-      Assert.assertEquals("template.text.velocity", attachment.getFileName());
-      
-      Assert.assertTrue(inlineAttachment.getContentType().startsWith("image/png;"));
-      Assert.assertEquals("seamLogo.png", inlineAttachment.getFileName());
-   }
-
-   @Test
-   public void testTextMailMessageLongFields() throws MessagingException, IOException
-   {
-      String subject = "Sometimes it is important to have a really long subject even if nobody is going to read it - " + java.util.UUID.randomUUID().toString();
-
-      String longFromName = "FromSometimesPeopleHaveNamesWhichAreALotLongerThanYouEverExpectedSomeoneToHaveSoItisGoodToTestUpTo100CharactersOrSo YouKnow?";
-      String longFromAddress = "sometimesPeopleHaveNamesWhichAreALotLongerThanYouEverExpectedSomeoneToHaveSoItisGoodToTestUpTo100CharactersOrSo@jboss.org";
-      String longToName = "ToSometimesPeopleHaveNamesWhichAreALotLongerThanYouEverExpectedSomeoneToHaveSoItisGoodToTestUpTo100CharactersOrSo YouKnow?";
-      String longToAddress = "toSometimesPeopleHaveNamesWhichAreALotLongerThanYouEverExpectedSomeoneToHaveSoItisGoodToTestUpTo100CharactersOrSo.seamerson@seam-mail.test";
-      String longCcName = "CCSometimesPeopleHaveNamesWhichAreALotLongerThanYouEverExpectedSomeoneToHaveSoItisGoodToTestUpTo100CharactersOrSo YouKnow? Hatty";
-      String longCcAddress = "cCSometimesPeopleHaveNamesWhichAreALotLongerThanYouEverExpectedSomeoneToHaveSoItisGoodToTestUpTo100CharactersOrSo.hatty@jboss.org";
-
-      mailConfig.setServerHost("localHost");
-      mailConfig.setServerPort(8977);
-
-      Wiser wiser = new Wiser(mailConfig.getServerPort());
-      try
-      {
-         wiser.start();
-
-         person.setName(longToName);
-         person.setEmail(longToAddress);
-
-         mailMessage.get()
-         .from(longFromAddress, longFromName)
-         .to(longToAddress, longToName)
-         .cc(longCcAddress, longCcName)
-         .subject(subject)
-         .bodyText(textBody)
-         .importance(MessagePriority.HIGH)
-         .send(session.get());
-      }
-      finally
-      {
-         stop(wiser);
-      }
-
-      Assert.assertTrue("Didn't receive the expected amount of messages. Expected 2 got " + wiser.getMessages().size(), wiser.getMessages().size() == 2);
-
-      MimeMessage mess = wiser.getMessages().get(0).getMimeMessage();
-
-      Assert.assertEquals(MailTestUtil.getAddressHeader(longFromName, longFromAddress), mess.getHeader("From", null));
-      Assert.assertEquals(MailTestUtil.getAddressHeader(longToName, longToAddress), mess.getHeader("To", null));
-      Assert.assertEquals(MailTestUtil.getAddressHeader(longCcName, longCcAddress), mess.getHeader("CC", null));
-      Assert.assertEquals("Subject has been modified", subject, MimeUtility.unfold(mess.getHeader("Subject", null)));
-      Assert.assertEquals(MessagePriority.HIGH.getPriority(), mess.getHeader("Priority", null));
-      Assert.assertEquals(MessagePriority.HIGH.getX_priority(), mess.getHeader("X-Priority", null));
-      Assert.assertEquals(MessagePriority.HIGH.getImportance(), mess.getHeader("Importance", null));
-      Assert.assertTrue(mess.getHeader("Content-Type", null).startsWith("multipart/mixed"));
-
-      MimeMultipart mixed = (MimeMultipart) mess.getContent();
-      BodyPart text = mixed.getBodyPart(0);
-      
-      Assert.assertTrue(mixed.getContentType().startsWith("multipart/mixed"));
-      Assert.assertEquals(1, mixed.getCount());
-      
-      Assert.assertTrue(text.getContentType().startsWith("text/plain; charset=UTF-8"));
-      Assert.assertEquals(textBody, MailTestUtil.getStringContent(text));
-   }
-
-   @Test(expected = SendFailedException.class)
-   public void testTextMailMessageSendFailed()
-   {
-      String subject = "Text Message from Seam Mail - " + java.util.UUID.randomUUID().toString();
-
-      mailConfig.setServerHost("localHost");
-      mailConfig.setServerPort(8977);
-
-      String messageId = "1234@seam.test.com";
-
-      // Port is one off so this should fail
-      Wiser wiser = new Wiser(mailConfig.getServerPort() + 1);
-
-      try
-      {
-         wiser.start();
-
-         person.setName(toName);
-         person.setEmail(toAddress);
-
-         mailMessage.get().from(fromAddress, fromName).replyTo(replyToAddress).to(toAddress, toName).subject(subject).bodyText(textBody).importance(MessagePriority.HIGH).messageId(messageId).send(session.get());
-      }
-      finally
-      {
-         stop(wiser);
-      }
-   }
-
-   @Test(expected = InvalidAddressException.class)
-   public void testTextMailMessageInvalidAddress() throws SendFailedException
-   {
-      String subject = "Text Message from Seam Mail - " + java.util.UUID.randomUUID().toString();
-
-      mailConfig.setServerHost("localHost");
-      mailConfig.setServerPort(8977);
-
-      String messageId = "1234@seam.test.com";
-
-      // Port is one off so this should fail
-      Wiser wiser = new Wiser(mailConfig.getServerPort() + 1);
-
-      try
-      {
-         wiser.start();
-
-         person.setName(toName);
-         person.setEmail(toAddress);
-
-         mailMessage.get().from("seam seamerson@test.com", fromName).replyTo(replyToAddress).to(toAddress, toName).subject(subject).bodyText(textBody).importance(MessagePriority.HIGH).messageId(messageId).send(session.get());
-      }
-      finally
-      {
-         stop(wiser);
-      }
-   }
-
-   @Test
-   public void testTextMailMessageUsingPerson() throws MessagingException, IOException
-   {
-      String subject = "Text Message from Seam Mail - " + java.util.UUID.randomUUID().toString();
-
-      mailConfig.setServerHost("localHost");
-      mailConfig.setServerPort(8977);
-
-      String messageId = "1234@seam.test.com";
-
-      Wiser wiser = new Wiser(mailConfig.getServerPort());
-      try
-      {
-         wiser.start();
-
-         person.setName(toName);
-         person.setEmail(toAddress);
-
-         mailMessage.get()
-         .from(fromAddress, fromName)
-         .replyTo(replyToAddress)
-         .to(person)
-         .subject(subject)
-         .bodyText(textBody)
-         .importance(MessagePriority.HIGH)
-         .messageId(messageId)
-         .send(session.get());
-      }
-      finally
-      {
-         stop(wiser);
-      }
-
-      Assert.assertTrue("Didn't receive the expected amount of messages. Expected 1 got " + wiser.getMessages().size(), wiser.getMessages().size() == 1);
-
-      MimeMessage mess = wiser.getMessages().get(0).getMimeMessage();
-
-      Assert.assertEquals(MailTestUtil.getAddressHeader(fromName, fromAddress), mess.getHeader("From", null));
-      Assert.assertEquals(MailTestUtil.getAddressHeader(replyToAddress), mess.getHeader("Reply-To", null));
-      Assert.assertEquals(MailTestUtil.getAddressHeader(toName, toAddress), mess.getHeader("To", null));
-      Assert.assertEquals("Subject has been modified", subject, MimeUtility.unfold(mess.getHeader("Subject", null)));
-      Assert.assertEquals(MessagePriority.HIGH.getPriority(), mess.getHeader("Priority", null));
-      Assert.assertEquals(MessagePriority.HIGH.getX_priority(), mess.getHeader("X-Priority", null));
-      Assert.assertEquals(MessagePriority.HIGH.getImportance(), mess.getHeader("Importance", null));
-      Assert.assertTrue(mess.getHeader("Content-Type", null).startsWith("multipart/mixed"));
-      Assert.assertEquals(messageId, MailUtility.headerStripper(mess.getHeader("Message-ID", null)));
-
-      MimeMultipart mixed = (MimeMultipart) mess.getContent();
-      BodyPart text = mixed.getBodyPart(0);
-      
-      Assert.assertTrue(mixed.getContentType().startsWith("multipart/mixed"));
-      Assert.assertEquals(1, mixed.getCount());
-      
-      Assert.assertTrue(text.getContentType().startsWith("text/plain; charset=UTF-8"));
-      Assert.assertEquals(textBody, MailTestUtil.getStringContent(text));
-   }
-
-   @Test
-   public void testTextMailMessageUsingDefaultSession() throws MessagingException, IOException
-   {
-      String subject = "Text Message from Seam Mail - " + java.util.UUID.randomUUID().toString();
-
-      mailConfig.setServerHost("localHost");
-      mailConfig.setServerPort(8977);
-
-      String messageId = "1234@seam.test.com";
-
-      Wiser wiser = new Wiser(mailConfig.getServerPort());
-      try
-      {
-         wiser.start();
-
-         person.setName(toName);
-         person.setEmail(toAddress);
-
-         mailMessage.get()
-         .from(fromAddress, fromName)
-         .replyTo(replyToAddress)
-         .to(person)
-         .subject(subject)
-         .bodyText(textBody)
-         .importance(MessagePriority.HIGH)
-         .messageId(messageId)
-         .send();
-      }
-      finally
-      {
-         stop(wiser);
-      }
-
-      Assert.assertTrue("Didn't receive the expected amount of messages. Expected 1 got " + wiser.getMessages().size(), wiser.getMessages().size() == 1);
-
-      MimeMessage mess = wiser.getMessages().get(0).getMimeMessage();
-
-      Assert.assertEquals(MailTestUtil.getAddressHeader(fromName, fromAddress), mess.getHeader("From", null));
-      Assert.assertEquals(MailTestUtil.getAddressHeader(replyToAddress), mess.getHeader("Reply-To", null));
-      Assert.assertEquals(MailTestUtil.getAddressHeader(toName, toAddress), mess.getHeader("To", null));
-      Assert.assertEquals("Subject has been modified", subject, MimeUtility.unfold(mess.getHeader("Subject", null)));
-      Assert.assertEquals(MessagePriority.HIGH.getPriority(), mess.getHeader("Priority", null));
-      Assert.assertEquals(MessagePriority.HIGH.getX_priority(), mess.getHeader("X-Priority", null));
-      Assert.assertEquals(MessagePriority.HIGH.getImportance(), mess.getHeader("Importance", null));
-      Assert.assertTrue(mess.getHeader("Content-Type", null).startsWith("multipart/mixed"));
-      Assert.assertEquals(messageId, MailUtility.headerStripper(mess.getHeader("Message-ID", null)));
-
-      MimeMultipart mixed = (MimeMultipart) mess.getContent();
-      BodyPart text = mixed.getBodyPart(0);
-      
-      Assert.assertTrue(mixed.getContentType().startsWith("multipart/mixed"));
-      Assert.assertEquals(1, mixed.getCount());
-      
-      Assert.assertTrue(text.getContentType().startsWith("text/plain; charset=UTF-8"));
-      Assert.assertEquals(textBody, MailTestUtil.getStringContent(text));
-   }
-
-   /**
-    * Wiser takes a fraction of a second to shutdown, so let it finish.
-    */
-   protected void stop(Wiser wiser)
-   {
-      wiser.stop();
-      try
-      {
-         Thread.sleep(100);
-      }
-      catch (InterruptedException e)
-      {
-         throw new RuntimeException(e);
-      }
-   }
+public class MailMessageTest {
+    @Deployment
+    public static Archive<?> createTestArchive() {
+        Archive<?> ar = ShrinkWrap.create(WebArchive.class, "test.war")
+                .addAsResource("template.text.velocity", "template.text.velocity")
+                .addPackages(true, MailMessageTest.class.getPackage())
+                .addAsLibraries(MavenArtifactResolver.resolve("org.jboss.seam.solder:seam-solder:3.0.0.CR4"),
+                        MavenArtifactResolver.resolve("org.subethamail:subethasmtp:3.1.4"),
+                        MavenArtifactResolver.resolve("org.apache.velocity:velocity:1.6.4"))
+                .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
+        return ar;
+    }
+
+    @Inject
+    private Instance<MailMessage> mailMessage;
+
+    @Inject
+    private Instance<Session> session;
+
+    @Inject
+    private ResourceProvider resourceProvider;
+
+    @Inject
+    private MailConfig mailConfig;
+
+    @Inject
+    private Person person;
+
+    String fromName = "Seam Framework";
+    String fromAddress = "seam@jboss.org";
+    String replyToName = "No Reply";
+    String replyToAddress = "no-reply@seam-mal.test";
+    String toName = "Seamy Seamerson";
+    String toAddress = "seamy.seamerson@seam-mail.test";
+    String ccName = "Red Hatty";
+    String ccAddress = "red.hatty@jboss.org";
+
+    String htmlBody = "<html><body><b>Hello</b> World!</body></html>";
+    String textBody = "This is a Text Body!";
+
+    @Test
+    public void testTextMailMessage() throws MessagingException, IOException {
+        String subject = "Text Message from Seam Mail - " + java.util.UUID.randomUUID().toString();
+
+        mailConfig.setServerHost("localHost");
+        mailConfig.setServerPort(8977);
+
+        String messageId = "1234@seam.test.com";
+
+        Wiser wiser = new Wiser(mailConfig.getServerPort());
+        try {
+            wiser.start();
+
+            person.setName(toName);
+            person.setEmail(toAddress);
+
+            mailMessage.get()
+                    .from(fromAddress, fromName)
+                    .replyTo(replyToAddress)
+                    .to(toAddress, toName)
+                    .subject(subject)
+                    .bodyText(textBody)
+                    .importance(MessagePriority.HIGH)
+                    .messageId(messageId)
+                    .send(session.get());
+        } finally {
+            stop(wiser);
+        }
+
+        Assert.assertTrue("Didn't receive the expected amount of messages. Expected 1 got " + wiser.getMessages().size(), wiser.getMessages().size() == 1);
+
+        MimeMessage mess = wiser.getMessages().get(0).getMimeMessage();
+
+        Assert.assertEquals(MailTestUtil.getAddressHeader(fromName, fromAddress), mess.getHeader("From", null));
+        Assert.assertEquals(MailTestUtil.getAddressHeader(replyToAddress), mess.getHeader("Reply-To", null));
+        Assert.assertEquals(MailTestUtil.getAddressHeader(toName, toAddress), mess.getHeader("To", null));
+        Assert.assertEquals("Subject has been modified", subject, MimeUtility.unfold(mess.getHeader("Subject", null)));
+        Assert.assertEquals(MessagePriority.HIGH.getPriority(), mess.getHeader("Priority", null));
+        Assert.assertEquals(MessagePriority.HIGH.getX_priority(), mess.getHeader("X-Priority", null));
+        Assert.assertEquals(MessagePriority.HIGH.getImportance(), mess.getHeader("Importance", null));
+        Assert.assertTrue(mess.getHeader("Content-Type", null).startsWith("multipart/mixed"));
+        Assert.assertEquals(messageId, MailUtility.headerStripper(mess.getHeader("Message-ID", null)));
+
+        MimeMultipart mixed = (MimeMultipart) mess.getContent();
+        BodyPart text = mixed.getBodyPart(0);
+
+        Assert.assertTrue(mixed.getContentType().startsWith("multipart/mixed"));
+        Assert.assertEquals(1, mixed.getCount());
+
+        Assert.assertTrue(text.getContentType().startsWith("text/plain; charset=UTF-8"));
+        Assert.assertEquals(textBody, MailTestUtil.getStringContent(text));
+    }
+
+    @Test
+    public void testHTMLMailMessage() throws MessagingException, IOException {
+        String subject = "HTML Message from Seam Mail - " + java.util.UUID.randomUUID().toString();
+
+        mailConfig.setServerHost("localHost");
+        mailConfig.setServerPort(8977);
+
+        EmailMessage emailMessage;
+
+        Wiser wiser = new Wiser(mailConfig.getServerPort());
+        try {
+            wiser.start();
+
+            person.setName(toName);
+            person.setEmail(toAddress);
+
+            emailMessage = mailMessage.get()
+                    .from(fromAddress, fromName)
+                    .replyTo(replyToAddress, replyToName)
+                    .to(person.getEmail(), person.getName())
+                    .subject(subject)
+                    .bodyHtml(htmlBody)
+                    .importance(MessagePriority.HIGH)
+                    .addAttachment(new URLAttachment("http://design.jboss.org/seam/logo/final/seam_mail_85px.png", "seamLogo.png", ContentDisposition.INLINE)).send(session.get());
+        } finally {
+            stop(wiser);
+        }
+
+        Assert.assertTrue("Didn't receive the expected amount of messages. Expected 1 got " + wiser.getMessages().size(), wiser.getMessages().size() == 1);
+
+        MimeMessage mess = wiser.getMessages().get(0).getMimeMessage();
+
+        Assert.assertEquals(MailTestUtil.getAddressHeader(fromName, fromAddress), mess.getHeader("From", null));
+        Assert.assertEquals(MailTestUtil.getAddressHeader(replyToName, replyToAddress), mess.getHeader("Reply-To", null));
+        Assert.assertEquals(MailTestUtil.getAddressHeader(toName, toAddress), mess.getHeader("To", null));
+        Assert.assertEquals("Subject has been modified", subject, MimeUtility.unfold(mess.getHeader("Subject", null)));
+        Assert.assertEquals(MessagePriority.HIGH.getPriority(), mess.getHeader("Priority", null));
+        Assert.assertEquals(MessagePriority.HIGH.getX_priority(), mess.getHeader("X-Priority", null));
+        Assert.assertEquals(MessagePriority.HIGH.getImportance(), mess.getHeader("Importance", null));
+        Assert.assertEquals(emailMessage.getLastMessageId(), MailUtility.headerStripper(mess.getHeader("Message-ID", null)));
+        Assert.assertTrue(mess.getHeader("Content-Type", null).startsWith("multipart/mixed"));
+
+        MimeMultipart mixed = (MimeMultipart) mess.getContent();
+        MimeMultipart related = (MimeMultipart) mixed.getBodyPart(0).getContent();
+        BodyPart html = related.getBodyPart(0);
+        BodyPart attachment1 = related.getBodyPart(1);
+
+        Assert.assertTrue(mixed.getContentType().startsWith("multipart/mixed"));
+        Assert.assertEquals(1, mixed.getCount());
+
+        Assert.assertTrue(related.getContentType().startsWith("multipart/related"));
+        Assert.assertEquals(2, related.getCount());
+
+        Assert.assertTrue(html.getContentType().startsWith("text/html"));
+        Assert.assertEquals(htmlBody, MailTestUtil.getStringContent(html));
+
+
+        Assert.assertTrue(attachment1.getContentType().startsWith("image/png;"));
+        Assert.assertEquals("seamLogo.png", attachment1.getFileName());
+    }
+
+    @Test
+    public void testHTMLTextAltMailMessage() throws MessagingException, IOException {
+        String subject = "HTML+Text Message from Seam Mail - " + java.util.UUID.randomUUID().toString();
+
+        mailConfig.setServerHost("localHost");
+        mailConfig.setServerPort(8977);
+
+        Wiser wiser = new Wiser(mailConfig.getServerPort());
+        try {
+            wiser.start();
+
+            person.setName(toName);
+            person.setEmail(toAddress);
+
+            mailMessage.get()
+                    .from(fromAddress, fromName)
+                    .to(person.getEmail(), person.getName())
+                    .subject(subject)
+                    .bodyHtmlTextAlt(htmlBody, textBody)
+                    .importance(MessagePriority.LOW)
+                    .deliveryReceipt(fromAddress)
+                    .readReceipt("seam.test")
+                    .addAttachment("template.text.velocity", "text/plain", ContentDisposition.ATTACHMENT, resourceProvider.loadResourceStream("template.text.velocity"))
+                    .addAttachment(new URLAttachment("http://design.jboss.org/seam/logo/final/seam_mail_85px.png", "seamLogo.png", ContentDisposition.INLINE))
+                    .send(session.get());
+        } finally {
+            stop(wiser);
+        }
+
+        Assert.assertTrue("Didn't receive the expected amount of messages. Expected 1 got " + wiser.getMessages().size(), wiser.getMessages().size() == 1);
+
+        MimeMessage mess = wiser.getMessages().get(0).getMimeMessage();
+
+        Assert.assertEquals(MailTestUtil.getAddressHeader(fromName, fromAddress), mess.getHeader("From", null));
+        Assert.assertEquals(MailTestUtil.getAddressHeader(toName, toAddress), mess.getHeader("To", null));
+        Assert.assertEquals("Subject has been modified", subject, MimeUtility.unfold(mess.getHeader("Subject", null)));
+        Assert.assertEquals(MessagePriority.LOW.getPriority(), mess.getHeader("Priority", null));
+        Assert.assertEquals(MessagePriority.LOW.getX_priority(), mess.getHeader("X-Priority", null));
+        Assert.assertEquals(MessagePriority.LOW.getImportance(), mess.getHeader("Importance", null));
+        Assert.assertTrue(mess.getHeader("Content-Type", null).startsWith("multipart/mixed"));
+
+        MimeMultipart mixed = (MimeMultipart) mess.getContent();
+        MimeMultipart related = (MimeMultipart) mixed.getBodyPart(0).getContent();
+        MimeMultipart alternative = (MimeMultipart) related.getBodyPart(0).getContent();
+        BodyPart attachment = mixed.getBodyPart(1);
+        BodyPart inlineAttachment = related.getBodyPart(1);
+
+        BodyPart textAlt = alternative.getBodyPart(0);
+        BodyPart html = alternative.getBodyPart(1);
+
+        Assert.assertTrue(mixed.getContentType().startsWith("multipart/mixed"));
+        Assert.assertEquals(2, mixed.getCount());
+
+        Assert.assertTrue(related.getContentType().startsWith("multipart/related"));
+        Assert.assertEquals(2, related.getCount());
+
+        Assert.assertTrue(html.getContentType().startsWith("text/html"));
+        Assert.assertEquals(htmlBody, MailTestUtil.getStringContent(html));
+
+        Assert.assertTrue(textAlt.getContentType().startsWith("text/plain"));
+        Assert.assertEquals(textBody, MailTestUtil.getStringContent(textAlt));
+
+        Assert.assertTrue(attachment.getContentType().startsWith("text/plain"));
+        Assert.assertEquals("template.text.velocity", attachment.getFileName());
+
+        Assert.assertTrue(inlineAttachment.getContentType().startsWith("image/png;"));
+        Assert.assertEquals("seamLogo.png", inlineAttachment.getFileName());
+    }
+
+    @Test
+    public void testTextMailMessageLongFields() throws MessagingException, IOException {
+        String subject = "Sometimes it is important to have a really long subject even if nobody is going to read it - " + java.util.UUID.randomUUID().toString();
+
+        String longFromName = "FromSometimesPeopleHaveNamesWhichAreALotLongerThanYouEverExpectedSomeoneToHaveSoItisGoodToTestUpTo100CharactersOrSo YouKnow?";
+        String longFromAddress = "sometimesPeopleHaveNamesWhichAreALotLongerThanYouEverExpectedSomeoneToHaveSoItisGoodToTestUpTo100CharactersOrSo@jboss.org";
+        String longToName = "ToSometimesPeopleHaveNamesWhichAreALotLongerThanYouEverExpectedSomeoneToHaveSoItisGoodToTestUpTo100CharactersOrSo YouKnow?";
+        String longToAddress = "toSometimesPeopleHaveNamesWhichAreALotLongerThanYouEverExpectedSomeoneToHaveSoItisGoodToTestUpTo100CharactersOrSo.seamerson@seam-mail.test";
+        String longCcName = "CCSometimesPeopleHaveNamesWhichAreALotLongerThanYouEverExpectedSomeoneToHaveSoItisGoodToTestUpTo100CharactersOrSo YouKnow? Hatty";
+        String longCcAddress = "cCSometimesPeopleHaveNamesWhichAreALotLongerThanYouEverExpectedSomeoneToHaveSoItisGoodToTestUpTo100CharactersOrSo.hatty@jboss.org";
+
+        mailConfig.setServerHost("localHost");
+        mailConfig.setServerPort(8977);
+
+        Wiser wiser = new Wiser(mailConfig.getServerPort());
+        try {
+            wiser.start();
+
+            person.setName(longToName);
+            person.setEmail(longToAddress);
+
+            mailMessage.get()
+                    .from(longFromAddress, longFromName)
+                    .to(longToAddress, longToName)
+                    .cc(longCcAddress, longCcName)
+                    .subject(subject)
+                    .bodyText(textBody)
+                    .importance(MessagePriority.HIGH)
+                    .send(session.get());
+        } finally {
+            stop(wiser);
+        }
+
+        Assert.assertTrue("Didn't receive the expected amount of messages. Expected 2 got " + wiser.getMessages().size(), wiser.getMessages().size() == 2);
+
+        MimeMessage mess = wiser.getMessages().get(0).getMimeMessage();
+
+        Assert.assertEquals(MailTestUtil.getAddressHeader(longFromName, longFromAddress), mess.getHeader("From", null));
+        Assert.assertEquals(MailTestUtil.getAddressHeader(longToName, longToAddress), mess.getHeader("To", null));
+        Assert.assertEquals(MailTestUtil.getAddressHeader(longCcName, longCcAddress), mess.getHeader("CC", null));
+        Assert.assertEquals("Subject has been modified", subject, MimeUtility.unfold(mess.getHeader("Subject", null)));
+        Assert.assertEquals(MessagePriority.HIGH.getPriority(), mess.getHeader("Priority", null));
+        Assert.assertEquals(MessagePriority.HIGH.getX_priority(), mess.getHeader("X-Priority", null));
+        Assert.assertEquals(MessagePriority.HIGH.getImportance(), mess.getHeader("Importance", null));
+        Assert.assertTrue(mess.getHeader("Content-Type", null).startsWith("multipart/mixed"));
+
+        MimeMultipart mixed = (MimeMultipart) mess.getContent();
+        BodyPart text = mixed.getBodyPart(0);
+
+        Assert.assertTrue(mixed.getContentType().startsWith("multipart/mixed"));
+        Assert.assertEquals(1, mixed.getCount());
+
+        Assert.assertTrue(text.getContentType().startsWith("text/plain; charset=UTF-8"));
+        Assert.assertEquals(textBody, MailTestUtil.getStringContent(text));
+    }
+
+    @Test(expected = SendFailedException.class)
+    public void testTextMailMessageSendFailed() {
+        String subject = "Text Message from Seam Mail - " + java.util.UUID.randomUUID().toString();
+
+        mailConfig.setServerHost("localHost");
+        mailConfig.setServerPort(8977);
+
+        String messageId = "1234@seam.test.com";
+
+        // Port is one off so this should fail
+        Wiser wiser = new Wiser(mailConfig.getServerPort() + 1);
+
+        try {
+            wiser.start();
+
+            person.setName(toName);
+            person.setEmail(toAddress);
+
+            mailMessage.get().from(fromAddress, fromName).replyTo(replyToAddress).to(toAddress, toName).subject(subject).bodyText(textBody).importance(MessagePriority.HIGH).messageId(messageId).send(session.get());
+        } finally {
+            stop(wiser);
+        }
+    }
+
+    @Test(expected = InvalidAddressException.class)
+    public void testTextMailMessageInvalidAddress() throws SendFailedException {
+        String subject = "Text Message from Seam Mail - " + java.util.UUID.randomUUID().toString();
+
+        mailConfig.setServerHost("localHost");
+        mailConfig.setServerPort(8977);
+
+        String messageId = "1234@seam.test.com";
+
+        // Port is one off so this should fail
+        Wiser wiser = new Wiser(mailConfig.getServerPort() + 1);
+
+        try {
+            wiser.start();
+
+            person.setName(toName);
+            person.setEmail(toAddress);
+
+            mailMessage.get().from("seam seamerson@test.com", fromName).replyTo(replyToAddress).to(toAddress, toName).subject(subject).bodyText(textBody).importance(MessagePriority.HIGH).messageId(messageId).send(session.get());
+        } finally {
+            stop(wiser);
+        }
+    }
+
+    @Test
+    public void testTextMailMessageUsingPerson() throws MessagingException, IOException {
+        String subject = "Text Message from Seam Mail - " + java.util.UUID.randomUUID().toString();
+
+        mailConfig.setServerHost("localHost");
+        mailConfig.setServerPort(8977);
+
+        String messageId = "1234@seam.test.com";
+
+        Wiser wiser = new Wiser(mailConfig.getServerPort());
+        try {
+            wiser.start();
+
+            person.setName(toName);
+            person.setEmail(toAddress);
+
+            mailMessage.get()
+                    .from(fromAddress, fromName)
+                    .replyTo(replyToAddress)
+                    .to(person)
+                    .subject(subject)
+                    .bodyText(textBody)
+                    .importance(MessagePriority.HIGH)
+                    .messageId(messageId)
+                    .send(session.get());
+        } finally {
+            stop(wiser);
+        }
+
+        Assert.assertTrue("Didn't receive the expected amount of messages. Expected 1 got " + wiser.getMessages().size(), wiser.getMessages().size() == 1);
+
+        MimeMessage mess = wiser.getMessages().get(0).getMimeMessage();
+
+        Assert.assertEquals(MailTestUtil.getAddressHeader(fromName, fromAddress), mess.getHeader("From", null));
+        Assert.assertEquals(MailTestUtil.getAddressHeader(replyToAddress), mess.getHeader("Reply-To", null));
+        Assert.assertEquals(MailTestUtil.getAddressHeader(toName, toAddress), mess.getHeader("To", null));
+        Assert.assertEquals("Subject has been modified", subject, MimeUtility.unfold(mess.getHeader("Subject", null)));
+        Assert.assertEquals(MessagePriority.HIGH.getPriority(), mess.getHeader("Priority", null));
+        Assert.assertEquals(MessagePriority.HIGH.getX_priority(), mess.getHeader("X-Priority", null));
+        Assert.assertEquals(MessagePriority.HIGH.getImportance(), mess.getHeader("Importance", null));
+        Assert.assertTrue(mess.getHeader("Content-Type", null).startsWith("multipart/mixed"));
+        Assert.assertEquals(messageId, MailUtility.headerStripper(mess.getHeader("Message-ID", null)));
+
+        MimeMultipart mixed = (MimeMultipart) mess.getContent();
+        BodyPart text = mixed.getBodyPart(0);
+
+        Assert.assertTrue(mixed.getContentType().startsWith("multipart/mixed"));
+        Assert.assertEquals(1, mixed.getCount());
+
+        Assert.assertTrue(text.getContentType().startsWith("text/plain; charset=UTF-8"));
+        Assert.assertEquals(textBody, MailTestUtil.getStringContent(text));
+    }
+
+    @Test
+    public void testTextMailMessageUsingDefaultSession() throws MessagingException, IOException {
+        String subject = "Text Message from Seam Mail - " + java.util.UUID.randomUUID().toString();
+
+        mailConfig.setServerHost("localHost");
+        mailConfig.setServerPort(8977);
+
+        String messageId = "1234@seam.test.com";
+
+        Wiser wiser = new Wiser(mailConfig.getServerPort());
+        try {
+            wiser.start();
+
+            person.setName(toName);
+            person.setEmail(toAddress);
+
+            mailMessage.get()
+                    .from(fromAddress, fromName)
+                    .replyTo(replyToAddress)
+                    .to(person)
+                    .subject(subject)
+                    .bodyText(textBody)
+                    .importance(MessagePriority.HIGH)
+                    .messageId(messageId)
+                    .send();
+        } finally {
+            stop(wiser);
+        }
+
+        Assert.assertTrue("Didn't receive the expected amount of messages. Expected 1 got " + wiser.getMessages().size(), wiser.getMessages().size() == 1);
+
+        MimeMessage mess = wiser.getMessages().get(0).getMimeMessage();
+
+        Assert.assertEquals(MailTestUtil.getAddressHeader(fromName, fromAddress), mess.getHeader("From", null));
+        Assert.assertEquals(MailTestUtil.getAddressHeader(replyToAddress), mess.getHeader("Reply-To", null));
+        Assert.assertEquals(MailTestUtil.getAddressHeader(toName, toAddress), mess.getHeader("To", null));
+        Assert.assertEquals("Subject has been modified", subject, MimeUtility.unfold(mess.getHeader("Subject", null)));
+        Assert.assertEquals(MessagePriority.HIGH.getPriority(), mess.getHeader("Priority", null));
+        Assert.assertEquals(MessagePriority.HIGH.getX_priority(), mess.getHeader("X-Priority", null));
+        Assert.assertEquals(MessagePriority.HIGH.getImportance(), mess.getHeader("Importance", null));
+        Assert.assertTrue(mess.getHeader("Content-Type", null).startsWith("multipart/mixed"));
+        Assert.assertEquals(messageId, MailUtility.headerStripper(mess.getHeader("Message-ID", null)));
+
+        MimeMultipart mixed = (MimeMultipart) mess.getContent();
+        BodyPart text = mixed.getBodyPart(0);
+
+        Assert.assertTrue(mixed.getContentType().startsWith("multipart/mixed"));
+        Assert.assertEquals(1, mixed.getCount());
+
+        Assert.assertTrue(text.getContentType().startsWith("text/plain; charset=UTF-8"));
+        Assert.assertEquals(textBody, MailTestUtil.getStringContent(text));
+    }
+
+    /**
+     * Wiser takes a fraction of a second to shutdown, so let it finish.
+     */
+    protected void stop(Wiser wiser) {
+        wiser.stop();
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

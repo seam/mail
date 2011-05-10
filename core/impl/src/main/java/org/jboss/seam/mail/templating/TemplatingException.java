@@ -21,31 +21,25 @@ import org.jboss.seam.mail.core.MailException;
 
 /**
  * Thrown when a error occurs during template processing
- * 
+ *
  * @author Cody Lerum
- * 
  */
-public class TemplatingException extends MailException
-{
-   private static final long serialVersionUID = 1L;
+public class TemplatingException extends MailException {
+    private static final long serialVersionUID = 1L;
 
-   public TemplatingException()
-   {
-      super();
-   }
+    public TemplatingException() {
+        super();
+    }
 
-   public TemplatingException(String message, Throwable cause)
-   {
-      super(message, cause);
-   }
+    public TemplatingException(String message, Throwable cause) {
+        super(message, cause);
+    }
 
-   public TemplatingException(String message)
-   {
-      super(message);
-   }
+    public TemplatingException(String message) {
+        super(message);
+    }
 
-   public TemplatingException(Throwable cause)
-   {
-      super(cause);
-   }
+    public TemplatingException(Throwable cause) {
+        super(cause);
+    }
 }

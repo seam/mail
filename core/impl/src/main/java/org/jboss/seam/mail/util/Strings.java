@@ -18,20 +18,16 @@
 package org.jboss.seam.mail.util;
 
 /**
- * 
  * @author Cody Lerum
- * 
  */
-public class Strings
-{
-   /**
-    * Checks if a String is null or empty when trimmed
-    * 
-    * @param string
-    * @return TRUE if NULL or string.trim.length == 0
-    */
-   public static boolean isNullOrBlank(String string)
-   {
-      return string == null || string.trim().length() == 0;
-   }
+public class Strings {
+    /**
+     * Checks if a String is null or empty when trimmed
+     *
+     * @param string
+     * @return TRUE if NULL or string.trim.length == 0
+     */
+    public static boolean isNullOrBlank(String string) {
+        return string == null || string.trim().length() == 0;
+    }
 }

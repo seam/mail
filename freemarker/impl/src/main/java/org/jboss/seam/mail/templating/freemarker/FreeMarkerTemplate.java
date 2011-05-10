@@ -28,62 +28,49 @@ import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.jboss.seam.mail.templating.TemplateProvider;
-import org.jboss.seam.mail.templating.TemplatingException;
-
 import freemarker.template.Configuration;
 import freemarker.template.DefaultObjectWrapper;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
+import org.jboss.seam.mail.templating.TemplateProvider;
+import org.jboss.seam.mail.templating.TemplatingException;
 
 /**
- * 
  * @author Cody Lerum
- * 
  */
-public class FreeMarkerTemplate implements TemplateProvider
-{
-   private Configuration configuration;
-   private Map<String, Object> rootMap = new HashMap<String, Object>();
-   private InputStream inputStream;
+public class FreeMarkerTemplate implements TemplateProvider {
+    private Configuration configuration;
+    private Map<String, Object> rootMap = new HashMap<String, Object>();
+    private InputStream inputStream;
 
-   public FreeMarkerTemplate(InputStream inputStream)
-   {
-      this.inputStream = inputStream;
-      configuration = new Configuration();
-      configuration.setObjectWrapper(new DefaultObjectWrapper());
-   }
+    public FreeMarkerTemplate(InputStream inputStream) {
+        this.inputStream = inputStream;
+        configuration = new Configuration();
+        configuration.setObjectWrapper(new DefaultObjectWrapper());
+    }
 
-   public FreeMarkerTemplate(String string)
-   {
-      this(new ByteArrayInputStream(string.getBytes()));
-   }
+    public FreeMarkerTemplate(String string) {
+        this(new ByteArrayInputStream(string.getBytes()));
+    }
 
-   public FreeMarkerTemplate(File file) throws FileNotFoundException
-   {
-      this(new FileInputStream(file));
-   }
+    public FreeMarkerTemplate(File file) throws FileNotFoundException {
+        this(new FileInputStream(file));
+    }
 
-   public String merge(Map<String, Object> context)
-   {
-      rootMap.putAll(context);
+    public String merge(Map<String, Object> context) {
+        rootMap.putAll(context);
 
-      StringWriter writer = new StringWriter();
+        StringWriter writer = new StringWriter();
 
-      try
-      {
-         Template template = new Template("mailGenerated", new InputStreamReader(inputStream), configuration);
-         template.process(rootMap, writer);
-      }
-      catch (IOException e)
-      {
-         throw new TemplatingException("Error creating template", e);
-      }
-      catch (TemplateException e)
-      {
-         throw new TemplatingException("Error rendering output", e);
-      }
+        try {
+            Template template = new Template("mailGenerated", new InputStreamReader(inputStream), configuration);
+            template.process(rootMap, writer);
+        } catch (IOException e) {
+            throw new TemplatingException("Error creating template", e);
+        } catch (TemplateException e) {
+            throw new TemplatingException("Error rendering output", e);
+        }
 
-      return writer.toString();
-   }
+        return writer.toString();
+    }
 }

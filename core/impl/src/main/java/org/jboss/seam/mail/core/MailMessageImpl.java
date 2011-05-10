@@ -42,394 +42,332 @@ import org.jboss.seam.mail.util.EmailAttachmentUtil;
 import org.jboss.seam.mail.util.MailUtility;
 
 /**
- * 
  * @author Cody Lerum
- * 
  */
-public class MailMessageImpl implements MailMessage
-{
-   private EmailMessage emailMessage;
-
-   private TemplateProvider subjectTemplate;
-   private TemplateProvider textTemplate;
-   private TemplateProvider htmlTemplate;
-   private Map<String, Object> templateContext = new HashMap<String, Object>();
-   private boolean templatesMerged;
-
-   @Inject
-   private Instance<Session> session;
-
-   public MailMessageImpl()
-   {
-      emailMessage = new EmailMessage();
-   }
-
-   public MailMessageImpl(ContentType rootContentType)
-   {
-      emailMessage = new EmailMessage(rootContentType);
-   }
-
-   // Begin Addressing
-
-   public MailMessage from(String address)
-   {
-      emailMessage.addFromAddress(MailUtility.internetAddress(address));
-      return this;
-   }
-
-   public MailMessage from(String address, String name)
-   {
-      emailMessage.addFromAddress(MailUtility.internetAddress(address, name));
-      return this;
-   }
-
-   public MailMessage from(InternetAddress emailAddress)
-   {
-      emailMessage.addFromAddress(emailAddress);
-      return this;
-   }
-
-   public MailMessage from(EmailContact emailContact)
-   {
-      if (emailContact != null)
-      {
-         emailMessage.addFromAddress(MailUtility.internetAddress(emailContact));
-      }
-      return this;
-   }
-
-   public MailMessage from(Collection<EmailContact> emailContacts)
-   {
-      emailMessage.addFromAddresses(MailUtility.internetAddress(emailContacts));
-      return this;
-   }
-
-   public MailMessage replyTo(String address)
-   {
-      emailMessage.addReplyToAddress(MailUtility.internetAddress(address));
-      return this;
-   }
-
-   public MailMessage replyTo(String address, String name)
-   {
-      emailMessage.addReplyToAddress(MailUtility.internetAddress(address, name));
-      return this;
-   }
-
-   public MailMessage replyTo(InternetAddress emailAddress)
-   {
-      emailMessage.addReplyToAddress(emailAddress);
-      return this;
-   }
-
-   public MailMessage replyTo(EmailContact emailContact)
-   {
-      if (emailContact != null)
-      {
-         emailMessage.addReplyToAddress(MailUtility.internetAddress(emailContact));
-      }
-      return this;
-   }
-
-   public MailMessage replyTo(Collection<EmailContact> emailContacts)
-   {
-      emailMessage.addReplyToAddresses(MailUtility.internetAddress(emailContacts));
-      return this;
-   }
-
-   public MailMessage to(String address)
-   {
-      emailMessage.addToAddress(MailUtility.internetAddress(address));
-      return this;
-   }
-
-   public MailMessage to(String address, String name)
-   {
-      emailMessage.addToAddress(MailUtility.internetAddress(address, name));
-      return this;
-   }
-
-   public MailMessage to(InternetAddress emailAddress)
-   {
-      emailMessage.addToAddress(emailAddress);
-      return this;
-   }
-
-   public MailMessage to(EmailContact emailContact)
-   {
-      if (emailContact != null)
-      {
-         emailMessage.addToAddress(MailUtility.internetAddress(emailContact));
-      }
-      return this;
-   }
-
-   public MailMessage to(Collection<EmailContact> emailContacts)
-   {
-      emailMessage.addToAddresses(MailUtility.internetAddress(emailContacts));
-      return this;
-   }
-
-   public MailMessage cc(String address)
-   {
-      emailMessage.addCcAddress(MailUtility.internetAddress(address));
-      return this;
-   }
-
-   public MailMessage cc(String address, String name)
-   {
-      emailMessage.addCcAddress(MailUtility.internetAddress(address, name));
-      return this;
-   }
-
-   public MailMessage cc(InternetAddress emailAddress)
-   {
-      emailMessage.addCcAddress(emailAddress);
-      return this;
-   }
-
-   public MailMessage cc(EmailContact emailContact)
-   {
-      if (emailContact != null)
-      {
-         emailMessage.addCcAddress(MailUtility.internetAddress(emailContact));
-      }
-      return this;
-   }
-
-   public MailMessage cc(Collection<EmailContact> emailContacts)
-   {
-      emailMessage.addCcAddresses(MailUtility.internetAddress(emailContacts));
-      return this;
-   }
-
-   public MailMessage bcc(String address)
-   {
-      emailMessage.addBccAddress(MailUtility.internetAddress(address));
-      return this;
-   }
-
-   public MailMessage bcc(String address, String name)
-   {
-      emailMessage.addBccAddress(MailUtility.internetAddress(address, name));
-      return this;
-   }
-
-   public MailMessage bcc(InternetAddress emailAddress)
-   {
-      emailMessage.addBccAddress(emailAddress);
-      return this;
-   }
-
-   public MailMessage bcc(EmailContact emailContact)
-   {
-      if (emailContact != null)
-      {
-         emailMessage.addBccAddress(MailUtility.internetAddress(emailContact));
-      }
-      return this;
-   }
-
-   public MailMessage bcc(Collection<EmailContact> emailContacts)
-   {
-      emailMessage.addBccAddresses(MailUtility.internetAddress(emailContacts));
-      return this;
-   }
-
-   // End Addressing
-
-   public MailMessage subject(String value)
-   {
-      emailMessage.setSubject(value);
-      return this;
-   }
-
-   public MailMessage deliveryReceipt(String address)
-   {
-      emailMessage.addDeliveryReceiptAddress(MailUtility.internetAddress(address));
-      return this;
-   }
-
-   public MailMessage readReceipt(String address)
-   {
-      emailMessage.addReadReceiptAddress(MailUtility.internetAddress(address));
-      return this;
-   }
-
-   public MailMessage importance(MessagePriority messagePriority)
-   {
-      emailMessage.setImportance(messagePriority);
-      return this;
-   }
-
-   public MailMessage messageId(String messageId)
-   {
-      emailMessage.setMessageId(messageId);
-      return this;
-   }
-
-   public MailMessage bodyText(String text)
-   {
-      emailMessage.setTextBody(text);
-      return this;
-   }
-
-   public MailMessage bodyHtml(String html)
-   {
-      emailMessage.setHtmlBody(html);
-      return this;
-   }
-
-   public MailMessage bodyHtmlTextAlt(String html, String text)
-   {
-      emailMessage.setTextBody(text);
-      emailMessage.setHtmlBody(html);
-      return this;
-   }
-
-   // Begin Attachments
-
-   public MailMessage addAttachment(EmailAttachment attachment)
-   {
-      emailMessage.addAttachment(attachment);
-      return this;
-   }
-
-   public MailMessage addAttachment(Collection<EmailAttachment> attachments)
-   {
-      emailMessage.addAttachments(attachments);
-      return this;
-   }
-
-   public MailMessage addAttachment(String fileName, String mimeType, ContentDisposition contentDispostion, byte[] bytes)
-   {
-      addAttachment(new BaseAttachment(fileName, mimeType, contentDispostion, bytes));
-      return this;
-   }
-
-   public MailMessage addAttachment(String fileName, String mimeType, ContentDisposition contentDispostion, InputStream inputStream)
-   {
-      addAttachment(new InputStreamAttachment(fileName, mimeType, contentDispostion, inputStream));
-      return this;
-   }
-
-   public MailMessage addAttachment(ContentDisposition contentDispostion, File file)
-   {
-      addAttachment(new FileAttachment(contentDispostion, file));
-      return this;
-   }
-
-   // End Attachments
-
-   // Begin Calendar
-
-   public MailMessage iCal(String html, byte[] bytes)
-   {
-      emailMessage.setType(EmailMessageType.INVITE_ICAL);
-      emailMessage.setHtmlBody(html);
-      emailMessage.addAttachment(new BaseAttachment(null, "text/calendar;method=CANCEL", ContentDisposition.INLINE, bytes, "urn:content-classes:calendarmessage"));
-      return this;
-   }
-
-   // End Calendar
-
-   public MailMessage subject(TemplateProvider subject)
-   {
-      subjectTemplate = subject;
-      return this;
-   }
-
-   public MailMessage bodyText(TemplateProvider textBody)
-   {
-      textTemplate = textBody;
-      return this;
-   }
-
-   public MailMessage bodyHtml(TemplateProvider htmlBody)
-   {
-      htmlTemplate = htmlBody;
-      return this;
-   }
-
-   public MailMessage bodyHtmlTextAlt(TemplateProvider htmlBody, TemplateProvider textBody)
-   {
-      bodyHtml(htmlBody);
-      bodyText(textBody);
-      return this;
-   }
-
-   public MailMessage put(String key, Object value)
-   {
-      templateContext.put(key, value);
-      return this;
-   }
-
-   public MailMessage put(Map<String, Object> values)
-   {
-      templateContext.putAll(values);
-      return this;
-   }
-
-   public EmailMessage getEmailMessage()
-   {
-      return emailMessage;
-   }
-
-   public void setEmailMessage(EmailMessage emailMessage)
-   {
-      this.emailMessage = emailMessage;
-   }
-
-   public EmailMessage mergeTemplates()
-   {
-      put("mailContext", new MailContext(EmailAttachmentUtil.getEmailAttachmentMap(emailMessage.getAttachments())));
-
-      if (subjectTemplate != null)
-      {
-         emailMessage.setSubject(subjectTemplate.merge(templateContext));
-      }
-
-      if (textTemplate != null)
-      {
-         emailMessage.setTextBody(textTemplate.merge(templateContext));
-      }
-
-      if (htmlTemplate != null)
-      {
-         emailMessage.setHtmlBody(htmlTemplate.merge(templateContext));
-      }
-
-      templatesMerged = true;
-
-      return emailMessage;
-   }
-
-   public EmailMessage send(Session session) throws SendFailedException
-   {
-      if (!templatesMerged)
-      {
-         mergeTemplates();
-      }
-
-      MailUtility.send(emailMessage, session);
-
-      return emailMessage;
-   }
-
-   public EmailMessage send() throws SendFailedException
-   {
-      return this.send(session.get());
-   }
-
-   //Doesn't Send Async Yet
-   public EmailMessage sendAsynchronously(Session session) throws SendFailedException
-   {
-      return send(session);
-   }
-
-   //Doesn't send Async Yet
-   public EmailMessage sendAsynchronously() throws SendFailedException
-   {
-      return this.send(session.get());
-   }
+public class MailMessageImpl implements MailMessage {
+
+    private EmailMessage emailMessage;
+
+    private TemplateProvider subjectTemplate;
+    private TemplateProvider textTemplate;
+    private TemplateProvider htmlTemplate;
+    private Map<String, Object> templateContext = new HashMap<String, Object>();
+    private boolean templatesMerged;
+
+    @Inject
+    private Instance<Session> session;
+
+    public MailMessageImpl() {
+        emailMessage = new EmailMessage();
+    }
+
+    public MailMessageImpl(ContentType rootContentType) {
+        emailMessage = new EmailMessage(rootContentType);
+    }
+
+    // Begin Addressing
+
+    public MailMessage from(String address) {
+        emailMessage.addFromAddress(MailUtility.internetAddress(address));
+        return this;
+    }
+
+    public MailMessage from(String address, String name) {
+        emailMessage.addFromAddress(MailUtility.internetAddress(address, name));
+        return this;
+    }
+
+    public MailMessage from(InternetAddress emailAddress) {
+        emailMessage.addFromAddress(emailAddress);
+        return this;
+    }
+
+    public MailMessage from(EmailContact emailContact) {
+        if (emailContact != null) {
+            emailMessage.addFromAddress(MailUtility.internetAddress(emailContact));
+        }
+        return this;
+    }
+
+    public MailMessage from(Collection<EmailContact> emailContacts) {
+        emailMessage.addFromAddresses(MailUtility.internetAddress(emailContacts));
+        return this;
+    }
+
+    public MailMessage replyTo(String address) {
+        emailMessage.addReplyToAddress(MailUtility.internetAddress(address));
+        return this;
+    }
+
+    public MailMessage replyTo(String address, String name) {
+        emailMessage.addReplyToAddress(MailUtility.internetAddress(address, name));
+        return this;
+    }
+
+    public MailMessage replyTo(InternetAddress emailAddress) {
+        emailMessage.addReplyToAddress(emailAddress);
+        return this;
+    }
+
+    public MailMessage replyTo(EmailContact emailContact) {
+        if (emailContact != null) {
+            emailMessage.addReplyToAddress(MailUtility.internetAddress(emailContact));
+        }
+        return this;
+    }
+
+    public MailMessage replyTo(Collection<EmailContact> emailContacts) {
+        emailMessage.addReplyToAddresses(MailUtility.internetAddress(emailContacts));
+        return this;
+    }
+
+    public MailMessage to(String address) {
+        emailMessage.addToAddress(MailUtility.internetAddress(address));
+        return this;
+    }
+
+    public MailMessage to(String address, String name) {
+        emailMessage.addToAddress(MailUtility.internetAddress(address, name));
+        return this;
+    }
+
+    public MailMessage to(InternetAddress emailAddress) {
+        emailMessage.addToAddress(emailAddress);
+        return this;
+    }
+
+    public MailMessage to(EmailContact emailContact) {
+        if (emailContact != null) {
+            emailMessage.addToAddress(MailUtility.internetAddress(emailContact));
+        }
+        return this;
+    }
+
+    public MailMessage to(Collection<EmailContact> emailContacts) {
+        emailMessage.addToAddresses(MailUtility.internetAddress(emailContacts));
+        return this;
+    }
+
+    public MailMessage cc(String address) {
+        emailMessage.addCcAddress(MailUtility.internetAddress(address));
+        return this;
+    }
+
+    public MailMessage cc(String address, String name) {
+        emailMessage.addCcAddress(MailUtility.internetAddress(address, name));
+        return this;
+    }
+
+    public MailMessage cc(InternetAddress emailAddress) {
+        emailMessage.addCcAddress(emailAddress);
+        return this;
+    }
+
+    public MailMessage cc(EmailContact emailContact) {
+        if (emailContact != null) {
+            emailMessage.addCcAddress(MailUtility.internetAddress(emailContact));
+        }
+        return this;
+    }
+
+    public MailMessage cc(Collection<EmailContact> emailContacts) {
+        emailMessage.addCcAddresses(MailUtility.internetAddress(emailContacts));
+        return this;
+    }
+
+    public MailMessage bcc(String address) {
+        emailMessage.addBccAddress(MailUtility.internetAddress(address));
+        return this;
+    }
+
+    public MailMessage bcc(String address, String name) {
+        emailMessage.addBccAddress(MailUtility.internetAddress(address, name));
+        return this;
+    }
+
+    public MailMessage bcc(InternetAddress emailAddress) {
+        emailMessage.addBccAddress(emailAddress);
+        return this;
+    }
+
+    public MailMessage bcc(EmailContact emailContact) {
+        if (emailContact != null) {
+            emailMessage.addBccAddress(MailUtility.internetAddress(emailContact));
+        }
+        return this;
+    }
+
+    public MailMessage bcc(Collection<EmailContact> emailContacts) {
+        emailMessage.addBccAddresses(MailUtility.internetAddress(emailContacts));
+        return this;
+    }
+
+    // End Addressing
+
+    public MailMessage subject(String value) {
+        emailMessage.setSubject(value);
+        return this;
+    }
+
+    public MailMessage deliveryReceipt(String address) {
+        emailMessage.addDeliveryReceiptAddress(MailUtility.internetAddress(address));
+        return this;
+    }
+
+    public MailMessage readReceipt(String address) {
+        emailMessage.addReadReceiptAddress(MailUtility.internetAddress(address));
+        return this;
+    }
+
+    public MailMessage importance(MessagePriority messagePriority) {
+        emailMessage.setImportance(messagePriority);
+        return this;
+    }
+
+    public MailMessage messageId(String messageId) {
+        emailMessage.setMessageId(messageId);
+        return this;
+    }
+
+    public MailMessage bodyText(String text) {
+        emailMessage.setTextBody(text);
+        return this;
+    }
+
+    public MailMessage bodyHtml(String html) {
+        emailMessage.setHtmlBody(html);
+        return this;
+    }
+
+    public MailMessage bodyHtmlTextAlt(String html, String text) {
+        emailMessage.setTextBody(text);
+        emailMessage.setHtmlBody(html);
+        return this;
+    }
+
+    // Begin Attachments
+
+    public MailMessage addAttachment(EmailAttachment attachment) {
+        emailMessage.addAttachment(attachment);
+        return this;
+    }
+
+    public MailMessage addAttachment(Collection<EmailAttachment> attachments) {
+        emailMessage.addAttachments(attachments);
+        return this;
+    }
+
+    public MailMessage addAttachment(String fileName, String mimeType, ContentDisposition contentDispostion, byte[] bytes) {
+        addAttachment(new BaseAttachment(fileName, mimeType, contentDispostion, bytes));
+        return this;
+    }
+
+    public MailMessage addAttachment(String fileName, String mimeType, ContentDisposition contentDispostion,
+            InputStream inputStream) {
+        addAttachment(new InputStreamAttachment(fileName, mimeType, contentDispostion, inputStream));
+        return this;
+    }
+
+    public MailMessage addAttachment(ContentDisposition contentDispostion, File file) {
+        addAttachment(new FileAttachment(contentDispostion, file));
+        return this;
+    }
+
+    // End Attachments
+
+    // Begin Calendar
+
+    public MailMessage iCal(String html, byte[] bytes) {
+        emailMessage.setType(EmailMessageType.INVITE_ICAL);
+        emailMessage.setHtmlBody(html);
+        emailMessage.addAttachment(new BaseAttachment(null, "text/calendar;method=CANCEL", ContentDisposition.INLINE, bytes,
+                "urn:content-classes:calendarmessage"));
+        return this;
+    }
+
+    // End Calendar
+
+    public MailMessage subject(TemplateProvider subject) {
+        subjectTemplate = subject;
+        return this;
+    }
+
+    public MailMessage bodyText(TemplateProvider textBody) {
+        textTemplate = textBody;
+        return this;
+    }
+
+    public MailMessage bodyHtml(TemplateProvider htmlBody) {
+        htmlTemplate = htmlBody;
+        return this;
+    }
+
+    public MailMessage bodyHtmlTextAlt(TemplateProvider htmlBody, TemplateProvider textBody) {
+        bodyHtml(htmlBody);
+        bodyText(textBody);
+        return this;
+    }
+
+    public MailMessage put(String key, Object value) {
+        templateContext.put(key, value);
+        return this;
+    }
+
+    public MailMessage put(Map<String, Object> values) {
+        templateContext.putAll(values);
+        return this;
+    }
+
+    public EmailMessage getEmailMessage() {
+        return emailMessage;
+    }
+
+    public void setEmailMessage(EmailMessage emailMessage) {
+        this.emailMessage = emailMessage;
+    }
+
+    public EmailMessage mergeTemplates() {
+        put("mailContext", new MailContext(EmailAttachmentUtil.getEmailAttachmentMap(emailMessage.getAttachments())));
+
+        if (subjectTemplate != null) {
+            emailMessage.setSubject(subjectTemplate.merge(templateContext));
+        }
+
+        if (textTemplate != null) {
+            emailMessage.setTextBody(textTemplate.merge(templateContext));
+        }
+
+        if (htmlTemplate != null) {
+            emailMessage.setHtmlBody(htmlTemplate.merge(templateContext));
+        }
+
+        templatesMerged = true;
+
+        return emailMessage;
+    }
+
+    public EmailMessage send(Session session) throws SendFailedException {
+        if (!templatesMerged) {
+            mergeTemplates();
+        }
+
+        MailUtility.send(emailMessage, session);
+
+        return emailMessage;
+    }
+
+    public EmailMessage send() throws SendFailedException {
+        return this.send(session.get());
+    }
+
+    // Doesn't Send Async Yet
+    public EmailMessage sendAsynchronously(Session session) throws SendFailedException {
+        return send(session);
+    }
+
+    // Doesn't send Async Yet
+    public EmailMessage sendAsynchronously() throws SendFailedException {
+        // TODO add code for async send
+        return this.send(session.get());
+    }
 }

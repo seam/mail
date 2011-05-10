@@ -25,55 +25,45 @@ import org.hibernate.validator.constraints.NotEmpty;
 import org.jboss.seam.mail.core.EmailContact;
 
 /**
- * 
  * @author Cody Lerum
- * 
  */
 @Model
-public class Person implements EmailContact
-{
-   private String name;
-   private String email;
+public class Person implements EmailContact {
+    private String name;
+    private String email;
 
-   public Person()
-   {
+    public Person() {
 
-   }
+    }
 
-   public Person(String name, String email)
-   {
-      this.name = name;
-      this.email = email;
-   }
+    public Person(String name, String email) {
+        this.name = name;
+        this.email = email;
+    }
 
-   @NotNull
-   @NotEmpty
-   public String getName()
-   {
-      return name;
-   }
+    @NotNull
+    @NotEmpty
+    public String getName() {
+        return name;
+    }
 
-   public void setName(String name)
-   {
-      this.name = name;
-   }
+    public void setName(String name) {
+        this.name = name;
+    }
 
-   @NotNull
-   @NotEmpty
-   @Email
-   public String getEmail()
-   {
-      return email;
-   }
+    @NotNull
+    @NotEmpty
+    @Email
+    public String getEmail() {
+        return email;
+    }
 
-   public void setEmail(String email)
-   {
-      this.email = email;
-   }
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
-   @Override
-   public String getAddress()
-   {
-      return getEmail();
-   }
+    @Override
+    public String getAddress() {
+        return getEmail();
+    }
 }

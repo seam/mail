@@ -26,96 +26,78 @@ import org.jboss.seam.mail.core.Header;
 import org.jboss.seam.mail.core.enumerations.ContentDisposition;
 
 /**
- * 
  * @author Cody Lerum
- * 
  */
-public class BaseAttachment implements EmailAttachment 
-{
-   private String contentId;
-   private String fileName;
-   private String mimeType;
-   private ContentDisposition contentDisposition;
-   private Collection<Header> headers = new ArrayList<Header>();
-   private byte[] bytes;
+public class BaseAttachment implements EmailAttachment {
+    private String contentId;
+    private String fileName;
+    private String mimeType;
+    private ContentDisposition contentDisposition;
+    private Collection<Header> headers = new ArrayList<Header>();
+    private byte[] bytes;
 
-   public BaseAttachment(String fileName, String mimeType, ContentDisposition contentDisposition, byte[] bytes)
-   {
-      this();
-      this.fileName = fileName;
-      this.mimeType = mimeType;
-      this.contentDisposition = contentDisposition;
-      this.bytes = bytes;
-   }
-   
-   public BaseAttachment(String fileName, String mimeType, ContentDisposition contentDisposition, byte[] bytes, String contentClass)
-   {
-      this(fileName, mimeType, contentDisposition, bytes);
-      this.addHeader(new Header("Content-Class", contentClass));
-   }
+    public BaseAttachment(String fileName, String mimeType, ContentDisposition contentDisposition, byte[] bytes) {
+        this();
+        this.fileName = fileName;
+        this.mimeType = mimeType;
+        this.contentDisposition = contentDisposition;
+        this.bytes = bytes;
+    }
 
-   public BaseAttachment()
-   {
-      this.contentId = UUID.randomUUID().toString();
-   }
+    public BaseAttachment(String fileName, String mimeType, ContentDisposition contentDisposition, byte[] bytes, String contentClass) {
+        this(fileName, mimeType, contentDisposition, bytes);
+        this.addHeader(new Header("Content-Class", contentClass));
+    }
 
-   public String getContentId()
-   {
-      return contentId;
-   }
+    public BaseAttachment() {
+        this.contentId = UUID.randomUUID().toString();
+    }
 
-   public String getFileName()
-   {
-      return fileName;
-   }
+    public String getContentId() {
+        return contentId;
+    }
 
-   public void setFileName(String fileName)
-   {
-      this.fileName = fileName;
-   }
+    public String getFileName() {
+        return fileName;
+    }
 
-   public String getMimeType()
-   {
-      return mimeType;
-   }
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
 
-   public void setMimeType(String mimeType)
-   {
-      this.mimeType = mimeType;
-   }
+    public String getMimeType() {
+        return mimeType;
+    }
 
-   public ContentDisposition getContentDisposition()
-   {
-      return contentDisposition;
-   }
+    public void setMimeType(String mimeType) {
+        this.mimeType = mimeType;
+    }
 
-   public void setContentDisposition(ContentDisposition contentDisposition)
-   {
-      this.contentDisposition = contentDisposition;
-   }
+    public ContentDisposition getContentDisposition() {
+        return contentDisposition;
+    }
 
-   public Collection<Header> getHeaders()
-   {
-      return headers;
-   }
+    public void setContentDisposition(ContentDisposition contentDisposition) {
+        this.contentDisposition = contentDisposition;
+    }
 
-   public void addHeader(Header header)
-   {
-      headers.add(header);
-   }
+    public Collection<Header> getHeaders() {
+        return headers;
+    }
 
-   public void addHeaders(Collection<Header> headers)
-   {
-      headers.addAll(headers);
-   }
+    public void addHeader(Header header) {
+        headers.add(header);
+    }
 
-   public byte[] getBytes()
-   {
-      return bytes;
-   }
+    public void addHeaders(Collection<Header> headers) {
+        headers.addAll(headers);
+    }
 
-   public void setBytes(byte[] bytes)
-   {
-      this.bytes = bytes;
-   }
+    public byte[] getBytes() {
+        return bytes;
+    }
+
+    public void setBytes(byte[] bytes) {
+        this.bytes = bytes;
+    }
 }

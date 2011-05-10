@@ -17,25 +17,24 @@
 
 package org.jboss.seam.mail.example;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.Target;
+
+import javax.inject.Qualifier;
+
 import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.ElementType.PARAMETER;
 import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.Target;
-
-import javax.inject.Qualifier;
-
 /**
  * Used in testing to qualify a mock mail session to gmail.com
- * 
+ *
  * @author Cody Lerum
  */
 @Qualifier
-@Target({ FIELD, METHOD, TYPE, PARAMETER })
+@Target({FIELD, METHOD, TYPE, PARAMETER})
 @Retention(RUNTIME)
-public @interface Gmail
-{
+public @interface Gmail {
 }

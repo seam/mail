@@ -26,29 +26,25 @@ import org.jboss.seam.mail.core.MailConfig;
 import org.jboss.seam.mail.util.MailUtility;
 
 /**
- * 
  * @author Cody Lerum
- * 
  */
-public class GmailSessionProducer
-{
-   @Inject
-   private Logger log;
+public class GmailSessionProducer {
+    @Inject
+    private Logger log;
 
-   @Gmail
-   @Produces
-   public Session getMailSession()
-   {
-      log.debug("Producing Gmail Session");
+    @Gmail
+    @Produces
+    public Session getMailSession() {
+        log.debug("Producing Gmail Session");
 
-      MailConfig mailConfig = new MailConfig();
+        MailConfig mailConfig = new MailConfig();
 
-      mailConfig.setServerHost("localhost");
-      mailConfig.setServerPort(8978);
-      mailConfig.setUsername("test");
-      mailConfig.setPassword("test12!");
-      mailConfig.setAuth(true);
+        mailConfig.setServerHost("localhost");
+        mailConfig.setServerPort(8978);
+        mailConfig.setUsername("test");
+        mailConfig.setPassword("test12!");
+        mailConfig.setAuth(true);
 
-      return MailUtility.buildMailSession(mailConfig);
-   }
+        return MailUtility.buildMailSession(mailConfig);
+    }
 }

@@ -36,83 +36,61 @@ import org.jboss.seam.mail.templating.TemplateProvider;
 import org.jboss.seam.mail.templating.TemplatingException;
 
 /**
- * 
  * @author Cody Lerum
- * 
  */
-public class VelocityTemplate implements TemplateProvider
-{
-   private VelocityEngine velocityEngine;
-   private VelocityContext velocityContext;
-   private CDIVelocityContext cdiContext;
-   private InputStream inputStream;
+public class VelocityTemplate implements TemplateProvider {
+    private VelocityEngine velocityEngine;
+    private VelocityContext velocityContext;
+    private CDIVelocityContext cdiContext;
+    private InputStream inputStream;
 
-   public VelocityTemplate(InputStream inputStream)
-   {
-      velocityEngine = new VelocityEngine();
-      this.inputStream = inputStream;
-   }
+    public VelocityTemplate(InputStream inputStream) {
+        velocityEngine = new VelocityEngine();
+        this.inputStream = inputStream;
+    }
 
-   public VelocityTemplate(InputStream inputStream, CDIVelocityContext cdiContext)
-   {
-      this(inputStream);
-      this.cdiContext = cdiContext;
-   }
-   
-   public VelocityTemplate(String string)
-   {
-      this(new ByteArrayInputStream(string.getBytes()));
-   }  
+    public VelocityTemplate(InputStream inputStream, CDIVelocityContext cdiContext) {
+        this(inputStream);
+        this.cdiContext = cdiContext;
+    }
 
-   public VelocityTemplate(String string, CDIVelocityContext cdiContext)
-   {
-      this(new ByteArrayInputStream(string.getBytes()), cdiContext);
-   }  
-   
-   public VelocityTemplate(File file) throws FileNotFoundException
-   {
-      this(new FileInputStream(file));
-   }
-   
-   public VelocityTemplate(File file, CDIVelocityContext cdiContext) throws FileNotFoundException
-   {
-      this(new FileInputStream(file), cdiContext);
-   }
+    public VelocityTemplate(String string) {
+        this(new ByteArrayInputStream(string.getBytes()));
+    }
 
-   public String merge(Map<String, Object> context)
-   {
-      StringWriter writer = new StringWriter();
+    public VelocityTemplate(String string, CDIVelocityContext cdiContext) {
+        this(new ByteArrayInputStream(string.getBytes()), cdiContext);
+    }
 
-      if (cdiContext != null)
-      {
-         velocityContext = new VelocityContext(context, cdiContext);
-      }
-      else
-      {
-         velocityContext = new VelocityContext(context);
-      }
+    public VelocityTemplate(File file) throws FileNotFoundException {
+        this(new FileInputStream(file));
+    }
 
-      try
-      {
-         velocityEngine.evaluate(velocityContext, writer, "mailGenerated", new InputStreamReader(inputStream));
-      }
-      catch (ResourceNotFoundException e)
-      {
-         throw new TemplatingException("Unable to find template", e);
-      }
-      catch (ParseErrorException e)
-      {
-         throw new TemplatingException("Unable to find template", e);
-      }
-      catch (MethodInvocationException e)
-      {
-         throw new TemplatingException("Error processing method referenced in context", e);
-      }
-      catch (IOException e)
-      {
-         throw new TemplatingException("Error rendering output", e);
-      }
+    public VelocityTemplate(File file, CDIVelocityContext cdiContext) throws FileNotFoundException {
+        this(new FileInputStream(file), cdiContext);
+    }
 
-      return writer.toString();
-   }
+    public String merge(Map<String, Object> context) {
+        StringWriter writer = new StringWriter();
+
+        if (cdiContext != null) {
+            velocityContext = new VelocityContext(context, cdiContext);
+        } else {
+            velocityContext = new VelocityContext(context);
+        }
+
+        try {
+            velocityEngine.evaluate(velocityContext, writer, "mailGenerated", new InputStreamReader(inputStream));
+        } catch (ResourceNotFoundException e) {
+            throw new TemplatingException("Unable to find template", e);
+        } catch (ParseErrorException e) {
+            throw new TemplatingException("Unable to find template", e);
+        } catch (MethodInvocationException e) {
+            throw new TemplatingException("Error processing method referenced in context", e);
+        } catch (IOException e) {
+            throw new TemplatingException("Error rendering output", e);
+        }
+
+        return writer.toString();
+    }
 }

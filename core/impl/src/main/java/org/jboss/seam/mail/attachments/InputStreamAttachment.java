@@ -20,39 +20,30 @@ package org.jboss.seam.mail.attachments;
 import java.io.IOException;
 import java.io.InputStream;
 
+import com.google.common.io.ByteStreams;
 import org.jboss.seam.mail.core.AttachmentException;
 import org.jboss.seam.mail.core.Header;
 import org.jboss.seam.mail.core.enumerations.ContentDisposition;
 
-import com.google.common.io.ByteStreams;
-
 /**
- * 
  * @author Cody Lerum
- * 
  */
-public class InputStreamAttachment extends BaseAttachment
-{
-   public InputStreamAttachment(String fileName, String mimeType, ContentDisposition contentDisposition, InputStream inputStream)
-   {
-      super();
+public class InputStreamAttachment extends BaseAttachment {
+    public InputStreamAttachment(String fileName, String mimeType, ContentDisposition contentDisposition, InputStream inputStream) {
+        super();
 
-      try
-      {
-         super.setFileName(fileName);
-         super.setMimeType(mimeType);
-         super.setContentDisposition(contentDisposition);
-         super.setBytes(ByteStreams.toByteArray(inputStream));
-      }
-      catch (IOException e)
-      {
-         throw new AttachmentException("Wasn't able to create email attachment from InputStream");
-      }
-   }
+        try {
+            super.setFileName(fileName);
+            super.setMimeType(mimeType);
+            super.setContentDisposition(contentDisposition);
+            super.setBytes(ByteStreams.toByteArray(inputStream));
+        } catch (IOException e) {
+            throw new AttachmentException("Wasn't able to create email attachment from InputStream");
+        }
+    }
 
-   public InputStreamAttachment(String fileName, String mimeType, ContentDisposition contentDisposition, InputStream inputStream, String contentClass)
-   {
-      this(fileName, mimeType, contentDisposition, inputStream);
-      super.addHeader(new Header("Content-Class", contentClass));
-   }
+    public InputStreamAttachment(String fileName, String mimeType, ContentDisposition contentDisposition, InputStream inputStream, String contentClass) {
+        this(fileName, mimeType, contentDisposition, inputStream);
+        super.addHeader(new Header("Content-Class", contentClass));
+    }
 }

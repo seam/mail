@@ -24,24 +24,18 @@ import java.util.Map;
 import org.jboss.seam.mail.core.EmailAttachment;
 
 /**
- * 
  * @author Cody Lerum
- * 
  */
-public class EmailAttachmentUtil
-{
-   public static Map<String, EmailAttachment> getEmailAttachmentMap(Collection<EmailAttachment> attachments)
-   {
-      Map<String, EmailAttachment> emailAttachmentMap = new HashMap<String, EmailAttachment>();
+public class EmailAttachmentUtil {
+    public static Map<String, EmailAttachment> getEmailAttachmentMap(Collection<EmailAttachment> attachments) {
+        Map<String, EmailAttachment> emailAttachmentMap = new HashMap<String, EmailAttachment>();
 
-      for (EmailAttachment ea : attachments)
-      {
-         if (!Strings.isNullOrBlank(ea.getFileName()))
-         {
-            emailAttachmentMap.put(ea.getFileName(), ea);
-         }
-      }
+        for (EmailAttachment ea : attachments) {
+            if (!Strings.isNullOrBlank(ea.getFileName())) {
+                emailAttachmentMap.put(ea.getFileName(), ea);
+            }
+        }
 
-      return emailAttachmentMap;
-   }
+        return emailAttachmentMap;
+    }
 }

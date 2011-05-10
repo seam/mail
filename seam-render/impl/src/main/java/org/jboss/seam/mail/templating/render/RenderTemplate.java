@@ -26,36 +26,29 @@ import org.jboss.seam.render.spi.TemplateResource;
 import org.jboss.seam.render.template.CompiledTemplateResource;
 
 /**
- * 
  * @author Cody Lerum
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
- * 
  */
-public class RenderTemplate implements TemplateProvider
-{
-   private final CompiledTemplateResource template;
+public class RenderTemplate implements TemplateProvider {
+    private final CompiledTemplateResource template;
 
-   public RenderTemplate(TemplateCompiler compiler, String path)
-   {
-      template = compiler.compile(path);
-   }
+    public RenderTemplate(TemplateCompiler compiler, String path) {
+        template = compiler.compile(path);
+    }
 
-   public RenderTemplate(TemplateCompiler compiler, TemplateResource<?> resource)
-   {
-      template = compiler.compile(resource);
-   }
+    public RenderTemplate(TemplateCompiler compiler, TemplateResource<?> resource) {
+        template = compiler.compile(resource);
+    }
 
-   public RenderTemplate(CompiledTemplateResource template)
-   {
-      this.template = template;
-   }
+    public RenderTemplate(CompiledTemplateResource template) {
+        this.template = template;
+    }
 
-   public String merge(Map<String, Object> context)
-   {
-      Map<Object, Object> map = new HashMap<Object, Object>();
-      map.putAll(context);
+    public String merge(Map<String, Object> context) {
+        Map<Object, Object> map = new HashMap<Object, Object>();
+        map.putAll(context);
 
-      String rendered = template.render(map);
-      return rendered;
-   }
+        String rendered = template.render(map);
+        return rendered;
+    }
 }

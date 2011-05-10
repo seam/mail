@@ -1,54 +1,61 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
-   xmlns:ui="http://java.sun.com/jsf/facelets"
-   xmlns:f="http://java.sun.com/jsf/core"
-   xmlns:h="http://java.sun.com/jsf/html"
-   template="/WEB-INF/templates/default.xhtml">
-   <ui:define name="content">
-      <h1>Sendmail</h1>
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                template="/WEB-INF/templates/default.xhtml">
+    <ui:define name="content">
+        <h1>Sendmail</h1>
 
-      <p>You can use this application to send sample e-mail messages.</p>
+        <p>You can use this application to send sample e-mail messages.</p>
 
-      <h:form id="sendmail">
-         <table>
-         	<tr>
-               <th style="text-align: right;">
-                  <h:outputLabel for="name" value="Name:"/>
-               </th>
-               <td>
-                  <h:inputText id="name" value="#{person.name}"/>
-                  <h:message for="name" errorClass="invalid"/>
-               </td>
-            </tr>           
-            <tr>
-               <th style="text-align: right;">
-                  <h:outputLabel for="email" value="Email:"/>
-               </th>
-               <td>
-                  <h:inputText id="email" value="#{person.email}"/>
-                  <h:message for="email" errorClass="invalid"/>
-               </td>
-            </tr>
-         </table>
-         <p>
-            <h:commandButton action="#{sendMail.sendText}" value="Send Text Email" onclick="value='Sending...';"/>
-         </p>
-         <p>
-           	<h:commandButton action="#{sendMail.sendHTMLFreeMarker}" value="Send HTML Email with FreeMarker" onclick="value='Sending...';"/>
-            <h:commandButton action="#{sendMail.sendHTMLwithAlternativeFreeMarker}" value="Send HTML+Text Email with FreeMarker" onclick="value='Sending...';"/>
-        </p>
-        <p> 
-            <h:commandButton action="#{sendMail.sendHTMLVelocity}" value="Send HTML Email with Velocity" onclick="value='Sending...';"/>
-            <h:commandButton action="#{sendMail.sendHTMLwithAlternativeVelocity}" value="Send HTML+Text Email with Velocity" onclick="value='Sending...';"/>
-        </p>        
-        <p> 
-            <h:commandButton action="#{sendMail.sendHTMLRender}" value="Send HTML Email with Seam Render" onclick="value='Sending...';"/>
-            <h:commandButton action="#{sendMail.sendHTMLwithAlternativeRender}" value="Send HTML+Text Email with Seam Render" onclick="value='Sending...';"/>
-        </p>
-        <p>           
-            <h:outputText value="Message Sent!" rendered="#{facesContext.postback and empty facesContext.messageList}" style="color: green;"/>
-         </p>
-      </h:form>
+        <h:form id="sendmail">
+            <table>
+                <tr>
+                    <th style="text-align: right;">
+                        <h:outputLabel for="name" value="Name:"/>
+                    </th>
+                    <td>
+                        <h:inputText id="name" value="#{person.name}"/>
+                        <h:message for="name" errorClass="invalid"/>
+                    </td>
+                </tr>
+                <tr>
+                    <th style="text-align: right;">
+                        <h:outputLabel for="email" value="Email:"/>
+                    </th>
+                    <td>
+                        <h:inputText id="email" value="#{person.email}"/>
+                        <h:message for="email" errorClass="invalid"/>
+                    </td>
+                </tr>
+            </table>
+            <p>
+                <h:commandButton action="#{sendMail.sendText}" value="Send Text Email" onclick="value='Sending...';"/>
+            </p>
+            <p>
+                <h:commandButton action="#{sendMail.sendHTMLFreeMarker}" value="Send HTML Email with FreeMarker"
+                                 onclick="value='Sending...';"/>
+                <h:commandButton action="#{sendMail.sendHTMLwithAlternativeFreeMarker}"
+                                 value="Send HTML+Text Email with FreeMarker" onclick="value='Sending...';"/>
+            </p>
+            <p>
+                <h:commandButton action="#{sendMail.sendHTMLVelocity}" value="Send HTML Email with Velocity"
+                                 onclick="value='Sending...';"/>
+                <h:commandButton action="#{sendMail.sendHTMLwithAlternativeVelocity}" value="Send HTML+Text Email with Velocity"
+                                 onclick="value='Sending...';"/>
+            </p>
+            <p>
+                <h:commandButton action="#{sendMail.sendHTMLRender}" value="Send HTML Email with Seam Render"
+                                 onclick="value='Sending...';"/>
+                <h:commandButton action="#{sendMail.sendHTMLwithAlternativeRender}"
+                                 value="Send HTML+Text Email with Seam Render" onclick="value='Sending...';"/>
+            </p>
+            <p>
+                <h:outputText value="Message Sent!" rendered="#{facesContext.postback and empty facesContext.messageList}"
+                              style="color: green;"/>
+            </p>
+        </h:form>
 
-   </ui:define>
+    </ui:define>
 </ui:composition>

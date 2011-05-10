@@ -20,19 +20,19 @@ Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
 02110-1301 USA, or see the FSF site: http://www.fsf.org.
 -->
 <beans xmlns="http://java.sun.com/xml/ns/javaee"
-   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-   xmlns:s="urn:java:ee" 
-   xmlns:mail="urn:java:org.jboss.seam.mail.core"
-   xmlns:exp="urn:java:org.jboss.seam.mail.example"
-   xsi:schemaLocation="
-      http://java.sun.com/xml/ns/javaee 
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:s="urn:java:ee"
+       xmlns:mail="urn:java:org.jboss.seam.mail.core"
+       xmlns:exp="urn:java:org.jboss.seam.mail.example"
+       xsi:schemaLocation="
+      http://java.sun.com/xml/ns/javaee
       http://docs.jboss.org/cdi/beans_1_0.xsd">
 
-   <mail:MailConfig 
-   	serverHost="localHost" 
-   	serverPort="8977"
-   	domainName="test.com">
-      <s:modifies/>
-   </mail:MailConfig>
-   
+    <mail:MailConfig
+            serverHost="localHost"
+            serverPort="8977"
+            domainName="test.com">
+        <s:modifies/>
+    </mail:MailConfig>
+
 </beans>

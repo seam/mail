@@ -24,18 +24,14 @@ import javax.mail.Session;
 import org.jboss.seam.mail.util.MailUtility;
 
 /**
- * 
  * @author Cody Lerum
- * 
  */
-public class MailSessionProducer
-{
-   @Inject
-   private MailConfig mailConfig;
+public class MailSessionProducer {
+    @Inject
+    private MailConfig mailConfig;
 
-   @Produces
-   public Session getMailSession()
-   {
-      return MailUtility.buildMailSession(mailConfig);
-   }
+    @Produces
+    public Session getMailSession() {
+        return MailUtility.buildMailSession(mailConfig);
+    }
 }

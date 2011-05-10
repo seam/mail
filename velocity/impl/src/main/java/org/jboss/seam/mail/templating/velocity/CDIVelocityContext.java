@@ -27,90 +27,72 @@ import org.apache.velocity.context.AbstractContext;
 import org.jboss.logging.Logger;
 
 /**
- * 
  * @author Cody Lerum
- * 
  */
-public class CDIVelocityContext extends AbstractContext
-{
-   @Inject
-   private Logger log;
+public class CDIVelocityContext extends AbstractContext {
+    @Inject
+    private Logger log;
 
-   @Inject
-   private BeanManager beanManager;
+    @Inject
+    private BeanManager beanManager;
 
-   public CDIVelocityContext()
-   {
-      super();
-   }
+    public CDIVelocityContext() {
+        super();
+    }
 
-   @Override
-   public boolean internalContainsKey(Object key)
-   {
-      Set<Bean<?>> beans;
-      beans = beanManager.getBeans(key.toString());
+    @Override
+    public boolean internalContainsKey(Object key) {
+        Set<Bean<?>> beans;
+        beans = beanManager.getBeans(key.toString());
 
-      if (beans.size() > 0)
-      {
-         return true;
-      }
-      else
-      {
-         return false;
-      }
-   }
+        if (beans.size() > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
-   @Override
-   public Object internalGet(String key)
-   {
-      log.debug("Getting Object by given EL name: " + key.toString());
+    @Override
+    public Object internalGet(String key) {
+        log.debug("Getting Object by given EL name: " + key.toString());
 
-      Bean<?> bean = null;
-      Set<Bean<?>> beans;
-      beans = beanManager.getBeans(key);
+        Bean<?> bean = null;
+        Set<Bean<?>> beans;
+        beans = beanManager.getBeans(key);
 
-      log.debug("BeanManager got " + beans.size() + " beans for key: " + key);
+        log.debug("BeanManager got " + beans.size() + " beans for key: " + key);
 
-      if (beans.size() > 0)
-      {
-         bean = beanManager.resolve(beans);
-      }
-      else
-      {
-         return null;
-      }
+        if (beans.size() > 0) {
+            bean = beanManager.resolve(beans);
+        } else {
+            return null;
+        }
 
-      if (bean != null)
-      {
-         log.debug("Found Bean by EL key: " + key.toString());
-         return beanManager.getReference(bean, bean.getBeanClass(), beanManager.createCreationalContext(bean));
-      }
-      else
-      {
-         log.debug("Returned Bean was Null");
-         return null;
-      }
-   }
+        if (bean != null) {
+            log.debug("Found Bean by EL key: " + key.toString());
+            return beanManager.getReference(bean, bean.getBeanClass(), beanManager.createCreationalContext(bean));
+        } else {
+            log.debug("Returned Bean was Null");
+            return null;
+        }
+    }
 
-   @Override
-   @Deprecated
-   public Object[] internalGetKeys()
-   {
-      return null;
-   }
+    @Override
+    @Deprecated
+    public Object[] internalGetKeys() {
+        return null;
+    }
 
-   @Override
-   @Deprecated
-   public Object internalPut(String key, Object value)
-   {
-      return null;
-   }
+    @Override
+    @Deprecated
+    public Object internalPut(String key, Object value) {
+        return null;
+    }
 
-   @Override
-   @Deprecated
-   public Object internalRemove(Object key)
-   {
-      return null;
-   }
+    @Override
+    @Deprecated
+    public Object internalRemove(Object key) {
+        return null;
+    }
 
 }

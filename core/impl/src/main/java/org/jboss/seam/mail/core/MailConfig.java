@@ -24,125 +24,102 @@ import com.google.common.base.Strings;
 /**
  * Bean which holds Mail Session configuration options. Can be configured via
  * Seam XML
- * 
+ *
  * @author Cody Lerum
- * 
  */
 @ApplicationScoped
-public class MailConfig
-{
-   private String serverHost = "localhost";
-   private int serverPort = 25;
-   private String domainName;
-   private String username;
-   private String password;
-   private boolean enableTls = false;
-   private boolean requireTls = false;
-   private boolean enableSsl = false;
-   private boolean auth = false;
+public class MailConfig {
+    private String serverHost = "localhost";
+    private int serverPort = 25;
+    private String domainName;
+    private String username;
+    private String password;
+    private boolean enableTls = false;
+    private boolean requireTls = false;
+    private boolean enableSsl = false;
+    private boolean auth = false;
 
-   public String getServerHost()
-   {
-      return serverHost;
-   }
+    public String getServerHost() {
+        return serverHost;
+    }
 
-   public void setServerHost(String serverHost)
-   {
-      this.serverHost = serverHost;
-   }
+    public void setServerHost(String serverHost) {
+        this.serverHost = serverHost;
+    }
 
-   public int getServerPort()
-   {
-      return serverPort;
-   }
+    public int getServerPort() {
+        return serverPort;
+    }
 
-   public void setServerPort(int serverPort)
-   {
-      this.serverPort = serverPort;
-   }
+    public void setServerPort(int serverPort) {
+        this.serverPort = serverPort;
+    }
 
-   public String getDomainName()
-   {
-      return domainName;
-   }
+    public String getDomainName() {
+        return domainName;
+    }
 
-   public void setDomainName(String domainName)
-   {
-      this.domainName = domainName;
-   }
+    public void setDomainName(String domainName) {
+        this.domainName = domainName;
+    }
 
-   public String getUsername()
-   {
-      return username;
-   }
+    public String getUsername() {
+        return username;
+    }
 
-   public void setUsername(String username)
-   {
-      this.username = username;
-   }
+    public void setUsername(String username) {
+        this.username = username;
+    }
 
-   public String getPassword()
-   {
-      return password;
-   }
+    public String getPassword() {
+        return password;
+    }
 
-   public void setPassword(String password)
-   {
-      this.password = password;
-   }
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
-   public boolean isEnableTls()
-   {
-      return enableTls;
-   }
+    public boolean isEnableTls() {
+        return enableTls;
+    }
 
-   public void setEnableTls(boolean enableTls)
-   {
-      this.enableTls = enableTls;
-   }
+    public void setEnableTls(boolean enableTls) {
+        this.enableTls = enableTls;
+    }
 
-   public boolean isRequireTls()
-   {
-      return requireTls;
-   }
+    public boolean isRequireTls() {
+        return requireTls;
+    }
 
-   public void setRequireTls(boolean requireTls)
-   {
-      this.requireTls = requireTls;
-   }
+    public void setRequireTls(boolean requireTls) {
+        this.requireTls = requireTls;
+    }
 
-   public boolean isEnableSsl()
-   {
-      return enableSsl;
-   }
+    public boolean isEnableSsl() {
+        return enableSsl;
+    }
 
-   public void setEnableSsl(boolean enableSsl)
-   {
-      this.enableSsl = enableSsl;
-   }
-  
-   public boolean isAuth()
-   {
-      return auth;
-   }
+    public void setEnableSsl(boolean enableSsl) {
+        this.enableSsl = enableSsl;
+    }
 
-   public void setAuth(boolean auth)
-   {
-      this.auth = auth;
-   }
+    public boolean isAuth() {
+        return auth;
+    }
 
-   public boolean isValid()
-   {
-      if (Strings.isNullOrEmpty(serverHost.trim()))
-      {
-         return false;
-      }
+    public void setAuth(boolean auth) {
+        this.auth = auth;
+    }
 
-      if (serverPort == 0)
-      {
-         return false;
-      }
+    public boolean isValid() {
+        if (Strings.isNullOrEmpty(serverHost.trim())) {
+            return false;
+        }
 
-      return true;
-   }
+        if (serverPort == 0) {
+            return false;
+        }
+
+        return true;
+    }
 }

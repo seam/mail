@@ -359,15 +359,4 @@ public class MailMessageImpl implements MailMessage {
     public EmailMessage send() throws SendFailedException {
         return this.send(session.get());
     }
-
-    // Doesn't Send Async Yet
-    public EmailMessage sendAsynchronously(Session session) throws SendFailedException {
-        return send(session);
-    }
-
-    // Doesn't send Async Yet
-    public EmailMessage sendAsynchronously() throws SendFailedException {
-        // TODO add code for async send
-        return this.send(session.get());
-    }
 }

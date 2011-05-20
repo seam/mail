@@ -30,6 +30,7 @@ import javax.mail.internet.MimeMultipart;
 import javax.mail.internet.MimeUtility;
 
 import junit.framework.Assert;
+
 import org.jboss.arquillian.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.seam.mail.api.MailMessage;
@@ -67,16 +68,22 @@ import org.subethamail.wiser.Wiser;
 public class SeamRenderMailMessageTest {
     @Deployment
     public static Archive<?> createTestArchive() {
-        Archive<?> ar = ShrinkWrap.create(WebArchive.class, "test.war")
+        Archive<?> ar = ShrinkWrap
+                .create(WebArchive.class, "test.war")
                 .addAsResource("template.text.render", "template.text.render")
                 .addAsResource("template.html.render", "template.html.render")
+                .addAsWebResource("seam-mail-logo.png")
                 .addPackages(true, SeamRenderMailMessageTest.class.getPackage())
-                        // workaround for Weld EE embedded not properly reading Seam Solder jar
-                .addAsLibrary(ShrinkWrap.create(ZipImporter.class, "seam-solder-3.0.0.CR4.jar")
-                        .importFrom(MavenArtifactResolver.resolve("org.jboss.seam.solder:seam-solder:3.0.0.CR4")).as(JavaArchive.class))
-                .addAsLibraries(
-                        MavenArtifactResolver.resolve("org.subethamail:subethasmtp:3.1.4"),
-                        MavenArtifactResolver.resolve("org.jboss.seam.render:seam-render:1.0.0.Alpha2"),
+                // workaround for Weld EE embedded not properly reading Seam Solder jar
+                .addAsLibrary(
+                        ShrinkWrap.create(ZipImporter.class, "seam-solder-3.0.0.Final.jar")
+                                .importFrom(MavenArtifactResolver.resolve("org.jboss.seam.solder:seam-solder:3.0.0.Final"))
+                                .as(JavaArchive.class))
+                .addAsLibrary(
+                        ShrinkWrap.create(ZipImporter.class, "seam-render-1.0.0.Alpha3.jar")
+                                .importFrom(MavenArtifactResolver.resolve("org.jboss.seam.render:seam-render:1.0.0.Alpha3"))
+                                .as(JavaArchive.class))
+                .addAsLibraries(MavenArtifactResolver.resolve("org.subethamail:subethasmtp:3.1.4"),
                         MavenArtifactResolver.resolve("commons-lang:commons-lang:2.4"))
                 .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
         return ar;
@@ -128,25 +135,19 @@ public class SeamRenderMailMessageTest {
         try {
             wiser.start();
 
-
             person.setName(toName);
             person.setEmail(toAddress);
 
-            mailMessage.get()
-                    .from(fromAddress, fromName)
-                    .replyTo(replyToAddress)
-                    .to(toAddress, toName)
+            mailMessage.get().from(fromAddress, fromName).replyTo(replyToAddress).to(toAddress, toName)
                     .subject(new RenderTemplate(templateCompiler.get(), new StringTemplateResource(subject)))
-                    .bodyText(new RenderTemplate(templateCompiler.get(), textTemplatePath))
-                    .put("person", person)
-                    .put("version", version)
-                    .importance(MessagePriority.HIGH)
-                    .send(session.get());
+                    .bodyText(new RenderTemplate(templateCompiler.get(), textTemplatePath)).put("person", person)
+                    .put("version", version).importance(MessagePriority.HIGH).send(session.get());
         } finally {
             stop(wiser);
         }
 
-        Assert.assertTrue("Didn't receive the expected amount of messages. Expected 1 got " + wiser.getMessages().size(), wiser.getMessages().size() == 1);
+        Assert.assertTrue("Didn't receive the expected amount of messages. Expected 1 got " + wiser.getMessages().size(), wiser
+                .getMessages().size() == 1);
 
         MimeMessage mess = wiser.getMessages().get(0).getMimeMessage();
 
@@ -181,11 +182,11 @@ public class SeamRenderMailMessageTest {
         try {
             wiser.start();
 
-
             person.setName(toName);
             person.setEmail(toAddress);
 
-            emailMessage = mailMessage.get()
+            emailMessage = mailMessage
+                    .get()
                     .from(fromAddress, fromName)
                     .replyTo(replyToAddress, replyToName)
                     .to(person)
@@ -194,13 +195,15 @@ public class SeamRenderMailMessageTest {
                     .put("person", person)
                     .put("version", version)
                     .importance(MessagePriority.HIGH)
-                    .addAttachment(new URLAttachment("http://design.jboss.org/seam/logo/final/seam_mail_85px.png", "seamLogo.png", ContentDisposition.INLINE))
-                    .send(session.get());
+                    .addAttachment(
+                            new URLAttachment("http://design.jboss.org/seam/logo/final/seam_mail_85px.png", "seamLogo.png",
+                                    ContentDisposition.INLINE)).send(session.get());
         } finally {
             stop(wiser);
         }
 
-        Assert.assertTrue("Didn't receive the expected amount of messages. Expected 1 got " + wiser.getMessages().size(), wiser.getMessages().size() == 1);
+        Assert.assertTrue("Didn't receive the expected amount of messages. Expected 1 got " + wiser.getMessages().size(), wiser
+                .getMessages().size() == 1);
 
         MimeMessage mess = wiser.getMessages().get(0).getMimeMessage();
 
@@ -225,8 +228,8 @@ public class SeamRenderMailMessageTest {
         Assert.assertEquals(2, related.getCount());
 
         Assert.assertTrue(html.getContentType().startsWith("text/html"));
-        Assert.assertEquals(expectedHtmlBody(emailMessage, person.getName(), person.getEmail(), version), MailTestUtil.getStringContent(html));
-
+        Assert.assertEquals(expectedHtmlBody(emailMessage, person.getName(), person.getEmail(), version),
+                MailTestUtil.getStringContent(html));
 
         Assert.assertTrue(attachment1.getContentType().startsWith("image/png;"));
         Assert.assertEquals("seamLogo.png", attachment1.getFileName());
@@ -247,26 +250,29 @@ public class SeamRenderMailMessageTest {
             person.setName(toName);
             person.setEmail(toAddress);
 
-            emailMessage = mailMessage.get()
+            emailMessage = mailMessage
+                    .get()
                     .from(fromAddress, fromName)
                     .to(person.getEmail(), person.getName())
                     .subject(subject)
                     .put("person", person)
                     .put("version", version)
-                    .bodyHtmlTextAlt(
-                            new RenderTemplate(templateCompiler.get(), htmlTemplatePath),
+                    .bodyHtmlTextAlt(new RenderTemplate(templateCompiler.get(), htmlTemplatePath),
                             new RenderTemplate(templateCompiler.get(), textTemplatePath))
                     .importance(MessagePriority.LOW)
                     .deliveryReceipt(fromAddress)
                     .readReceipt("seam.test")
-                    .addAttachment(htmlTemplatePath, "text/html", ContentDisposition.ATTACHMENT, resourceProvider.loadResourceStream(htmlTemplatePath))
-                    .addAttachment(new URLAttachment("http://design.jboss.org/seam/logo/final/seam_mail_85px.png", "seamLogo.png", ContentDisposition.INLINE))
-                    .send();
+                    .addAttachment(htmlTemplatePath, "text/html", ContentDisposition.ATTACHMENT,
+                            resourceProvider.loadResourceStream(htmlTemplatePath))
+                    .addAttachment(
+                            new URLAttachment("http://design.jboss.org/seam/logo/final/seam_mail_85px.png", "seamLogo.png",
+                                    ContentDisposition.INLINE)).send();
         } finally {
             stop(wiser);
         }
 
-        Assert.assertTrue("Didn't receive the expected amount of messages. Expected 1 got " + wiser.getMessages().size(), wiser.getMessages().size() == 1);
+        Assert.assertTrue("Didn't receive the expected amount of messages. Expected 1 got " + wiser.getMessages().size(), wiser
+                .getMessages().size() == 1);
 
         MimeMessage mess = wiser.getMessages().get(0).getMimeMessage();
 
@@ -294,7 +300,8 @@ public class SeamRenderMailMessageTest {
         Assert.assertEquals(2, related.getCount());
 
         Assert.assertTrue(html.getContentType().startsWith("text/html"));
-        Assert.assertEquals(expectedHtmlBody(emailMessage, person.getName(), person.getEmail(), version), MailTestUtil.getStringContent(html));
+        Assert.assertEquals(expectedHtmlBody(emailMessage, person.getName(), person.getEmail(), version),
+                MailTestUtil.getStringContent(html));
 
         Assert.assertTrue(textAlt.getContentType().startsWith("text/plain"));
         Assert.assertEquals(expectedTextBody(person.getName(), version), MailTestUtil.getStringContent(textAlt));
@@ -314,34 +321,37 @@ public class SeamRenderMailMessageTest {
         mailConfig.setServerPort(8978);
 
         Wiser wiser = new Wiser(mailConfig.getServerPort());
-        wiser.getServer().setAuthenticationHandlerFactory(new EasyAuthenticationHandlerFactory(new SMTPAuthenticator("test", "test12!")));
+        wiser.getServer().setAuthenticationHandlerFactory(
+                new EasyAuthenticationHandlerFactory(new SMTPAuthenticator("test", "test12!")));
         try {
             wiser.start();
-
 
             person.setName(toName);
             person.setEmail(toAddress);
 
-            mailMessage.get()
+            mailMessage
+                    .get()
                     .from(fromAddress, fromName)
                     .to(person.getEmail(), person.getName())
                     .subject(subject)
                     .put("person", person)
                     .put("version", "Seam 3")
-                    .bodyHtmlTextAlt(
-                            new RenderTemplate(templateCompiler.get(), htmlTemplatePath),
+                    .bodyHtmlTextAlt(new RenderTemplate(templateCompiler.get(), htmlTemplatePath),
                             new RenderTemplate(templateCompiler.get(), textTemplatePath))
                     .importance(MessagePriority.LOW)
                     .deliveryReceipt(fromAddress)
                     .readReceipt("seam.test")
-                    .addAttachment("htmlTemplatePath", "text/html", ContentDisposition.ATTACHMENT, resourceProvider.loadResourceStream("htmlTemplatePath"))
-                    .addAttachment(new URLAttachment("http://www.seamframework.org/themes/sfwkorg/img/seam_icon_large.png", "seamLogo.png", ContentDisposition.INLINE))
-                    .send(gmailSession);
+                    .addAttachment("htmlTemplatePath", "text/html", ContentDisposition.ATTACHMENT,
+                            resourceProvider.loadResourceStream("htmlTemplatePath"))
+                    .addAttachment(
+                            new URLAttachment("http://www.seamframework.org/themes/sfwkorg/img/seam_icon_large.png",
+                                    "seamLogo.png", ContentDisposition.INLINE)).send(gmailSession);
         } finally {
             stop(wiser);
         }
 
-        Assert.assertTrue("Didn't receive the expected amount of messages. Expected 1 got " + wiser.getMessages().size(), wiser.getMessages().size() == 1);
+        Assert.assertTrue("Didn't receive the expected amount of messages. Expected 1 got " + wiser.getMessages().size(), wiser
+                .getMessages().size() == 1);
 
         MimeMessage mess = wiser.getMessages().get(0).getMimeMessage();
 
@@ -356,25 +366,17 @@ public class SeamRenderMailMessageTest {
         mailConfig.setServerHost("localHost");
         mailConfig.setServerPort(8977);
 
-        //Port is two off so this should fail
+        // Port is two off so this should fail
         Wiser wiser = new Wiser(mailConfig.getServerPort() + 2);
         try {
             wiser.start();
 
-
             person.setName(toName);
             person.setEmail(toAddress);
 
-            mailMessage.get()
-                    .from(fromAddress, fromName)
-                    .replyTo(replyToAddress)
-                    .to(toAddress, toName)
-                    .subject(subject)
-                    .bodyText(new RenderTemplate(templateCompiler.get(), textTemplatePath))
-                    .put("person", person)
-                    .put("version", version)
-                    .importance(MessagePriority.HIGH)
-                    .send(session.get());
+            mailMessage.get().from(fromAddress, fromName).replyTo(replyToAddress).to(toAddress, toName).subject(subject)
+                    .bodyText(new RenderTemplate(templateCompiler.get(), textTemplatePath)).put("person", person)
+                    .put("version", version).importance(MessagePriority.HIGH).send(session.get());
         } finally {
             stop(wiser);
         }
@@ -392,7 +394,6 @@ public class SeamRenderMailMessageTest {
         }
     }
 
-
     private static String expectedHtmlBody(EmailMessage emailMessage, String name, String email, String version) {
         StringBuilder sb = new StringBuilder();
 
@@ -400,7 +401,9 @@ public class SeamRenderMailMessageTest {
         sb.append("<body>" + "\r\n");
         sb.append("<p><b>Dear <a href=\"mailto:" + email + "\">" + name + "</a>,</b></p>" + "\r\n");
         sb.append("<p>This is an example <i>HTML</i> email sent by " + version + " and Seam Render.</p>" + "\r\n");
-        sb.append("<p><img src=\"cid:" + EmailAttachmentUtil.getEmailAttachmentMap(emailMessage.getAttachments()).get("seamLogo.png").getContentId() + "\" /></p>" + "\r\n");
+        sb.append("<p><img src=\"cid:"
+                + EmailAttachmentUtil.getEmailAttachmentMap(emailMessage.getAttachments()).get("seamLogo.png").getContentId()
+                + "\" /></p>" + "\r\n");
         sb.append("<p>It has an alternative text body for mail readers that don't support html.</p>" + "\r\n");
         sb.append("</body>" + "\r\n");
         sb.append("</html>");
@@ -413,7 +416,8 @@ public class SeamRenderMailMessageTest {
 
         sb.append("Hello " + name + ",\r\n");
         sb.append("\r\n");
-        sb.append("This is the alternative text body for mail readers that don't support html. This was sent with " + version + " and Seam Render.");
+        sb.append("This is the alternative text body for mail readers that don't support html. This was sent with " + version
+                + " and Seam Render.");
 
         return sb.toString();
     }

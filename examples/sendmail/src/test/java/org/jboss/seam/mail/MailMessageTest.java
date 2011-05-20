@@ -29,6 +29,7 @@ import javax.mail.internet.MimeMultipart;
 import javax.mail.internet.MimeUtility;
 
 import junit.framework.Assert;
+
 import org.jboss.arquillian.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.seam.mail.api.MailMessage;
@@ -47,6 +48,8 @@ import org.jboss.seam.solder.resourceLoader.ResourceProvider;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
+import org.jboss.shrinkwrap.api.importer.ZipImporter;
+import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -59,12 +62,18 @@ import org.subethamail.wiser.Wiser;
 public class MailMessageTest {
     @Deployment
     public static Archive<?> createTestArchive() {
-        Archive<?> ar = ShrinkWrap.create(WebArchive.class, "test.war")
-                .addAsResource("template.text.velocity", "template.text.velocity")
+        Archive<?> ar = ShrinkWrap
+                .create(WebArchive.class, "test.war")
+                .addAsResource("template.text.velocity")
                 .addPackages(true, MailMessageTest.class.getPackage())
-                .addAsLibraries(MavenArtifactResolver.resolve("org.jboss.seam.solder:seam-solder:3.0.0.CR4"),
-                        MavenArtifactResolver.resolve("org.subethamail:subethasmtp:3.1.4"),
-                        MavenArtifactResolver.resolve("org.apache.velocity:velocity:1.6.4"))
+                // workaround for Weld EE embedded not properly reading Seam Solder jar
+                .addAsLibrary(
+                        ShrinkWrap.create(ZipImporter.class, "seam-solder-3.0.0.Final.jar")
+                                .importFrom(MavenArtifactResolver.resolve("org.jboss.seam.solder:seam-solder:3.0.0.Final"))
+                                .as(JavaArchive.class))
+                .addAsLibraries(MavenArtifactResolver.resolve("org.subethamail:subethasmtp:3.1.4"),
+                        MavenArtifactResolver.resolve("org.apache.velocity:velocity:1.6.4"),
+                        MavenArtifactResolver.resolve("commons-lang:commons-lang:2.4"))
                 .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
         return ar;
     }
@@ -112,20 +121,14 @@ public class MailMessageTest {
             person.setName(toName);
             person.setEmail(toAddress);
 
-            mailMessage.get()
-                    .from(fromAddress, fromName)
-                    .replyTo(replyToAddress)
-                    .to(toAddress, toName)
-                    .subject(subject)
-                    .bodyText(textBody)
-                    .importance(MessagePriority.HIGH)
-                    .messageId(messageId)
-                    .send(session.get());
+            mailMessage.get().from(fromAddress, fromName).replyTo(replyToAddress).to(toAddress, toName).subject(subject)
+                    .bodyText(textBody).importance(MessagePriority.HIGH).messageId(messageId).send(session.get());
         } finally {
             stop(wiser);
         }
 
-        Assert.assertTrue("Didn't receive the expected amount of messages. Expected 1 got " + wiser.getMessages().size(), wiser.getMessages().size() == 1);
+        Assert.assertTrue("Didn't receive the expected amount of messages. Expected 1 got " + wiser.getMessages().size(), wiser
+                .getMessages().size() == 1);
 
         MimeMessage mess = wiser.getMessages().get(0).getMimeMessage();
 
@@ -165,19 +168,23 @@ public class MailMessageTest {
             person.setName(toName);
             person.setEmail(toAddress);
 
-            emailMessage = mailMessage.get()
+            emailMessage = mailMessage
+                    .get()
                     .from(fromAddress, fromName)
                     .replyTo(replyToAddress, replyToName)
                     .to(person.getEmail(), person.getName())
                     .subject(subject)
                     .bodyHtml(htmlBody)
                     .importance(MessagePriority.HIGH)
-                    .addAttachment(new URLAttachment("http://design.jboss.org/seam/logo/final/seam_mail_85px.png", "seamLogo.png", ContentDisposition.INLINE)).send(session.get());
+                    .addAttachment(
+                            new URLAttachment("http://design.jboss.org/seam/logo/final/seam_mail_85px.png", "seamLogo.png",
+                                    ContentDisposition.INLINE)).send(session.get());
         } finally {
             stop(wiser);
         }
 
-        Assert.assertTrue("Didn't receive the expected amount of messages. Expected 1 got " + wiser.getMessages().size(), wiser.getMessages().size() == 1);
+        Assert.assertTrue("Didn't receive the expected amount of messages. Expected 1 got " + wiser.getMessages().size(), wiser
+                .getMessages().size() == 1);
 
         MimeMessage mess = wiser.getMessages().get(0).getMimeMessage();
 
@@ -205,7 +212,6 @@ public class MailMessageTest {
         Assert.assertTrue(html.getContentType().startsWith("text/html"));
         Assert.assertEquals(htmlBody, MailTestUtil.getStringContent(html));
 
-
         Assert.assertTrue(attachment1.getContentType().startsWith("image/png;"));
         Assert.assertEquals("seamLogo.png", attachment1.getFileName());
     }
@@ -224,7 +230,8 @@ public class MailMessageTest {
             person.setName(toName);
             person.setEmail(toAddress);
 
-            mailMessage.get()
+            mailMessage
+                    .get()
                     .from(fromAddress, fromName)
                     .to(person.getEmail(), person.getName())
                     .subject(subject)
@@ -232,14 +239,17 @@ public class MailMessageTest {
                     .importance(MessagePriority.LOW)
                     .deliveryReceipt(fromAddress)
                     .readReceipt("seam.test")
-                    .addAttachment("template.text.velocity", "text/plain", ContentDisposition.ATTACHMENT, resourceProvider.loadResourceStream("template.text.velocity"))
-                    .addAttachment(new URLAttachment("http://design.jboss.org/seam/logo/final/seam_mail_85px.png", "seamLogo.png", ContentDisposition.INLINE))
-                    .send(session.get());
+                    .addAttachment("template.text.velocity", "text/plain", ContentDisposition.ATTACHMENT,
+                            resourceProvider.loadResourceStream("template.text.velocity"))
+                    .addAttachment(
+                            new URLAttachment("http://design.jboss.org/seam/logo/final/seam_mail_85px.png", "seamLogo.png",
+                                    ContentDisposition.INLINE)).send(session.get());
         } finally {
             stop(wiser);
         }
 
-        Assert.assertTrue("Didn't receive the expected amount of messages. Expected 1 got " + wiser.getMessages().size(), wiser.getMessages().size() == 1);
+        Assert.assertTrue("Didn't receive the expected amount of messages. Expected 1 got " + wiser.getMessages().size(), wiser
+                .getMessages().size() == 1);
 
         MimeMessage mess = wiser.getMessages().get(0).getMimeMessage();
 
@@ -281,7 +291,8 @@ public class MailMessageTest {
 
     @Test
     public void testTextMailMessageLongFields() throws MessagingException, IOException {
-        String subject = "Sometimes it is important to have a really long subject even if nobody is going to read it - " + java.util.UUID.randomUUID().toString();
+        String subject = "Sometimes it is important to have a really long subject even if nobody is going to read it - "
+                + java.util.UUID.randomUUID().toString();
 
         String longFromName = "FromSometimesPeopleHaveNamesWhichAreALotLongerThanYouEverExpectedSomeoneToHaveSoItisGoodToTestUpTo100CharactersOrSo YouKnow?";
         String longFromAddress = "sometimesPeopleHaveNamesWhichAreALotLongerThanYouEverExpectedSomeoneToHaveSoItisGoodToTestUpTo100CharactersOrSo@jboss.org";
@@ -300,19 +311,14 @@ public class MailMessageTest {
             person.setName(longToName);
             person.setEmail(longToAddress);
 
-            mailMessage.get()
-                    .from(longFromAddress, longFromName)
-                    .to(longToAddress, longToName)
-                    .cc(longCcAddress, longCcName)
-                    .subject(subject)
-                    .bodyText(textBody)
-                    .importance(MessagePriority.HIGH)
-                    .send(session.get());
+            mailMessage.get().from(longFromAddress, longFromName).to(longToAddress, longToName).cc(longCcAddress, longCcName)
+                    .subject(subject).bodyText(textBody).importance(MessagePriority.HIGH).send(session.get());
         } finally {
             stop(wiser);
         }
 
-        Assert.assertTrue("Didn't receive the expected amount of messages. Expected 2 got " + wiser.getMessages().size(), wiser.getMessages().size() == 2);
+        Assert.assertTrue("Didn't receive the expected amount of messages. Expected 2 got " + wiser.getMessages().size(), wiser
+                .getMessages().size() == 2);
 
         MimeMessage mess = wiser.getMessages().get(0).getMimeMessage();
 
@@ -353,7 +359,8 @@ public class MailMessageTest {
             person.setName(toName);
             person.setEmail(toAddress);
 
-            mailMessage.get().from(fromAddress, fromName).replyTo(replyToAddress).to(toAddress, toName).subject(subject).bodyText(textBody).importance(MessagePriority.HIGH).messageId(messageId).send(session.get());
+            mailMessage.get().from(fromAddress, fromName).replyTo(replyToAddress).to(toAddress, toName).subject(subject)
+                    .bodyText(textBody).importance(MessagePriority.HIGH).messageId(messageId).send(session.get());
         } finally {
             stop(wiser);
         }
@@ -377,7 +384,9 @@ public class MailMessageTest {
             person.setName(toName);
             person.setEmail(toAddress);
 
-            mailMessage.get().from("seam seamerson@test.com", fromName).replyTo(replyToAddress).to(toAddress, toName).subject(subject).bodyText(textBody).importance(MessagePriority.HIGH).messageId(messageId).send(session.get());
+            mailMessage.get().from("seam seamerson@test.com", fromName).replyTo(replyToAddress).to(toAddress, toName)
+                    .subject(subject).bodyText(textBody).importance(MessagePriority.HIGH).messageId(messageId)
+                    .send(session.get());
         } finally {
             stop(wiser);
         }
@@ -399,20 +408,14 @@ public class MailMessageTest {
             person.setName(toName);
             person.setEmail(toAddress);
 
-            mailMessage.get()
-                    .from(fromAddress, fromName)
-                    .replyTo(replyToAddress)
-                    .to(person)
-                    .subject(subject)
-                    .bodyText(textBody)
-                    .importance(MessagePriority.HIGH)
-                    .messageId(messageId)
-                    .send(session.get());
+            mailMessage.get().from(fromAddress, fromName).replyTo(replyToAddress).to(person).subject(subject)
+                    .bodyText(textBody).importance(MessagePriority.HIGH).messageId(messageId).send(session.get());
         } finally {
             stop(wiser);
         }
 
-        Assert.assertTrue("Didn't receive the expected amount of messages. Expected 1 got " + wiser.getMessages().size(), wiser.getMessages().size() == 1);
+        Assert.assertTrue("Didn't receive the expected amount of messages. Expected 1 got " + wiser.getMessages().size(), wiser
+                .getMessages().size() == 1);
 
         MimeMessage mess = wiser.getMessages().get(0).getMimeMessage();
 
@@ -452,20 +455,14 @@ public class MailMessageTest {
             person.setName(toName);
             person.setEmail(toAddress);
 
-            mailMessage.get()
-                    .from(fromAddress, fromName)
-                    .replyTo(replyToAddress)
-                    .to(person)
-                    .subject(subject)
-                    .bodyText(textBody)
-                    .importance(MessagePriority.HIGH)
-                    .messageId(messageId)
-                    .send();
+            mailMessage.get().from(fromAddress, fromName).replyTo(replyToAddress).to(person).subject(subject)
+                    .bodyText(textBody).importance(MessagePriority.HIGH).messageId(messageId).send();
         } finally {
             stop(wiser);
         }
 
-        Assert.assertTrue("Didn't receive the expected amount of messages. Expected 1 got " + wiser.getMessages().size(), wiser.getMessages().size() == 1);
+        Assert.assertTrue("Didn't receive the expected amount of messages. Expected 1 got " + wiser.getMessages().size(), wiser
+                .getMessages().size() == 1);
 
         MimeMessage mess = wiser.getMessages().get(0).getMimeMessage();
 

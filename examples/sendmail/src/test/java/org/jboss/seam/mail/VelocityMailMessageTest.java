@@ -67,16 +67,18 @@ import org.subethamail.wiser.Wiser;
 public class VelocityMailMessageTest {
     @Deployment
     public static Archive<?> createTestArchive() {
-        Archive<?> ar = ShrinkWrap.create(WebArchive.class, "test.war")
+        Archive<?> ar = ShrinkWrap
+                .create(WebArchive.class, "test.war")
                 .addAsResource("template.text.velocity")
                 .addAsResource("template.html.velocity")
                 .addAsWebResource("seam-mail-logo.png")
                 .addPackages(true, VelocityMailMessageTest.class.getPackage())
-                        // workaround for Weld EE embedded not properly reading Seam Solder jar
-                .addAsLibrary(ShrinkWrap.create(ZipImporter.class, "seam-solder-3.0.0.CR4.jar")
-                        .importFrom(MavenArtifactResolver.resolve("org.jboss.seam.solder:seam-solder:3.0.0.CR4")).as(JavaArchive.class))
-                .addAsLibraries(
-                        MavenArtifactResolver.resolve("org.subethamail:subethasmtp:3.1.4"),
+                // workaround for Weld EE embedded not properly reading Seam Solder jar
+                .addAsLibrary(
+                        ShrinkWrap.create(ZipImporter.class, "seam-solder-3.0.0.Final.jar")
+                                .importFrom(MavenArtifactResolver.resolve("org.jboss.seam.solder:seam-solder:3.0.0.Final"))
+                                .as(JavaArchive.class))
+                .addAsLibraries(MavenArtifactResolver.resolve("org.subethamail:subethasmtp:3.1.4"),
                         MavenArtifactResolver.resolve("org.apache.velocity:velocity:1.6.4"),
                         MavenArtifactResolver.resolve("commons-lang:commons-lang:2.4"))
                 .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
@@ -126,24 +128,25 @@ public class VelocityMailMessageTest {
         try {
             wiser.start();
 
-
             person.setName(toName);
             person.setEmail(toAddress);
 
-            mailMessage.get()
+            mailMessage
+                    .get()
                     .from(fromAddress, fromName)
                     .replyTo(replyToAddress)
                     .to(toAddress, toName)
                     .subject(new VelocityTemplate(subject, cDIVelocityContext.get()))
-                    .bodyText(new VelocityTemplate(resourceProvider.loadResourceStream("template.text.velocity"), cDIVelocityContext.get()))
-                    .put("version", version)
-                    .importance(MessagePriority.HIGH)
+                    .bodyText(
+                            new VelocityTemplate(resourceProvider.loadResourceStream("template.text.velocity"),
+                                    cDIVelocityContext.get())).put("version", version).importance(MessagePriority.HIGH)
                     .send(session.get());
         } finally {
             stop(wiser);
         }
 
-        Assert.assertTrue("Didn't receive the expected amount of messages. Expected 1 got " + wiser.getMessages().size(), wiser.getMessages().size() == 1);
+        Assert.assertTrue("Didn't receive the expected amount of messages. Expected 1 got " + wiser.getMessages().size(), wiser
+                .getMessages().size() == 1);
 
         MimeMessage mess = wiser.getMessages().get(0).getMimeMessage();
 
@@ -178,25 +181,29 @@ public class VelocityMailMessageTest {
         try {
             wiser.start();
 
-
             person.setName(toName);
             person.setEmail(toAddress);
 
-            emailMessage = mailMessage.get()
+            emailMessage = mailMessage
+                    .get()
                     .from(fromAddress, fromName)
                     .replyTo(replyToAddress, replyToName)
                     .to(person)
                     .subject(subject)
-                    .bodyHtml(new VelocityTemplate(resourceProvider.loadResourceStream("template.html.velocity"), cDIVelocityContext.get()))
+                    .bodyHtml(
+                            new VelocityTemplate(resourceProvider.loadResourceStream("template.html.velocity"),
+                                    cDIVelocityContext.get()))
                     .put("version", version)
                     .importance(MessagePriority.HIGH)
-                    .addAttachment(new URLAttachment("http://design.jboss.org/seam/logo/final/seam_mail_85px.png", "seamLogo.png", ContentDisposition.INLINE))
-                    .send(session.get());
+                    .addAttachment(
+                            new URLAttachment("http://design.jboss.org/seam/logo/final/seam_mail_85px.png", "seamLogo.png",
+                                    ContentDisposition.INLINE)).send(session.get());
         } finally {
             stop(wiser);
         }
 
-        Assert.assertTrue("Didn't receive the expected amount of messages. Expected 1 got " + wiser.getMessages().size(), wiser.getMessages().size() == 1);
+        Assert.assertTrue("Didn't receive the expected amount of messages. Expected 1 got " + wiser.getMessages().size(), wiser
+                .getMessages().size() == 1);
 
         MimeMessage mess = wiser.getMessages().get(0).getMimeMessage();
 
@@ -221,8 +228,8 @@ public class VelocityMailMessageTest {
         Assert.assertEquals(2, related.getCount());
 
         Assert.assertTrue(html.getContentType().startsWith("text/html"));
-        Assert.assertEquals(expectedHtmlBody(emailMessage, person.getName(), person.getEmail(), version), MailTestUtil.getStringContent(html));
-
+        Assert.assertEquals(expectedHtmlBody(emailMessage, person.getName(), person.getEmail(), version),
+                MailTestUtil.getStringContent(html));
 
         Assert.assertTrue(attachment1.getContentType().startsWith("image/png;"));
         Assert.assertEquals("seamLogo.png", attachment1.getFileName());
@@ -243,25 +250,31 @@ public class VelocityMailMessageTest {
             person.setName(toName);
             person.setEmail(toAddress);
 
-            emailMessage = mailMessage.get()
+            emailMessage = mailMessage
+                    .get()
                     .from(fromAddress, fromName)
                     .to(person.getEmail(), person.getName())
                     .subject(subject)
                     .put("version", version)
                     .bodyHtmlTextAlt(
-                            new VelocityTemplate(resourceProvider.loadResourceStream("template.html.velocity"), cDIVelocityContext.get()),
-                            new VelocityTemplate(resourceProvider.loadResourceStream("template.text.velocity"), cDIVelocityContext.get()))
+                            new VelocityTemplate(resourceProvider.loadResourceStream("template.html.velocity"),
+                                    cDIVelocityContext.get()),
+                            new VelocityTemplate(resourceProvider.loadResourceStream("template.text.velocity"),
+                                    cDIVelocityContext.get()))
                     .importance(MessagePriority.LOW)
                     .deliveryReceipt(fromAddress)
                     .readReceipt("seam.test")
-                    .addAttachment("template.html.velocity", "text/html", ContentDisposition.ATTACHMENT, resourceProvider.loadResourceStream("template.html.velocity"))
-                    .addAttachment(new URLAttachment("http://design.jboss.org/seam/logo/final/seam_mail_85px.png", "seamLogo.png", ContentDisposition.INLINE))
-                    .send();
+                    .addAttachment("template.html.velocity", "text/html", ContentDisposition.ATTACHMENT,
+                            resourceProvider.loadResourceStream("template.html.velocity"))
+                    .addAttachment(
+                            new URLAttachment("http://design.jboss.org/seam/logo/final/seam_mail_85px.png", "seamLogo.png",
+                                    ContentDisposition.INLINE)).send();
         } finally {
             stop(wiser);
         }
 
-        Assert.assertTrue("Didn't receive the expected amount of messages. Expected 1 got " + wiser.getMessages().size(), wiser.getMessages().size() == 1);
+        Assert.assertTrue("Didn't receive the expected amount of messages. Expected 1 got " + wiser.getMessages().size(), wiser
+                .getMessages().size() == 1);
 
         MimeMessage mess = wiser.getMessages().get(0).getMimeMessage();
 
@@ -289,7 +302,8 @@ public class VelocityMailMessageTest {
         Assert.assertEquals(2, related.getCount());
 
         Assert.assertTrue(html.getContentType().startsWith("text/html"));
-        Assert.assertEquals(expectedHtmlBody(emailMessage, person.getName(), person.getEmail(), version), MailTestUtil.getStringContent(html));
+        Assert.assertEquals(expectedHtmlBody(emailMessage, person.getName(), person.getEmail(), version),
+                MailTestUtil.getStringContent(html));
 
         Assert.assertTrue(textAlt.getContentType().startsWith("text/plain"));
         Assert.assertEquals(expectedTextBody(person.getName(), version), MailTestUtil.getStringContent(textAlt));
@@ -309,33 +323,39 @@ public class VelocityMailMessageTest {
         mailConfig.setServerPort(8978);
 
         Wiser wiser = new Wiser(mailConfig.getServerPort());
-        wiser.getServer().setAuthenticationHandlerFactory(new EasyAuthenticationHandlerFactory(new SMTPAuthenticator("test", "test12!")));
+        wiser.getServer().setAuthenticationHandlerFactory(
+                new EasyAuthenticationHandlerFactory(new SMTPAuthenticator("test", "test12!")));
         try {
             wiser.start();
-
 
             person.setName(toName);
             person.setEmail(toAddress);
 
-            mailMessage.get()
+            mailMessage
+                    .get()
                     .from(fromAddress, fromName)
                     .to(person.getEmail(), person.getName())
                     .subject(subject)
                     .put("version", "Seam 3")
                     .bodyHtmlTextAlt(
-                            new VelocityTemplate(resourceProvider.loadResourceStream("template.html.velocity"), cDIVelocityContext.get()),
-                            new VelocityTemplate(resourceProvider.loadResourceStream("template.text.velocity"), cDIVelocityContext.get()))
+                            new VelocityTemplate(resourceProvider.loadResourceStream("template.html.velocity"),
+                                    cDIVelocityContext.get()),
+                            new VelocityTemplate(resourceProvider.loadResourceStream("template.text.velocity"),
+                                    cDIVelocityContext.get()))
                     .importance(MessagePriority.LOW)
                     .deliveryReceipt(fromAddress)
                     .readReceipt("seam.test")
-                    .addAttachment("template.html.velocity", "text/html", ContentDisposition.ATTACHMENT, resourceProvider.loadResourceStream("template.html.velocity"))
-                    .addAttachment(new URLAttachment("http://design.jboss.org/seam/logo/final/seam_mail_85px.png", "seamLogo.png", ContentDisposition.INLINE))
-                    .send(gmailSession);
+                    .addAttachment("template.html.velocity", "text/html", ContentDisposition.ATTACHMENT,
+                            resourceProvider.loadResourceStream("template.html.velocity"))
+                    .addAttachment(
+                            new URLAttachment("http://design.jboss.org/seam/logo/final/seam_mail_85px.png", "seamLogo.png",
+                                    ContentDisposition.INLINE)).send(gmailSession);
         } finally {
             stop(wiser);
         }
 
-        Assert.assertTrue("Didn't receive the expected amount of messages. Expected 1 got " + wiser.getMessages().size(), wiser.getMessages().size() == 1);
+        Assert.assertTrue("Didn't receive the expected amount of messages. Expected 1 got " + wiser.getMessages().size(), wiser
+                .getMessages().size() == 1);
 
         MimeMessage mess = wiser.getMessages().get(0).getMimeMessage();
 
@@ -350,23 +370,23 @@ public class VelocityMailMessageTest {
         mailConfig.setServerHost("localHost");
         mailConfig.setServerPort(8977);
 
-        //Port is two off so this should fail
+        // Port is two off so this should fail
         Wiser wiser = new Wiser(mailConfig.getServerPort() + 2);
         try {
             wiser.start();
 
-
             person.setName(toName);
             person.setEmail(toAddress);
 
-            mailMessage.get()
+            mailMessage
+                    .get()
                     .from(fromAddress, fromName)
                     .replyTo(replyToAddress)
                     .to(toAddress, toName)
                     .subject(new VelocityTemplate(subject, cDIVelocityContext.get()))
-                    .bodyText(new VelocityTemplate(resourceProvider.loadResourceStream("template.text.velocity"), cDIVelocityContext.get()))
-                    .put("version", version)
-                    .importance(MessagePriority.HIGH)
+                    .bodyText(
+                            new VelocityTemplate(resourceProvider.loadResourceStream("template.text.velocity"),
+                                    cDIVelocityContext.get())).put("version", version).importance(MessagePriority.HIGH)
                     .send(session.get());
         } finally {
             stop(wiser);
@@ -385,7 +405,6 @@ public class VelocityMailMessageTest {
         }
     }
 
-
     private static String expectedHtmlBody(EmailMessage emailMessage, String name, String email, String version) {
         StringBuilder sb = new StringBuilder();
 
@@ -393,7 +412,9 @@ public class VelocityMailMessageTest {
         sb.append("<body>" + "\r\n");
         sb.append("<p><b>Dear <a href=\"mailto:" + email + "\">" + name + "</a>,</b></p>" + "\r\n");
         sb.append("<p>This is an example <i>HTML</i> email sent by " + version + " and Velocity.</p>" + "\r\n");
-        sb.append("<p><img src=\"cid:" + EmailAttachmentUtil.getEmailAttachmentMap(emailMessage.getAttachments()).get("seamLogo.png").getContentId() + "\" /></p>" + "\r\n");
+        sb.append("<p><img src=\"cid:"
+                + EmailAttachmentUtil.getEmailAttachmentMap(emailMessage.getAttachments()).get("seamLogo.png").getContentId()
+                + "\" /></p>" + "\r\n");
         sb.append("<p>It has an alternative text body for mail readers that don't support html.</p>" + "\r\n");
         sb.append("</body>" + "\r\n");
         sb.append("</html>");
@@ -406,7 +427,8 @@ public class VelocityMailMessageTest {
 
         sb.append("Hello " + name + ",\r\n");
         sb.append("\r\n");
-        sb.append("This is the alternative text body for mail readers that don't support html. This was sent with " + version + " and Velocity.");
+        sb.append("This is the alternative text body for mail readers that don't support html. This was sent with " + version
+                + " and Velocity.");
 
         return sb.toString();
     }

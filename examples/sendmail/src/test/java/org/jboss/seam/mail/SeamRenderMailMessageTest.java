@@ -342,9 +342,9 @@ public class SeamRenderMailMessageTest {
                     .deliveryReceipt(fromAddress)
                     .readReceipt("seam.test")
                     .addAttachment("htmlTemplatePath", "text/html", ContentDisposition.ATTACHMENT,
-                            resourceProvider.loadResourceStream("htmlTemplatePath"))
+                            resourceProvider.loadResourceStream(htmlTemplatePath))
                     .addAttachment(
-                            new URLAttachment("http://www.seamframework.org/themes/sfwkorg/img/seam_icon_large.png",
+                            new URLAttachment("http://design.jboss.org/seam/logo/final/seam_mail_85px.png",
                                     "seamLogo.png", ContentDisposition.INLINE)).send(gmailSession);
         } finally {
             stop(wiser);

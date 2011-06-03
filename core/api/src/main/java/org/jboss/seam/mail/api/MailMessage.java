@@ -118,7 +118,15 @@ public interface MailMessage {
      * @param emailContacts Collection of {@link EmailContact} to be added
      */
     public MailMessage replyTo(Collection<EmailContact> emailContacts);
-
+    
+    /**
+     * Add header to the message.
+     * 
+     * @param name Header name
+     * @param value Header value
+     */
+    public MailMessage addHeader(String name, String value);
+    
     /**
      * Convenience method to add a TO address
      * 

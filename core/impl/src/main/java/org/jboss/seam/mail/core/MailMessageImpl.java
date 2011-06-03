@@ -121,6 +121,11 @@ public class MailMessageImpl implements MailMessage {
         return this;
     }
 
+    public MailMessage addHeader(String name, String value) {
+        emailMessage.addHeader(new Header(name, value));
+        return this;
+    }
+
     public MailMessage to(String address) {
         emailMessage.addToAddress(MailUtility.internetAddress(address));
         return this;

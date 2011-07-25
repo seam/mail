@@ -18,8 +18,9 @@ import static org.jboss.test.selenium.guard.request.RequestTypeGuardFactory.*;
 import static org.testng.AssertJUnit.assertEquals;
 import static org.testng.AssertJUnit.assertTrue;
 import static org.testng.AssertJUnit.assertFalse;
+
 /**
- * 
+ * A functional test for send mail example
  * @author <a href="mailto:tremes@redhat.com"> Tomas Remes </a>
  *
  */

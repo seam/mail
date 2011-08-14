@@ -61,7 +61,6 @@
 
 	</dependencies>
 
-	<version>3.0.0.Beta1-SNAPSHOT</version>
 	<build>
 		<plugins>
 			<plugin>

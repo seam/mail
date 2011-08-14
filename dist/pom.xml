@@ -5,14 +5,13 @@
    <parent>
       <groupId>org.jboss.seam.mail</groupId>
       <artifactId>seam-mail-parent</artifactId>
-      <version>3.0.0.Beta1-SNAPSHOT</version>
+      <version>3.1.0-SNAPSHOT</version>
       <relativePath>../pom.xml</relativePath>
    </parent>
 
    <groupId>org.jboss.seam.mail</groupId>
    <artifactId>seam-mail-distribution</artifactId>
    <name>Seam Mail Module Distribution</name>
-   <version>3.0.0.Beta1-SNAPSHOT</version>
    <description>Builds a Seam Mail module release distribution</description>
    <packaging>pom</packaging>
 

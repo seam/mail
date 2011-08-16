@@ -134,18 +134,7 @@
 			<version>1.0.0.Alpha5</version>
 			<scope>test</scope>
 		</dependency>
-
-		<dependency>
-			<groupId>org.testng</groupId>
-			<artifactId>testng</artifactId>
-			<version>${ftest.testng.version}</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.jboss.test</groupId>
-			<artifactId>richfaces-selenium</artifactId>
-			<scope>test</scope>
-		</dependency>
+		
 	</dependencies>
 
 	<build>

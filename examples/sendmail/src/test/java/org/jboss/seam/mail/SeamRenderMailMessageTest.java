@@ -76,8 +76,8 @@ public class SeamRenderMailMessageTest {
                 .addPackages(true, SeamRenderMailMessageTest.class.getPackage())
                 // workaround for Weld EE embedded not properly reading Seam Solder jar
                 .addAsLibrary(
-                        ShrinkWrap.create(ZipImporter.class, "seam-solder-3.0.0.Final.jar")
-                                .importFrom(MavenArtifactResolver.resolve("org.jboss.seam.solder:seam-solder:3.0.0.Final"))
+                        ShrinkWrap.create(ZipImporter.class, "seam-solder-3.1.0.Beta1.jar")
+                                .importFrom(MavenArtifactResolver.resolve("org.jboss.seam.solder:seam-solder:3.1.0.Beta1"))
                                 .as(JavaArchive.class))
                 .addAsLibrary(
                         ShrinkWrap.create(ZipImporter.class, "seam-render-1.0.0.Alpha3.jar")

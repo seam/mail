@@ -1,9 +1,0 @@
-<!DOCTYPE suite SYSTEM "http://beust.com/testng/testng-1.0.dtd" >
-<suite name="Seam Mail Example" verbose="2" parallel="false">
-    <test name="sendmail_ftest">
-        <parameter name="example.context.path" value="/sendmail"/>
-        <packages>
-            <package name="org.jboss.seam.mail.examples.sendmail.ftest"/>
-        </packages>
-    </test>
-</suite>

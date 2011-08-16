@@ -75,8 +75,8 @@ public class VelocityMailMessageTest {
                 .addPackages(true, VelocityMailMessageTest.class.getPackage())
                 // workaround for Weld EE embedded not properly reading Seam Solder jar
                 .addAsLibrary(
-                        ShrinkWrap.create(ZipImporter.class, "seam-solder-3.0.0.Final.jar")
-                                .importFrom(MavenArtifactResolver.resolve("org.jboss.seam.solder:seam-solder:3.0.0.Final"))
+                        ShrinkWrap.create(ZipImporter.class, "seam-solder-3.1.0.Beta1.jar")
+                                .importFrom(MavenArtifactResolver.resolve("org.jboss.seam.solder:seam-solder:3.1.0.Beta1"))
                                 .as(JavaArchive.class))
                 .addAsLibraries(MavenArtifactResolver.resolve("org.subethamail:subethasmtp:3.1.4"),
                         MavenArtifactResolver.resolve("org.apache.velocity:velocity:1.6.4"),

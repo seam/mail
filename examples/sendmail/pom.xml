@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-	<modelVersion>4.0.0</modelVersion>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
 	<parent>
 		<groupId>org.jboss.seam.mail</groupId>
@@ -13,121 +14,126 @@
 	<artifactId>seam-mail-example-sendmail</artifactId>
 	<packaging>war</packaging>
 
-	<name>Seam Mail Module Example: Sendmail</name>
-	<description>A starter Java EE 6 webapp project generated from the jboss-javaee6-webapp archetype</description>
+    <name>Seam Mail Module Example: Sendmail</name>
+    <description>A starter Java EE 6 webapp project generated from the jboss-javaee6-webapp archetype</description>
 
-	<properties>
-		<!-- Explicitly declaring the source encoding eliminates the following message: -->
-		<!-- [WARNING] Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent! -->
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<!-- Timestamp format for the maven.build.timestamp property -->
-		<!-- You can reference property in pom.xml or filtered resources (must enable third-party plugin if using Maven < 2.1) -->
-		<maven.build.timestamp.format>yyyyMMdd'T'HHmmss</maven.build.timestamp.format>
-		<!-- Set the jboss.home property in an active profile of the $HOME/.m2/settings.xml to specify the JBoss AS directory the "Maven way" -->
-		<!-- By default, we assign it to the value of the JBOSS_HOME envrionment variable -->
-		<jboss.home>${env.JBOSS_HOME}</jboss.home>
-		<jboss.domain>default</jboss.domain>
-	</properties>
+    <properties>
+        <!-- Explicitly declaring the source encoding eliminates the following message: -->
+        <!-- [WARNING] Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent! -->
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <!-- Timestamp format for the maven.build.timestamp property -->
+        <!-- You can reference property in pom.xml or filtered resources (must enable third-party plugin if using Maven < 2.1) -->
+        <maven.build.timestamp.format>yyyyMMdd'T'HHmmss</maven.build.timestamp.format>
+        <!-- Set the jboss.home property in an active profile of the $HOME/.m2/settings.xml to specify the JBoss AS directory the "Maven way" -->
+        <!-- By default, we assign it to the value of the JBOSS_HOME envrionment variable -->
+        <jboss.home>${env.JBOSS_HOME}</jboss.home>
+        <jboss.domain>default</jboss.domain>
+        <arquillian.drone.version>1.0.0.CR1</arquillian.drone.version>
+        <arquillian.ajocado.version>1.0.0.CR1</arquillian.ajocado.version>
+        <selenium.version>2.0rc2</selenium.version>
+    </properties>
 
-	<dependencies>
+    <dependencies>
 
-		<dependency>
-			<groupId>org.jboss.seam.mail</groupId>
-			<artifactId>seam-mail-core-impl</artifactId>
-         <!-- FIXME implementation should not be required at compilation time -->
-         <scope>compile</scope>
-		</dependency>
+        <dependency>
+            <groupId>org.jboss.seam.mail</groupId>
+            <artifactId>seam-mail-core-impl</artifactId>
+            <!-- FIXME implementation should not be required at compilation time -->
+            <scope>compile</scope>
+        </dependency>
 
-		<dependency>
-			<groupId>org.jboss.seam.mail</groupId>
-			<artifactId>seam-mail-velocity-impl</artifactId>
-			<scope>compile</scope>
-		</dependency>
+        <dependency>
+            <groupId>org.jboss.seam.mail</groupId>
+            <artifactId>seam-mail-velocity-impl</artifactId>
+            <scope>compile</scope>
+        </dependency>
 
-		<dependency>
-			<groupId>org.jboss.seam.mail</groupId>
-			<artifactId>seam-mail-freemarker-impl</artifactId>
-			<scope>compile</scope>
-		</dependency>
+        <dependency>
+            <groupId>org.jboss.seam.mail</groupId>
+            <artifactId>seam-mail-freemarker-impl</artifactId>
+            <scope>compile</scope>
+        </dependency>
 
-		<dependency>
-			<groupId>org.jboss.seam.mail</groupId>
-			<artifactId>seam-mail-render-impl</artifactId>
-			<scope>compile</scope>
-		</dependency>
+        <dependency>
+            <groupId>org.jboss.seam.mail</groupId>
+            <artifactId>seam-mail-render-impl</artifactId>
+            <scope>compile</scope>
+        </dependency>
 
-		<dependency>
-			<groupId>org.jboss.seam.solder</groupId>
-			<artifactId>seam-solder</artifactId>
-		</dependency>
+        <dependency>
+            <groupId>org.jboss.seam.solder</groupId>
+            <artifactId>seam-solder-api</artifactId>
+            <version>3.1.0.Beta1</version>
+        </dependency>
 
-		<dependency>
-			<groupId>org.jboss.seam.config</groupId>
-			<artifactId>seam-config-xml</artifactId>
-		</dependency>
+        <dependency>
+            <groupId>org.jboss.seam.solder</groupId>
+            <artifactId>seam-solder</artifactId>
+            <version>3.1.0.Beta1</version>
+        </dependency>
 
-		<!-- Need to use the injectable logger in Weld Extensions -->
-		<!-- Both JBoss AS and GlassFish provide this API -->
-		<!-- <dependency> <groupId>org.slf4j</groupId> <artifactId>slf4j-api</artifactId> <version>1.5.10</version> <scope>provided</scope> </dependency> -->
+        <dependency>
+            <groupId>org.jboss.seam.config</groupId>
+            <artifactId>seam-config-xml</artifactId>
+        </dependency>
 
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-api</artifactId>
-			<version>1.5.10</version>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-simple</artifactId>
-			<version>1.5.10</version>
-			<scope>runtime</scope>
-		</dependency>
+        <!-- Need to use the injectable logger in Weld Extensions -->
+        <!-- Both JBoss AS and GlassFish provide this API -->
+        <!-- <dependency> <groupId>org.slf4j</groupId> <artifactId>slf4j-api</artifactId> <version>1.5.10</version> <scope>provided</scope> </dependency> -->
 
-		<!-- JSR-303 (Bean Validation) Implementation -->
-		<!-- Provides portable constraints such as @Email -->
-		<!-- Hibernate Validator is the only JSR-303 implementation at the moment, so we can assume it's provided -->
-		<dependency>
-			<groupId>org.hibernate</groupId>
-			<artifactId>hibernate-validator</artifactId>
-			<version>4.0.0.GA</version>
-			<scope>provided</scope>
-		</dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.5.10</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>1.5.10</version>
+            <scope>runtime</scope>
+        </dependency>
 
-		<dependency>
-			<groupId>javax.mail</groupId>
-			<artifactId>mail</artifactId>
-			<scope>provided</scope>
-		</dependency>
+        <!-- JSR-303 (Bean Validation) Implementation -->
+        <!-- Provides portable constraints such as @Email -->
+        <!-- Hibernate Validator is the only JSR-303 implementation at the moment, so we can assume it's provided -->
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-validator</artifactId>
+            <version>4.0.0.GA</version>
+            <scope>provided</scope>
+        </dependency>
 
-		<dependency>
-			<groupId>org.apache.velocity</groupId>
-			<artifactId>velocity</artifactId>
-		</dependency>
+        <dependency>
+            <groupId>javax.mail</groupId>
+            <artifactId>mail</artifactId>
+            <scope>provided</scope>
+        </dependency>
 
-		<dependency>
-  			<groupId>org.freemarker</groupId>
-  			<artifactId>freemarker</artifactId>
-  			<version>2.3.16</version>
-		</dependency>
+        <dependency>
+            <groupId>org.apache.velocity</groupId>
+            <artifactId>velocity</artifactId>
+        </dependency>
 
-		<dependency>
-			<groupId>org.subethamail</groupId>
-			<artifactId>subethasmtp</artifactId>
-			<scope>test</scope>
-		</dependency>
+        <dependency>
+            <groupId>org.freemarker</groupId>
+            <artifactId>freemarker</artifactId>
+            <version>2.3.16</version>
+        </dependency>
 
-		<dependency>
-			<groupId>org.jboss.weld</groupId>
-			<artifactId>weld-core</artifactId>
-			<scope>test</scope>
-		</dependency>
+        <dependency>
+            <groupId>org.jboss.weld</groupId>
+            <artifactId>weld-core</artifactId>
+            <scope>test</scope>
+        </dependency>
 
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<scope>test</scope>
-		</dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
 
+<<<<<<< HEAD
 		<dependency>
 			<groupId>org.jboss.arquillian</groupId>
 			<artifactId>arquillian-junit</artifactId>
@@ -147,134 +153,196 @@
 		</dependency>
 		
 	</dependencies>
+=======
+        <dependency>
+            <groupId>org.jboss.arquillian.junit</groupId>
+            <artifactId>arquillian-junit-container</artifactId>
+            <version>${arquillian.version}</version>
+            <scope>test</scope>
+        </dependency>
 
-	<build>
-		<finalName>sendmail</finalName>
-		<plugins>
-			<!-- Compiler plugin enforces Java 1.6 compatibility -->
-			<plugin>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>2.3.1</version>
-				<configuration>
-					<source>1.6</source>
-					<target>1.6</target>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
+        <dependency>
+            <groupId>org.jboss.arquillian.extension</groupId>
+            <artifactId>arquillian-drone-impl</artifactId>
+            <version>${arquillian.drone.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.arquillian.extension</groupId>
+            <artifactId>arquillian-drone-selenium-server</artifactId>
+            <version>${arquillian.drone.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.arquillian.extension</groupId>
+            <artifactId>arquillian-drone-selenium</artifactId>
+            <version>${arquillian.drone.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.seleniumhq.selenium</groupId>
+            <artifactId>selenium-remote-control</artifactId>
+            <version>${selenium.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.seleniumhq.selenium</groupId>
+            <artifactId>selenium-server</artifactId>
+            <version>${selenium.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.arquillian.ajocado</groupId>
+            <artifactId>arquillian-ajocado-impl</artifactId>
+            <version>${arquillian.ajocado.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.arquillian.ajocado</groupId>
+            <artifactId>arquillian-ajocado-drone</artifactId>
+            <version>${arquillian.ajocado.version}</version>
+            <scope>test</scope>
+        </dependency>
+>>>>>>> First stab at fixing up tests
 
-	<profiles>
-		<profile>
-			<!-- The default profile skips all tests, though you can tune it to run just unit tests -->
-			<!-- Seperate profiles are provided for running all tests, including Arquillian tests, which execute in the specified container -->
-			<id>default</id>
-			<activation>
-				<activeByDefault>true</activeByDefault>
-			</activation>
-			<dependencies>
-				<!-- Java EE Specification POM -->
-				<!-- This one dependency imports all APIs available for a Java EE 6.0 application -->
-				<dependency>
-					<groupId>org.jboss.spec</groupId>
-					<artifactId>jboss-javaee-6.0</artifactId>
-					<type>pom</type>
+        <dependency>
+            <groupId>org.subethamail</groupId>
+            <artifactId>subethasmtp</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <finalName>sendmail</finalName>
+        <plugins>
+            <!-- Compiler plugin enforces Java 1.6 compatibility -->
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.3.1</version>
+                <configuration>
+                    <source>1.6</source>
+                    <target>1.6</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <profiles>
+        <profile>
+            <!-- The default profile skips all tests, though you can tune it to run just unit tests -->
+            <!-- Seperate profiles are provided for running all tests, including Arquillian tests, which execute in the specified container -->
+            <id>default</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <dependencies>
+                <!-- Java EE Specification POM -->
+                <!-- This one dependency imports all APIs available for a Java EE 6.0 application -->
+                <dependency>
+                    <groupId>org.jboss.spec</groupId>
+                    <artifactId>jboss-javaee-6.0</artifactId>
+                    <type>pom</type>
                     <version>1.0.0.Final</version>
-					<scope>provided</scope>
-				</dependency>
-			</dependencies>
-			<build>
-				<plugins>
-					<plugin>
-						<artifactId>maven-surefire-plugin</artifactId>
-						<version>2.4.3</version>
-						<configuration>
-							<skip>true</skip>
-						</configuration>
-					</plugin>
-					<!-- Optional JBoss deployer plugin will deploy your war to a local JBoss AS container if you've declared $JBOSS_HOME in your OS -->
-					<!-- To use, set the JBOSS_HOME environment variable (or jboss.home in $HOME/.m2/settings.xml) and run 'mvn package jboss:hard-deploy' -->
-					<plugin>
-						<groupId>org.codehaus.mojo</groupId>
-						<artifactId>jboss-maven-plugin</artifactId>
-						<version>1.4.1</version>
-						<configuration>
-							<jbossHome>${jboss.home}</jbossHome>
-							<serverName>${jboss.domain}</serverName>
-							<fileNames>
-								<fileName>${project.build.directory}/${project.build.finalName}.war</fileName>
-								<!-- JNDI Datasource that connects to in-memory HSQLDB to demonstrate JPA -->
-								<fileName>src/main/resources-jbossas/default-ds.xml</fileName>
-								<fileName>${project.build.directory}/${project.build.finalName}.war</fileName>
-							</fileNames>
-						</configuration>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
+                    <scope>provided</scope>
+                </dependency>
+            </dependencies>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <version>2.4.3</version>
+                        <configuration>
+                            <skip>false</skip>
+                            <testNGArtifactName>none:none</testNGArtifactName>
+                            <excludes>
+                                <exclude>**/ftest/**</exclude>
+                            </excludes>
+                        </configuration>
+                    </plugin>
+                    <!-- Optional JBoss deployer plugin will deploy your war to a local JBoss AS container if you've declared $JBOSS_HOME in your OS -->
+                    <!-- To use, set the JBOSS_HOME environment variable (or jboss.home in $HOME/.m2/settings.xml) and run 'mvn package jboss:hard-deploy' -->
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>jboss-maven-plugin</artifactId>
+                        <version>1.4.1</version>
+                        <configuration>
+                            <jbossHome>${jboss.home}</jbossHome>
+                            <serverName>${jboss.domain}</serverName>
+                            <fileNames>
+                                <fileName>${project.build.directory}/${project.build.finalName}.war</fileName>
+                                <!-- JNDI Datasource that connects to in-memory HSQLDB to demonstrate JPA -->
+                                <fileName>src/main/resources-jbossas/default-ds.xml</fileName>
+                                <fileName>${project.build.directory}/${project.build.finalName}.war</fileName>
+                            </fileNames>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
 
-		<profile>
-			<id>weld-ee-embedded-1.1</id>
-			<activation>
-				<property>
-					<name>integration-test</name>
-				</property>
-			</activation>
-			<dependencies>
-				<dependency>
-					<groupId>org.jboss.arquillian.container</groupId>
-					<artifactId>arquillian-weld-ee-embedded-1.1</artifactId>
-               <version>1.0.0.Alpha5</version>
-					<scope>test</scope>
-				</dependency>
-				<dependency>
-					<groupId>org.jboss.weld</groupId>
-					<artifactId>weld-core</artifactId>
-				</dependency>
-				<dependency>
-					<groupId>org.jboss.weld</groupId>
-					<artifactId>weld-api</artifactId>
-				</dependency>
-				<dependency>
-					<groupId>org.slf4j</groupId>
-					<artifactId>slf4j-simple</artifactId>
-				</dependency>
-				<dependency>
-					<groupId>org.jboss.spec</groupId>
-					<artifactId>jboss-javaee-6.0</artifactId>
-					<type>pom</type>
-					<scope>test</scope>
-				</dependency>
-			</dependencies>
-		</profile>
+        <profile>
+            <id>weld-ee-embedded-1.1</id>
+            <activation>
+                <property>
+                    <name>integration-test</name>
+                </property>
+            </activation>
+            <dependencies>
+                <dependency>
+                    <groupId>org.jboss.arquillian.container</groupId>
+                    <artifactId>arquillian-weld-ee-embedded-1.1</artifactId>
+                    <version>1.0.0.CR1</version>
+                    <scope>test</scope>
+                </dependency>
+                <dependency>
+                    <groupId>org.jboss.weld</groupId>
+                    <artifactId>weld-core</artifactId>
+                </dependency>
+                <dependency>
+                    <groupId>org.jboss.weld</groupId>
+                    <artifactId>weld-api</artifactId>
+                </dependency>
+                <dependency>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-simple</artifactId>
+                </dependency>
+                <dependency>
+                    <groupId>org.jboss.spec</groupId>
+                    <artifactId>jboss-javaee-6.0</artifactId>
+                    <type>pom</type>
+                    <scope>test</scope>
+                </dependency>
+            </dependencies>
+        </profile>
 
-		<profile>
-			<!-- An Arquillian testing profile that executes tests in a remote JBoss AS instance -->
-			<!-- Run with 'mvn test -Pjbossas-remote-6' -->
-			<id>jbossas-remote-6</id>
-			<dependencies>
-				<dependency>
-					<groupId>org.jboss.arquillian.container</groupId>
-					<artifactId>arquillian-jbossas-remote-6</artifactId>
-               <version>1.0.0.Alpha5</version>
-					<scope>test</scope>
-				</dependency>
-				<!-- Java EE Specification POM -->
-				<!-- This one dependency imports all APIs available for a Java EE 6.0 application -->
-				<dependency>
-					<groupId>org.jboss.spec</groupId>
-					<artifactId>jboss-javaee-6.0</artifactId>
-					<type>pom</type>
-					<scope>provided</scope>
-				</dependency>
-				<!-- need for org.jnp.interfaces.NamingContextFactory -->
-				<dependency>
-					<groupId>org.jboss.jbossas</groupId>
-					<artifactId>jboss-as-client</artifactId>
-					<version>6.0.0.Final</version>
-					<type>pom</type>
-					<scope>test</scope>
-				</dependency>
-			</dependencies>
-		</profile>
-	</profiles>
+        <profile>
+            <!-- An Arquillian testing profile that executes tests in a remote JBoss AS instance -->
+            <!-- Run with 'mvn test -Pjbossas-remote-6' -->
+            <id>jbossas-remote-6</id>
+            <dependencies>
+                <dependency>
+                    <groupId>org.jboss.arquillian.container</groupId>
+                    <artifactId>arquillian-jbossas-remote-6</artifactId>
+                    <version>1.0.0.CR1</version>
+                    <scope>test</scope>
+                </dependency>
+                <!-- Java EE Specification POM -->
+                <!-- This one dependency imports all APIs available for a Java EE 6.0 application -->
+                <dependency>
+                    <groupId>org.jboss.spec</groupId>
+                    <artifactId>jboss-javaee-6.0</artifactId>
+                    <type>pom</type>
+                    <scope>provided</scope>
+                </dependency>
+                <!-- need for org.jnp.interfaces.NamingContextFactory -->
+                <dependency>
+                    <groupId>org.jboss.jbossas</groupId>
+                    <artifactId>jboss-as-client</artifactId>
+                    <version>6.0.0.Final</version>
+                    <type>pom</type>
+                    <scope>test</scope>
+                </dependency>
+            </dependencies>
+        </profile>
+    </profiles>
 </project>

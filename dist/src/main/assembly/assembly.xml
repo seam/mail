@@ -26,7 +26,10 @@
          <outputDirectory>artifacts</outputDirectory>
          <useProjectArtifact>false</useProjectArtifact>
          <includes>
-            <include>org.jboss.seam.mail:seam-mail</include>
+            <include>org.jboss.seam.mail:seam-mail-core-api</include>
+            <include>org.jboss.seam.mail:seam-mail-core-impl</include>
+            <include>org.jboss.seam.mail:seam-mail-freemarker-impl</include>
+            <include>org.jboss.seam.mail:seam-mail-velocity-impl</include>
          </includes>
          <outputFileNameMapping>${artifact.artifactId}${dashClassifier?}.${artifact.extension}</outputFileNameMapping>
       </dependencySet>

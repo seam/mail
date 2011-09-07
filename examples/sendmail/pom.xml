@@ -133,27 +133,6 @@
             <scope>test</scope>
         </dependency>
 
-<<<<<<< HEAD
-		<dependency>
-			<groupId>org.jboss.arquillian</groupId>
-			<artifactId>arquillian-junit</artifactId>
-			<version>1.0.0.Alpha5</version>
-			<scope>test</scope>
-		</dependency>
-		
-		<dependency>
-			<groupId>org.jboss.shrinkwrap</groupId>
-			<artifactId>shrinkwrap-api</artifactId>
-		</dependency>
-     
-		<dependency>
-			<groupId>org.jboss.shrinkwrap</groupId>
-			<artifactId>shrinkwrap-impl-base</artifactId>
-			<scope>test</scope>
-		</dependency>
-		
-	</dependencies>
-=======
         <dependency>
             <groupId>org.jboss.arquillian.junit</groupId>
             <artifactId>arquillian-junit-container</artifactId>
@@ -203,8 +182,7 @@
             <version>${arquillian.ajocado.version}</version>
             <scope>test</scope>
         </dependency>
->>>>>>> First stab at fixing up tests
-
+        
         <dependency>
             <groupId>org.subethamail</groupId>
             <artifactId>subethasmtp</artifactId>

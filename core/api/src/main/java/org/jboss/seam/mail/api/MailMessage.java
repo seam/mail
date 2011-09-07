@@ -31,6 +31,7 @@ import org.jboss.seam.mail.core.EmailMessage;
 import org.jboss.seam.mail.core.InvalidAddressException;
 import org.jboss.seam.mail.core.SendFailedException;
 import org.jboss.seam.mail.core.enumerations.ContentDisposition;
+import org.jboss.seam.mail.core.enumerations.ContentType;
 import org.jboss.seam.mail.core.enumerations.MessagePriority;
 import org.jboss.seam.mail.templating.TemplateProvider;
 
@@ -374,6 +375,13 @@ public interface MailMessage {
      * 
      */
     public MailMessage bodyHtmlTextAlt(String html, String text);
+    
+    
+    /**
+     * Set the Content Type of the message
+     * @param contentType
+     */
+    public MailMessage contentType(ContentType contentType);
 
     // End Core
 

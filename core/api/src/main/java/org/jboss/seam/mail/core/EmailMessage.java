@@ -57,22 +57,6 @@ public class EmailMessage {
     private MessagePriority importance = MessagePriority.NORMAL;
 
     /**
-     * Constructs a EmailMessage with Root Mime SubType "mixed"
-     */
-    public EmailMessage() {
-
-    }
-
-    /**
-     * Creates an EmailMessage with specificed Root ContentType
-     *
-     * @param rootSubType
-     */
-    public EmailMessage(ContentType rootContentType) {
-        this.rootContentType = rootContentType;
-    }
-
-    /**
      * Get the Root Mime ContentType of the EmailMessage
      *
      * @return Root Mime ContentType of the EmailMessage

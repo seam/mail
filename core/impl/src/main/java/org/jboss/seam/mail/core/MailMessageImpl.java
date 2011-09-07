@@ -61,10 +61,6 @@ public class MailMessageImpl implements MailMessage {
         emailMessage = new EmailMessage();
     }
 
-    public MailMessageImpl(ContentType rootContentType) {
-        emailMessage = new EmailMessage(rootContentType);
-    }
-
     // Begin Addressing
 
     public MailMessage from(String address) {
@@ -312,6 +308,11 @@ public class MailMessageImpl implements MailMessage {
         bodyText(textBody);
         return this;
     }
+    
+    public MailMessage contentType(ContentType contentType) {
+        emailMessage.setRootContentType(contentType);
+        return this;
+    }
 
     public MailMessage put(String key, Object value) {
         templateContext.put(key, value);
@@ -363,5 +364,5 @@ public class MailMessageImpl implements MailMessage {
 
     public EmailMessage send() throws SendFailedException {
         return this.send(session.get());
-    }
+    }    
 }

@@ -16,12 +16,6 @@
 
 	<dependencies>
 
-        <dependency>
-            <groupId>org.jboss.logging</groupId>
-            <artifactId>jboss-logging</artifactId>
-            <version>3.0.0.GA</version>
-        </dependency>
-
 		<dependency>
 			<groupId>org.jboss.seam.mail</groupId>
 			<artifactId>seam-mail-core-impl</artifactId>
@@ -52,13 +46,11 @@
 		<dependency>
 			<groupId>org.jboss.arquillian.junit</groupId>
 			<artifactId>arquillian-junit-container</artifactId>
-            <version>${arquillian.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.jboss.arquillian.container</groupId>
 			<artifactId>arquillian-weld-ee-embedded-1.1</artifactId>
-            <version>${arquillian.version}</version>
 		</dependency>
 
 		<dependency>

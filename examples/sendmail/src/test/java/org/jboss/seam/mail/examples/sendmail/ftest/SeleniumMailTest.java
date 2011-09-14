@@ -15,6 +15,7 @@ import org.jboss.arquillian.test.api.ArquillianResource;
 import org.jboss.seam.mail.example.SendMail;
 import org.jboss.shrinkwrap.api.ArchivePaths;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
+import org.jboss.shrinkwrap.api.importer.ZipImporter;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.After;
 import org.junit.Before;
@@ -38,6 +39,9 @@ import static org.junit.Assert.assertTrue;
 @RunAsClient
 @RunWith(Arquillian.class)
 public class SeleniumMailTest {
+    
+    public static final String ARCHIVE_NAME = "mail-sendmail.war";
+    public static final String BUILD_DIRECTORY = "target";
 
     public static final String HOME_PAGE_TITLE = "Seam 3 Sendmail Example";
     public static final String ENVELOPE_SENDER = "seam@test.test";
@@ -62,27 +66,13 @@ public class SeleniumMailTest {
 
     @ArquillianResource
     private URL deploymentUrl;
-
+    
     @Deployment(testable = false)
     public static WebArchive createDeployment() {
-        WebArchive deploy = ShrinkWrap.create(WebArchive.class, "sendmail-test.war")
-                .addPackage(SendMail.class.getPackage())
-                .addAsWebInfResource(new File("src/main/webapp/WEB-INF/beans.xml"))
-                .addAsWebInfResource(new File("src/main/webapp/WEB-INF/faces-config.xml"))
-                .addAsWebResource(new File("src/main/webapp/index.jsp"))
-                .addAsWebResource(new File("src/main/webapp/home.xhtml"))
-                .addAsWebResource(new File("src/main/webapp/WEB-INF/templates/default.xhtml"), ArchivePaths.create("WEB-INF/templates/"))
-                .addAsResource(new File("src/main/resources/META-INF/seam-beans.xml"), ArchivePaths.create("WEB-INF/classes/META-INF/seam-beans.xml"))
-                .addAsResource(new File("src/main/webapp/resources"))
-                // TODO: add the templates
-
-                // TODO: add libraries
-                .setWebXML(new File("src/main/webapp/WEB-INF/web.xml"));
-
-        System.out.println(deploy.toString(true));
-
-        return deploy;
+        return ShrinkWrap.create(ZipImporter.class, ARCHIVE_NAME).importFrom(new File(BUILD_DIRECTORY + '/' + ARCHIVE_NAME))
+                .as(WebArchive.class);
     }
+
 
     /**
      * We restart SMTP after each Method, because Wiser doesn't have mechanism to flush recieved emails.
@@ -92,6 +82,9 @@ public class SeleniumMailTest {
         wiser = new Wiser();
         wiser.setPort(8977);
         wiser.start();
+        
+        selenium.open(deploymentUrl);
+        selenium.waitForPageToLoad();
     }
 
     @After

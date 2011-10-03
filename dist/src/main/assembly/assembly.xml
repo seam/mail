@@ -26,10 +26,8 @@
          <outputDirectory>artifacts</outputDirectory>
          <useProjectArtifact>false</useProjectArtifact>
          <includes>
-            <include>org.jboss.seam.mail:seam-mail-core-api</include>
-            <include>org.jboss.seam.mail:seam-mail-core-impl</include>
-            <include>org.jboss.seam.mail:seam-mail-freemarker-impl</include>
-            <include>org.jboss.seam.mail:seam-mail-velocity-impl</include>
+            <include>org.jboss.seam.mail:seam-mail--api</include>
+            <include>org.jboss.seam.mail:seam-mail--impl</include>
          </includes>
          <outputFileNameMapping>${artifact.artifactId}${dashClassifier?}.${artifact.extension}</outputFileNameMapping>
       </dependencySet>
@@ -44,14 +42,14 @@
          <outputFileNameMapping>${artifact.artifactId}${dashClassifier?}.${artifact.extension}</outputFileNameMapping>
       </dependencySet>
       <!-- Pull in the example projects -->
-      <dependencySet>
-         <outputDirectory>examples</outputDirectory>
-         <unpack>true</unpack>
-         <useProjectArtifact>false</useProjectArtifact>
-         <includes>
-            <include>org.jboss.seam.mail:seam-mail-examples-sendmail</include>
-         </includes>
-      </dependencySet>
+      <!--<dependencySet>-->
+         <!--<outputDirectory>examples</outputDirectory>-->
+         <!--<unpack>true</unpack>-->
+         <!--<useProjectArtifact>false</useProjectArtifact>-->
+         <!--<includes>-->
+            <!--<include>org.jboss.seam.mail:seam-mail-examples-sendmail</include>-->
+         <!--</includes>-->
+      <!--</dependencySet>-->
       <!-- Pull in docbook artifacts -->
       <dependencySet>
          <outputDirectory>doc/reference</outputDirectory>

@@ -16,15 +16,15 @@
 
     <properties>
         <seam.version>3.1.0.Beta2</seam.version>
+        <freemarker.version>2.3.16</freemarker.version>
+        <seam_render.version>1.0.0.Alpha3</seam_render.version>
+        <velocity.version>1.6.4</velocity.version>
     </properties>
 
     <modules>
-        <module>core/api</module>
-        <module>core/impl</module>
-        <module>freemarker/impl</module>
-        <module>seam-render/impl</module>
-        <module>velocity/impl</module>
-        <module>examples/sendmail</module>
+        <module>api</module>
+        <module>impl</module>
+        <!--<module>examples/sendmail</module>-->
 
     </modules>
 
@@ -41,37 +41,55 @@
             <!-- Override versions from seam-bom for this module's artifacts -->
             <dependency>
                 <groupId>org.jboss.seam.mail</groupId>
-                <artifactId>seam-mail-core-api</artifactId>
+                <artifactId>seam-mail-api</artifactId>
                 <version>${project.version}</version>
                 <scope>compile</scope>
             </dependency>
 
             <dependency>
                 <groupId>org.jboss.seam.mail</groupId>
-                <artifactId>seam-mail-core-impl</artifactId>
+                <artifactId>seam-mail-impl</artifactId>
                 <version>${project.version}</version>
                 <scope>runtime</scope>
             </dependency>
 
             <dependency>
                 <groupId>org.jboss.seam.mail</groupId>
-                <artifactId>seam-mail-freemarker-impl</artifactId>
+                <artifactId>seam-mail-impl</artifactId>
                 <version>${project.version}</version>
                 <scope>runtime</scope>
             </dependency>
 
             <dependency>
                 <groupId>org.jboss.seam.mail</groupId>
-                <artifactId>seam-mail-render-impl</artifactId>
+                <artifactId>seam-mail-impl</artifactId>
                 <version>${project.version}</version>
                 <scope>runtime</scope>
             </dependency>
 
             <dependency>
                 <groupId>org.jboss.seam.mail</groupId>
-                <artifactId>seam-mail-velocity-impl</artifactId>
+                <artifactId>seam-mail-impl</artifactId>
                 <version>${project.version}</version>
                 <scope>runtime</scope>
+            </dependency>
+            <dependency>
+              <groupId>org.jboss.seam.render</groupId>
+              <artifactId>seam-render</artifactId>
+              <version>${seam_render.version}</version>
+              <scope>provided</scope>
+            </dependency>
+            <dependency>
+              <groupId>org.apache.velocity</groupId>
+              <artifactId>velocity</artifactId>
+              <version>${velocity.version}</version>
+              <scope>provided</scope>
+            </dependency>
+            <dependency>
+              <groupId>org.freemarker</groupId>
+              <artifactId>freemarker</artifactId>
+              <version>${freemarker.version}</version>
+              <scope>provided</scope>
             </dependency>
         </dependencies>
 
@@ -103,14 +121,6 @@
 
     <profiles>
         <profile>
-            <id>integration-test</id>
-            <activation>
-                <property>
-                    <name>integration-test</name>
-                </property>
-            </activation>
-        </profile>
-        <profile>
             <id>distribution</id>
             <activation>
                 <property>
@@ -118,7 +128,7 @@
                 </property>
             </activation>
             <modules>
-                <module>examples/sendmail</module>
+                <!--<module>examples/sendmail</module>-->
                 <module>docs</module>
                 <module>dist</module>
             </modules>
@@ -149,6 +159,14 @@
             <timezone>MST</timezone>
             <roles>
                 <role>Project Lead</role>
+            </roles>
+        </developer>
+        <developer>
+            <name>Cody Lerum</name>
+            <url>http://community.jboss.org/people/lightguard</url>
+            <timezone>MST</timezone>
+            <roles>
+                <role>Contributor</role>
             </roles>
         </developer>
     </developers>

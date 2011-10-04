@@ -10,7 +10,6 @@
 		<relativePath>../../pom.xml</relativePath>
 	</parent>
 
-	<groupId>org.jboss.seam.mail</groupId>
 	<artifactId>seam-mail-example-sendmail</artifactId>
 	<packaging>war</packaging>
 
@@ -34,42 +33,13 @@
 
         <dependency>
             <groupId>org.jboss.seam.mail</groupId>
-            <artifactId>seam-mail-core-impl</artifactId>
-            <!-- FIXME implementation should not be required at compilation time -->
+            <artifactId>seam-mail-impl</artifactId>
             <scope>compile</scope>
         </dependency>
 
         <dependency>
-            <groupId>org.jboss.seam.mail</groupId>
-            <artifactId>seam-mail-velocity-impl</artifactId>
-            <scope>compile</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.jboss.seam.mail</groupId>
-            <artifactId>seam-mail-freemarker-impl</artifactId>
-            <scope>compile</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.jboss.seam.mail</groupId>
-            <artifactId>seam-mail-render-impl</artifactId>
-            <scope>compile</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.jboss.seam.solder</groupId>
-            <artifactId>seam-solder-api</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.jboss.seam.solder</groupId>
-            <artifactId>seam-solder</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.jboss.seam.config</groupId>
-            <artifactId>seam-config-xml</artifactId>
+            <groupId>org.jboss.solder</groupId>
+            <artifactId>solder-impl</artifactId>
         </dependency>
 
         <!-- Need to use the injectable logger in Weld Extensions -->
@@ -82,7 +52,6 @@
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-validator</artifactId>
-            <version>4.0.0.GA</version>
             <scope>provided</scope>
         </dependency>
 
@@ -100,8 +69,7 @@
         <dependency>
             <groupId>org.freemarker</groupId>
             <artifactId>freemarker</artifactId>
-            <version>2.3.16</version>
-        </dependency>
+            </dependency>
 
         <dependency>
             <groupId>junit</groupId>
@@ -196,7 +164,6 @@
                     <groupId>org.jboss.spec</groupId>
                     <artifactId>jboss-javaee-6.0</artifactId>
                     <type>pom</type>
-                    <version>1.0.0.Final</version>
                     <scope>provided</scope>
                 </dependency>
             </dependencies>
@@ -207,7 +174,6 @@
                     <plugin>
                         <groupId>org.codehaus.mojo</groupId>
                         <artifactId>jboss-maven-plugin</artifactId>
-                        <version>1.4.1</version>
                         <configuration>
                             <jbossHome>${jboss.home}</jbossHome>
                             <serverName>${jboss.domain}</serverName>

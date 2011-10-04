@@ -1,0 +1,12 @@
+ ===================================================================================
+ ==  NOTICE file corresponding to section 4d of the Apache License, Version 2.0,  ==
+ ==  in this case for the Seam Mail distribution.                                 ==
+ ===================================================================================
+
+ Seam Mail
+ Copyright 2010 Red Hat, Inc., and individual contributors by the @authors tag
+ 
+ (include any other copyright notices or attributions below, if applicable)
+ This product includes software developed at
+ The Apache Software Foundation (http://www.apache.org/).
+

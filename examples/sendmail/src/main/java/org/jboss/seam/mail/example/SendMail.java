@@ -29,11 +29,9 @@ import org.jboss.seam.mail.attachments.URLAttachment;
 import org.jboss.seam.mail.core.enumerations.ContentDisposition;
 import org.jboss.seam.mail.core.enumerations.MessagePriority;
 import org.jboss.seam.mail.templating.freemarker.FreeMarkerTemplate;
-import org.jboss.seam.mail.templating.render.RenderTemplate;
 import org.jboss.seam.mail.templating.velocity.CDIVelocityContext;
 import org.jboss.seam.mail.templating.velocity.VelocityTemplate;
-import org.jboss.seam.render.TemplateCompiler;
-import org.jboss.seam.solder.resourceLoader.ResourceProvider;
+import org.jboss.solder.resourceLoader.ResourceProvider;
 
 /**
  * @author Cody Lerum
@@ -50,9 +48,6 @@ public class SendMail {
 
     @Inject
     private ResourceProvider resourceProvider;
-
-    @Inject
-    private Instance<TemplateCompiler> templateCompiler;
 
     @Inject
     private Instance<Session> session;
@@ -125,35 +120,6 @@ public class SendMail {
                 .deliveryReceipt("seam@jboss.org")
                 .readReceipt("seam@jboss.org")
                 .addAttachment("template.html.velocity", "text/html", ContentDisposition.ATTACHMENT, resourceProvider.loadResourceStream("template.html.velocity"))
-                .addAttachment(new URLAttachment("http://www.seamframework.org/themes/sfwkorg/img/seam_icon_large.png", "seamLogo.png", ContentDisposition.INLINE))
-                .send(session.get());
-    }
-
-    public void sendHTMLRender() throws MalformedURLException {
-        mailMessage.get()
-                .from("seam@test.test", "Seam Framework")
-                .to(person)
-                .subject("HTML Message from Seam Mail - " + java.util.UUID.randomUUID().toString())
-                .bodyHtml(new RenderTemplate(templateCompiler.get(), "template.html.render"))
-                .put("version", "Seam 3")
-                .importance(MessagePriority.HIGH)
-                .addAttachment(new URLAttachment("http://www.seamframework.org/themes/sfwkorg/img/seam_icon_large.png", "seamLogo.png", ContentDisposition.INLINE))
-                .send(session.get());
-    }
-
-    public void sendHTMLwithAlternativeRender() throws MalformedURLException {
-        mailMessage.get()
-                .from("seam@test.test", "Seam Framework")
-                .to(person.getEmail(), person.getName())
-                .subject("HTML+Text Message from Seam Mail - " + java.util.UUID.randomUUID().toString())
-                .put("version", "Seam 3")
-                .bodyHtmlTextAlt(
-                        new RenderTemplate(templateCompiler.get(), "template.html.render"),
-                        new RenderTemplate(templateCompiler.get(), "template.text.render"))
-                .importance(MessagePriority.LOW)
-                .deliveryReceipt("seam@jboss.org")
-                .readReceipt("seam@jboss.org")
-                .addAttachment("template.html.render", "text/html", ContentDisposition.ATTACHMENT, resourceProvider.loadResourceStream("template.html.render"))
                 .addAttachment(new URLAttachment("http://www.seamframework.org/themes/sfwkorg/img/seam_icon_large.png", "seamLogo.png", ContentDisposition.INLINE))
                 .send(session.get());
     }

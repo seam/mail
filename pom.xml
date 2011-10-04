@@ -16,7 +16,6 @@
     <properties>
         <seam.version>3.1.0.Beta3</seam.version>
         <freemarker.version>2.3.16</freemarker.version>
-        <seam_render.version>1.0.0.Alpha3</seam_render.version>
         <velocity.version>1.6.4</velocity.version>
     </properties>
 
@@ -50,14 +49,7 @@
                 <version>${project.version}</version>
                 <scope>runtime</scope>
             </dependency>
-            
-            <dependency>
-              <groupId>org.jboss.seam.render</groupId>
-              <artifactId>seam-render</artifactId>
-              <version>${seam_render.version}</version>
-              <scope>provided</scope>
-            </dependency>
-            
+
             <dependency>
               <groupId>org.apache.velocity</groupId>
               <artifactId>velocity</artifactId>

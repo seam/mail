@@ -21,9 +21,9 @@ import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 import javax.mail.Session;
 
-import org.jboss.seam.logging.Logger;
 import org.jboss.seam.mail.core.MailConfig;
 import org.jboss.seam.mail.util.MailUtility;
+import org.jboss.solder.logging.Logger;
 
 /**
  * @author Cody Lerum

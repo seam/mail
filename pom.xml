@@ -5,7 +5,7 @@
     <parent>
         <artifactId>seam-parent</artifactId>
         <groupId>org.jboss.seam</groupId>
-        <version>15-SNAPSHOT</version>
+        <version>15</version>
     </parent>
 
     <groupId>org.jboss.seam.mail</groupId>

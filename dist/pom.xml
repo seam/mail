@@ -65,6 +65,7 @@
          <optional>true</optional>
       </dependency>
 
+      <!--
       <dependency>
          <groupId>org.jboss.seam.mail</groupId>
          <artifactId>seam-mail-example-sendmail</artifactId>
@@ -72,6 +73,7 @@
          <type>war</type>
          <optional>true</optional>
       </dependency>
+      -->
 
    </dependencies>
 

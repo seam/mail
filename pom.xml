@@ -1,197 +1,173 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
+    <modelVersion>4.0.0</modelVersion>
 
-	<parent>
-		<artifactId>seam-parent</artifactId>
-		<groupId>org.jboss.seam</groupId>
-		<version>9</version>
-	</parent>
+    <parent>
+        <artifactId>seam-parent</artifactId>
+        <groupId>org.jboss.seam</groupId>
+        <version>15</version>
+    </parent>
 
-	<groupId>org.jboss.seam.mail</groupId>
-	<artifactId>seam-mail-parent</artifactId>
-	<packaging>pom</packaging>
-	<version>3.0.0.Beta1-SNAPSHOT</version>
-	<name>Seam Mail Module</name>
+    <groupId>org.jboss.seam.mail</groupId>
+    <artifactId>seam-mail-parent</artifactId>
+    <packaging>pom</packaging>
+    <version>3.1.0-SNAPSHOT</version>
+    <name>Seam Mail Module</name>
 
-	<properties>
-		<seam.version>3.0.0.Final</seam.version>
-	</properties>
+    <properties>
+        <seam.version>3.1.0.Beta2</seam.version>
+        <freemarker.version>2.3.16</freemarker.version>
+        <seam_render.version>1.0.0.Alpha3</seam_render.version>
+        <velocity.version>1.6.4</velocity.version>
+    </properties>
 
-	<modules>
-		<module>core/api</module>
-		<module>core/impl</module>
-		<module>freemarker/impl</module>
-		<module>seam-render/impl</module>
-		<module>velocity/impl</module>
-		<module>examples/sendmail</module>
+    <modules>
+        <module>api</module>
+        <module>impl</module>
+        <!--<module>examples/sendmail</module>-->
 
-	</modules>
+    </modules>
 
-	<dependencyManagement>
-		<dependencies>
-			<dependency>
-				<groupId>org.jboss.seam</groupId>
-				<artifactId>seam-bom</artifactId>
-				<version>${seam.version}</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.jboss.seam</groupId>
+                <artifactId>seam-bom</artifactId>
+                <version>${seam.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
 
-			<!-- Override versions from seam-bom for this module's artifacts -->
-			<dependency>
-				<groupId>org.jboss.seam.mail</groupId>
-				<artifactId>seam-mail-core-api</artifactId>
-				<version>${project.version}</version>
-				<scope>compile</scope>
-			</dependency>
+            <!-- Override versions from seam-bom for this module's artifacts -->
+            <dependency>
+                <groupId>org.jboss.seam.mail</groupId>
+                <artifactId>seam-mail-api</artifactId>
+                <version>${project.version}</version>
+                <scope>compile</scope>
+            </dependency>
 
-			<dependency>
-				<groupId>org.jboss.seam.mail</groupId>
-				<artifactId>seam-mail-core-impl</artifactId>
-				<version>${project.version}</version>
-				<scope>runtime</scope>
-			</dependency>
+            <dependency>
+                <groupId>org.jboss.seam.mail</groupId>
+                <artifactId>seam-mail-impl</artifactId>
+                <version>${project.version}</version>
+                <scope>runtime</scope>
+            </dependency>
 
-			<dependency>
-				<groupId>org.jboss.seam.mail</groupId>
-				<artifactId>seam-mail-freemarker-impl</artifactId>
-				<version>${project.version}</version>
-				<scope>runtime</scope>
-			</dependency>
+            <dependency>
+                <groupId>org.jboss.seam.mail</groupId>
+                <artifactId>seam-mail-impl</artifactId>
+                <version>${project.version}</version>
+                <scope>runtime</scope>
+            </dependency>
 
-			<dependency>
-				<groupId>org.jboss.seam.mail</groupId>
-				<artifactId>seam-mail-render-impl</artifactId>
-				<version>${project.version}</version>
-				<scope>runtime</scope>
-			</dependency>
+            <dependency>
+                <groupId>org.jboss.seam.mail</groupId>
+                <artifactId>seam-mail-impl</artifactId>
+                <version>${project.version}</version>
+                <scope>runtime</scope>
+            </dependency>
 
-			<dependency>
-				<groupId>org.jboss.seam.mail</groupId>
-				<artifactId>seam-mail-velocity-impl</artifactId>
-				<version>${project.version}</version>
-				<scope>runtime</scope>
-			</dependency>
-		</dependencies>
+            <dependency>
+                <groupId>org.jboss.seam.mail</groupId>
+                <artifactId>seam-mail-impl</artifactId>
+                <version>${project.version}</version>
+                <scope>runtime</scope>
+            </dependency>
+            <dependency>
+              <groupId>org.jboss.seam.render</groupId>
+              <artifactId>seam-render</artifactId>
+              <version>${seam_render.version}</version>
+              <scope>provided</scope>
+            </dependency>
+            <dependency>
+              <groupId>org.apache.velocity</groupId>
+              <artifactId>velocity</artifactId>
+              <version>${velocity.version}</version>
+              <scope>provided</scope>
+            </dependency>
+            <dependency>
+              <groupId>org.freemarker</groupId>
+              <artifactId>freemarker</artifactId>
+              <version>${freemarker.version}</version>
+              <scope>provided</scope>
+            </dependency>
+        </dependencies>
 
-	</dependencyManagement>
+    </dependencyManagement>
 
-	<!-- Dependencies common to the api and implementation(s) -->
-	<dependencies>
-		<dependency>
-			<groupId>javax.enterprise</groupId>
-			<artifactId>cdi-api</artifactId>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>javax.mail</groupId>
-			<artifactId>mail</artifactId>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>javax.activation</groupId>
-			<artifactId>activation</artifactId>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.google.guava</groupId>
-			<artifactId>guava</artifactId>
-			<version>r07</version>
-		</dependency>
-	</dependencies>
+    <!-- Dependencies common to the api and implementation(s) -->
+    <dependencies>
+        <dependency>
+            <groupId>javax.enterprise</groupId>
+            <artifactId>cdi-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>javax.mail</groupId>
+            <artifactId>mail</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>javax.activation</groupId>
+            <artifactId>activation</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>r07</version>
+        </dependency>
+    </dependencies>
 
-	<profiles>
-		<profile>
-			<id>integration-test</id>
-			<activation>
-				<property>
-					<name>integration-test</name>
-				</property>
-			</activation>
-		</profile>
-		<profile>
-			<id>distribution</id>
-			<activation>
-				<property>
-					<name>release</name>
-				</property>
-			</activation>
-			<modules>
-				<module>examples/sendmail</module>
-				<module>docs</module>
-				<module>dist</module>
-			</modules>
-		</profile>
-		<profile>
-			<id>jboss-public-repository</id>
-			<!-- Repository is active unless explicitly disabled e.g. -P!jboss-public-repository -->
-			<activation>
-				<property>
-					<name>jboss-public-repository</name>
-					<value>!false</value>
-				</property>
-			</activation>
-			<repositories>
-				<repository>
-					<id>jboss-public-repository-group</id>
-					<name>JBoss Public Maven Repository Group</name>
-					<url>http://repository.jboss.org/nexus/content/groups/public</url>
-					<layout>default</layout>
-					<releases>
-						<enabled>true</enabled>
-						<updatePolicy>never</updatePolicy>
-					</releases>
-					<snapshots>
-						<enabled>false</enabled>
-						<updatePolicy>never</updatePolicy>
-					</snapshots>
-				</repository>
-			</repositories>
-			<pluginRepositories>
-				<pluginRepository>
-					<id>jboss-public-repository-group</id>
-					<name>JBoss Public Maven Repository Group</name>
-					<url>http://repository.jboss.org/nexus/content/groups/public</url>
-					<layout>default</layout>
-					<releases>
-						<enabled>true</enabled>
-						<updatePolicy>never</updatePolicy>
-					</releases>
-					<snapshots>
-						<enabled>true</enabled>
-						<updatePolicy>never</updatePolicy>
-					</snapshots>
-				</pluginRepository>
-			</pluginRepositories>
-		</profile>
+    <profiles>
+        <profile>
+            <id>distribution</id>
+            <activation>
+                <property>
+                    <name>release</name>
+                </property>
+            </activation>
+            <modules>
+                <!--<module>examples/sendmail</module>-->
+                <module>docs</module>
+                <module>dist</module>
+            </modules>
+        </profile>
 
-	</profiles>
+    </profiles>
 
-	<scm>
-		<connection>scm:git:git://github.com/seam/mail.git</connection>
-		<developerConnection>scm:git:git@github.com:seam/mail.git</developerConnection>
-		<url>http://github.com/seam/mail</url>
-	</scm>
+    <scm>
+        <connection>scm:git:git://github.com/seam/mail.git</connection>
+        <developerConnection>scm:git:git@github.com:seam/mail.git</developerConnection>
+        <url>http://github.com/seam/mail</url>
+    </scm>
 
-	<issueManagement>
-		<system>JIRA</system>
-		<url>http://issues.jboss.org/browse/SEAMMAIL</url>
-	</issueManagement>
+    <issueManagement>
+        <system>JIRA</system>
+        <url>http://issues.jboss.org/browse/SEAMMAIL</url>
+    </issueManagement>
 
-	<ciManagement>
-		<system>Hudson</system>
-		<url>http://hudson.jboss.org/hudson/view/Seam/job/Seam-3.X-mail-CI</url>
-	</ciManagement>
+    <ciManagement>
+        <system>Hudson</system>
+        <url>http://hudson.jboss.org/hudson/view/Seam/job/Seam-3.X-mail-CI</url>
+    </ciManagement>
 
-	<developers>
-		<developer>
-			<name>Cody Lerum</name>
-			<url>http://community.jboss.org/people/clerum</url>
-			<timezone>MST</timezone>
-			<roles>
-				<role>Project Lead</role>
-			</roles>
-		</developer>
-	</developers>
+    <developers>
+        <developer>
+            <name>Cody Lerum</name>
+            <url>http://community.jboss.org/people/clerum</url>
+            <timezone>MST</timezone>
+            <roles>
+                <role>Project Lead</role>
+            </roles>
+        </developer>
+        <developer>
+            <name>Cody Lerum</name>
+            <url>http://community.jboss.org/people/lightguard</url>
+            <timezone>MST</timezone>
+            <roles>
+                <role>Contributor</role>
+            </roles>
+        </developer>
+    </developers>
 
 </project>

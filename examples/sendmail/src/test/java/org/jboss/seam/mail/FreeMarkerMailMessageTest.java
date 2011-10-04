@@ -30,7 +30,7 @@ import javax.mail.internet.MimeMultipart;
 import javax.mail.internet.MimeUtility;
 
 import junit.framework.Assert;
-import org.jboss.arquillian.api.Deployment;
+import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.seam.mail.api.MailMessage;
 import org.jboss.seam.mail.attachments.URLAttachment;
@@ -70,8 +70,8 @@ public class FreeMarkerMailMessageTest {
                 .addAsResource("template.html.freemarker", "template.html.freemarker")
                 .addPackages(true, FreeMarkerMailMessageTest.class.getPackage())
                         // workaround for Weld EE embedded not properly reading Seam Solder jar
-                .addAsLibrary(ShrinkWrap.create(ZipImporter.class, "seam-solder-3.0.0.CR4.jar")
-                        .importFrom(MavenArtifactResolver.resolve("org.jboss.seam.solder:seam-solder:3.0.0.CR4")).as(JavaArchive.class))
+                .addAsLibrary(ShrinkWrap.create(ZipImporter.class, "seam-solder-3.1.0.Beta1.jar")
+                        .importFrom(MavenArtifactResolver.resolve("org.jboss.seam.solder:seam-solder:3.1.0.Beta1")).as(JavaArchive.class))
                 .addAsLibraries(
                         MavenArtifactResolver.resolve("org.subethamail:subethasmtp:3.1.4"),
                         MavenArtifactResolver.resolve("org.freemarker:freemarker:2.3.16"),

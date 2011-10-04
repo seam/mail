@@ -1,30 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<arquillian xmlns="http://jboss.com/arquillian"
-            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-            xmlns:jbasmanaged="urn:arq:org.jboss.arquillian.container.jbossas.managed_6"
-            xmlns:gfembed="urn:arq:org.jboss.arquillian.container.glassfish.embedded_3"
-            xmlns:gfremote="urn:arq:org.jboss.arquillian.container.glassfish.remote_3">
+<arquillian
+        xmlns="http://jboss.org/schema/arquillian"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://jboss.org/schema/arquillian http://jboss.org/schema/arquillian/arquillian_1_0.xsd">
 
     <!-- Uncomment to have test archives exported to the file system for inspection -->
-    <!--
     <engine>
-       <deploymentExportPath>/tmp/</deploymentExportPath>
+        <property name="deploymentExportPath">/tmp</property>
     </engine>
-    -->
 
-    <jbasmanaged:container>
-        <jbasmanaged:jbossHome>${env.JBOSS_HOME}</jbasmanaged:jbossHome>
-    </jbasmanaged:container>
+    <container qualifier="jboss-as6-managed" default="true">
+        <configuration>
+            <property name="jbossHome">${env.JBOSS_HOME</property>
+        </configuration>
+    </container>
 
-    <gfembed:container>
-        <gfembed:bindHttpPort>7070</gfembed:bindHttpPort>
+    <container qualifier="glassfish-managed">
+        <configuration>
+            <property name="bindHttpPort">7070</property>
+        </configuration>
         <!--
         <gfembed:sunResourcesXml>src/test/resources-glassfish-embedded/sun-resources.xml</gfembed:sunResourcesXml>
         -->
-    </gfembed:container>
+    </container>
 
-    <gfremote:container>
-        <gfremote:remoteServerHttpPort>7070</gfremote:remoteServerHttpPort>
-    </gfremote:container>
+    <container qualifier="glassfish-remote">
+        <configuration>
+            <property name="remoteServerHttpPort">7070</property>
+        </configuration>
+    </container>
+
+    <extension qualifier="ajocado">
+        <property name="seleniumMaximize">true</property>
+        <property name="browser">*firefox</property>
+        <property name="seleniumTimeoutAjax">5000</property>
+    </extension>
+
+    <extension qualifier="selenium-server">
+        <property name="enable">true</property>
+    </extension>
 
 </arquillian>

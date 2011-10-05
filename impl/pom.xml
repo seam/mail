@@ -10,7 +10,7 @@
 	</parent>
 
 	<groupId>org.jboss.seam.mail</groupId>
-	<artifactId>seam-mail-impl</artifactId>
+	<artifactId>seam-mail</artifactId>
 	<packaging>jar</packaging>
 	<name>Seam Mail Module Implementation</name>
 

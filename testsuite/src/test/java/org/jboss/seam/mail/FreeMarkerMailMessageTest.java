@@ -66,7 +66,7 @@ public class FreeMarkerMailMessageTest {
                 .addAsResource("template.html.freemarker", "template.html.freemarker")
                 .addPackages(true, FreeMarkerMailMessageTest.class.getPackage())
                 .addAsLibraries(MavenArtifactResolver.resolve("org.subethamail:subethasmtp",
-                        "org.freemarker:freemarker", "commons-lang:commons-lang", "org.jboss.seam.solder:seam-solder"))
+                        "org.freemarker:freemarker", "org.jboss.solder:solder-impl"))
                 .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
         return ar;
     }

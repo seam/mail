@@ -43,6 +43,46 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+          <groupId>org.freemarker</groupId>
+          <artifactId>freemarker</artifactId>
+          <scope>test</scope>
+        </dependency>
+
+        <dependency>
+          <groupId>org.apache.velocity</groupId>
+          <artifactId>velocity</artifactId>
+          <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.subethamail</groupId>
+            <artifactId>subethasmtp</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jboss.seam.mail</groupId>
+            <artifactId>seam-mail-api</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jboss.seam.mail</groupId>
+            <artifactId>seam-mail-impl</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jboss.shrinkwrap.resolver</groupId>
+            <artifactId>shrinkwrap-resolver-impl-maven</artifactId>
+            <version>1.0.0-beta-5</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
@@ -96,11 +136,17 @@
                     <type>pom</type>
                     <scope>test</scope>
                 </dependency>
- 
+
                 <!-- EL impl needed for ElTest -->
                 <dependency>
                     <groupId>org.glassfish.web</groupId>
                     <artifactId>el-impl</artifactId>
+                    <scope>test</scope>
+                </dependency>
+
+                <dependency>
+                    <groupId>javax.mail</groupId>
+                    <artifactId>mail</artifactId>
                     <scope>test</scope>
                 </dependency>
 
@@ -153,7 +199,7 @@
                   </plugin>
                </plugins>
             </build>
-        </profile> 
+        </profile>
 
         <profile>
             <id>glassfish-embedded-3.1</id>
@@ -186,7 +232,7 @@
                   </plugin>
                </plugins>
             </build>
-        </profile> 
+        </profile>
 
         <profile>
             <id>glassfish-remote-3.1</id>
@@ -219,7 +265,7 @@
                   </plugin>
                </plugins>
             </build>
-        </profile> 
+        </profile>
     </profiles>
 
 </project>

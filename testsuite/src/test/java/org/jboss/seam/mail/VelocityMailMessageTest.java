@@ -70,8 +70,7 @@ public class VelocityMailMessageTest {
                 .addAsWebResource("seam-mail-logo.png")
                 .addPackages(true, VelocityMailMessageTest.class.getPackage())
                 .addAsLibraries(MavenArtifactResolver.resolve("org.subethamail:subethasmtp",
-                "org.apache.velocity:velocity:1.6.4", "commons-lang:commons-lang",
-                "org.jboss.seam.solder:seam-solder"))
+                "org.apache.velocity:velocity:1.6.4", "org.jboss.solder:solder-impl"))
                 .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
         return ar;
     }

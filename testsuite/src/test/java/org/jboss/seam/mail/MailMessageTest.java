@@ -64,8 +64,7 @@ public class MailMessageTest {
                 .addPackages(true, MailMessageTest.class.getPackage())
                 // workaround for Weld EE embedded not properly reading Seam Solder jar
                 .addAsLibraries(MavenArtifactResolver.resolve("org.subethamail:subethasmtp",
-                        "org.jboss.seam.solder:seam-solder", "org.apache.velocity:velocity",
-                        "commons-lang:commons-lang"))
+                        "org.jboss.solder:solder-impl", "org.apache.velocity:velocity"))
                 .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
         return ar;
     }

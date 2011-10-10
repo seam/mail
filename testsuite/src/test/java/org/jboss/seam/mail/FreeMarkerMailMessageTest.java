@@ -30,6 +30,7 @@ import javax.mail.internet.MimeMultipart;
 import javax.mail.internet.MimeUtility;
 
 import junit.framework.Assert;
+
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.seam.mail.api.MailMessage;
@@ -67,7 +68,8 @@ public class FreeMarkerMailMessageTest {
                 .addPackages(true, FreeMarkerMailMessageTest.class.getPackage())
                 .addAsLibraries(MavenArtifactResolver.resolve("org.subethamail:subethasmtp",
                         "org.freemarker:freemarker", "org.jboss.solder:solder-impl", "org.slf4j:slf4j-simple:1.6.1"))
-                .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
+                .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
+                .addAsWebInfResource("seam-beans.xml");                
         return ar;
     }
 

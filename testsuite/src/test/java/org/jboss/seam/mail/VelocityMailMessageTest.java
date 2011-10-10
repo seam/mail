@@ -31,6 +31,7 @@ import javax.mail.internet.MimeMultipart;
 import javax.mail.internet.MimeUtility;
 
 import junit.framework.Assert;
+
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.seam.mail.api.MailMessage;
@@ -72,7 +73,8 @@ public class VelocityMailMessageTest {
                 .addAsLibraries(MavenArtifactResolver.resolve("org.subethamail:subethasmtp",
                 "org.apache.velocity:velocity:1.6.4", "org.jboss.solder:solder-impl", "org.jboss.solder:solder-logging",
                 "org.slf4j:slf4j-simple:1.5.6"))
-                .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
+                .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
+                .addAsWebInfResource("seam-beans.xml");              
         return ar;
     }
 
@@ -111,9 +113,6 @@ public class VelocityMailMessageTest {
         String subject = "Text Message from $version Mail - " + uuid;
         String version = "Seam 3";
         String mergedSubject = "Text Message from " + version + " Mail - " + uuid;
-
-        mailConfig.setServerHost("localHost");
-        mailConfig.setServerPort(8977);
 
         Wiser wiser = new Wiser(mailConfig.getServerPort());
         wiser.setHostname(mailConfig.getServerHost());
@@ -166,8 +165,6 @@ public class VelocityMailMessageTest {
         String subject = "HTML Message from Seam Mail - " + java.util.UUID.randomUUID().toString();
         String version = "Seam 3";
         EmailMessage emailMessage;
-        mailConfig.setServerHost("localHost");
-        mailConfig.setServerPort(8977);
 
         Wiser wiser = new Wiser(mailConfig.getServerPort());
         try {
@@ -232,8 +229,6 @@ public class VelocityMailMessageTest {
         String subject = "HTML+Text Message from Seam Mail - " + java.util.UUID.randomUUID().toString();
         String version = "Seam 3";
         EmailMessage emailMessage;
-        mailConfig.setServerHost("localHost");
-        mailConfig.setServerPort(8977);
 
         Wiser wiser = new Wiser(mailConfig.getServerPort());
         try {

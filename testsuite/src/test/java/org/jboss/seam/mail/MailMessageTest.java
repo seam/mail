@@ -64,8 +64,10 @@ public class MailMessageTest {
                 .addPackages(true, MailMessageTest.class.getPackage())
                 // workaround for Weld EE embedded not properly reading Seam Solder jar
                 .addAsLibraries(MavenArtifactResolver.resolve("org.subethamail:subethasmtp",
-                        "org.jboss.solder:solder-impl", "org.apache.velocity:velocity"))
-                .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
+                        "org.jboss.solder:solder-impl"))
+                .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
+                .addAsWebInfResource("seam-beans.xml");
+                
         return ar;
     }
 
@@ -98,10 +100,10 @@ public class MailMessageTest {
 
     @Test
     public void testTextMailMessage() throws MessagingException, IOException {
+        
+        System.out.println("Configured Port: " + mailConfig.getServerPort());
+        
         String subject = "Text Message from Seam Mail - " + java.util.UUID.randomUUID().toString();
-
-        mailConfig.setServerHost("localHost");
-        mailConfig.setServerPort(8977);
 
         String messageId = "1234@seam.test.com";
 
@@ -146,10 +148,7 @@ public class MailMessageTest {
     @Test
     public void testHTMLMailMessage() throws MessagingException, IOException {
         String subject = "HTML Message from Seam Mail - " + java.util.UUID.randomUUID().toString();
-
-        mailConfig.setServerHost("localHost");
-        mailConfig.setServerPort(8977);
-
+        
         EmailMessage emailMessage;
 
         Wiser wiser = new Wiser(mailConfig.getServerPort());
@@ -210,9 +209,6 @@ public class MailMessageTest {
     @Test
     public void testHTMLTextAltMailMessage() throws MessagingException, IOException {
         String subject = "HTML+Text Message from Seam Mail - " + java.util.UUID.randomUUID().toString();
-
-        mailConfig.setServerHost("localHost");
-        mailConfig.setServerPort(8977);
 
         Wiser wiser = new Wiser(mailConfig.getServerPort());
         try {
@@ -292,9 +288,6 @@ public class MailMessageTest {
         String longCcName = "CCSometimesPeopleHaveNamesWhichAreALotLongerThanYouEverExpectedSomeoneToHaveSoItisGoodToTestUpTo100CharactersOrSo YouKnow? Hatty";
         String longCcAddress = "cCSometimesPeopleHaveNamesWhichAreALotLongerThanYouEverExpectedSomeoneToHaveSoItisGoodToTestUpTo100CharactersOrSo.hatty@jboss.org";
 
-        mailConfig.setServerHost("localHost");
-        mailConfig.setServerPort(8977);
-
         Wiser wiser = new Wiser(mailConfig.getServerPort());
         try {
             wiser.start();
@@ -336,9 +329,6 @@ public class MailMessageTest {
     public void testTextMailMessageSendFailed() {
         String subject = "Text Message from Seam Mail - " + java.util.UUID.randomUUID().toString();
 
-        mailConfig.setServerHost("localHost");
-        mailConfig.setServerPort(8977);
-
         String messageId = "1234@seam.test.com";
 
         // Port is one off so this should fail
@@ -360,9 +350,6 @@ public class MailMessageTest {
     @Test(expected = InvalidAddressException.class)
     public void testTextMailMessageInvalidAddress() throws SendFailedException {
         String subject = "Text Message from Seam Mail - " + java.util.UUID.randomUUID().toString();
-
-        mailConfig.setServerHost("localHost");
-        mailConfig.setServerPort(8977);
 
         String messageId = "1234@seam.test.com";
 
@@ -386,9 +373,6 @@ public class MailMessageTest {
     @Test
     public void testTextMailMessageUsingPerson() throws MessagingException, IOException {
         String subject = "Text Message from Seam Mail - " + java.util.UUID.randomUUID().toString();
-
-        mailConfig.setServerHost("localHost");
-        mailConfig.setServerPort(8977);
 
         String messageId = "1234@seam.test.com";
 
@@ -433,9 +417,6 @@ public class MailMessageTest {
     @Test
     public void testTextMailMessageUsingDefaultSession() throws MessagingException, IOException {
         String subject = "Text Message from Seam Mail - " + java.util.UUID.randomUUID().toString();
-
-        mailConfig.setServerHost("localHost");
-        mailConfig.setServerPort(8977);
 
         String messageId = "1234@seam.test.com";
 

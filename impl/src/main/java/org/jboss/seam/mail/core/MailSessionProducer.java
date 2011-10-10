@@ -18,7 +18,6 @@
 package org.jboss.seam.mail.core;
 
 import javax.enterprise.inject.Produces;
-import javax.inject.Inject;
 import javax.mail.Session;
 
 import org.jboss.seam.mail.util.MailUtility;
@@ -27,11 +26,9 @@ import org.jboss.seam.mail.util.MailUtility;
  * @author Cody Lerum
  */
 public class MailSessionProducer {
-    @Inject
-    private MailConfig mailConfig;
 
     @Produces
-    public Session getMailSession() {
+    public Session getMailSession(MailConfig mailConfig) {
         return MailUtility.buildMailSession(mailConfig);
     }
 }

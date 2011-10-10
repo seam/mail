@@ -88,6 +88,13 @@
 			<version>2.2.1</version>
 			<scope>provided</scope>
 		</dependency>
+		
+		<dependency>
+        	<groupId>xalan</groupId>
+        	<artifactId>xalan</artifactId>
+        	<version>2.7.0</version>
+        	<scope>provided</scope>
+        </dependency>
         
         <!-- End Freemarker deps -->
 
@@ -147,16 +154,9 @@
         <dependency>
             <groupId>org.jboss.shrinkwrap.resolver</groupId>
             <artifactId>shrinkwrap-resolver-impl-maven</artifactId>
-            <version>1.0.0-beta-5</version>
             <scope>test</scope>
         </dependency>
-
-        <dependency>
-        	<groupId>xalan</groupId>
-        	<artifactId>xalan</artifactId>
-        	<version>2.7.0</version>
-        	<scope>provided</scope>
-        </dependency>
+        
     </dependencies>
 
     <build>
@@ -215,13 +215,6 @@
                     <groupId>org.glassfish.web</groupId>
                     <artifactId>el-impl</artifactId>
                     <scope>test</scope>
-                </dependency>
-
-                <dependency>
-                    <groupId>org.slf4j</groupId>
-                    <artifactId>slf4j-simple</artifactId>
-                    <scope>test</scope>
-                    <version>1.5.6</version>
                 </dependency>
 
             </dependencies>

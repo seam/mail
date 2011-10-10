@@ -18,6 +18,7 @@ package org.jboss.seam.mail.util;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
@@ -50,14 +51,25 @@ public class MavenArtifactResolver {
 
     public static Collection<JavaArchive> resolve(String qualifiedArtifactId) {
         return DependencyResolvers.use(MavenDependencyResolver.class).loadMetadataFromPom("pom.xml")
-                .artifact(qualifiedArtifactId).resolveAs(JavaArchive.class);
+                .artifact(qualifiedArtifactId)
+                .resolveAs(JavaArchive.class);
     }
 
     public static Collection<JavaArchive> resolve(String ... coords) {
-        Set<JavaArchive> libs = new HashSet<JavaArchive>();
+        final Set<JavaArchive> libs = new HashSet<JavaArchive>();
 
         for (String coord : coords) {
             libs.addAll(MavenArtifactResolver.resolve(coord));
+        }
+
+        final Iterator<JavaArchive> libIter = libs.iterator();
+
+        while (libIter.hasNext()) {
+            final JavaArchive jar = libIter.next();
+
+            if (jar.getName().contains("slf4j-api-1.5.6")) {
+                libIter.remove();
+            }
         }
 
         return libs;

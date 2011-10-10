@@ -35,32 +35,66 @@
         </dependency>
 
         <dependency>
+            <groupId>org.jboss.solder</groupId>
+            <artifactId>solder-logging</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>javax.mail</groupId>
+            <artifactId>mail</artifactId>
+            <version>1.4.1</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
             <groupId>org.jboss.weld</groupId>
             <artifactId>weld-core</artifactId>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
+            <groupId>org.freemarker</groupId>
+            <artifactId>freemarker</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- Velocity deps -->
+        <dependency>
+            <groupId>org.apache.velocity</groupId>
+            <artifactId>velocity</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>jdom</groupId>
+            <artifactId>jdom</artifactId>
+            <version>1.0</version>
             <scope>test</scope>
         </dependency>
 
         <dependency>
-          <groupId>org.freemarker</groupId>
-          <artifactId>freemarker</artifactId>
-          <scope>test</scope>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+            <version>1.1</version>
         </dependency>
 
         <dependency>
-          <groupId>org.apache.velocity</groupId>
-          <artifactId>velocity</artifactId>
-          <scope>test</scope>
+            <groupId>ant</groupId>
+            <artifactId>ant</artifactId>
+            <version>1.6</version>
         </dependency>
+        <!-- end Velocity Deps -->
 
         <dependency>
             <groupId>org.subethamail</groupId>
             <artifactId>subethasmtp</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
             <scope>test</scope>
         </dependency>
 
@@ -73,7 +107,7 @@
 
         <dependency>
             <groupId>org.jboss.seam.mail</groupId>
-            <artifactId>seam-mail-impl</artifactId>
+            <artifactId>seam-mail</artifactId>
             <version>${project.version}</version>
             <scope>test</scope>
         </dependency>
@@ -145,9 +179,10 @@
                 </dependency>
 
                 <dependency>
-                    <groupId>javax.mail</groupId>
-                    <artifactId>mail</artifactId>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-simple</artifactId>
                     <scope>test</scope>
+                    <version>1.5.6</version>
                 </dependency>
 
             </dependencies>

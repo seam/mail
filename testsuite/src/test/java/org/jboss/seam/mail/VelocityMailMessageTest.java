@@ -61,7 +61,7 @@ import org.subethamail.wiser.Wiser;
  */
 @RunWith(Arquillian.class)
 public class VelocityMailMessageTest {
-    @Deployment
+    @Deployment(name = "velocity")
     public static Archive<?> createTestArchive() {
         Archive<?> ar = ShrinkWrap
                 .create(WebArchive.class, "test.war")
@@ -70,7 +70,8 @@ public class VelocityMailMessageTest {
                 .addAsWebResource("seam-mail-logo.png")
                 .addPackages(true, VelocityMailMessageTest.class.getPackage())
                 .addAsLibraries(MavenArtifactResolver.resolve("org.subethamail:subethasmtp",
-                "org.apache.velocity:velocity:1.6.4", "org.jboss.solder:solder-impl"))
+                "org.apache.velocity:velocity:1.6.4", "org.jboss.solder:solder-impl", "org.jboss.solder:solder-logging",
+                "org.slf4j:slf4j-simple:1.5.6"))
                 .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
         return ar;
     }
@@ -115,6 +116,7 @@ public class VelocityMailMessageTest {
         mailConfig.setServerPort(8977);
 
         Wiser wiser = new Wiser(mailConfig.getServerPort());
+        wiser.setHostname(mailConfig.getServerHost());
         try {
             wiser.start();
 

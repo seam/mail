@@ -59,14 +59,14 @@ import org.subethamail.wiser.Wiser;
  */
 @RunWith(Arquillian.class)
 public class FreeMarkerMailMessageTest {
-    @Deployment
+    @Deployment(name = "freemarker")
     public static Archive<?> createTestArchive() {
         Archive<?> ar = ShrinkWrap.create(WebArchive.class, "test.war")
                 .addAsResource("template.text.freemarker", "template.text.freemarker")
                 .addAsResource("template.html.freemarker", "template.html.freemarker")
                 .addPackages(true, FreeMarkerMailMessageTest.class.getPackage())
                 .addAsLibraries(MavenArtifactResolver.resolve("org.subethamail:subethasmtp",
-                        "org.freemarker:freemarker", "org.jboss.solder:solder-impl"))
+                        "org.freemarker:freemarker", "org.jboss.solder:solder-impl", "org.slf4j:slf4j-simple:1.6.1"))
                 .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
         return ar;
     }

@@ -56,7 +56,7 @@ import org.subethamail.wiser.Wiser;
  */
 @RunWith(Arquillian.class)
 public class MailMessageTest {
-    @Deployment
+    @Deployment(name = "mailMessage")
     public static Archive<?> createTestArchive() {
         Archive<?> ar = ShrinkWrap
                 .create(WebArchive.class, "test.war")

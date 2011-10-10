@@ -15,36 +15,50 @@
  * limitations under the License.
  */
 
-package org.jboss.seam.mail.example;
+package org.jboss.seam.mail;
 
-import javax.enterprise.inject.Produces;
-import javax.inject.Inject;
-import javax.mail.Session;
+import javax.enterprise.inject.Model;
+import javax.validation.constraints.NotNull;
 
-import org.jboss.seam.mail.core.MailConfig;
-import org.jboss.seam.mail.util.MailUtility;
-import org.jboss.solder.logging.Logger;
+import org.jboss.seam.mail.core.EmailContact;
 
 /**
  * @author Cody Lerum
  */
-public class GmailSessionProducer {
-    @Inject
-    private Logger log;
+@Model
+public class Person implements EmailContact {
+    private String name;
+    private String email;
 
-    @Gmail
-    @Produces
-    public Session getMailSession() {
-        log.debug("Producing Gmail Session");
+    public Person() {
 
-        MailConfig mailConfig = new MailConfig();
+    }
 
-        mailConfig.setServerHost("localhost");
-        mailConfig.setServerPort(8978);
-        mailConfig.setUsername("test");
-        mailConfig.setPassword("test12!");
-        mailConfig.setAuth(true);
+    public Person(String name, String email) {
+        this.name = name;
+        this.email = email;
+    }
 
-        return MailUtility.buildMailSession(mailConfig);
+    @NotNull
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    @NotNull
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    @Override
+    public String getAddress() {
+        return getEmail();
     }
 }

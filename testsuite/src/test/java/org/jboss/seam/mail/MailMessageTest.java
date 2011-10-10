@@ -100,9 +100,7 @@ public class MailMessageTest {
 
     @Test
     public void testTextMailMessage() throws MessagingException, IOException {
-        
-        System.out.println("Configured Port: " + mailConfig.getServerPort());
-        
+                
         String subject = "Text Message from Seam Mail - " + java.util.UUID.randomUUID().toString();
 
         String messageId = "1234@seam.test.com";

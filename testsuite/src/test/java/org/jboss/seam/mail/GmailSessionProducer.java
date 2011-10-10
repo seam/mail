@@ -15,20 +15,36 @@
  * limitations under the License.
  */
 
-package org.jboss.seam.mail.core;
+package org.jboss.seam.mail;
 
 import javax.enterprise.inject.Produces;
+import javax.inject.Inject;
 import javax.mail.Session;
 
+import org.jboss.seam.mail.core.MailConfig;
 import org.jboss.seam.mail.util.MailUtility;
+import org.jboss.solder.logging.Logger;
 
 /**
  * @author Cody Lerum
  */
-public class MailSessionProducer {
+public class GmailSessionProducer {
+    @Inject
+    private Logger log;
 
+    @Gmail
     @Produces
-    public Session getMailSession(MailConfig mailConfig) {
+    public Session getMailSession() {
+        log.debug("Producing Gmail Session");
+
+        MailConfig mailConfig = new MailConfig();
+
+        mailConfig.setServerHost("localhost");
+        mailConfig.setServerPort(8978);
+        mailConfig.setUsername("test");
+        mailConfig.setPassword("test12!");
+        mailConfig.setAuth(true);
+
         return MailUtility.buildMailSession(mailConfig);
     }
 }

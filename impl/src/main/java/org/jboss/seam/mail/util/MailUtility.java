@@ -107,16 +107,16 @@ public class MailUtility {
         Session session;
 
         Properties props = new Properties();
-
+        
         if (mailConfig.isValid()) {
-            props.put("mail.smtp.host", mailConfig.getServerHost());
-            props.put("mail.smtp.port", mailConfig.getServerPort());
-            props.put("mail.smtp.starttls.enable", mailConfig.isEnableTls());
-            props.put("mail.smtp.starttls.required", mailConfig.isRequireTls());
-            props.put("mail.smtp.ssl.enable", mailConfig.isEnableSsl());
-            props.put("mail.smtp.auth", mailConfig.isAuth());
+            props.setProperty("mail.smtp.host", mailConfig.getServerHost());
+            props.setProperty("mail.smtp.port", mailConfig.getServerPort().toString());
+            props.setProperty("mail.smtp.starttls.enable", mailConfig.getEnableSsl().toString());
+            props.setProperty("mail.smtp.starttls.required", mailConfig.getRequireTls().toString());
+            props.setProperty("mail.smtp.ssl.enable", mailConfig.getEnableSsl().toString());
+            props.setProperty("mail.smtp.auth", mailConfig.getAuth().toString());
         } else {
-            throw new RuntimeException("ServerHost and ServerPort must be set in MailConfig");
+            throw new RuntimeException("Server Host and Server  Port must be set in MailConfig");
         }
 
         if (!Strings.isNullOrBlank(mailConfig.getDomainName())) {
@@ -130,6 +130,7 @@ public class MailUtility {
         } else {
             session = Session.getInstance(props, null);
         }
+                
         return session;
     }
 

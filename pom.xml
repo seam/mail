@@ -22,17 +22,25 @@
     <modules>
         <module>api</module>
         <module>impl</module>
+        <module>testsuite</module>
     </modules>
 
     <dependencyManagement>
         <dependencies>
-        
+
             <dependency>
                 <groupId>org.jboss.seam</groupId>
                 <artifactId>seam-bom</artifactId>
                 <version>${seam.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.jboss.solder</groupId>
+                <artifactId>solder-logging</artifactId>
+                <version>${seam.version}</version>
+                <scope>runtime</scope>
             </dependency>
 
             <!-- Override versions from seam-bom for this module's artifacts -->
@@ -56,14 +64,14 @@
               <version>${velocity.version}</version>
               <scope>provided</scope>
             </dependency>
-            
+
             <dependency>
               <groupId>org.freemarker</groupId>
               <artifactId>freemarker</artifactId>
               <version>${freemarker.version}</version>
               <scope>provided</scope>
             </dependency>
-            
+
         </dependencies>
 
     </dependencyManagement>

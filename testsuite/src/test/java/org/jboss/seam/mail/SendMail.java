@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package org.jboss.seam.mail.example;
+package org.jboss.seam.mail;
 
 import java.net.MalformedURLException;
 

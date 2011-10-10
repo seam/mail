@@ -17,6 +17,8 @@
 
 package org.jboss.seam.mail.core;
 
+import java.io.Serializable;
+
 import javax.enterprise.context.ApplicationScoped;
 
 import com.google.common.base.Strings;
@@ -28,16 +30,19 @@ import com.google.common.base.Strings;
  * @author Cody Lerum
  */
 @ApplicationScoped
-public class MailConfig {
+public class MailConfig implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+    
     private String serverHost = "localhost";
-    private int serverPort = 25;
+    private Integer serverPort = 25;
     private String domainName;
     private String username;
     private String password;
-    private boolean enableTls = false;
-    private boolean requireTls = false;
-    private boolean enableSsl = false;
-    private boolean auth = false;
+    private Boolean enableTls = false;
+    private Boolean requireTls = false;
+    private Boolean enableSsl = false;
+    private Boolean auth = false;
 
     public String getServerHost() {
         return serverHost;
@@ -47,11 +52,11 @@ public class MailConfig {
         this.serverHost = serverHost;
     }
 
-    public int getServerPort() {
+    public Integer getServerPort() {
         return serverPort;
     }
 
-    public void setServerPort(int serverPort) {
+    public void setServerPort(Integer serverPort) {
         this.serverPort = serverPort;
     }
 
@@ -79,35 +84,35 @@ public class MailConfig {
         this.password = password;
     }
 
-    public boolean isEnableTls() {
+    public Boolean getEnableTls() {
         return enableTls;
     }
 
-    public void setEnableTls(boolean enableTls) {
+    public void setEnableTls(Boolean enableTls) {
         this.enableTls = enableTls;
     }
 
-    public boolean isRequireTls() {
+    public Boolean getRequireTls() {
         return requireTls;
     }
 
-    public void setRequireTls(boolean requireTls) {
+    public void setRequireTls(Boolean requireTls) {
         this.requireTls = requireTls;
     }
 
-    public boolean isEnableSsl() {
+    public Boolean getEnableSsl() {
         return enableSsl;
     }
 
-    public void setEnableSsl(boolean enableSsl) {
+    public void setEnableSsl(Boolean enableSsl) {
         this.enableSsl = enableSsl;
     }
 
-    public boolean isAuth() {
+    public Boolean getAuth() {
         return auth;
     }
 
-    public void setAuth(boolean auth) {
+    public void setAuth(Boolean auth) {
         this.auth = auth;
     }
 

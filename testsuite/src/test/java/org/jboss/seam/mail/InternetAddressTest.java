@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package org.jboss.mail.core.test;
+package org.jboss.seam.mail;
 
 import java.util.ArrayList;
 import java.util.Collection;

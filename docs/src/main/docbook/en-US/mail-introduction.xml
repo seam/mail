@@ -4,12 +4,38 @@
    <title>Seam Mail Introduction</title>
   
    <para>
-      Lead in...
+      Seam mail is an portable CDI extension designed to make working with Java Mail easier via standard
+      methods or plugable templating engines.
    </para>
   
    <section>
       <title>Getting Started</title>
-      <para>Explain</para>
+      <para>
+	     No better way to start off then with a simple example to show what we are talking about.
+	  </para>
+	  
+	  <para>
+<programlisting role="JAVA"><![CDATA[
+@Inject
+private Instance<MailMessage> mailMessage;
+	     
+public void sendMail() {
+
+	MailMessage m = mailMessage.get();
+	m.from("john@test.com", "John Doe")
+       .to("jane@test.com, "Jane Doe")
+       .subject(subject)
+       .bodyHtml(htmlBody)
+       .importance(MessagePriority.HIGH)
+       .send();
+}]]>
+</programlisting>
+	  </para>
+	  
+	  <para>
+	     Very little is required to enable this this level of functionality in your application. Let's
+	     start off with a little required configuration.
+	  </para>
    </section>
 <!--
 vim:et:ts=3:sw=3:tw=120

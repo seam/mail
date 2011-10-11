@@ -6,9 +6,9 @@
    <toc/>
 
    <title>Seam Mail</title>
-   <xi:include href="mail-introduction.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />  
-   <!--
-   <xi:include href="another_chapter.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />  
-   -->
+   <xi:include href="mail-introduction.xml" xmlns:xi="http://www.w3.org/2001/XInclude" /> 
+   <xi:include href="mail-configuration.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />  
+   <xi:include href="mail-velocity.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />  
+   <xi:include href="mail-freemarker.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />  
 
 </book>

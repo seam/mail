@@ -9,7 +9,6 @@
       <relativePath>../pom.xml</relativePath>
    </parent>
 
-   <groupId>org.jboss.seam.mail</groupId>
    <artifactId>seam-mail-distribution</artifactId>
    <name>Seam Mail Module Distribution</name>
    <description>Builds a Seam Mail module release distribution</description>

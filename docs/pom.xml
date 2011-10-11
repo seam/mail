@@ -8,7 +8,6 @@
       <relativePath>../pom.xml</relativePath>
    </parent>
 
-   <groupId>org.jboss.seam.mail</groupId>
    <artifactId>seam-mail-reference-guide</artifactId>
    <packaging>jdocbook</packaging>
    <name>Seam Mail Module Reference Guide</name>

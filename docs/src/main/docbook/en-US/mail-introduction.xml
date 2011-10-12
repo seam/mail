@@ -5,7 +5,7 @@
   
    <para>
       Seam mail is an portable CDI extension designed to make working with Java Mail easier via standard
-      methods or plugable templating engines.
+      methods or <literal>plugable</literal> templating engines.
    </para>
   
    <section>
@@ -33,7 +33,7 @@ public void sendMail() {
 	  </para>
 	  
 	  <para>
-	     Very little is required to enable this this level of functionality in your application. Let's
+	     Very little is required to enable this level of functionality in your application. Let's
 	     start off with a little required configuration.
 	  </para>
    </section>

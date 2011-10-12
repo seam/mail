@@ -13,7 +13,7 @@
    <section>
       <title>Minimal Configuration</title>
       <para>
-	     First lets add the relevent maven configuration to your pom.xml
+	     First lets add the relevant maven configuration to your pom.xml
 	  </para>
 	  
 	  <para>
@@ -28,13 +28,13 @@
 	  </para>
 	  
 	  <para>
-	     Now now that is out of the way lets provide JavaMail with the details of your SMTP server
+	     Now now that is out of the way lets provide <literal>JavaMail</literal> with the details of your <literal>SMTP</literal> server
 	     so that it can connect and send your mail on it's way.
 	  </para>
 	      
 	  <para>
 	     This configuration is handled via Seam Solder which reads in the configuration from your
-	     application's seam-beans.xml and configures the MailConfig class prior to injection.   
+	     application's <literal>seam-beans.xml</literal> and configures the <literal>MailConfig</literal> class prior to injection.   
 	  </para>
 
 <para>

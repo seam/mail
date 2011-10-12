@@ -14,7 +14,6 @@
 	     No better way to start off then with a simple example to show what we are talking about.
 	  </para>
 	  
-	  <para>
 <programlisting role="JAVA"><![CDATA[
 @Inject
 private Instance<MailMessage> mailMessage;
@@ -30,7 +29,6 @@ public void sendMail() {
        .send();
 }]]>
 </programlisting>
-	  </para>
 	  
 	  <para>
 	     Very little is required to enable this level of functionality in your application. Let's

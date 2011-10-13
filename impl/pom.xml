@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-           <artifactId>seam-mail-parent</artifactId>
+       <artifactId>seam-mail-parent</artifactId>
 	   <groupId>org.jboss.seam.mail</groupId>
 	   <version>3.1.0-SNAPSHOT</version>
 	   <relativePath>../pom.xml</relativePath>
@@ -28,11 +28,15 @@
 		<dependency>
 			<groupId>org.freemarker</groupId>
 			<artifactId>freemarker</artifactId>
+			<scope>provided</scope>
+         	<optional>true</optional>
 		</dependency>
 
 		<dependency>
 			<groupId>org.apache.velocity</groupId>
 			<artifactId>velocity</artifactId>
+			<scope>provided</scope>
+         	<optional>true</optional>
 		</dependency>
 
 		<dependency>
@@ -44,22 +48,7 @@
             <groupId>org.jboss.solder</groupId>
             <artifactId>solder-logging</artifactId>
         </dependency>
-
-		<dependency>
-			<groupId>org.jboss.arquillian.junit</groupId>
-			<artifactId>arquillian-junit-container</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>org.jboss.arquillian.container</groupId>
-			<artifactId>arquillian-weld-ee-embedded-1.1</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-		</dependency>
-
+        
 	</dependencies>
 
 	<build>

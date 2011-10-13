@@ -53,7 +53,7 @@
 
             <dependency>
                 <groupId>org.jboss.seam.mail</groupId>
-                <artifactId>seam-mail-impl</artifactId>
+                <artifactId>seam-mail</artifactId>
                 <version>${project.version}</version>
                 <scope>runtime</scope>
             </dependency>

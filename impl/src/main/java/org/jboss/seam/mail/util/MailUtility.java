@@ -72,7 +72,8 @@ public class MailUtility {
         }
     }
 
-    public static Collection<InternetAddress> internetAddress(Collection<EmailContact> emailContacts) throws InvalidAddressException {
+    public static Collection<InternetAddress> internetAddress(Collection<EmailContact> emailContacts)
+            throws InvalidAddressException {
         Set<InternetAddress> internetAddresses = new HashSet<InternetAddress>();
 
         for (EmailContact ec : emailContacts) {
@@ -83,7 +84,7 @@ public class MailUtility {
     }
 
     public static InternetAddress[] getInternetAddressses(InternetAddress emaiAddress) {
-        InternetAddress[] internetAddresses = {emaiAddress};
+        InternetAddress[] internetAddresses = { emaiAddress };
 
         return internetAddresses;
     }
@@ -103,11 +104,11 @@ public class MailUtility {
         }
     }
 
-    public static Session buildMailSession(MailConfig mailConfig) {
+    public static Session createSession(MailConfig mailConfig) {
         Session session;
 
         Properties props = new Properties();
-        
+
         if (mailConfig.isValid()) {
             props.setProperty("mail.smtp.host", mailConfig.getServerHost());
             props.setProperty("mail.smtp.port", mailConfig.getServerPort().toString());
@@ -123,14 +124,16 @@ public class MailUtility {
             props.put("mail.seam.domainName", mailConfig.getDomainName());
         }
 
-        if (mailConfig.getUsername() != null && mailConfig.getUsername().length() != 0 && mailConfig.getPassword() != null && mailConfig.getPassword().length() != 0) {
-            MailSessionAuthenticator authenticator = new MailSessionAuthenticator(mailConfig.getUsername(), mailConfig.getPassword());
+        if (mailConfig.getUsername() != null && mailConfig.getUsername().length() != 0 && mailConfig.getPassword() != null
+                && mailConfig.getPassword().length() != 0) {
+            MailSessionAuthenticator authenticator = new MailSessionAuthenticator(mailConfig.getUsername(),
+                    mailConfig.getPassword());
 
             session = Session.getInstance(props, authenticator);
         } else {
             session = Session.getInstance(props, null);
         }
-                
+
         return session;
     }
 

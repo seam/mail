@@ -45,6 +45,6 @@ public class GmailSessionProducer {
         mailConfig.setPassword("test12!");
         mailConfig.setAuth(true);
 
-        return MailUtility.buildMailSession(mailConfig);
+        return MailUtility.createSession(mailConfig);
     }
 }

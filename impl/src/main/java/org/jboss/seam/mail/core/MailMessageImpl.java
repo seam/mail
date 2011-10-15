@@ -40,6 +40,7 @@ import org.jboss.seam.mail.templating.MailContext;
 import org.jboss.seam.mail.templating.TemplateProvider;
 import org.jboss.seam.mail.util.EmailAttachmentUtil;
 import org.jboss.seam.mail.util.MailUtility;
+import org.jboss.solder.core.ExtensionManaged;
 
 /**
  * @author Cody Lerum
@@ -55,6 +56,7 @@ public class MailMessageImpl implements MailMessage {
     private boolean templatesMerged;
 
     @Inject
+    @ExtensionManaged
     private Instance<Session> session;
 
     public MailMessageImpl() {
@@ -308,7 +310,7 @@ public class MailMessageImpl implements MailMessage {
         bodyText(textBody);
         return this;
     }
-    
+
     public MailMessage contentType(ContentType contentType) {
         emailMessage.setRootContentType(contentType);
         return this;
@@ -352,17 +354,26 @@ public class MailMessageImpl implements MailMessage {
         return emailMessage;
     }
 
-    public EmailMessage send(Session session) throws SendFailedException {
+    public EmailMessage send(MailTransporter mailTransporter) throws SendFailedException {
+
         if (!templatesMerged) {
             mergeTemplates();
         }
 
-        MailUtility.send(emailMessage, session);
+        try {
+            mailTransporter.send(emailMessage);
+        } catch (Exception e) {
+            throw new SendFailedException("Send Failed", e);
+        }
 
         return emailMessage;
     }
 
+    public EmailMessage send(Session session) throws SendFailedException {
+        return send(new MailTransporterImpl(session));
+    }
+
     public EmailMessage send() throws SendFailedException {
         return this.send(session.get());
-    }    
+    }
 }

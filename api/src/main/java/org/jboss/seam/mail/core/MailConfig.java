@@ -24,16 +24,15 @@ import javax.enterprise.context.ApplicationScoped;
 import com.google.common.base.Strings;
 
 /**
- * Bean which holds Mail Session configuration options. Can be configured via
- * Seam XML
- *
+ * Bean which holds Mail Session configuration options. Can be configured via Seam XML
+ * 
  * @author Cody Lerum
  */
 @ApplicationScoped
 public class MailConfig implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    
+
     private String serverHost = "localhost";
     private Integer serverPort = 25;
     private String domainName;

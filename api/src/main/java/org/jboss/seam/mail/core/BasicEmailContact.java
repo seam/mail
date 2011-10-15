@@ -21,7 +21,6 @@ package org.jboss.seam.mail.core;
  * @author Cody Lerum
  */
 public class BasicEmailContact implements EmailContact {
-    private static final long serialVersionUID = 1L;
 
     private String address;
     private String name;

@@ -84,7 +84,8 @@ public class BaseMailMessage {
         try {
             rootMimeMessage.addRecipient(recipientType.getRecipientType(), emailAddress);
         } catch (MessagingException e) {
-            throw new RuntimeException("Unable to add recipient " + recipientType + ": " + emailAddress.toString() + " to MIME message", e);
+            throw new RuntimeException("Unable to add recipient " + recipientType + ": " + emailAddress.toString()
+                    + " to MIME message", e);
         }
     }
 
@@ -316,7 +317,9 @@ public class BaseMailMessage {
     }
 
     public void addAttachment(EmailAttachment emailAttachment) {
-        AttachmentPart attachment = new AttachmentPart(emailAttachment.getBytes(), emailAttachment.getContentId(), emailAttachment.getFileName(), emailAttachment.getMimeType(), emailAttachment.getHeaders(), emailAttachment.getContentDisposition());
+        AttachmentPart attachment = new AttachmentPart(emailAttachment.getBytes(), emailAttachment.getContentId(),
+                emailAttachment.getFileName(), emailAttachment.getMimeType(), emailAttachment.getHeaders(),
+                emailAttachment.getContentDisposition());
         attachments.put(attachment.getAttachmentFileName(), attachment);
     }
 

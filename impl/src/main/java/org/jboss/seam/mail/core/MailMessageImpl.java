@@ -41,6 +41,7 @@ import org.jboss.seam.mail.templating.TemplateProvider;
 import org.jboss.seam.mail.util.EmailAttachmentUtil;
 import org.jboss.seam.mail.util.MailUtility;
 import org.jboss.solder.core.ExtensionManaged;
+import org.jboss.solder.logging.Logger;
 
 /**
  * @author Cody Lerum
@@ -58,6 +59,9 @@ public class MailMessageImpl implements MailMessage {
     @Inject
     @ExtensionManaged
     private Instance<Session> session;
+
+    @Inject
+    private Logger log;
 
     public MailMessageImpl() {
         emailMessage = new EmailMessage();
@@ -335,6 +339,9 @@ public class MailMessageImpl implements MailMessage {
     }
 
     public EmailMessage mergeTemplates() {
+        
+        log.debug("Merging templates");
+        
         put("mailContext", new MailContext(EmailAttachmentUtil.getEmailAttachmentMap(emailMessage.getAttachments())));
 
         if (subjectTemplate != null) {
@@ -355,6 +362,8 @@ public class MailMessageImpl implements MailMessage {
     }
 
     public EmailMessage send(MailTransporter mailTransporter) throws SendFailedException {
+
+        log.debug("Beginning send");
 
         if (!templatesMerged) {
             mergeTemplates();

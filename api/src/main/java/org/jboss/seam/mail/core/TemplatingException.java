@@ -15,9 +15,8 @@
  * limitations under the License.
  */
 
-package org.jboss.seam.mail.templating;
+package org.jboss.seam.mail.core;
 
-import org.jboss.seam.mail.core.MailException;
 
 /**
  * Thrown when a error occurs during template processing

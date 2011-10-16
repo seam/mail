@@ -42,7 +42,8 @@ import org.jboss.seam.mail.core.enumerations.RecipientType;
 /**
  * @author Cody Lerum
  */
-public class MailUtility {
+public class MailUtility 
+{
     public static InternetAddress internetAddress(String address) throws InvalidAddressException {
         try {
             return new InternetAddress(address);
@@ -171,7 +172,7 @@ public class MailUtility {
         if (e.getSubject() != null) {
             b.setSubject(e.getSubject());
         }
-
+        
         if (e.getType() == EmailMessageType.STANDARD) {
 
             if (e.getHtmlBody() != null && e.getTextBody() != null) {

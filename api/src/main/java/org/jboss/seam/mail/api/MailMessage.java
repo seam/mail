@@ -29,6 +29,8 @@ import org.jboss.seam.mail.core.EmailAttachment;
 import org.jboss.seam.mail.core.EmailContact;
 import org.jboss.seam.mail.core.EmailMessage;
 import org.jboss.seam.mail.core.InvalidAddressException;
+import org.jboss.seam.mail.core.MailConfig;
+import org.jboss.seam.mail.core.MailTransporter;
 import org.jboss.seam.mail.core.SendFailedException;
 import org.jboss.seam.mail.core.enumerations.ContentDisposition;
 import org.jboss.seam.mail.core.enumerations.ContentType;
@@ -408,6 +410,15 @@ public interface MailMessage {
     /**
      * Send the Message
      * 
+     * @param MailTransporter {@link MailTransporter} instance to used to send the {@link MailMessage}
+     * @return {@link EmailMessage} which represents the {@link MailMessage} as sent
+     * @throws SendFailedException If the messages fails to be sent.
+     */
+    public EmailMessage send(MailTransporter mailTransporter);
+    
+    /**
+     * Send the Message using a specific JavaMail session
+     * 
      * @param session {@link Session} to use to send the {@link MailMessage}
      * @return {@link EmailMessage} which represents the {@link MailMessage} as sent
      * @throws SendFailedException If the messages fails to be sent.
@@ -415,7 +426,15 @@ public interface MailMessage {
     public EmailMessage send(Session session);
 
     /**
-     * Send the Message Asynchronously
+     * Send the Message using a JavaMail session created from this specific MailConfig
+     * @param mailConfig {@link MailConfig} to use to send the {@link MailMessage}
+     * @return {@link EmailMessage} which represents the {@link MailMessage} as sent
+     * @throws SendFailedException If the messages fails to be sent.
+     */
+    public EmailMessage send(MailConfig mailConfig);
+        
+    /**
+     * Send the Message using a default mail session created from a configured MailConfig
      * 
      * @return {@link EmailMessage} which represents the {@link MailMessage} as sent
      * @throws SendFailedException If the messages fails to be sent.

@@ -381,8 +381,12 @@ public class MailMessageImpl implements MailMessage {
     public EmailMessage send(Session session) throws SendFailedException {
         return send(new MailTransporterImpl(session));
     }
+    
+    public EmailMessage send(MailConfig mailConfig) {
+        return send(MailUtility.createSession(mailConfig));
+    }
 
     public EmailMessage send() throws SendFailedException {
         return this.send(session.get());
-    }
+    }    
 }

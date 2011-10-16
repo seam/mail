@@ -121,7 +121,7 @@ public interface MailMessage {
      * @param emailContacts Collection of {@link EmailContact} to be added
      */
     public MailMessage replyTo(Collection<EmailContact> emailContacts);
-    
+
     /**
      * Add header to the message.
      * 
@@ -129,7 +129,7 @@ public interface MailMessage {
      * @param value Header value
      */
     public MailMessage addHeader(String name, String value);
-    
+
     /**
      * Convenience method to add a TO address
      * 
@@ -270,7 +270,6 @@ public interface MailMessage {
      * @param mimeType
      * @param contentDispostion
      * @param bytes
-     * @return
      */
     public MailMessage addAttachment(String fileName, String mimeType, ContentDisposition contentDispostion, byte[] bytes);
 
@@ -377,10 +376,10 @@ public interface MailMessage {
      * 
      */
     public MailMessage bodyHtmlTextAlt(String html, String text);
-    
-    
+
     /**
      * Set the Content Type of the message
+     * 
      * @param contentType
      */
     public MailMessage contentType(ContentType contentType);
@@ -403,19 +402,19 @@ public interface MailMessage {
     /**
      * Merge the templates with the context
      * 
-     * @return
+     * @return {@link EmailMessage} representing this {@link MailMessage} after merging
      */
     public EmailMessage mergeTemplates();
 
     /**
      * Send the Message
      * 
-     * @param MailTransporter {@link MailTransporter} instance to used to send the {@link MailMessage}
+     * @param mailTransporter {@link MailTransporter} instance to used to send the {@link MailMessage}
      * @return {@link EmailMessage} which represents the {@link MailMessage} as sent
      * @throws SendFailedException If the messages fails to be sent.
      */
     public EmailMessage send(MailTransporter mailTransporter);
-    
+
     /**
      * Send the Message using a specific JavaMail session
      * 
@@ -427,12 +426,13 @@ public interface MailMessage {
 
     /**
      * Send the Message using a JavaMail session created from this specific MailConfig
+     * 
      * @param mailConfig {@link MailConfig} to use to send the {@link MailMessage}
      * @return {@link EmailMessage} which represents the {@link MailMessage} as sent
      * @throws SendFailedException If the messages fails to be sent.
      */
     public EmailMessage send(MailConfig mailConfig);
-        
+
     /**
      * Send the Message using a default mail session created from a configured MailConfig
      * 
@@ -457,7 +457,7 @@ public interface MailMessage {
      * @param textBody {@link TemplateProvider} to use
      * @throws TemplatingException
      */
-    public MailMessage bodyText(TemplateProvider textbody);
+    public MailMessage bodyText(TemplateProvider textBody);
 
     /**
      * Sets the HTML body of the message to the HTML output of the given template
@@ -474,7 +474,7 @@ public interface MailMessage {
      * @param textBody {@link TemplateProvider} to use for Text alternative portion of message
      * @throws TemplatingException
      */
-    public MailMessage bodyHtmlTextAlt(TemplateProvider htmlBody, TemplateProvider textbody);
+    public MailMessage bodyHtmlTextAlt(TemplateProvider htmlBody, TemplateProvider textBody);
 
     /**
      * Places a variable in the templating engines context

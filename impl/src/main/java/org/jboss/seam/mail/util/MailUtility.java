@@ -28,12 +28,15 @@ import javax.mail.MessagingException;
 import javax.mail.Session;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 
 import org.jboss.seam.mail.core.BaseMailMessage;
 import org.jboss.seam.mail.core.EmailContact;
 import org.jboss.seam.mail.core.EmailMessage;
 import org.jboss.seam.mail.core.InvalidAddressException;
 import org.jboss.seam.mail.core.MailConfig;
+import org.jboss.seam.mail.core.MailException;
 import org.jboss.seam.mail.core.MailSessionAuthenticator;
 import org.jboss.seam.mail.core.SendFailedException;
 import org.jboss.seam.mail.core.enumerations.EmailMessageType;
@@ -106,6 +109,16 @@ public class MailUtility
     }
 
     public static Session createSession(MailConfig mailConfig) {
+        
+        if(!Strings.isNullOrBlank(mailConfig.getJndiSessionName()))
+        {
+            try {
+                return InitialContext.doLookup(mailConfig.getJndiSessionName());
+            } catch (NamingException e) {
+                throw new MailException("Unable to lookup JNDI JavaMail Session", e);
+            }
+        }
+        
         Session session;
 
         Properties props = new Properties();
@@ -118,7 +131,7 @@ public class MailUtility
             props.setProperty("mail.smtp.ssl.enable", mailConfig.getEnableSsl().toString());
             props.setProperty("mail.smtp.auth", mailConfig.getAuth().toString());
         } else {
-            throw new RuntimeException("Server Host and Server  Port must be set in MailConfig");
+            throw new MailException("Server Host and Server  Port must be set in MailConfig");
         }
 
         if (!Strings.isNullOrBlank(mailConfig.getDomainName())) {
@@ -188,7 +201,7 @@ public class MailUtility
             b.setHTMLNotRelated(e.getHtmlBody());
             b.addAttachments(e.getAttachments());
         } else {
-            throw new RuntimeException("Unsupported Message Type: " + e.getType());
+            throw new SendFailedException("Unsupported Message Type: " + e.getType());
         }
         b.send();
 
@@ -196,7 +209,7 @@ public class MailUtility
             e.setMessageId(null);
             e.setLastMessageId(MailUtility.headerStripper(b.getFinalizedMessage().getMessageID()));
         } catch (MessagingException e1) {
-            throw new RuntimeException("Unable to read Message-ID from sent message");
+            throw new SendFailedException("Unable to read Message-ID from sent message");
         }
     }
 }

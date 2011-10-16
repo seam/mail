@@ -42,6 +42,7 @@ public class MailConfig implements Serializable {
     private Boolean requireTls = false;
     private Boolean enableSsl = false;
     private Boolean auth = false;
+    private String jndiSessionName;
 
     public String getServerHost() {
         return serverHost;
@@ -115,7 +116,20 @@ public class MailConfig implements Serializable {
         this.auth = auth;
     }
 
+    public String getJndiSessionName() {
+        return jndiSessionName;
+    }
+
+    public void setJndiSessionName(String jndiSessionName) {
+        this.jndiSessionName = jndiSessionName;
+    }
+
     public boolean isValid() {
+
+        if (!Strings.isNullOrEmpty(jndiSessionName)) {
+            return true;
+        }
+
         if (Strings.isNullOrEmpty(serverHost.trim())) {
             return false;
         }
@@ -126,4 +140,5 @@ public class MailConfig implements Serializable {
 
         return true;
     }
+
 }

@@ -24,7 +24,7 @@ package org.jboss.seam.mail.core;
  *
  * @author Cody Lerum
  */
-public abstract class MailException extends RuntimeException {
+public class MailException extends RuntimeException {
     private static final long serialVersionUID = 1L;
 
     public MailException() {

@@ -123,9 +123,9 @@ public class VelocityMailMessageTest {
 
             mailMessage
                     .get()
-                    .from(fromAddress, fromName)
+                    .from(MailTestUtil.getAddressHeader(fromName, fromAddress))
                     .replyTo(replyToAddress)
-                    .to(toAddress, toName)
+                    .to(MailTestUtil.getAddressHeader(toName, toAddress))
                     .subject(new VelocityTemplate(subject, cDIVelocityContext.get()))
                     .bodyText(
                             new VelocityTemplate(resourceProvider.loadResourceStream("template.text.velocity"),
@@ -174,8 +174,8 @@ public class VelocityMailMessageTest {
 
             emailMessage = mailMessage
                     .get()
-                    .from(fromAddress, fromName)
-                    .replyTo(replyToAddress, replyToName)
+                    .from(MailTestUtil.getAddressHeader(fromName, fromAddress))
+                    .replyTo(MailTestUtil.getAddressHeader(replyToName, replyToAddress))
                     .to(person)
                     .subject(subject)
                     .bodyHtml(
@@ -238,8 +238,8 @@ public class VelocityMailMessageTest {
 
             emailMessage = mailMessage
                     .get()
-                    .from(fromAddress, fromName)
-                    .to(person.getEmail(), person.getName())
+                    .from(MailTestUtil.getAddressHeader(fromName, fromAddress))
+                    .to(MailTestUtil.getAddressHeader(person.getName(), person.getEmail()))
                     .subject(subject)
                     .put("version", version)
                     .bodyHtmlTextAlt(
@@ -319,8 +319,8 @@ public class VelocityMailMessageTest {
 
             mailMessage
                     .get()
-                    .from(fromAddress, fromName)
-                    .to(person.getEmail(), person.getName())
+                    .from(fromAddress)
+                    .to(person.getEmail())
                     .subject(subject)
                     .put("version", "Seam 3")
                     .bodyHtmlTextAlt(
@@ -366,9 +366,9 @@ public class VelocityMailMessageTest {
 
             mailMessage
                     .get()
-                    .from(fromAddress, fromName)
+                    .from(fromAddress)
                     .replyTo(replyToAddress)
-                    .to(toAddress, toName)
+                    .to(toAddress)
                     .subject(new VelocityTemplate(subject, cDIVelocityContext.get()))
                     .bodyText(
                             new VelocityTemplate(resourceProvider.loadResourceStream("template.text.velocity"),

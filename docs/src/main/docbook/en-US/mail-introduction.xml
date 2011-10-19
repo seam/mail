@@ -21,8 +21,8 @@ private Instance<MailMessage> mailMessage;
 public void sendMail() {
 
 	MailMessage m = mailMessage.get();
-	m.from("john@test.com", "John Doe")
-       .to("jane@test.com, "Jane Doe")
+	m.from("John Doe<john@test.com>")
+       .to("Jane Doe<jane@test.com>")
        .subject(subject)
        .bodyHtml(htmlBody)
        .importance(MessagePriority.HIGH)

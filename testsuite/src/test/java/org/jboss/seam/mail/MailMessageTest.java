@@ -112,8 +112,15 @@ public class MailMessageTest {
             person.setName(toName);
             person.setEmail(toAddress);
 
-            mailMessage.get().from(fromAddress, fromName).replyTo(replyToAddress).to(toAddress, toName).subject(subject)
-                    .bodyText(textBody).importance(MessagePriority.HIGH).messageId(messageId).send(session.get());
+            mailMessage.get()
+                .from(MailTestUtil.getAddressHeader(fromName, fromAddress))
+                .replyTo(replyToAddress)
+                .to(MailTestUtil.getAddressHeader(toName, toAddress))
+                .subject(subject)
+                .bodyText(textBody)
+                .importance(MessagePriority.HIGH)
+                .messageId(messageId)
+                .send(session.get());
         } finally {
             stop(wiser);
         }
@@ -158,9 +165,9 @@ public class MailMessageTest {
 
             emailMessage = mailMessage
                     .get()
-                    .from(fromAddress, fromName)
-                    .replyTo(replyToAddress, replyToName)
-                    .to(person.getEmail(), person.getName())
+                    .from(MailTestUtil.getAddressHeader(fromName, fromAddress))
+                    .replyTo(MailTestUtil.getAddressHeader(replyToName, replyToAddress))
+                    .to(person)
                     .subject(subject)
                     .bodyHtml(htmlBody)
                     .importance(MessagePriority.HIGH)
@@ -217,8 +224,8 @@ public class MailMessageTest {
 
             mailMessage
                     .get()
-                    .from(fromAddress, fromName)
-                    .to(person.getEmail(), person.getName())
+                    .from(MailTestUtil.getAddressHeader(fromName, fromAddress))
+                    .to(person)
                     .subject(subject)
                     .bodyHtmlTextAlt(htmlBody, textBody)
                     .importance(MessagePriority.LOW)
@@ -293,8 +300,14 @@ public class MailMessageTest {
             person.setName(longToName);
             person.setEmail(longToAddress);
 
-            mailMessage.get().from(longFromAddress, longFromName).to(longToAddress, longToName).cc(longCcAddress, longCcName)
-                    .subject(subject).bodyText(textBody).importance(MessagePriority.HIGH).send(session.get());
+            mailMessage.get()
+                .from(MailTestUtil.getAddressHeader(longFromName, longFromAddress))
+                .to(MailTestUtil.getAddressHeader(longToName, longToAddress))
+                .cc(MailTestUtil.getAddressHeader(longCcName, longCcAddress))
+                .subject(subject)
+                .bodyText(textBody)
+                .importance(MessagePriority.HIGH)
+                .send(session.get());
         } finally {
             stop(wiser);
         }
@@ -338,8 +351,15 @@ public class MailMessageTest {
             person.setName(toName);
             person.setEmail(toAddress);
 
-            mailMessage.get().from(fromAddress, fromName).replyTo(replyToAddress).to(toAddress, toName).subject(subject)
-                    .bodyText(textBody).importance(MessagePriority.HIGH).messageId(messageId).send(session.get());
+            mailMessage.get()
+                .from(MailTestUtil.getAddressHeader(fromName, fromAddress))
+                .replyTo(replyToAddress)
+                .to(toAddress)
+                .subject(subject)
+                .bodyText(textBody)
+                .importance(MessagePriority.HIGH)
+                .messageId(messageId)
+                .send(session.get());
         } finally {
             stop(wiser);
         }
@@ -360,9 +380,14 @@ public class MailMessageTest {
             person.setName(toName);
             person.setEmail(toAddress);
 
-            mailMessage.get().from("seam seamerson@test.com", fromName).replyTo(replyToAddress).to(toAddress, toName)
-                    .subject(subject).bodyText(textBody).importance(MessagePriority.HIGH).messageId(messageId)
-                    .send(session.get());
+            mailMessage.get()
+                .from("seam seamerson@test.com", fromName)
+                .replyTo(replyToAddress).to(toAddress, toName)
+                .subject(subject)
+                .bodyText(textBody)
+                .importance(MessagePriority.HIGH)
+                .messageId(messageId)
+                .send(session.get());
         } finally {
             stop(wiser);
         }
@@ -381,8 +406,14 @@ public class MailMessageTest {
             person.setName(toName);
             person.setEmail(toAddress);
 
-            mailMessage.get().from(fromAddress, fromName).replyTo(replyToAddress).to(person).subject(subject)
-                    .bodyText(textBody).importance(MessagePriority.HIGH).messageId(messageId).send(session.get());
+            mailMessage.get()
+                .from(MailTestUtil.getAddressHeader(fromName, fromAddress))
+                .replyTo(replyToAddress)
+                .to(person).subject(subject)
+                .bodyText(textBody)
+                .importance(MessagePriority.HIGH)
+                .messageId(messageId)
+                .send(session.get());
         } finally {
             stop(wiser);
         }
@@ -425,8 +456,14 @@ public class MailMessageTest {
             person.setName(toName);
             person.setEmail(toAddress);
 
-            mailMessage.get().from(fromAddress, fromName).replyTo(replyToAddress).to(person).subject(subject)
-                    .bodyText(textBody).importance(MessagePriority.HIGH).messageId(messageId).send();
+            mailMessage.get()
+                .from(MailTestUtil.getAddressHeader(fromName, fromAddress))
+                .replyTo(replyToAddress)
+                .to(person).subject(subject)
+                .bodyText(textBody)
+                .importance(MessagePriority.HIGH)
+                .messageId(messageId)
+                .send();
         } finally {
             stop(wiser);
         }

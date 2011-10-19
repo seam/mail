@@ -47,21 +47,12 @@ public interface MailMessage {
     // Begin Recipients
 
     /**
-     * Convenience method to add a FROM address
+     * Convenience varargs method to add FROM address(es)
      * 
-     * @param address Email address of the recipient eq "john.doe@example.com"
-     * @throws InvalidAddressException if address is in invalid format
+     * @param address Address of the recipient eq "john.doe@example.com" or "John Doe<john.doe@example.com>"
+     * @throws InvalidAddressException if address(es) are in an invalid format
      */
-    public MailMessage from(String address);
-
-    /**
-     * Convenience method to add a FROM address
-     * 
-     * @param name Personal name of the recipient eg "John Doe"
-     * @param address Email address of the recipient eg "john.doe@example.com"
-     * @throws InvalidAddressException if address is in invalid format
-     */
-    public MailMessage from(String address, String name);
+    public MailMessage from(String... address);
 
     /**
      * Adds a From Address
@@ -85,21 +76,12 @@ public interface MailMessage {
     public MailMessage from(Collection<EmailContact> emailContacts);
 
     /**
-     * Convenience method to add a REPLY-TO address
+     * Convenience varargs method to add REPLY-TO address(es)
      * 
-     * @param address Email address of the recipient eq "john.doe@example.com
-     * @throws InvalidAddressException if address is in invalid format"
+     * @param address Address of the recipient eq "john.doe@example.com" or "John Doe<john.doe@example.com>"
+     * @throws InvalidAddressException if address(es) are in an invalid format
      */
-    public MailMessage replyTo(String address);
-
-    /**
-     * Convenience method to add a REPLY-TO name and address
-     * 
-     * @param name Personal name of the recipient eg "John Doe"
-     * @param address Email address of the recipient eg "john.doe@example.com"
-     * @throws InvalidAddressException if address is in invalid format
-     */
-    public MailMessage replyTo(String address, String name);
+    public MailMessage replyTo(String... address);
 
     /**
      * Adds a REPLY-TO Address
@@ -131,21 +113,12 @@ public interface MailMessage {
     public MailMessage addHeader(String name, String value);
 
     /**
-     * Convenience method to add a TO address
+     * Convenience varargs method to add TO address(es)
      * 
-     * @param address Email address of the recipient eq "john.doe@example.com"
-     * @throws InvalidAddressException if address is in invalid format
+     * @param address Address of the recipient eq "john.doe@example.com" or "John Doe<john.doe@example.com>"
+     * @throws InvalidAddressException if address(es) are in an invalid format
      */
-    public MailMessage to(String address);
-
-    /**
-     * Convenience method to add a TO recipient
-     * 
-     * @param name Personal name of the recipient eg "John Doe"
-     * @param address Email address of the recipient eg "john.doe@example.com"
-     * @throws InvalidAddressException if address is in invalid format
-     */
-    public MailMessage to(String address, String name);
+    public MailMessage to(String... address);
 
     /**
      * Add TO recipient
@@ -169,22 +142,12 @@ public interface MailMessage {
     public MailMessage to(Collection<EmailContact> emailContacts);
 
     /**
-     * Convenience method to add a CC (Carbon Copy) recipient
+     * Convenience varargs method to add CC address(es)
      * 
-     * @param address Email address of the recipient eg "john.doe@example.com"
-     * @throws InvalidAddressException if address is in invalid format
-     * 
+     * @param address Address of the recipient eq "john.doe@example.com" or "John Doe<john.doe@example.com>"
+     * @throws InvalidAddressException if address(es) are in an invalid format
      */
-    public MailMessage cc(String address);
-
-    /**
-     * Convenience method to add a CC (Carbon Copy) recipient
-     * 
-     * @param name Personal name of the recipient eg "John Doe"
-     * @param address Email address of the recipient eg "john.doe@example.com"
-     * @throws InvalidAddressException if address is in invalid format
-     */
-    public MailMessage cc(String address, String name);
+    public MailMessage cc(String... address);
 
     /**
      * Add CC (Carbon Copy) recipient
@@ -208,21 +171,12 @@ public interface MailMessage {
     public MailMessage cc(Collection<EmailContact> emailContacts);
 
     /**
-     * Convenience method to add a BCC (Blind Carbon Copy) recipient
+     * Convenience varargs method to add BCC address(es)
      * 
-     * @param address Email address of the recipient eg "john.doe@example.com"
-     * @throws InvalidAddressException if address is in invalid format
+     * @param address Address of the recipient eq "john.doe@example.com" or "John Doe<john.doe@example.com>"
+     * @throws InvalidAddressException if address(es) are in an invalid format
      */
-    public MailMessage bcc(String address);
-
-    /**
-     * Convenience method to add a BCC (Blind Carbon Copy) recipient
-     * 
-     * @param name Personal name of the recipient eg "John Doe"
-     * @param address Email address of the recipient eg "john.doe@example.com"
-     * @throws InvalidAddressException if address is in invalid format
-     */
-    public MailMessage bcc(String address, String name);
+    public MailMessage bcc(String... address);
 
     /**
      * Add BCC (Blind Carbon Copy) recipient

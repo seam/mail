@@ -19,6 +19,7 @@ package org.jboss.seam.mail.util;
 
 import java.io.UnsupportedEncodingException;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Properties;
@@ -45,14 +46,22 @@ import org.jboss.seam.mail.core.enumerations.RecipientType;
 /**
  * @author Cody Lerum
  */
-public class MailUtility 
-{
+public class MailUtility {
     public static InternetAddress internetAddress(String address) throws InvalidAddressException {
         try {
             return new InternetAddress(address);
         } catch (AddressException e) {
-            throw new InvalidAddressException(e);
+            throw new InvalidAddressException("Must be in format of a@b.com or Name<a@b.com> but was: \"" + address + "\"", e);
         }
+    }
+
+    public static Collection<InternetAddress> internetAddress(String... addresses) throws InvalidAddressException {
+        ArrayList<InternetAddress> result = new ArrayList<InternetAddress>();
+
+        for (String address : addresses) {
+            result.add(MailUtility.internetAddress(address));
+        }
+        return result;
     }
 
     public static InternetAddress internetAddress(String address, String name) throws InvalidAddressException {
@@ -109,16 +118,15 @@ public class MailUtility
     }
 
     public static Session createSession(MailConfig mailConfig) {
-        
-        if(!Strings.isNullOrBlank(mailConfig.getJndiSessionName()))
-        {
+
+        if (!Strings.isNullOrBlank(mailConfig.getJndiSessionName())) {
             try {
                 return InitialContext.doLookup(mailConfig.getJndiSessionName());
             } catch (NamingException e) {
                 throw new MailException("Unable to lookup JNDI JavaMail Session", e);
             }
         }
-        
+
         Session session;
 
         Properties props = new Properties();
@@ -185,7 +193,7 @@ public class MailUtility
         if (e.getSubject() != null) {
             b.setSubject(e.getSubject());
         }
-        
+
         if (e.getType() == EmailMessageType.STANDARD) {
 
             if (e.getHtmlBody() != null && e.getTextBody() != null) {

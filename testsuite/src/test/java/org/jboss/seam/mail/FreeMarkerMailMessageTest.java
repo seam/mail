@@ -118,9 +118,9 @@ public class FreeMarkerMailMessageTest {
             person.setEmail(toAddress);
 
             mailMessage.get()
-                    .from(fromAddress, fromName)
+                    .from(MailTestUtil.getAddressHeader(fromName, fromAddress))
                     .replyTo(replyToAddress)
-                    .to(toAddress, toName)
+                    .to(MailTestUtil.getAddressHeader(toName, toAddress))
                     .subject(new FreeMarkerTemplate(subject))
                     .bodyText(new FreeMarkerTemplate(resourceProvider.loadResourceStream("template.text.freemarker")))
                     .put("person", person)
@@ -171,8 +171,8 @@ public class FreeMarkerMailMessageTest {
             person.setEmail(toAddress);
 
             emailMessage = mailMessage.get()
-                    .from(fromAddress, fromName)
-                    .replyTo(replyToAddress, replyToName)
+                    .from(MailTestUtil.getAddressHeader(fromName, fromAddress))
+                    .replyTo(MailTestUtil.getAddressHeader(replyToName, replyToAddress))
                     .to(person)
                     .subject(subject)
                     .bodyHtml(new FreeMarkerTemplate(resourceProvider.loadResourceStream("template.html.freemarker")))
@@ -233,8 +233,8 @@ public class FreeMarkerMailMessageTest {
             person.setEmail(toAddress);
 
             emailMessage = mailMessage.get()
-                    .from(fromAddress, fromName)
-                    .to(person.getEmail(), person.getName())
+                    .from(MailTestUtil.getAddressHeader(fromName, fromAddress))
+                    .to(MailTestUtil.getAddressHeader(person.getName(), person.getEmail()))
                     .subject(subject)
                     .put("person", person)
                     .put("version", version)
@@ -308,8 +308,8 @@ public class FreeMarkerMailMessageTest {
             person.setEmail(toAddress);
 
             mailMessage.get()
-                    .from(fromAddress, fromName)
-                    .to(person.getEmail(), person.getName())
+                    .from(fromAddress)
+                    .to(person.getEmail())
                     .subject(subject)
                     .put("person", person)
                     .put("version", "Seam 3")
@@ -351,9 +351,9 @@ public class FreeMarkerMailMessageTest {
             person.setEmail(toAddress);
 
             mailMessage.get()
-                    .from(fromAddress, fromName)
+                    .from(fromAddress)
                     .replyTo(replyToAddress)
-                    .to(toAddress, toName)
+                    .to(toAddress)
                     .subject(new FreeMarkerTemplate(subject))
                     .bodyText(new FreeMarkerTemplate(resourceProvider.loadResourceStream("template.text.freemarker")))
                     .put("person", person)

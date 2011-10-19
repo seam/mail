@@ -69,13 +69,8 @@ public class MailMessageImpl implements MailMessage {
 
     // Begin Addressing
 
-    public MailMessage from(String address) {
-        emailMessage.addFromAddress(MailUtility.internetAddress(address));
-        return this;
-    }
-
-    public MailMessage from(String address, String name) {
-        emailMessage.addFromAddress(MailUtility.internetAddress(address, name));
+    public MailMessage from(String... address) {
+        emailMessage.addFromAddresses(MailUtility.internetAddress(address));
         return this;
     }
 
@@ -96,13 +91,8 @@ public class MailMessageImpl implements MailMessage {
         return this;
     }
 
-    public MailMessage replyTo(String address) {
-        emailMessage.addReplyToAddress(MailUtility.internetAddress(address));
-        return this;
-    }
-
-    public MailMessage replyTo(String address, String name) {
-        emailMessage.addReplyToAddress(MailUtility.internetAddress(address, name));
+    public MailMessage replyTo(String... address) {
+        emailMessage.addReplyToAddresses(MailUtility.internetAddress(address));
         return this;
     }
 
@@ -128,16 +118,11 @@ public class MailMessageImpl implements MailMessage {
         return this;
     }
 
-    public MailMessage to(String address) {
-        emailMessage.addToAddress(MailUtility.internetAddress(address));
+    public MailMessage to(String... address) {
+        emailMessage.addToAddresses(MailUtility.internetAddress(address));
         return this;
     }
-
-    public MailMessage to(String address, String name) {
-        emailMessage.addToAddress(MailUtility.internetAddress(address, name));
-        return this;
-    }
-
+    
     public MailMessage to(InternetAddress emailAddress) {
         emailMessage.addToAddress(emailAddress);
         return this;
@@ -155,13 +140,8 @@ public class MailMessageImpl implements MailMessage {
         return this;
     }
 
-    public MailMessage cc(String address) {
-        emailMessage.addCcAddress(MailUtility.internetAddress(address));
-        return this;
-    }
-
-    public MailMessage cc(String address, String name) {
-        emailMessage.addCcAddress(MailUtility.internetAddress(address, name));
+    public MailMessage cc(String... address) {
+        emailMessage.addCcAddresses(MailUtility.internetAddress(address));
         return this;
     }
 
@@ -182,13 +162,8 @@ public class MailMessageImpl implements MailMessage {
         return this;
     }
 
-    public MailMessage bcc(String address) {
-        emailMessage.addBccAddress(MailUtility.internetAddress(address));
-        return this;
-    }
-
-    public MailMessage bcc(String address, String name) {
-        emailMessage.addBccAddress(MailUtility.internetAddress(address, name));
+    public MailMessage bcc(String... address) {
+        emailMessage.addBccAddresses(MailUtility.internetAddress(address));
         return this;
     }
 

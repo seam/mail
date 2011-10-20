@@ -85,7 +85,7 @@ public class MailUtility {
         }
     }
 
-    public static Collection<InternetAddress> internetAddress(Collection<EmailContact> emailContacts)
+    public static Collection<InternetAddress> internetAddress(Collection<? extends EmailContact> emailContacts)
             throws InvalidAddressException {
         Set<InternetAddress> internetAddresses = new HashSet<InternetAddress>();
 

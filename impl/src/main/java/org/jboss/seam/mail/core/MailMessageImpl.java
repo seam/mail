@@ -86,7 +86,7 @@ public class MailMessageImpl implements MailMessage {
         return this;
     }
 
-    public MailMessage from(Collection<EmailContact> emailContacts) {
+    public MailMessage from(Collection<? extends EmailContact> emailContacts) {
         emailMessage.addFromAddresses(MailUtility.internetAddress(emailContacts));
         return this;
     }
@@ -108,7 +108,7 @@ public class MailMessageImpl implements MailMessage {
         return this;
     }
 
-    public MailMessage replyTo(Collection<EmailContact> emailContacts) {
+    public MailMessage replyTo(Collection<? extends EmailContact> emailContacts) {
         emailMessage.addReplyToAddresses(MailUtility.internetAddress(emailContacts));
         return this;
     }
@@ -135,7 +135,7 @@ public class MailMessageImpl implements MailMessage {
         return this;
     }
 
-    public MailMessage to(Collection<EmailContact> emailContacts) {
+    public MailMessage to(Collection<? extends EmailContact> emailContacts) {
         emailMessage.addToAddresses(MailUtility.internetAddress(emailContacts));
         return this;
     }
@@ -157,7 +157,7 @@ public class MailMessageImpl implements MailMessage {
         return this;
     }
 
-    public MailMessage cc(Collection<EmailContact> emailContacts) {
+    public MailMessage cc(Collection<? extends EmailContact> emailContacts) {
         emailMessage.addCcAddresses(MailUtility.internetAddress(emailContacts));
         return this;
     }
@@ -179,7 +179,7 @@ public class MailMessageImpl implements MailMessage {
         return this;
     }
 
-    public MailMessage bcc(Collection<EmailContact> emailContacts) {
+    public MailMessage bcc(Collection<? extends EmailContact> emailContacts) {
         emailMessage.addBccAddresses(MailUtility.internetAddress(emailContacts));
         return this;
     }
@@ -234,7 +234,7 @@ public class MailMessageImpl implements MailMessage {
         return this;
     }
 
-    public MailMessage addAttachment(Collection<EmailAttachment> attachments) {
+    public MailMessage addAttachments(Collection<? extends EmailAttachment> attachments) {
         emailMessage.addAttachments(attachments);
         return this;
     }

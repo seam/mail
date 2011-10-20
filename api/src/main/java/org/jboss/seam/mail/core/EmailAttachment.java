@@ -21,7 +21,13 @@ import java.util.Collection;
 
 import org.jboss.seam.mail.core.enumerations.ContentDisposition;
 
+/**
+ * 
+ * @author Cody Lerum
+ * 
+ */
 public interface EmailAttachment {
+
     public String getContentId();
 
     public String getFileName();

@@ -44,7 +44,8 @@ public class BaseAttachment implements EmailAttachment {
         this.bytes = bytes;
     }
 
-    public BaseAttachment(String fileName, String mimeType, ContentDisposition contentDisposition, byte[] bytes, String contentClass) {
+    public BaseAttachment(String fileName, String mimeType, ContentDisposition contentDisposition, byte[] bytes,
+            String contentClass) {
         this(fileName, mimeType, contentDisposition, bytes);
         this.addHeader(new Header("Content-Class", contentClass));
     }

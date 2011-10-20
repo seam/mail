@@ -73,7 +73,7 @@ public interface MailMessage {
      * 
      * @param emailContacts Collection of {@link EmailContact} to be added
      */
-    public MailMessage from(Collection<EmailContact> emailContacts);
+    public MailMessage from(Collection<? extends EmailContact> emailContacts);
 
     /**
      * Convenience varargs method to add REPLY-TO address(es)
@@ -102,7 +102,7 @@ public interface MailMessage {
      * 
      * @param emailContacts Collection of {@link EmailContact} to be added
      */
-    public MailMessage replyTo(Collection<EmailContact> emailContacts);
+    public MailMessage replyTo(Collection<? extends EmailContact> emailContacts);
 
     /**
      * Add header to the message.
@@ -139,7 +139,7 @@ public interface MailMessage {
      * 
      * @param emailContacts Collection of {@link EmailContact} to be added
      */
-    public MailMessage to(Collection<EmailContact> emailContacts);
+    public MailMessage to(Collection<? extends EmailContact> emailContacts);
 
     /**
      * Convenience varargs method to add CC address(es)
@@ -168,7 +168,7 @@ public interface MailMessage {
      * 
      * @param emailContacts Collection of {@link EmailContact} to be added
      */
-    public MailMessage cc(Collection<EmailContact> emailContacts);
+    public MailMessage cc(Collection<? extends EmailContact> emailContacts);
 
     /**
      * Convenience varargs method to add BCC address(es)
@@ -197,7 +197,7 @@ public interface MailMessage {
      * 
      * @param emailContacts Collection of {@link EmailContact} to be added
      */
-    public MailMessage bcc(Collection<EmailContact> emailContacts);
+    public MailMessage bcc(Collection<? extends EmailContact> emailContacts);
 
     // End Recipients
 
@@ -215,7 +215,7 @@ public interface MailMessage {
      * 
      * @param attachments
      */
-    public MailMessage addAttachment(Collection<EmailAttachment> attachments);
+    public MailMessage addAttachments(Collection<? extends EmailAttachment> attachments);
 
     /**
      * Adds Attachment to the message

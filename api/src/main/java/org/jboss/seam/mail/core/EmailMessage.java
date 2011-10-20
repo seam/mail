@@ -463,7 +463,7 @@ public class EmailMessage {
      *
      * @param attachments Collection of EmailAttachment
      */
-    public void addAttachments(Collection<EmailAttachment> attachments) {
+    public void addAttachments(Collection<? extends EmailAttachment> attachments) {
         for (EmailAttachment e : attachments) {
             addAttachment(e);
         }

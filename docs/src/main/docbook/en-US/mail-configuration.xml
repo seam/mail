@@ -57,6 +57,34 @@
    That is all the configuration necessary to send a simple email message. Next we will take a look at
    how to configure and use the supported templating engines.
 </para>
+<important>
+   <para>
+      JBoss AS 7.0.x does not correctly load all the modules to support sending mail <ulink url="https://issues.jboss.org/browse/AS7-1375">AS7-1375</ulink>.   
+      This is easily fixed By replacing the module definition at $JBOSS_HOME/modules/javax/activation/api/main/module.xml with
+      the following
+   </para>
+   <programlisting role="XML"><![CDATA[
+<module xmlns="urn:jboss:module:1.0" name="javax.activation.api">
+	<dependencies>
+        <module name="javax.api" />
+        <module name="javax.mail.api" >
+        	<imports><include path="META-INF"/></imports>
+        </module>	
+	</dependencies>        
+        
+	 <resources>
+        <resource-root path="activation-1.1.1.jar"/>
+            
+		<!-- Insert resources here -->
+    </resources>
+</module>]]>
+</programlisting>
+
+<para>
+	This will be fixed in AS 7.1.x
+</para>
+
+</important>
    </section>
 <!--
 vim:et:ts=3:sw=3:tw=120

@@ -8,7 +8,8 @@
    <title>Seam Mail</title>
    <xi:include href="mail-introduction.xml" xmlns:xi="http://www.w3.org/2001/XInclude" /> 
    <xi:include href="mail-configuration.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />  
-   <xi:include href="mail-velocity.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />  
-   <xi:include href="mail-freemarker.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />  
-
+   <xi:include href="mail-core.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />  
+   <xi:include href="mail-templating.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />  
+   <xi:include href="mail-advanced.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />  
+	
 </book>

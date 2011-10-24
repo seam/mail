@@ -39,13 +39,10 @@ import org.jboss.seam.mail.core.MailConfig;
 import org.jboss.seam.mail.core.SendFailedException;
 import org.jboss.seam.mail.core.enumerations.ContentDisposition;
 import org.jboss.seam.mail.core.enumerations.MessagePriority;
+import org.jboss.seam.mail.util.Deployments;
 import org.jboss.seam.mail.util.MailTestUtil;
 import org.jboss.seam.mail.util.MailUtility;
-import org.jboss.seam.mail.util.MavenArtifactResolver;
 import org.jboss.shrinkwrap.api.Archive;
-import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.asset.EmptyAsset;
-import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.jboss.solder.resourceLoader.ResourceProvider;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -58,17 +55,9 @@ import org.subethamail.wiser.Wiser;
 public class MailMessageTest {
     @Deployment(name = "mailMessage")
     public static Archive<?> createTestArchive() {
-        Archive<?> ar = ShrinkWrap
-                .create(WebArchive.class, "test.war")
+        return Deployments.baseDeployment()
                 .addAsResource("template.text.velocity")
-                .addPackages(true, MailMessageTest.class.getPackage())
-                // workaround for Weld EE embedded not properly reading Seam Solder jar
-                .addAsLibraries(MavenArtifactResolver.resolve("org.subethamail:subethasmtp",
-                        "org.jboss.solder:solder-impl"))
-                .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
-                .addAsWebInfResource("seam-beans.xml");
-                
-        return ar;
+                .addPackages(true, MailMessageTest.class.getPackage());
     }
 
     @Inject
@@ -106,6 +95,7 @@ public class MailMessageTest {
         String messageId = "1234@seam.test.com";
 
         Wiser wiser = new Wiser(mailConfig.getServerPort());
+        wiser.setHostname(mailConfig.getServerHost());
         try {
             wiser.start();
 
@@ -157,6 +147,7 @@ public class MailMessageTest {
         EmailMessage emailMessage;
 
         Wiser wiser = new Wiser(mailConfig.getServerPort());
+        wiser.setHostname(mailConfig.getServerHost());
         try {
             wiser.start();
 
@@ -216,6 +207,7 @@ public class MailMessageTest {
         String subject = "HTML+Text Message from Seam Mail - " + java.util.UUID.randomUUID().toString();
 
         Wiser wiser = new Wiser(mailConfig.getServerPort());
+        wiser.setHostname(mailConfig.getServerHost());
         try {
             wiser.start();
 
@@ -294,6 +286,7 @@ public class MailMessageTest {
         String longCcAddress = "cCSometimesPeopleHaveNamesWhichAreALotLongerThanYouEverExpectedSomeoneToHaveSoItisGoodToTestUpTo100CharactersOrSo.hatty@jboss.org";
 
         Wiser wiser = new Wiser(mailConfig.getServerPort());
+        wiser.setHostname(mailConfig.getServerHost());
         try {
             wiser.start();
 
@@ -344,7 +337,8 @@ public class MailMessageTest {
 
         // Port is one off so this should fail
         Wiser wiser = new Wiser(mailConfig.getServerPort() + 1);
-
+        wiser.setHostname(mailConfig.getServerHost());
+        
         try {
             wiser.start();
 
@@ -373,7 +367,8 @@ public class MailMessageTest {
 
         // Port is one off so this should fail
         Wiser wiser = new Wiser(mailConfig.getServerPort() + 1);
-
+        wiser.setHostname(mailConfig.getServerHost());
+        
         try {
             wiser.start();
 
@@ -400,6 +395,7 @@ public class MailMessageTest {
         String messageId = "1234@seam.test.com";
 
         Wiser wiser = new Wiser(mailConfig.getServerPort());
+        wiser.setHostname(mailConfig.getServerHost());
         try {
             wiser.start();
 
@@ -450,6 +446,7 @@ public class MailMessageTest {
         String messageId = "1234@seam.test.com";
 
         Wiser wiser = new Wiser(mailConfig.getServerPort());
+        wiser.setHostname(mailConfig.getServerHost());
         try {
             wiser.start();
 

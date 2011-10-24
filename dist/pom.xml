@@ -9,7 +9,6 @@
       <relativePath>../pom.xml</relativePath>
    </parent>
 
-   <groupId>org.jboss.seam.mail</groupId>
    <artifactId>seam-mail-distribution</artifactId>
    <name>Seam Mail Module Distribution</name>
    <description>Builds a Seam Mail module release distribution</description>
@@ -24,6 +23,7 @@
       <dependency>
          <groupId>org.jboss.seam.mail</groupId>
          <artifactId>seam-mail-api</artifactId>
+         <version>${project.version}</version>         
          <optional>true</optional>
       </dependency>
 
@@ -45,13 +45,14 @@
 
       <dependency>
          <groupId>org.jboss.seam.mail</groupId>
-         <artifactId>seam-mail-impl</artifactId>
+         <artifactId>seam-mail</artifactId>
+         <version>${project.version}</version>         
          <optional>true</optional>
       </dependency>
 
       <dependency>
          <groupId>org.jboss.seam.mail</groupId>
-         <artifactId>seam-mail-impl</artifactId>
+         <artifactId>seam-mail</artifactId>
          <version>${project.version}</version>
          <classifier>sources</classifier>
          <optional>true</optional>
@@ -64,16 +65,6 @@
          <type>war</type>
          <optional>true</optional>
       </dependency>
-
-      <!--
-      <dependency>
-         <groupId>org.jboss.seam.mail</groupId>
-         <artifactId>seam-mail-example-sendmail</artifactId>
-         <version>${project.version}</version>
-         <type>war</type>
-         <optional>true</optional>
-      </dependency>
-      -->
 
    </dependencies>
 

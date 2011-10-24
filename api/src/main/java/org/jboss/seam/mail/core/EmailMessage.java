@@ -66,9 +66,9 @@ public class EmailMessage {
     }
 
     /**
-     * Set the Root Mime SubType of the EmailMessage
+     * Set the Root Mime ContentType of the EmailMessage
      *
-     * @param rootSubType SubType to set
+     * @param rootContentType SubType to set
      */
     public void setRootContentType(ContentType rootContentType) {
         this.rootContentType = rootContentType;
@@ -131,7 +131,7 @@ public class EmailMessage {
     /**
      * Get the Collection of FROM addresses on the EmailMeassage
      *
-     * @return
+     * @return Collection of InternetAddresses addresses
      */
     public Collection<InternetAddress> getFromAddresses() {
         return fromAddresses;
@@ -463,7 +463,7 @@ public class EmailMessage {
      *
      * @param attachments Collection of EmailAttachment
      */
-    public void addAttachments(Collection<EmailAttachment> attachments) {
+    public void addAttachments(Collection<? extends EmailAttachment> attachments) {
         for (EmailAttachment e : attachments) {
             addAttachment(e);
         }

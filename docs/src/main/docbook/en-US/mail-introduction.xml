@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<chapter id="mail-introduction">
+   <title>Seam Mail Introduction</title>
+  
+   <para>
+      Seam mail is an portable CDI extension designed to make working with Java Mail easier via standard
+      methods or <literal>plugable</literal> templating engines.
+   </para>
+  
+   <section>
+      <title>Getting Started</title>
+      <para>
+	     No better way to start off then with a simple example to show what we are talking about.
+	  </para>
+	  
+<programlisting role="JAVA"><![CDATA[
+@Inject
+private Instance<MailMessage> mailMessage;
+	     
+public void sendMail() {
+
+	MailMessage m = mailMessage.get();
+	m.from("John Doe<john@test.com>")
+       .to("Jane Doe<jane@test.com>")
+       .subject(subject)
+       .bodyHtml(htmlBody)
+       .importance(MessagePriority.HIGH)
+       .send();
+}]]>
+</programlisting>
+	  
+	  <para>
+	     Very little is required to enable this level of functionality in your application. Let's
+	     start off with a little required configuration.
+	  </para>
+   </section>
+<!--
+vim:et:ts=3:sw=3:tw=120
+-->    
+</chapter>

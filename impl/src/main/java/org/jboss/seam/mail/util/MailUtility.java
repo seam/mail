@@ -19,6 +19,7 @@ package org.jboss.seam.mail.util;
 
 import java.io.UnsupportedEncodingException;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Properties;
@@ -28,12 +29,15 @@ import javax.mail.MessagingException;
 import javax.mail.Session;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 
 import org.jboss.seam.mail.core.BaseMailMessage;
 import org.jboss.seam.mail.core.EmailContact;
 import org.jboss.seam.mail.core.EmailMessage;
 import org.jboss.seam.mail.core.InvalidAddressException;
 import org.jboss.seam.mail.core.MailConfig;
+import org.jboss.seam.mail.core.MailException;
 import org.jboss.seam.mail.core.MailSessionAuthenticator;
 import org.jboss.seam.mail.core.SendFailedException;
 import org.jboss.seam.mail.core.enumerations.EmailMessageType;
@@ -47,8 +51,17 @@ public class MailUtility {
         try {
             return new InternetAddress(address);
         } catch (AddressException e) {
-            throw new InvalidAddressException(e);
+            throw new InvalidAddressException("Must be in format of a@b.com or Name<a@b.com> but was: \"" + address + "\"", e);
         }
+    }
+
+    public static Collection<InternetAddress> internetAddress(String... addresses) throws InvalidAddressException {
+        ArrayList<InternetAddress> result = new ArrayList<InternetAddress>();
+
+        for (String address : addresses) {
+            result.add(MailUtility.internetAddress(address));
+        }
+        return result;
     }
 
     public static InternetAddress internetAddress(String address, String name) throws InvalidAddressException {
@@ -72,7 +85,8 @@ public class MailUtility {
         }
     }
 
-    public static Collection<InternetAddress> internetAddress(Collection<EmailContact> emailContacts) throws InvalidAddressException {
+    public static Collection<InternetAddress> internetAddress(Collection<? extends EmailContact> emailContacts)
+            throws InvalidAddressException {
         Set<InternetAddress> internetAddresses = new HashSet<InternetAddress>();
 
         for (EmailContact ec : emailContacts) {
@@ -83,7 +97,7 @@ public class MailUtility {
     }
 
     public static InternetAddress[] getInternetAddressses(InternetAddress emaiAddress) {
-        InternetAddress[] internetAddresses = {emaiAddress};
+        InternetAddress[] internetAddresses = { emaiAddress };
 
         return internetAddresses;
     }
@@ -103,33 +117,45 @@ public class MailUtility {
         }
     }
 
-    public static Session buildMailSession(MailConfig mailConfig) {
+    public static Session createSession(MailConfig mailConfig) {
+
+        if (!Strings.isNullOrBlank(mailConfig.getJndiSessionName())) {
+            try {
+                return InitialContext.doLookup(mailConfig.getJndiSessionName());
+            } catch (NamingException e) {
+                throw new MailException("Unable to lookup JNDI JavaMail Session", e);
+            }
+        }
+
         Session session;
 
         Properties props = new Properties();
 
         if (mailConfig.isValid()) {
-            props.put("mail.smtp.host", mailConfig.getServerHost());
-            props.put("mail.smtp.port", mailConfig.getServerPort());
-            props.put("mail.smtp.starttls.enable", mailConfig.isEnableTls());
-            props.put("mail.smtp.starttls.required", mailConfig.isRequireTls());
-            props.put("mail.smtp.ssl.enable", mailConfig.isEnableSsl());
-            props.put("mail.smtp.auth", mailConfig.isAuth());
+            props.setProperty("mail.smtp.host", mailConfig.getServerHost());
+            props.setProperty("mail.smtp.port", mailConfig.getServerPort().toString());
+            props.setProperty("mail.smtp.starttls.enable", mailConfig.getEnableSsl().toString());
+            props.setProperty("mail.smtp.starttls.required", mailConfig.getRequireTls().toString());
+            props.setProperty("mail.smtp.ssl.enable", mailConfig.getEnableSsl().toString());
+            props.setProperty("mail.smtp.auth", mailConfig.getAuth().toString());
         } else {
-            throw new RuntimeException("ServerHost and ServerPort must be set in MailConfig");
+            throw new MailException("Server Host and Server  Port must be set in MailConfig");
         }
 
         if (!Strings.isNullOrBlank(mailConfig.getDomainName())) {
             props.put("mail.seam.domainName", mailConfig.getDomainName());
         }
 
-        if (mailConfig.getUsername() != null && mailConfig.getUsername().length() != 0 && mailConfig.getPassword() != null && mailConfig.getPassword().length() != 0) {
-            MailSessionAuthenticator authenticator = new MailSessionAuthenticator(mailConfig.getUsername(), mailConfig.getPassword());
+        if (mailConfig.getUsername() != null && mailConfig.getUsername().length() != 0 && mailConfig.getPassword() != null
+                && mailConfig.getPassword().length() != 0) {
+            MailSessionAuthenticator authenticator = new MailSessionAuthenticator(mailConfig.getUsername(),
+                    mailConfig.getPassword());
 
             session = Session.getInstance(props, authenticator);
         } else {
             session = Session.getInstance(props, null);
         }
+
         return session;
     }
 
@@ -183,7 +209,7 @@ public class MailUtility {
             b.setHTMLNotRelated(e.getHtmlBody());
             b.addAttachments(e.getAttachments());
         } else {
-            throw new RuntimeException("Unsupported Message Type: " + e.getType());
+            throw new SendFailedException("Unsupported Message Type: " + e.getType());
         }
         b.send();
 
@@ -191,7 +217,7 @@ public class MailUtility {
             e.setMessageId(null);
             e.setLastMessageId(MailUtility.headerStripper(b.getFinalizedMessage().getMessageID()));
         } catch (MessagingException e1) {
-            throw new RuntimeException("Unable to read Message-ID from sent message");
+            throw new SendFailedException("Unable to read Message-ID from sent message");
         }
     }
 }

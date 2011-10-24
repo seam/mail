@@ -15,22 +15,26 @@
  * limitations under the License.
  */
 
-package org.jboss.seam.mail.core;
+package org.jboss.seam.mail;
 
-import javax.enterprise.inject.Produces;
-import javax.mail.Session;
+import java.lang.annotation.Retention;
+import java.lang.annotation.Target;
 
-import org.jboss.seam.mail.util.MailUtility;
-import org.jboss.solder.core.ExtensionManaged;
+import javax.inject.Qualifier;
+
+import static java.lang.annotation.ElementType.FIELD;
+import static java.lang.annotation.ElementType.METHOD;
+import static java.lang.annotation.ElementType.PARAMETER;
+import static java.lang.annotation.ElementType.TYPE;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
+ * Used in testing to qualify a mock mail session to gmail.com
+ *
  * @author Cody Lerum
  */
-public class MailSessionProducer {
-
-    @Produces
-    @ExtensionManaged
-    public Session getMailSession(MailConfig mailConfig) {
-        return MailUtility.createSession(mailConfig);
-    }
+@Qualifier
+@Target({FIELD, METHOD, TYPE, PARAMETER})
+@Retention(RUNTIME)
+public @interface Gmail {
 }

@@ -8,14 +8,12 @@
       <relativePath>../pom.xml</relativePath>
    </parent>
 
-   <groupId>org.jboss.seam.mail</groupId>
    <artifactId>seam-mail-reference-guide</artifactId>
    <packaging>jdocbook</packaging>
    <name>Seam Mail Module Reference Guide</name>
 
    <properties>
       <pdf.name>seam-mail-reference-guide.pdf</pdf.name>
-      <weld.docbook.version>1.1.1-Beta5</weld.docbook.version>
    </properties>
 
    <build>
@@ -46,6 +44,18 @@
                         </artifact>
                      </artifacts>
                   </configuration>
+               </execution>
+               <execution>
+                 <id>attach-source</id>
+                 <phase>generate-sources</phase>
+                 <goals>
+                   <goal>add-source</goal>
+                 </goals>
+                 <configuration>
+                   <sources>
+                     <source>src/main/docbook/en-US</source>
+                   </sources>
+                 </configuration>
                </execution>
             </executions>
          </plugin>

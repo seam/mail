@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<chapter id="mail-configuration">
+   <title>Configuration</title>
+  
+   <para>
+      By default the configuration parameters for Seam Mail are handled via configuration read from
+      your application's seam-beans.xml. This file is then parsed by Seam Solder to configure the 
+      MailConfig class. You can override this and provide your own configuration outside of Seam Mail
+      but we will get into that later.
+   </para>
+  
+   <section>
+      <title>Minimal Configuration</title>
+      <para>
+	     First lets add the relevant maven configuration to your pom.xml
+	  </para>
+	  
+ <programlisting role="XML"><![CDATA[
+ <dependency>
+  <groupId>org.jboss.seam.mail</groupId>
+  <artifactId>seam-mail-impl</artifactId>
+  <version>${seam.mail.version}</version>
+</dependency>
+]]>
+</programlisting>
+	  
+	  <para>
+	     Now now that is out of the way lets provide <literal>JavaMail</literal> with the details of your <literal>SMTP</literal> server
+	     so that it can connect and send your mail on it's way.
+	  </para>
+	      
+	  <para>
+	     This configuration is handled via Seam Solder which reads in the configuration from your
+	     application's <literal>seam-beans.xml</literal> and configures the <literal>MailConfig</literal> class prior to injection.   
+	  </para>
+
+<programlisting role="XML"><![CDATA[
+<beans xmlns="http://java.sun.com/xml/ns/javaee"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:s="urn:java:ee"
+       xmlns:mail="urn:java:org.jboss.seam.mail.core"
+       xsi:schemaLocation="
+      http://java.sun.com/xml/ns/javaee
+      http://docs.jboss.org/cdi/beans_1_0.xsd">
+
+    <mail:MailConfig
+            serverHost="my-server.test.com"
+            serverPort="25">
+        <s:modifies/>
+    </mail:MailConfig>
+    
+</beans>]]>
+</programlisting>  
+
+<para>
+   That is all the configuration necessary to send a simple email message. Next we will take a look at
+   how to configure and use the supported templating engines.
+</para>
+<important>
+   <para>
+      JBoss AS 7.0.x does not correctly load all the modules to support sending mail <ulink url="https://issues.jboss.org/browse/AS7-1375">AS7-1375</ulink>.   
+      This is easily fixed By replacing the module definition at $JBOSS_HOME/modules/javax/activation/api/main/module.xml with
+      the following
+   </para>
+   <programlisting role="XML"><![CDATA[
+<module xmlns="urn:jboss:module:1.0" name="javax.activation.api">
+	<dependencies>
+        <module name="javax.api" />
+        <module name="javax.mail.api" >
+        	<imports><include path="META-INF"/></imports>
+        </module>	
+	</dependencies>        
+        
+	 <resources>
+        <resource-root path="activation-1.1.1.jar"/>
+            
+		<!-- Insert resources here -->
+    </resources>
+</module>]]>
+</programlisting>
+
+<para>
+	This will be fixed in AS 7.1.x
+</para>
+
+</important>
+   </section>
+<!--
+vim:et:ts=3:sw=3:tw=120
+-->    
+</chapter>

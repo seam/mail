@@ -1,0 +1,338 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.jboss.seam.mail</groupId>
+        <artifactId>seam-mail-parent</artifactId>
+        <version>3.1.0-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <artifactId>seam-mail-testsuite</artifactId>
+
+    <name>Seam Mail Test Suite</name>
+    <packaging>jar</packaging>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.jboss.arquillian.junit</groupId>
+            <artifactId>arquillian-junit-container</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jboss.solder</groupId>
+            <artifactId>solder-api</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jboss.solder</groupId>
+            <artifactId>solder-impl</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jboss.solder</groupId>
+            <artifactId>solder-tooling</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jboss.solder</groupId>
+            <artifactId>solder-logging</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>javax.mail</groupId>
+            <artifactId>mail</artifactId>
+            <version>1.4.1</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jboss.weld</groupId>
+            <artifactId>weld-core</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.freemarker</groupId>
+            <artifactId>freemarker</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        
+        <!-- Freemarker deps -->
+			
+		<dependency>
+			<groupId>jaxen</groupId>
+			<artifactId>jaxen</artifactId>
+			<version>1.0-FCS</version>
+			<scope>provided</scope>
+		</dependency>
+		
+		<dependency>
+			<groupId>saxpath</groupId>
+			<artifactId>saxpath</artifactId>
+			<version>1.0-FCS</version>
+			<scope>provided</scope>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.zeroturnaround</groupId>
+			<artifactId>javarebel-sdk</artifactId>
+			<version>1.2.2</version>
+			<scope>provided</scope>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.python</groupId>
+			<artifactId>jython</artifactId>
+			<version>2.2.1</version>
+			<scope>provided</scope>
+		</dependency>
+		
+		<dependency>
+        	<groupId>xalan</groupId>
+        	<artifactId>xalan</artifactId>
+        	<version>2.7.0</version>
+        	<scope>provided</scope>
+        </dependency>
+        
+        <!-- End Freemarker deps -->
+
+        <!-- Velocity deps -->
+        <dependency>
+            <groupId>org.apache.velocity</groupId>
+            <artifactId>velocity</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>jdom</groupId>
+            <artifactId>jdom</artifactId>
+            <version>1.0</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+            <version>1.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>ant</groupId>
+            <artifactId>ant</artifactId>
+            <version>1.6</version>
+        </dependency>
+        <!-- end Velocity Deps -->
+
+        <dependency>
+            <groupId>org.subethamail</groupId>
+            <artifactId>subethasmtp</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jboss.seam.mail</groupId>
+            <artifactId>seam-mail-api</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jboss.seam.mail</groupId>
+            <artifactId>seam-mail</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jboss.shrinkwrap.resolver</groupId>
+            <artifactId>shrinkwrap-resolver-impl-maven</artifactId>
+            <scope>test</scope>
+        </dependency>
+        
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <skip>true</skip>
+                    <systemProperties>
+                        <arquillian.launch>${arquillian}</arquillian.launch>
+                        <arquillian>${arquillian}</arquillian>
+                    </systemProperties>
+                </configuration>
+
+                <executions>
+                    <execution>
+                        <id>surefire-it</id>
+                        <phase>integration-test</phase>
+                        <goals>
+                            <goal>test</goal>
+                        </goals>
+                        <configuration>
+                            <skip>false</skip>
+                            <redirectTestOutputToFile>true</redirectTestOutputToFile>
+                            <trimStackTrace>false</trimStackTrace>
+                            <printSummary>true</printSummary>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+    <profiles>
+        <profile>
+            <id>weld-ee-embedded-1.1</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+                <property>
+                    <name>arquillian</name>
+                    <value>weld-ee-embedded-1.1</value>
+                </property>
+            </activation>
+
+            <dependencies>
+                <dependency>
+                    <groupId>org.jboss.seam.test</groupId>
+                    <artifactId>weld-ee-embedded-1.1</artifactId>
+                    <type>pom</type>
+                    <scope>test</scope>
+                </dependency>
+
+                <!-- EL impl needed for ElTest -->
+                <dependency>
+                    <groupId>org.glassfish.web</groupId>
+                    <artifactId>el-impl</artifactId>
+                    <scope>test</scope>
+                </dependency>
+
+            </dependencies>
+
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <configuration>
+                            <systemProperties>
+                                <arquillian.launch>weld-ee-embedded-1.1</arquillian.launch>
+                                <arquillian>weld-ee-embedded-1.1</arquillian>
+                            </systemProperties>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <profile>
+            <id>jbossas-managed-7</id>
+            <activation>
+                <property>
+                    <name>arquillian</name>
+                    <value>jbossas-managed-7</value>
+                </property>
+            </activation>
+
+            <dependencies>
+                <dependency>
+                    <groupId>org.jboss.seam.test</groupId>
+                    <artifactId>jbossas-managed-7</artifactId>
+                    <type>pom</type>
+                    <scope>test</scope>
+                </dependency>
+            </dependencies>
+
+            <build>
+               <plugins>
+                  <plugin>
+                     <groupId>org.apache.maven.plugins</groupId>
+                     <artifactId>maven-surefire-plugin</artifactId>
+                     <configuration>
+                        <excludes>
+                           <exclude>**/weld/**</exclude>
+                        </excludes>
+                     </configuration>
+                  </plugin>
+               </plugins>
+            </build>
+        </profile>
+
+        <profile>
+            <id>glassfish-embedded-3.1</id>
+            <activation>
+                <property>
+                    <name>arquillian</name>
+                    <value>glassfish-embedded-3.1</value>
+                </property>
+            </activation>
+
+            <dependencies>
+                <dependency>
+                    <groupId>org.jboss.seam.test</groupId>
+                    <artifactId>glassfish-embedded-3.1</artifactId>
+                    <type>pom</type>
+                    <scope>test</scope>
+                </dependency>
+            </dependencies>
+
+            <build>
+               <plugins>
+                  <plugin>
+                     <groupId>org.apache.maven.plugins</groupId>
+                     <artifactId>maven-surefire-plugin</artifactId>
+                     <configuration>
+                        <excludes>
+                           <exclude>**/weld/**</exclude>
+                        </excludes>
+                     </configuration>
+                  </plugin>
+               </plugins>
+            </build>
+        </profile>
+
+        <profile>
+            <id>glassfish-remote-3.1</id>
+            <activation>
+                <property>
+                    <name>arquillian</name>
+                    <value>glassfish-remote-3.1</value>
+                </property>
+            </activation>
+
+            <dependencies>
+                <dependency>
+                    <groupId>org.jboss.seam.test</groupId>
+                    <artifactId>glassfish-remote-3.1</artifactId>
+                    <type>pom</type>
+                    <scope>test</scope>
+                </dependency>
+            </dependencies>
+
+            <build>
+               <plugins>
+                  <plugin>
+                     <groupId>org.apache.maven.plugins</groupId>
+                     <artifactId>maven-surefire-plugin</artifactId>
+                     <configuration>
+                        <excludes>
+                           <exclude>**/weld/**</exclude>
+                        </excludes>
+                     </configuration>
+                  </plugin>
+               </plugins>
+            </build>
+        </profile>
+    </profiles>
+
+</project>

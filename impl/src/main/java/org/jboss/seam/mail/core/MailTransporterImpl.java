@@ -17,20 +17,26 @@
 
 package org.jboss.seam.mail.core;
 
-import javax.enterprise.inject.Produces;
 import javax.mail.Session;
 
 import org.jboss.seam.mail.util.MailUtility;
-import org.jboss.solder.core.ExtensionManaged;
 
 /**
+ * 
  * @author Cody Lerum
+ * 
  */
-public class MailSessionProducer {
+public class MailTransporterImpl implements MailTransporter {
 
-    @Produces
-    @ExtensionManaged
-    public Session getMailSession(MailConfig mailConfig) {
-        return MailUtility.createSession(mailConfig);
+    private Session session;
+
+    public MailTransporterImpl(Session session) {
+        this.session = session;
     }
+
+    public EmailMessage send(EmailMessage emailMessage) {
+        MailUtility.send(emailMessage, session);
+        return emailMessage;
+    }
+
 }

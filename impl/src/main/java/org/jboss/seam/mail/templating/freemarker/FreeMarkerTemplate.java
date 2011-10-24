@@ -32,8 +32,9 @@ import freemarker.template.Configuration;
 import freemarker.template.DefaultObjectWrapper;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
+
+import org.jboss.seam.mail.core.TemplatingException;
 import org.jboss.seam.mail.templating.TemplateProvider;
-import org.jboss.seam.mail.templating.TemplatingException;
 
 /**
  * @author Cody Lerum

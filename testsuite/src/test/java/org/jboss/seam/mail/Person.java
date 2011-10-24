@@ -15,22 +15,50 @@
  * limitations under the License.
  */
 
-package org.jboss.seam.mail.core;
+package org.jboss.seam.mail;
 
-import javax.enterprise.inject.Produces;
-import javax.mail.Session;
+import javax.enterprise.inject.Model;
+import javax.validation.constraints.NotNull;
 
-import org.jboss.seam.mail.util.MailUtility;
-import org.jboss.solder.core.ExtensionManaged;
+import org.jboss.seam.mail.core.EmailContact;
 
 /**
  * @author Cody Lerum
  */
-public class MailSessionProducer {
+@Model
+public class Person implements EmailContact {
+    private String name;
+    private String email;
 
-    @Produces
-    @ExtensionManaged
-    public Session getMailSession(MailConfig mailConfig) {
-        return MailUtility.createSession(mailConfig);
+    public Person() {
+
+    }
+
+    public Person(String name, String email) {
+        this.name = name;
+        this.email = email;
+    }
+
+    @NotNull
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    @NotNull
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    @Override
+    public String getAddress() {
+        return getEmail();
     }
 }

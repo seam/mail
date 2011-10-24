@@ -29,6 +29,8 @@ import org.jboss.seam.mail.core.EmailAttachment;
 import org.jboss.seam.mail.core.EmailContact;
 import org.jboss.seam.mail.core.EmailMessage;
 import org.jboss.seam.mail.core.InvalidAddressException;
+import org.jboss.seam.mail.core.MailConfig;
+import org.jboss.seam.mail.core.MailTransporter;
 import org.jboss.seam.mail.core.SendFailedException;
 import org.jboss.seam.mail.core.enumerations.ContentDisposition;
 import org.jboss.seam.mail.core.enumerations.ContentType;
@@ -45,21 +47,12 @@ public interface MailMessage {
     // Begin Recipients
 
     /**
-     * Convenience method to add a FROM address
+     * Convenience varargs method to add FROM address(es)
      * 
-     * @param address Email address of the recipient eq "john.doe@example.com"
-     * @throws InvalidAddressException if address is in invalid format
+     * @param address Address of the recipient eq "john.doe@example.com" or "John Doe<john.doe@example.com>"
+     * @throws InvalidAddressException if address(es) are in an invalid format
      */
-    public MailMessage from(String address);
-
-    /**
-     * Convenience method to add a FROM address
-     * 
-     * @param name Personal name of the recipient eg "John Doe"
-     * @param address Email address of the recipient eg "john.doe@example.com"
-     * @throws InvalidAddressException if address is in invalid format
-     */
-    public MailMessage from(String address, String name);
+    public MailMessage from(String... address);
 
     /**
      * Adds a From Address
@@ -80,24 +73,15 @@ public interface MailMessage {
      * 
      * @param emailContacts Collection of {@link EmailContact} to be added
      */
-    public MailMessage from(Collection<EmailContact> emailContacts);
+    public MailMessage from(Collection<? extends EmailContact> emailContacts);
 
     /**
-     * Convenience method to add a REPLY-TO address
+     * Convenience varargs method to add REPLY-TO address(es)
      * 
-     * @param address Email address of the recipient eq "john.doe@example.com
-     * @throws InvalidAddressException if address is in invalid format"
+     * @param address Address of the recipient eq "john.doe@example.com" or "John Doe<john.doe@example.com>"
+     * @throws InvalidAddressException if address(es) are in an invalid format
      */
-    public MailMessage replyTo(String address);
-
-    /**
-     * Convenience method to add a REPLY-TO name and address
-     * 
-     * @param name Personal name of the recipient eg "John Doe"
-     * @param address Email address of the recipient eg "john.doe@example.com"
-     * @throws InvalidAddressException if address is in invalid format
-     */
-    public MailMessage replyTo(String address, String name);
+    public MailMessage replyTo(String... address);
 
     /**
      * Adds a REPLY-TO Address
@@ -118,8 +102,8 @@ public interface MailMessage {
      * 
      * @param emailContacts Collection of {@link EmailContact} to be added
      */
-    public MailMessage replyTo(Collection<EmailContact> emailContacts);
-    
+    public MailMessage replyTo(Collection<? extends EmailContact> emailContacts);
+
     /**
      * Add header to the message.
      * 
@@ -127,23 +111,14 @@ public interface MailMessage {
      * @param value Header value
      */
     public MailMessage addHeader(String name, String value);
-    
-    /**
-     * Convenience method to add a TO address
-     * 
-     * @param address Email address of the recipient eq "john.doe@example.com"
-     * @throws InvalidAddressException if address is in invalid format
-     */
-    public MailMessage to(String address);
 
     /**
-     * Convenience method to add a TO recipient
+     * Convenience varargs method to add TO address(es)
      * 
-     * @param name Personal name of the recipient eg "John Doe"
-     * @param address Email address of the recipient eg "john.doe@example.com"
-     * @throws InvalidAddressException if address is in invalid format
+     * @param address Address of the recipient eq "john.doe@example.com" or "John Doe<john.doe@example.com>"
+     * @throws InvalidAddressException if address(es) are in an invalid format
      */
-    public MailMessage to(String address, String name);
+    public MailMessage to(String... address);
 
     /**
      * Add TO recipient
@@ -164,25 +139,15 @@ public interface MailMessage {
      * 
      * @param emailContacts Collection of {@link EmailContact} to be added
      */
-    public MailMessage to(Collection<EmailContact> emailContacts);
+    public MailMessage to(Collection<? extends EmailContact> emailContacts);
 
     /**
-     * Convenience method to add a CC (Carbon Copy) recipient
+     * Convenience varargs method to add CC address(es)
      * 
-     * @param address Email address of the recipient eg "john.doe@example.com"
-     * @throws InvalidAddressException if address is in invalid format
-     * 
+     * @param address Address of the recipient eq "john.doe@example.com" or "John Doe<john.doe@example.com>"
+     * @throws InvalidAddressException if address(es) are in an invalid format
      */
-    public MailMessage cc(String address);
-
-    /**
-     * Convenience method to add a CC (Carbon Copy) recipient
-     * 
-     * @param name Personal name of the recipient eg "John Doe"
-     * @param address Email address of the recipient eg "john.doe@example.com"
-     * @throws InvalidAddressException if address is in invalid format
-     */
-    public MailMessage cc(String address, String name);
+    public MailMessage cc(String... address);
 
     /**
      * Add CC (Carbon Copy) recipient
@@ -203,24 +168,15 @@ public interface MailMessage {
      * 
      * @param emailContacts Collection of {@link EmailContact} to be added
      */
-    public MailMessage cc(Collection<EmailContact> emailContacts);
+    public MailMessage cc(Collection<? extends EmailContact> emailContacts);
 
     /**
-     * Convenience method to add a BCC (Blind Carbon Copy) recipient
+     * Convenience varargs method to add BCC address(es)
      * 
-     * @param address Email address of the recipient eg "john.doe@example.com"
-     * @throws InvalidAddressException if address is in invalid format
+     * @param address Address of the recipient eq "john.doe@example.com" or "John Doe<john.doe@example.com>"
+     * @throws InvalidAddressException if address(es) are in an invalid format
      */
-    public MailMessage bcc(String address);
-
-    /**
-     * Convenience method to add a BCC (Blind Carbon Copy) recipient
-     * 
-     * @param name Personal name of the recipient eg "John Doe"
-     * @param address Email address of the recipient eg "john.doe@example.com"
-     * @throws InvalidAddressException if address is in invalid format
-     */
-    public MailMessage bcc(String address, String name);
+    public MailMessage bcc(String... address);
 
     /**
      * Add BCC (Blind Carbon Copy) recipient
@@ -241,7 +197,7 @@ public interface MailMessage {
      * 
      * @param emailContacts Collection of {@link EmailContact} to be added
      */
-    public MailMessage bcc(Collection<EmailContact> emailContacts);
+    public MailMessage bcc(Collection<? extends EmailContact> emailContacts);
 
     // End Recipients
 
@@ -259,7 +215,7 @@ public interface MailMessage {
      * 
      * @param attachments
      */
-    public MailMessage addAttachment(Collection<EmailAttachment> attachments);
+    public MailMessage addAttachments(Collection<? extends EmailAttachment> attachments);
 
     /**
      * Adds Attachment to the message
@@ -268,7 +224,6 @@ public interface MailMessage {
      * @param mimeType
      * @param contentDispostion
      * @param bytes
-     * @return
      */
     public MailMessage addAttachment(String fileName, String mimeType, ContentDisposition contentDispostion, byte[] bytes);
 
@@ -375,10 +330,10 @@ public interface MailMessage {
      * 
      */
     public MailMessage bodyHtmlTextAlt(String html, String text);
-    
-    
+
     /**
      * Set the Content Type of the message
+     * 
      * @param contentType
      */
     public MailMessage contentType(ContentType contentType);
@@ -401,12 +356,21 @@ public interface MailMessage {
     /**
      * Merge the templates with the context
      * 
-     * @return
+     * @return {@link EmailMessage} representing this {@link MailMessage} after merging
      */
     public EmailMessage mergeTemplates();
 
     /**
      * Send the Message
+     * 
+     * @param mailTransporter {@link MailTransporter} instance to used to send the {@link MailMessage}
+     * @return {@link EmailMessage} which represents the {@link MailMessage} as sent
+     * @throws SendFailedException If the messages fails to be sent.
+     */
+    public EmailMessage send(MailTransporter mailTransporter);
+
+    /**
+     * Send the Message using a specific JavaMail session
      * 
      * @param session {@link Session} to use to send the {@link MailMessage}
      * @return {@link EmailMessage} which represents the {@link MailMessage} as sent
@@ -415,7 +379,16 @@ public interface MailMessage {
     public EmailMessage send(Session session);
 
     /**
-     * Send the Message Asynchronously
+     * Send the Message using a JavaMail session created from this specific MailConfig
+     * 
+     * @param mailConfig {@link MailConfig} to use to send the {@link MailMessage}
+     * @return {@link EmailMessage} which represents the {@link MailMessage} as sent
+     * @throws SendFailedException If the messages fails to be sent.
+     */
+    public EmailMessage send(MailConfig mailConfig);
+
+    /**
+     * Send the Message using a default mail session created from a configured MailConfig
      * 
      * @return {@link EmailMessage} which represents the {@link MailMessage} as sent
      * @throws SendFailedException If the messages fails to be sent.
@@ -438,7 +411,7 @@ public interface MailMessage {
      * @param textBody {@link TemplateProvider} to use
      * @throws TemplatingException
      */
-    public MailMessage bodyText(TemplateProvider textbody);
+    public MailMessage bodyText(TemplateProvider textBody);
 
     /**
      * Sets the HTML body of the message to the HTML output of the given template
@@ -455,7 +428,7 @@ public interface MailMessage {
      * @param textBody {@link TemplateProvider} to use for Text alternative portion of message
      * @throws TemplatingException
      */
-    public MailMessage bodyHtmlTextAlt(TemplateProvider htmlBody, TemplateProvider textbody);
+    public MailMessage bodyHtmlTextAlt(TemplateProvider htmlBody, TemplateProvider textBody);
 
     /**
      * Places a variable in the templating engines context

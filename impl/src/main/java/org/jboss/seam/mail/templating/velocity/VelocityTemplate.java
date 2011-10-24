@@ -32,8 +32,8 @@ import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.exception.MethodInvocationException;
 import org.apache.velocity.exception.ParseErrorException;
 import org.apache.velocity.exception.ResourceNotFoundException;
+import org.jboss.seam.mail.core.TemplatingException;
 import org.jboss.seam.mail.templating.TemplateProvider;
-import org.jboss.seam.mail.templating.TemplatingException;
 
 /**
  * @author Cody Lerum

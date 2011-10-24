@@ -28,8 +28,8 @@
          <outputDirectory>artifacts</outputDirectory>
          <useProjectArtifact>false</useProjectArtifact>
          <includes>
-            <include>org.jboss.seam.mail:seam-mail--api</include>
-            <include>org.jboss.seam.mail:seam-mail--impl</include>
+            <include>org.jboss.seam.mail:seam-mail-api</include>
+            <include>org.jboss.seam.mail:seam-mail</include>
          </includes>
          <outputFileNameMapping>${artifact.artifactId}${dashClassifier?}.${artifact.extension}</outputFileNameMapping>
       </dependencySet>

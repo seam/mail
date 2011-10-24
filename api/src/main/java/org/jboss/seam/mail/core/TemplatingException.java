@@ -17,20 +17,28 @@
 
 package org.jboss.seam.mail.core;
 
-import javax.enterprise.inject.Produces;
-import javax.mail.Session;
-
-import org.jboss.seam.mail.util.MailUtility;
-import org.jboss.solder.core.ExtensionManaged;
 
 /**
+ * Thrown when a error occurs during template processing
+ *
  * @author Cody Lerum
  */
-public class MailSessionProducer {
+public class TemplatingException extends MailException {
+    private static final long serialVersionUID = 1L;
 
-    @Produces
-    @ExtensionManaged
-    public Session getMailSession(MailConfig mailConfig) {
-        return MailUtility.createSession(mailConfig);
+    public TemplatingException() {
+        super();
+    }
+
+    public TemplatingException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public TemplatingException(String message) {
+        super(message);
+    }
+
+    public TemplatingException(Throwable cause) {
+        super(cause);
     }
 }

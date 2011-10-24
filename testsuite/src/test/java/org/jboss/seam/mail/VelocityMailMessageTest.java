@@ -43,14 +43,11 @@ import org.jboss.seam.mail.core.enumerations.ContentDisposition;
 import org.jboss.seam.mail.core.enumerations.MessagePriority;
 import org.jboss.seam.mail.templating.velocity.CDIVelocityContext;
 import org.jboss.seam.mail.templating.velocity.VelocityTemplate;
+import org.jboss.seam.mail.util.Deployments;
 import org.jboss.seam.mail.util.EmailAttachmentUtil;
 import org.jboss.seam.mail.util.MailTestUtil;
-import org.jboss.seam.mail.util.MavenArtifactResolver;
 import org.jboss.seam.mail.util.SMTPAuthenticator;
 import org.jboss.shrinkwrap.api.Archive;
-import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.asset.EmptyAsset;
-import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.jboss.solder.resourceLoader.ResourceProvider;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -64,17 +61,11 @@ import org.subethamail.wiser.Wiser;
 public class VelocityMailMessageTest {
     @Deployment(name = "velocity")
     public static Archive<?> createTestArchive() {
-        Archive<?> ar = ShrinkWrap
-                .create(WebArchive.class, "test.war")
+        return Deployments.baseVelocityDeployment()
                 .addAsResource("template.text.velocity")
                 .addAsResource("template.html.velocity")
                 .addAsWebResource("seam-mail-logo.png")
-                .addPackages(true, VelocityMailMessageTest.class.getPackage())
-                .addAsLibraries(MavenArtifactResolver.resolve("org.subethamail:subethasmtp",
-                "org.apache.velocity:velocity:1.6.4", "org.jboss.solder:solder-impl"))
-                .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
-                .addAsWebInfResource("seam-beans.xml");              
-        return ar;
+                .addPackages(true, VelocityMailMessageTest.class.getPackage());
     }
 
     @Inject
@@ -166,6 +157,7 @@ public class VelocityMailMessageTest {
         EmailMessage emailMessage;
 
         Wiser wiser = new Wiser(mailConfig.getServerPort());
+        wiser.setHostname(mailConfig.getServerHost());
         try {
             wiser.start();
 
@@ -230,6 +222,7 @@ public class VelocityMailMessageTest {
         EmailMessage emailMessage;
 
         Wiser wiser = new Wiser(mailConfig.getServerPort());
+        wiser.setHostname(mailConfig.getServerHost());
         try {
             wiser.start();
 
@@ -307,8 +300,9 @@ public class VelocityMailMessageTest {
 
         mailConfig.setServerHost("localhost");
         mailConfig.setServerPort(8978);
-
+        
         Wiser wiser = new Wiser(mailConfig.getServerPort());
+        wiser.setHostname(mailConfig.getServerHost());
         wiser.getServer().setAuthenticationHandlerFactory(
                 new EasyAuthenticationHandlerFactory(new SMTPAuthenticator("test", "test12!")));
         try {
@@ -353,11 +347,10 @@ public class VelocityMailMessageTest {
         String uuid = java.util.UUID.randomUUID().toString();
         String subject = "Text Message from $version Mail - " + uuid;
         String version = "Seam 3";
-        mailConfig.setServerHost("localHost");
-        mailConfig.setServerPort(8977);
 
         // Port is two off so this should fail
         Wiser wiser = new Wiser(mailConfig.getServerPort() + 2);
+        wiser.setHostname(mailConfig.getServerHost());
         try {
             wiser.start();
 

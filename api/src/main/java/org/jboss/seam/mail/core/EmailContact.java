@@ -17,7 +17,13 @@
 
 package org.jboss.seam.mail.core;
 
+/**
+ * 
+ * @author Cody Lerum
+ * 
+ */
 public interface EmailContact {
+
     public String getName();
 
     public String getAddress();

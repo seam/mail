@@ -16,7 +16,7 @@
     <properties>
         <seam.version>3.1.0.Beta4</seam.version>
         <freemarker.version>2.3.16</freemarker.version>
-        <velocity.version>1.6.4</velocity.version>
+        <velocity.version>1.7</velocity.version>
     </properties>
 
     <modules>

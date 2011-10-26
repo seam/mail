@@ -21,7 +21,6 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringWriter;
@@ -87,8 +86,6 @@ public class VelocityTemplate implements TemplateProvider {
             throw new TemplatingException("Unable to find template", e);
         } catch (MethodInvocationException e) {
             throw new TemplatingException("Error processing method referenced in context", e);
-        } catch (IOException e) {
-            throw new TemplatingException("Error rendering output", e);
         }
 
         return writer.toString();

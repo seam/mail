@@ -47,7 +47,7 @@ import org.jboss.seam.mail.util.MailUtility;
  */
 public class BaseMailMessage {
     private RootMimeMessage rootMimeMessage;
-    private String charset;
+    private String charset = "UTF-8";
     private ContentType rootContentType;
     private Map<String, AttachmentPart> attachments = new HashMap<String, AttachmentPart>();
     private MimeMultipart rootMultipart;
@@ -67,10 +67,10 @@ public class BaseMailMessage {
     private void initialize() {
         rootMimeMessage = new RootMimeMessage(session);
         rootMultipart = new MimeMultipart(rootContentType.getValue());
-        charset = "UTF-8";
         setSentDate(new Date());
 
         try {
+            
             rootMimeMessage.setContent(rootMultipart);
         } catch (MessagingException e) {
             throw new RuntimeException("Unable to set RootMultiPart", e);
@@ -148,8 +148,8 @@ public class BaseMailMessage {
     public void setSubject(String value) {
         setSubject(value, "UTF-8");
     }
-
-    public void setSubject(String value, String charset) {
+    
+    private void setSubject(String value, String charset) {
         try {
             rootMimeMessage.setSubject(value, charset);
         } catch (MessagingException e) {

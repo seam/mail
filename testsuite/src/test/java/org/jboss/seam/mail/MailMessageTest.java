@@ -139,6 +139,52 @@ public class MailMessageTest {
         Assert.assertTrue(text.getContentType().startsWith("text/plain; charset=UTF-8"));
         Assert.assertEquals(textBody, MailTestUtil.getStringContent(text));
     }
+    
+    @Test
+    public void testTextMailMessageSpecialCharacters() throws MessagingException, IOException {
+                
+        String subject = "Sometimes subjects have speical characters like ü - " + java.util.UUID.randomUUID().toString();
+        String specialTextBody = "This is a Text Body with a special character - ü";
+
+        String messageId = "1234@seam.test.com";
+
+        Wiser wiser = new Wiser(mailConfig.getServerPort());
+        wiser.setHostname(mailConfig.getServerHost());
+        try {
+            wiser.start();
+
+            person.setName(toName);
+            person.setEmail(toAddress);
+
+            mailMessage.get()
+                .from(MailTestUtil.getAddressHeader(fromName, fromAddress))
+                .replyTo(replyToAddress)
+                .to(MailTestUtil.getAddressHeader(toName, toAddress))
+                .subject(subject)
+                .bodyText(specialTextBody)
+                .importance(MessagePriority.HIGH)
+                .messageId(messageId)
+                .send(session.get());
+        } finally {
+            stop(wiser);
+        }
+
+        Assert.assertTrue("Didn't receive the expected amount of messages. Expected 1 got " + wiser.getMessages().size(), wiser
+                .getMessages().size() == 1);
+
+        MimeMessage mess = wiser.getMessages().get(0).getMimeMessage();
+       
+        Assert.assertEquals("Subject has been modified", subject, MimeUtility.decodeText(MimeUtility.unfold(mess.getHeader("Subject", null))));
+
+        MimeMultipart mixed = (MimeMultipart) mess.getContent();
+        BodyPart text = mixed.getBodyPart(0);
+
+        Assert.assertTrue(mixed.getContentType().startsWith("multipart/mixed"));
+        Assert.assertEquals(1, mixed.getCount());
+
+        Assert.assertTrue(text.getContentType().startsWith("text/plain; charset=UTF-8"));
+        Assert.assertEquals(specialTextBody, MimeUtility.decodeText(MailTestUtil.getStringContent(text)));
+    }
 
     @Test
     public void testHTMLMailMessage() throws MessagingException, IOException {

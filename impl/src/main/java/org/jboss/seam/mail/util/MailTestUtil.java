@@ -18,13 +18,10 @@
 package org.jboss.seam.mail.util;
 
 import java.io.IOException;
-import java.io.InputStreamReader;
 
 import javax.mail.BodyPart;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMultipart;
-
-import com.google.common.io.CharStreams;
 
 /**
  * @author Cody Lerum
@@ -43,6 +40,6 @@ public class MailTestUtil {
     }
 
     public static String getStringContent(BodyPart bodyPart) throws IOException, MessagingException {
-        return CharStreams.toString(new InputStreamReader(bodyPart.getInputStream()));
+        return (String) bodyPart.getContent();
     }
 }

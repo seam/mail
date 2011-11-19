@@ -39,13 +39,10 @@ import org.jboss.seam.mail.core.MailConfig;
 import org.jboss.seam.mail.core.SendFailedException;
 import org.jboss.seam.mail.core.enumerations.ContentDisposition;
 import org.jboss.seam.mail.core.enumerations.MessagePriority;
+import org.jboss.seam.mail.util.Deployments;
 import org.jboss.seam.mail.util.MailTestUtil;
 import org.jboss.seam.mail.util.MailUtility;
-import org.jboss.seam.mail.util.MavenArtifactResolver;
 import org.jboss.shrinkwrap.api.Archive;
-import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.asset.EmptyAsset;
-import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.jboss.solder.resourceLoader.ResourceProvider;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -58,17 +55,9 @@ import org.subethamail.wiser.Wiser;
 public class MailMessageTest {
     @Deployment(name = "mailMessage")
     public static Archive<?> createTestArchive() {
-        Archive<?> ar = ShrinkWrap
-                .create(WebArchive.class, "test.war")
+        return Deployments.baseDeployment()
                 .addAsResource("template.text.velocity")
-                .addPackages(true, MailMessageTest.class.getPackage())
-                // workaround for Weld EE embedded not properly reading Seam Solder jar
-                .addAsLibraries(MavenArtifactResolver.resolve("org.subethamail:subethasmtp",
-                        "org.jboss.solder:solder-impl"))
-                .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
-                .addAsWebInfResource("seam-beans.xml");
-                
-        return ar;
+                .addPackages(true, MailMessageTest.class.getPackage());
     }
 
     @Inject
@@ -106,6 +95,7 @@ public class MailMessageTest {
         String messageId = "1234@seam.test.com";
 
         Wiser wiser = new Wiser(mailConfig.getServerPort());
+        wiser.setHostname(mailConfig.getServerHost());
         try {
             wiser.start();
 
@@ -149,6 +139,52 @@ public class MailMessageTest {
         Assert.assertTrue(text.getContentType().startsWith("text/plain; charset=UTF-8"));
         Assert.assertEquals(textBody, MailTestUtil.getStringContent(text));
     }
+    
+    @Test
+    public void testTextMailMessageSpecialCharacters() throws MessagingException, IOException {
+                
+        String subject = "Sometimes subjects have speical characters like ü - " + java.util.UUID.randomUUID().toString();
+        String specialTextBody = "This is a Text Body with a special character - ü";
+
+        String messageId = "1234@seam.test.com";
+
+        Wiser wiser = new Wiser(mailConfig.getServerPort());
+        wiser.setHostname(mailConfig.getServerHost());
+        try {
+            wiser.start();
+
+            person.setName(toName);
+            person.setEmail(toAddress);
+
+            mailMessage.get()
+                .from(MailTestUtil.getAddressHeader(fromName, fromAddress))
+                .replyTo(replyToAddress)
+                .to(MailTestUtil.getAddressHeader(toName, toAddress))
+                .subject(subject)
+                .bodyText(specialTextBody)
+                .importance(MessagePriority.HIGH)
+                .messageId(messageId)
+                .send(session.get());
+        } finally {
+            stop(wiser);
+        }
+
+        Assert.assertTrue("Didn't receive the expected amount of messages. Expected 1 got " + wiser.getMessages().size(), wiser
+                .getMessages().size() == 1);
+
+        MimeMessage mess = wiser.getMessages().get(0).getMimeMessage();
+       
+        Assert.assertEquals("Subject has been modified", subject, MimeUtility.decodeText(MimeUtility.unfold(mess.getHeader("Subject", null))));
+
+        MimeMultipart mixed = (MimeMultipart) mess.getContent();
+        BodyPart text = mixed.getBodyPart(0);
+
+        Assert.assertTrue(mixed.getContentType().startsWith("multipart/mixed"));
+        Assert.assertEquals(1, mixed.getCount());
+
+        Assert.assertTrue(text.getContentType().startsWith("text/plain; charset=UTF-8"));
+        Assert.assertEquals(specialTextBody, MimeUtility.decodeText(MailTestUtil.getStringContent(text)));
+    }
 
     @Test
     public void testHTMLMailMessage() throws MessagingException, IOException {
@@ -157,6 +193,7 @@ public class MailMessageTest {
         EmailMessage emailMessage;
 
         Wiser wiser = new Wiser(mailConfig.getServerPort());
+        wiser.setHostname(mailConfig.getServerHost());
         try {
             wiser.start();
 
@@ -216,6 +253,7 @@ public class MailMessageTest {
         String subject = "HTML+Text Message from Seam Mail - " + java.util.UUID.randomUUID().toString();
 
         Wiser wiser = new Wiser(mailConfig.getServerPort());
+        wiser.setHostname(mailConfig.getServerHost());
         try {
             wiser.start();
 
@@ -294,6 +332,7 @@ public class MailMessageTest {
         String longCcAddress = "cCSometimesPeopleHaveNamesWhichAreALotLongerThanYouEverExpectedSomeoneToHaveSoItisGoodToTestUpTo100CharactersOrSo.hatty@jboss.org";
 
         Wiser wiser = new Wiser(mailConfig.getServerPort());
+        wiser.setHostname(mailConfig.getServerHost());
         try {
             wiser.start();
 
@@ -344,7 +383,8 @@ public class MailMessageTest {
 
         // Port is one off so this should fail
         Wiser wiser = new Wiser(mailConfig.getServerPort() + 1);
-
+        wiser.setHostname(mailConfig.getServerHost());
+        
         try {
             wiser.start();
 
@@ -373,7 +413,8 @@ public class MailMessageTest {
 
         // Port is one off so this should fail
         Wiser wiser = new Wiser(mailConfig.getServerPort() + 1);
-
+        wiser.setHostname(mailConfig.getServerHost());
+        
         try {
             wiser.start();
 
@@ -400,6 +441,7 @@ public class MailMessageTest {
         String messageId = "1234@seam.test.com";
 
         Wiser wiser = new Wiser(mailConfig.getServerPort());
+        wiser.setHostname(mailConfig.getServerHost());
         try {
             wiser.start();
 
@@ -450,6 +492,7 @@ public class MailMessageTest {
         String messageId = "1234@seam.test.com";
 
         Wiser wiser = new Wiser(mailConfig.getServerPort());
+        wiser.setHostname(mailConfig.getServerHost());
         try {
             wiser.start();
 

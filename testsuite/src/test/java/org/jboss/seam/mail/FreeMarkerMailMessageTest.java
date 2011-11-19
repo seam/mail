@@ -41,14 +41,11 @@ import org.jboss.seam.mail.core.SendFailedException;
 import org.jboss.seam.mail.core.enumerations.ContentDisposition;
 import org.jboss.seam.mail.core.enumerations.MessagePriority;
 import org.jboss.seam.mail.templating.freemarker.FreeMarkerTemplate;
+import org.jboss.seam.mail.util.Deployments;
 import org.jboss.seam.mail.util.EmailAttachmentUtil;
 import org.jboss.seam.mail.util.MailTestUtil;
-import org.jboss.seam.mail.util.MavenArtifactResolver;
 import org.jboss.seam.mail.util.SMTPAuthenticator;
 import org.jboss.shrinkwrap.api.Archive;
-import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.asset.EmptyAsset;
-import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.jboss.solder.resourceLoader.ResourceProvider;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -62,15 +59,10 @@ import org.subethamail.wiser.Wiser;
 public class FreeMarkerMailMessageTest {
     @Deployment(name = "freemarker")
     public static Archive<?> createTestArchive() {
-        Archive<?> ar = ShrinkWrap.create(WebArchive.class, "test.war")
+        return Deployments.baseFreeMarkerDeployment()        
                 .addAsResource("template.text.freemarker", "template.text.freemarker")
                 .addAsResource("template.html.freemarker", "template.html.freemarker")
-                .addPackages(true, FreeMarkerMailMessageTest.class.getPackage())
-                .addAsLibraries(MavenArtifactResolver.resolve("org.subethamail:subethasmtp",
-                        "org.freemarker:freemarker", "org.jboss.solder:solder-impl"))
-                .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
-                .addAsWebInfResource("seam-beans.xml");                
-        return ar;
+                .addPackages(true, FreeMarkerMailMessageTest.class.getPackage());
     }
 
     @Inject
@@ -106,10 +98,8 @@ public class FreeMarkerMailMessageTest {
         String version = "Seam 3";
         String mergedSubject = "Text Message from " + version + " Mail - " + uuid;
 
-        mailConfig.setServerHost("localHost");
-        mailConfig.setServerPort(8977);
-
         Wiser wiser = new Wiser(mailConfig.getServerPort());
+        wiser.setHostname(mailConfig.getServerHost());
         try {
             wiser.start();
 
@@ -153,16 +143,71 @@ public class FreeMarkerMailMessageTest {
         Assert.assertTrue(text.getContentType().startsWith("text/plain; charset=UTF-8"));
         Assert.assertEquals(expectedTextBody(person.getName(), version), MailTestUtil.getStringContent(text));
     }
+    
+    @Test
+    public void testTextMailMessageSpecialCharacters() throws MessagingException, IOException {
+                
+        String uuid = java.util.UUID.randomUUID().toString();
+        String subject = "Special Char ü from ${version} Mail - " + uuid;
+        String version = "Seam 3";
+        String mergedSubject = "Special Char ü from " + version + " Mail - " + uuid;        
+        String specialTextBody = "This is a Text Body with a special character - ü - ${version}";
+        String mergedSpecialTextBody = "This is a Text Body with a special character - ü - " + version;
+
+
+        String messageId = "1234@seam.test.com";
+
+        Wiser wiser = new Wiser(mailConfig.getServerPort());
+        wiser.setHostname(mailConfig.getServerHost());
+        try {
+            wiser.start();
+
+            person.setName(toName);
+            person.setEmail(toAddress);
+
+            mailMessage.get()
+                .from(MailTestUtil.getAddressHeader(fromName, fromAddress))
+                .replyTo(replyToAddress)
+                .to(MailTestUtil.getAddressHeader(toName, toAddress))
+                .subject(new FreeMarkerTemplate(subject))
+                .bodyText(new FreeMarkerTemplate(specialTextBody))
+                .importance(MessagePriority.HIGH)
+                .messageId(messageId)
+                .put("version", version)
+                .send(session.get());
+        } finally {
+            stop(wiser);
+        }
+
+        Assert.assertTrue("Didn't receive the expected amount of messages. Expected 1 got " + wiser.getMessages().size(), wiser
+                .getMessages().size() == 1);
+
+        MimeMessage mess = wiser.getMessages().get(0).getMimeMessage();
+       
+        System.out.println(subject);
+        System.out.println(MimeUtility.decodeText(MimeUtility.unfold(mess.getHeader("Subject", null))));
+        System.out.println(mergedSubject);
+        
+        Assert.assertEquals("Subject has been modified", mergedSubject, MimeUtility.decodeText(MimeUtility.unfold(mess.getHeader("Subject", null))));
+
+        MimeMultipart mixed = (MimeMultipart) mess.getContent();
+        BodyPart text = mixed.getBodyPart(0);
+
+        Assert.assertTrue(mixed.getContentType().startsWith("multipart/mixed"));
+        Assert.assertEquals(1, mixed.getCount());
+
+        Assert.assertTrue(text.getContentType().startsWith("text/plain; charset=UTF-8"));
+        Assert.assertEquals(mergedSpecialTextBody, MimeUtility.decodeText(MailTestUtil.getStringContent(text)));
+    }
 
     @Test
     public void testFreeMarkerHTMLMailMessage() throws MessagingException, IOException {
         String subject = "HTML Message from Seam Mail - " + java.util.UUID.randomUUID().toString();
         String version = "Seam 3";
         EmailMessage emailMessage;
-        mailConfig.setServerHost("localHost");
-        mailConfig.setServerPort(8977);
-
+        
         Wiser wiser = new Wiser(mailConfig.getServerPort());
+        wiser.setHostname(mailConfig.getServerHost());
         try {
             wiser.start();
 
@@ -222,10 +267,9 @@ public class FreeMarkerMailMessageTest {
         String subject = "HTML+Text Message from Seam Mail - " + java.util.UUID.randomUUID().toString();
         String version = "Seam 3";
         EmailMessage emailMessage;
-        mailConfig.setServerHost("localHost");
-        mailConfig.setServerPort(8977);
-
+        
         Wiser wiser = new Wiser(mailConfig.getServerPort());
+        wiser.setHostname(mailConfig.getServerHost());
         try {
             wiser.start();
 
@@ -293,11 +337,10 @@ public class FreeMarkerMailMessageTest {
 
     @Test
     public void testSMTPSessionAuthentication() throws MessagingException, MalformedURLException {
-        String subject = "HTML+Text Message from Seam Mail - " + java.util.UUID.randomUUID().toString();
-
+        String subject = "HTML+Text Message from Seam Mail - " + java.util.UUID.randomUUID().toString();        
         mailConfig.setServerHost("localHost");
         mailConfig.setServerPort(8978);
-
+        
         Wiser wiser = new Wiser(mailConfig.getServerPort());
         wiser.getServer().setAuthenticationHandlerFactory(new EasyAuthenticationHandlerFactory(new SMTPAuthenticator("test", "test12!")));
         try {
@@ -338,11 +381,10 @@ public class FreeMarkerMailMessageTest {
         String uuid = java.util.UUID.randomUUID().toString();
         String subject = "Text Message from $version Mail - " + uuid;
         String version = "Seam 3";
-        mailConfig.setServerHost("localHost");
-        mailConfig.setServerPort(8977);
-
+        
         //Port is two off so this should fail
         Wiser wiser = new Wiser(mailConfig.getServerPort() + 2);
+        wiser.setHostname(mailConfig.getServerHost());        
         try {
             wiser.start();
 

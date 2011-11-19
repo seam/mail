@@ -56,4 +56,16 @@ public class Header implements Serializable {
     public void setValue(String value) {
         this.value = value;
     }
+
+    public boolean equals(Object o) {
+
+        Header h = (Header) o;
+
+        return name.equals(h.getName()) || value.equals(h.getValue());
+    }
+
+    public int hashCode() {
+        return name.hashCode() + value.hashCode();
+    }
+
 }

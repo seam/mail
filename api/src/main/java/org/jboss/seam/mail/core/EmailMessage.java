@@ -19,7 +19,7 @@ package org.jboss.seam.mail.core;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
+import java.util.List;
 
 import javax.mail.internet.InternetAddress;
 
@@ -38,21 +38,21 @@ public class EmailMessage {
     private EmailMessageType type = EmailMessageType.STANDARD;
     private String messageId;
     private String lastMessageId;
-    private Collection<InternetAddress> fromAddresses = new HashSet<InternetAddress>();
-    private Collection<InternetAddress> replyToAddresses = new HashSet<InternetAddress>();
-    private Collection<InternetAddress> toAddresses = new HashSet<InternetAddress>();
-    private Collection<InternetAddress> ccAddresses = new HashSet<InternetAddress>();
-    private Collection<InternetAddress> bccAddresses = new HashSet<InternetAddress>();
-    private Collection<Header> headers = new ArrayList<Header>();
+    private List<InternetAddress> fromAddresses = new ArrayList<InternetAddress>();
+    private List<InternetAddress> replyToAddresses = new ArrayList<InternetAddress>();
+    private List<InternetAddress> toAddresses = new ArrayList<InternetAddress>();
+    private List<InternetAddress> ccAddresses = new ArrayList<InternetAddress>();
+    private List<InternetAddress> bccAddresses = new ArrayList<InternetAddress>();
+    private List<Header> headers = new ArrayList<Header>();
 
     private String subject;
     private String textBody;
     private String htmlBody;
 
-    private Collection<EmailAttachment> attachments = new ArrayList<EmailAttachment>();
+    private List<EmailAttachment> attachments = new ArrayList<EmailAttachment>();
 
-    private Collection<InternetAddress> deliveryReceiptAddresses = new HashSet<InternetAddress>();
-    private Collection<InternetAddress> readReceiptAddresses = new HashSet<InternetAddress>();
+    private List<InternetAddress> deliveryReceiptAddresses = new ArrayList<InternetAddress>();
+    private List<InternetAddress> readReceiptAddresses = new ArrayList<InternetAddress>();
 
     private MessagePriority importance = MessagePriority.NORMAL;
 
@@ -133,8 +133,12 @@ public class EmailMessage {
      *
      * @return Collection of InternetAddresses addresses
      */
-    public Collection<InternetAddress> getFromAddresses() {
+    public List<InternetAddress> getFromAddresses() {
         return fromAddresses;
+    }
+    
+    public void setFromAddresses(List<InternetAddress> fromAddresses) {
+        this.fromAddresses = fromAddresses;
     }
 
     /**
@@ -161,8 +165,12 @@ public class EmailMessage {
      *
      * @return Collection of InternetAddresses addresses
      */
-    public Collection<InternetAddress> getReplyToAddresses() {
+    public List<InternetAddress> getReplyToAddresses() {
         return replyToAddresses;
+    }
+    
+    public void setReplyToAddresses(List<InternetAddress> replyToAddresses) {
+        this.replyToAddresses = replyToAddresses;
     }
 
     /**
@@ -189,7 +197,7 @@ public class EmailMessage {
      *
      * @return Collection of InternetAddresses addresses
      */
-    public Collection<InternetAddress> getToAddresses() {
+    public List<InternetAddress> getToAddresses() {
         return toAddresses;
     }
 
@@ -210,6 +218,10 @@ public class EmailMessage {
     public void addToAddresses(Collection<InternetAddress> toAddresses) {
         this.toAddresses.addAll(toAddresses);
     }
+    
+    public void setToAddresses(List<InternetAddress> toAddresses) {
+        this.toAddresses = toAddresses;
+    }
 
     /**
      * Remove an InternetAddress from the TO addressses
@@ -226,8 +238,12 @@ public class EmailMessage {
      *
      * @return Collection of InternetAddresses addresses
      */
-    public Collection<InternetAddress> getCcAddresses() {
+    public List<InternetAddress> getCcAddresses() {
         return ccAddresses;
+    }
+    
+    public void setCcAddresses(List<InternetAddress> ccAddresses) {
+        this.ccAddresses = ccAddresses;
     }
 
     /**
@@ -263,8 +279,12 @@ public class EmailMessage {
      *
      * @return Collection of InternetAddresses addresses
      */
-    public Collection<InternetAddress> getBccAddresses() {
+    public List<InternetAddress> getBccAddresses() {
         return bccAddresses;
+    }
+    
+    public void setBccAddresses(List<InternetAddress> bccAddresses) {
+        this.bccAddresses = bccAddresses;
     }
 
     /**
@@ -300,8 +320,12 @@ public class EmailMessage {
      *
      * @return Collection of Header
      */
-    public Collection<Header> getHeaders() {
+    public List<Header> getHeaders() {
         return headers;
+    }
+    
+    public void setHeaders(List<Header> headers) {
+        this.headers = headers;
     }
 
     /**
@@ -381,8 +405,12 @@ public class EmailMessage {
      *
      * @return Collection of InternetAddress
      */
-    public Collection<InternetAddress> getDeliveryReceiptAddresses() {
+    public List<InternetAddress> getDeliveryReceiptAddresses() {
         return deliveryReceiptAddresses;
+    }
+    
+    public void setDeliveryReceiptAddresses(List<InternetAddress> deliveryReceiptAddresses) {
+        this.deliveryReceiptAddresses = deliveryReceiptAddresses;
     }
 
     /**
@@ -408,8 +436,12 @@ public class EmailMessage {
      *
      * @return Collection of InternetAddress
      */
-    public Collection<InternetAddress> getReadReceiptAddresses() {
+    public List<InternetAddress> getReadReceiptAddresses() {
         return readReceiptAddresses;
+    }
+    
+    public void setReadReceiptAddresses(List<InternetAddress> readReceiptAddresses) {
+        this.readReceiptAddresses = readReceiptAddresses;
     }
 
     /**
@@ -474,7 +506,11 @@ public class EmailMessage {
      *
      * @return Collection of EmailAttachment
      */
-    public Collection<EmailAttachment> getAttachments() {
+    public List<EmailAttachment> getAttachments() {
         return attachments;
     }
+    
+    public void setAttachments(List<EmailAttachment> attachments) {
+        this.attachments = attachments;
+    }    
 }

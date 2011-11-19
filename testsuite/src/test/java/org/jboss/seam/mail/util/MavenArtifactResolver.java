@@ -50,7 +50,9 @@ import org.jboss.shrinkwrap.resolver.api.maven.MavenDependencyResolver;
 public class MavenArtifactResolver {
 
     public static Collection<JavaArchive> resolve(String qualifiedArtifactId) {
-        return DependencyResolvers.use(MavenDependencyResolver.class).loadMetadataFromPom("pom.xml")
+        return DependencyResolvers.use(MavenDependencyResolver.class)
+                .configureFrom("../settings.xml")
+                .loadMetadataFromPom("pom.xml")
                 .artifact(qualifiedArtifactId)
                 .resolveAs(JavaArchive.class);
     }

@@ -43,14 +43,11 @@ import org.jboss.seam.mail.core.enumerations.ContentDisposition;
 import org.jboss.seam.mail.core.enumerations.MessagePriority;
 import org.jboss.seam.mail.templating.velocity.CDIVelocityContext;
 import org.jboss.seam.mail.templating.velocity.VelocityTemplate;
+import org.jboss.seam.mail.util.Deployments;
 import org.jboss.seam.mail.util.EmailAttachmentUtil;
 import org.jboss.seam.mail.util.MailTestUtil;
-import org.jboss.seam.mail.util.MavenArtifactResolver;
 import org.jboss.seam.mail.util.SMTPAuthenticator;
 import org.jboss.shrinkwrap.api.Archive;
-import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.asset.EmptyAsset;
-import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.jboss.solder.resourceLoader.ResourceProvider;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -64,17 +61,11 @@ import org.subethamail.wiser.Wiser;
 public class VelocityMailMessageTest {
     @Deployment(name = "velocity")
     public static Archive<?> createTestArchive() {
-        Archive<?> ar = ShrinkWrap
-                .create(WebArchive.class, "test.war")
+        return Deployments.baseVelocityDeployment()
                 .addAsResource("template.text.velocity")
                 .addAsResource("template.html.velocity")
                 .addAsWebResource("seam-mail-logo.png")
-                .addPackages(true, VelocityMailMessageTest.class.getPackage())
-                .addAsLibraries(MavenArtifactResolver.resolve("org.subethamail:subethasmtp",
-                "org.apache.velocity:velocity:1.6.4", "org.jboss.solder:solder-impl"))
-                .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
-                .addAsWebInfResource("seam-beans.xml");              
-        return ar;
+                .addPackages(true, VelocityMailMessageTest.class.getPackage());
     }
 
     @Inject
@@ -158,6 +149,62 @@ public class VelocityMailMessageTest {
         Assert.assertTrue(text.getContentType().startsWith("text/plain; charset=UTF-8"));
         Assert.assertEquals(expectedTextBody(person.getName(), version), MailTestUtil.getStringContent(text));
     }
+    
+    @Test
+    public void testTextMailMessageSpecialCharacters() throws MessagingException, IOException {
+                
+        String uuid = java.util.UUID.randomUUID().toString();
+        String subject = "Special Char ü from $version Mail - " + uuid;
+        String version = "Seam 3";
+        String mergedSubject = "Special Char ü from " + version + " Mail - " + uuid;        
+        String specialTextBody = "This is a Text Body with a special character - ü - $version";
+        String mergedSpecialTextBody = "This is a Text Body with a special character - ü - " + version;
+
+
+        String messageId = "1234@seam.test.com";
+
+        Wiser wiser = new Wiser(mailConfig.getServerPort());
+        wiser.setHostname(mailConfig.getServerHost());
+        try {
+            wiser.start();
+
+            person.setName(toName);
+            person.setEmail(toAddress);
+
+            mailMessage.get()
+                .from(MailTestUtil.getAddressHeader(fromName, fromAddress))
+                .replyTo(replyToAddress)
+                .to(MailTestUtil.getAddressHeader(toName, toAddress))
+                .subject(new VelocityTemplate(subject))
+                .bodyText(new VelocityTemplate(specialTextBody))
+                .importance(MessagePriority.HIGH)
+                .messageId(messageId)
+                .put("version", version)
+                .send(session.get());
+        } finally {
+            stop(wiser);
+        }
+
+        Assert.assertTrue("Didn't receive the expected amount of messages. Expected 1 got " + wiser.getMessages().size(), wiser
+                .getMessages().size() == 1);
+
+        MimeMessage mess = wiser.getMessages().get(0).getMimeMessage();
+       
+        System.out.println(subject);
+        System.out.println(MimeUtility.decodeText(MimeUtility.unfold(mess.getHeader("Subject", null))));
+        System.out.println(mergedSubject);
+        
+        Assert.assertEquals("Subject has been modified", mergedSubject, MimeUtility.decodeText(MimeUtility.unfold(mess.getHeader("Subject", null))));
+
+        MimeMultipart mixed = (MimeMultipart) mess.getContent();
+        BodyPart text = mixed.getBodyPart(0);
+
+        Assert.assertTrue(mixed.getContentType().startsWith("multipart/mixed"));
+        Assert.assertEquals(1, mixed.getCount());
+
+        Assert.assertTrue(text.getContentType().startsWith("text/plain; charset=UTF-8"));
+        Assert.assertEquals(mergedSpecialTextBody, MimeUtility.decodeText(MailTestUtil.getStringContent(text)));
+    }
 
     @Test
     public void testVelocityHTMLMailMessage() throws MessagingException, IOException {
@@ -166,6 +213,7 @@ public class VelocityMailMessageTest {
         EmailMessage emailMessage;
 
         Wiser wiser = new Wiser(mailConfig.getServerPort());
+        wiser.setHostname(mailConfig.getServerHost());
         try {
             wiser.start();
 
@@ -230,6 +278,7 @@ public class VelocityMailMessageTest {
         EmailMessage emailMessage;
 
         Wiser wiser = new Wiser(mailConfig.getServerPort());
+        wiser.setHostname(mailConfig.getServerHost());
         try {
             wiser.start();
 
@@ -307,8 +356,9 @@ public class VelocityMailMessageTest {
 
         mailConfig.setServerHost("localhost");
         mailConfig.setServerPort(8978);
-
+        
         Wiser wiser = new Wiser(mailConfig.getServerPort());
+        wiser.setHostname(mailConfig.getServerHost());
         wiser.getServer().setAuthenticationHandlerFactory(
                 new EasyAuthenticationHandlerFactory(new SMTPAuthenticator("test", "test12!")));
         try {
@@ -353,11 +403,10 @@ public class VelocityMailMessageTest {
         String uuid = java.util.UUID.randomUUID().toString();
         String subject = "Text Message from $version Mail - " + uuid;
         String version = "Seam 3";
-        mailConfig.setServerHost("localHost");
-        mailConfig.setServerPort(8977);
 
         // Port is two off so this should fail
         Wiser wiser = new Wiser(mailConfig.getServerPort() + 2);
+        wiser.setHostname(mailConfig.getServerHost());
         try {
             wiser.start();
 

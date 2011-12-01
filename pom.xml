@@ -4,7 +4,7 @@
     <parent>
         <groupId>org.jboss.seam</groupId>
         <artifactId>seam-parent</artifactId>
-        <version>17</version>
+        <version>18</version>
     </parent>
 
     <groupId>org.jboss.seam.mail</groupId>
@@ -14,7 +14,7 @@
     <name>Seam Mail Module</name>
 
     <properties>
-        <seam.version>3.1.0.Beta5</seam.version>
+        <seam.version>3.1.0.CR1</seam.version>
         <freemarker.version>2.3.16</freemarker.version>
         <velocity.version>1.7</velocity.version>
     </properties>

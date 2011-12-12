@@ -55,6 +55,7 @@ public class MailMessageImpl implements MailMessage {
     private TemplateProvider htmlTemplate;
     private Map<String, Object> templateContext = new HashMap<String, Object>();
     private boolean templatesMerged;
+    private MailTransporter mailTransporter;
 
     @Inject
     @ExtensionManaged
@@ -122,7 +123,7 @@ public class MailMessageImpl implements MailMessage {
         emailMessage.addToAddresses(MailUtility.internetAddress(address));
         return this;
     }
-    
+
     public MailMessage to(InternetAddress emailAddress) {
         emailMessage.addToAddress(emailAddress);
         return this;
@@ -313,10 +314,14 @@ public class MailMessageImpl implements MailMessage {
         this.emailMessage = emailMessage;
     }
 
+    public void setMailTransporter(MailTransporter mailTransporter) {
+        this.mailTransporter = mailTransporter;
+    }
+
     public EmailMessage mergeTemplates() {
-        
+
         log.debug("Merging templates");
-        
+
         put("mailContext", new MailContext(EmailAttachmentUtil.getEmailAttachmentMap(emailMessage.getAttachments())));
 
         if (subjectTemplate != null) {
@@ -356,12 +361,18 @@ public class MailMessageImpl implements MailMessage {
     public EmailMessage send(Session session) throws SendFailedException {
         return send(new MailTransporterImpl(session));
     }
-    
+
     public EmailMessage send(MailConfig mailConfig) {
         return send(MailUtility.createSession(mailConfig));
     }
 
     public EmailMessage send() throws SendFailedException {
-        return this.send(session.get());
-    }    
+
+        if (mailTransporter != null) {
+            return mailTransporter.send(emailMessage);
+        } else {
+            return this.send(session.get());
+        }
+
+    }
 }

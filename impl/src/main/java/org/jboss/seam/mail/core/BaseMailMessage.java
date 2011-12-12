@@ -27,7 +27,6 @@ import java.util.UUID;
 
 import javax.mail.MessagingException;
 import javax.mail.Session;
-import javax.mail.Transport;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
@@ -70,7 +69,7 @@ public class BaseMailMessage {
         setSentDate(new Date());
 
         try {
-            
+
             rootMimeMessage.setContent(rootMultipart);
         } catch (MessagingException e) {
             throw new RuntimeException("Unable to set RootMultiPart", e);
@@ -148,7 +147,7 @@ public class BaseMailMessage {
     public void setSubject(String value) {
         setSubject(value, "UTF-8");
     }
-    
+
     private void setSubject(String value, String charset) {
         try {
             rootMimeMessage.setSubject(value, charset);
@@ -337,24 +336,9 @@ public class BaseMailMessage {
         return rootMimeMessage;
     }
 
-    public void finalizeMessage() {
-        addAttachmentsToMessage();
-    }
-
     public MimeMessage getFinalizedMessage() {
-        finalizeMessage();
+        addAttachmentsToMessage();
         return getRootMimeMessage();
-    }
-
-    public void send() {
-        finalizeMessage();
-
-        try {
-            Transport.send(rootMimeMessage);
-        } catch (MessagingException e) {
-            throw new SendFailedException("Send Failed", e);
-        }
-
     }
 
     private void addAttachmentsToMessage() {

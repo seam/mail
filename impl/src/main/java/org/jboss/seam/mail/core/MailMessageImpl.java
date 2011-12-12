@@ -369,7 +369,7 @@ public class MailMessageImpl implements MailMessage {
     public EmailMessage send() throws SendFailedException {
 
         if (mailTransporter != null) {
-            return mailTransporter.send(emailMessage);
+            return send(mailTransporter);
         } else {
             return this.send(session.get());
         }

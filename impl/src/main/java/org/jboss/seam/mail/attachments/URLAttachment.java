@@ -17,6 +17,7 @@
 
 package org.jboss.seam.mail.attachments;
 
+import com.google.common.io.ByteStreams;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -34,18 +35,14 @@ public class URLAttachment extends BaseAttachment {
     public URLAttachment(String url, String fileName, ContentDisposition contentDisposition) {
         super();
 
-        byte[] bytes;
         URLDataSource uds;
 
         try {
             uds = new URLDataSource(new URL(url));
-            bytes = new byte[uds.getInputStream().available()];
-            uds.getInputStream().read(bytes);
-
             super.setFileName(fileName);
             super.setMimeType(uds.getContentType());
             super.setContentDisposition(contentDisposition);
-            super.setBytes(bytes);
+            super.setBytes(ByteStreams.toByteArray(uds.getInputStream()));
         } catch (MalformedURLException e) {
             throw new AttachmentException("Wasn't able to create email attachment from URL: " + url, e);
         } catch (IOException e) {

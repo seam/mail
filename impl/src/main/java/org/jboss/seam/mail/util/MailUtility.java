@@ -27,8 +27,10 @@ import java.util.Set;
 
 import javax.mail.MessagingException;
 import javax.mail.Session;
+import javax.mail.Transport;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
@@ -173,7 +175,7 @@ public class MailUtility {
         }
     }
 
-    public static void send(EmailMessage e, Session session) throws SendFailedException {
+    public static MimeMessage createMimeMessage(EmailMessage e, Session session) {
         BaseMailMessage b = new BaseMailMessage(session, e.getRootContentType());
 
         if (!Strings.isNullOrBlank(e.getMessageId())) {
@@ -211,11 +213,23 @@ public class MailUtility {
         } else {
             throw new SendFailedException("Unsupported Message Type: " + e.getType());
         }
-        b.send();
+        
+        MimeMessage msg = b.getFinalizedMessage();       
 
+        return msg;
+    }
+
+    public static void send(EmailMessage e, Session session) throws SendFailedException {
+        MimeMessage msg = MailUtility.createMimeMessage(e, session);
+        try {
+            Transport.send(msg);
+        } catch (MessagingException e1) {
+            throw new SendFailedException("Send Failed", e1);
+        }
+        
         try {
             e.setMessageId(null);
-            e.setLastMessageId(MailUtility.headerStripper(b.getFinalizedMessage().getMessageID()));
+            e.setLastMessageId(MailUtility.headerStripper(msg.getMessageID()));
         } catch (MessagingException e1) {
             throw new SendFailedException("Unable to read Message-ID from sent message");
         }

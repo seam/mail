@@ -17,13 +17,15 @@
 
 package org.jboss.seam.mail.core;
 
+import java.io.InputStream;
+
 import javax.mail.MessagingException;
 import javax.mail.Session;
 import javax.mail.internet.MimeMessage;
 
 /**
  * Extends {@link MimeMessage} to allow for the setting of the Message-ID
- *
+ * 
  * @author cody.lerum
  */
 public class RootMimeMessage extends MimeMessage {
@@ -31,6 +33,10 @@ public class RootMimeMessage extends MimeMessage {
 
     public RootMimeMessage(Session session) {
         super(session);
+    }
+
+    public RootMimeMessage(Session session, InputStream inputStream) throws MessagingException {
+        super(session, inputStream);
     }
 
     @Override

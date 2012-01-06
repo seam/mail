@@ -354,6 +354,13 @@ public interface MailMessage {
     public void setEmailMessage(EmailMessage emailMessage);
 
     /**
+     * Optionally set a MailTransporter will will be used with the default send() method
+     * 
+     * @param mailTransporter
+     */
+    public void setMailTransporter(MailTransporter mailTransporter);
+
+    /**
      * Merge the templates with the context
      * 
      * @return {@link EmailMessage} representing this {@link MailMessage} after merging

@@ -59,8 +59,7 @@ import org.subethamail.wiser.Wiser;
 public class FreeMarkerMailMessageTest {
     @Deployment(name = "freemarker")
     public static Archive<?> createTestArchive() {
-        return Deployments.baseFreeMarkerDeployment()        
-                .addAsResource("template.text.freemarker", "template.text.freemarker")
+        return Deployments.baseFreeMarkerDeployment().addAsResource("template.text.freemarker", "template.text.freemarker")
                 .addAsResource("template.html.freemarker", "template.html.freemarker")
                 .addPackages(true, FreeMarkerMailMessageTest.class.getPackage());
     }
@@ -93,6 +92,9 @@ public class FreeMarkerMailMessageTest {
 
     @Test
     public void testFreeMarkerTextMailMessage() throws MessagingException, IOException {
+
+        EmailMessage e;
+
         String uuid = java.util.UUID.randomUUID().toString();
         String subject = "Text Message from ${version} Mail - " + uuid;
         String version = "Seam 3";
@@ -103,25 +105,19 @@ public class FreeMarkerMailMessageTest {
         try {
             wiser.start();
 
-
             person.setName(toName);
             person.setEmail(toAddress);
 
-            mailMessage.get()
-                    .from(MailTestUtil.getAddressHeader(fromName, fromAddress))
-                    .replyTo(replyToAddress)
-                    .to(MailTestUtil.getAddressHeader(toName, toAddress))
-                    .subject(new FreeMarkerTemplate(subject))
+            e = mailMessage.get().from(MailTestUtil.getAddressHeader(fromName, fromAddress)).replyTo(replyToAddress)
+                    .to(MailTestUtil.getAddressHeader(toName, toAddress)).subject(new FreeMarkerTemplate(subject))
                     .bodyText(new FreeMarkerTemplate(resourceProvider.loadResourceStream("template.text.freemarker")))
-                    .put("person", person)
-                    .put("version", version)
-                    .importance(MessagePriority.HIGH)
-                    .send(session.get());
+                    .put("person", person).put("version", version).importance(MessagePriority.HIGH).send(session.get());
         } finally {
             stop(wiser);
         }
 
-        Assert.assertTrue("Didn't receive the expected amount of messages. Expected 1 got " + wiser.getMessages().size(), wiser.getMessages().size() == 1);
+        Assert.assertTrue("Didn't receive the expected amount of messages. Expected 1 got " + wiser.getMessages().size(), wiser
+                .getMessages().size() == 1);
 
         MimeMessage mess = wiser.getMessages().get(0).getMimeMessage();
 
@@ -140,20 +136,22 @@ public class FreeMarkerMailMessageTest {
         Assert.assertTrue(mixed.getContentType().startsWith("multipart/mixed"));
         Assert.assertEquals(1, mixed.getCount());
 
-        Assert.assertTrue(text.getContentType().startsWith("text/plain; charset=UTF-8"));
+        Assert.assertTrue("Incorrect Charset: " + e.getCharset(),
+                text.getContentType().startsWith("text/plain; charset=" + e.getCharset()));
         Assert.assertEquals(expectedTextBody(person.getName(), version), MailTestUtil.getStringContent(text));
     }
-    
+
     @Test
     public void testTextMailMessageSpecialCharacters() throws MessagingException, IOException {
-                
+
+        EmailMessage e;
+
         String uuid = java.util.UUID.randomUUID().toString();
         String subject = "Special Char ü from ${version} Mail - " + uuid;
         String version = "Seam 3";
-        String mergedSubject = "Special Char ü from " + version + " Mail - " + uuid;        
+        String mergedSubject = "Special Char ü from " + version + " Mail - " + uuid;
         String specialTextBody = "This is a Text Body with a special character - ü - ${version}";
         String mergedSpecialTextBody = "This is a Text Body with a special character - ü - " + version;
-
 
         String messageId = "1234@seam.test.com";
 
@@ -165,16 +163,10 @@ public class FreeMarkerMailMessageTest {
             person.setName(toName);
             person.setEmail(toAddress);
 
-            mailMessage.get()
-                .from(MailTestUtil.getAddressHeader(fromName, fromAddress))
-                .replyTo(replyToAddress)
-                .to(MailTestUtil.getAddressHeader(toName, toAddress))
-                .subject(new FreeMarkerTemplate(subject))
-                .bodyText(new FreeMarkerTemplate(specialTextBody))
-                .importance(MessagePriority.HIGH)
-                .messageId(messageId)
-                .put("version", version)
-                .send(session.get());
+            e = mailMessage.get().from(MailTestUtil.getAddressHeader(fromName, fromAddress)).replyTo(replyToAddress)
+                    .to(MailTestUtil.getAddressHeader(toName, toAddress)).subject(new FreeMarkerTemplate(subject))
+                    .bodyText(new FreeMarkerTemplate(specialTextBody)).importance(MessagePriority.HIGH).messageId(messageId)
+                    .put("version", version).send(session.get());
         } finally {
             stop(wiser);
         }
@@ -183,12 +175,13 @@ public class FreeMarkerMailMessageTest {
                 .getMessages().size() == 1);
 
         MimeMessage mess = wiser.getMessages().get(0).getMimeMessage();
-       
+
         System.out.println(subject);
         System.out.println(MimeUtility.decodeText(MimeUtility.unfold(mess.getHeader("Subject", null))));
         System.out.println(mergedSubject);
-        
-        Assert.assertEquals("Subject has been modified", mergedSubject, MimeUtility.decodeText(MimeUtility.unfold(mess.getHeader("Subject", null))));
+
+        Assert.assertEquals("Subject has been modified", mergedSubject,
+                MimeUtility.decodeText(MimeUtility.unfold(mess.getHeader("Subject", null))));
 
         MimeMultipart mixed = (MimeMultipart) mess.getContent();
         BodyPart text = mixed.getBodyPart(0);
@@ -196,7 +189,8 @@ public class FreeMarkerMailMessageTest {
         Assert.assertTrue(mixed.getContentType().startsWith("multipart/mixed"));
         Assert.assertEquals(1, mixed.getCount());
 
-        Assert.assertTrue(text.getContentType().startsWith("text/plain; charset=UTF-8"));
+        Assert.assertTrue("Incorrect Charset: " + e.getCharset(),
+                text.getContentType().startsWith("text/plain; charset=" + e.getCharset()));
         Assert.assertEquals(mergedSpecialTextBody, MimeUtility.decodeText(MailTestUtil.getStringContent(text)));
     }
 
@@ -205,17 +199,17 @@ public class FreeMarkerMailMessageTest {
         String subject = "HTML Message from Seam Mail - " + java.util.UUID.randomUUID().toString();
         String version = "Seam 3";
         EmailMessage emailMessage;
-        
+
         Wiser wiser = new Wiser(mailConfig.getServerPort());
         wiser.setHostname(mailConfig.getServerHost());
         try {
             wiser.start();
 
-
             person.setName(toName);
             person.setEmail(toAddress);
 
-            emailMessage = mailMessage.get()
+            emailMessage = mailMessage
+                    .get()
                     .from(MailTestUtil.getAddressHeader(fromName, fromAddress))
                     .replyTo(MailTestUtil.getAddressHeader(replyToName, replyToAddress))
                     .to(person)
@@ -224,13 +218,15 @@ public class FreeMarkerMailMessageTest {
                     .put("person", person)
                     .put("version", version)
                     .importance(MessagePriority.HIGH)
-                    .addAttachment(new URLAttachment("http://design.jboss.org/seam/logo/final/seam_mail_85px.png", "seamLogo.png", ContentDisposition.INLINE))
-                    .send(session.get());
+                    .addAttachment(
+                            new URLAttachment("http://design.jboss.org/seam/logo/final/seam_mail_85px.png", "seamLogo.png",
+                                    ContentDisposition.INLINE)).send(session.get());
         } finally {
             stop(wiser);
         }
 
-        Assert.assertTrue("Didn't receive the expected amount of messages. Expected 1 got " + wiser.getMessages().size(), wiser.getMessages().size() == 1);
+        Assert.assertTrue("Didn't receive the expected amount of messages. Expected 1 got " + wiser.getMessages().size(), wiser
+                .getMessages().size() == 1);
 
         MimeMessage mess = wiser.getMessages().get(0).getMimeMessage();
 
@@ -255,8 +251,8 @@ public class FreeMarkerMailMessageTest {
         Assert.assertEquals(2, related.getCount());
 
         Assert.assertTrue(html.getContentType().startsWith("text/html"));
-        Assert.assertEquals(expectedHtmlBody(emailMessage, person.getName(), person.getEmail(), version), MailTestUtil.getStringContent(html));
-
+        Assert.assertEquals(expectedHtmlBody(emailMessage, person.getName(), person.getEmail(), version),
+                MailTestUtil.getStringContent(html));
 
         Assert.assertTrue(attachment1.getContentType().startsWith("image/png;"));
         Assert.assertEquals("seamLogo.png", attachment1.getFileName());
@@ -267,7 +263,7 @@ public class FreeMarkerMailMessageTest {
         String subject = "HTML+Text Message from Seam Mail - " + java.util.UUID.randomUUID().toString();
         String version = "Seam 3";
         EmailMessage emailMessage;
-        
+
         Wiser wiser = new Wiser(mailConfig.getServerPort());
         wiser.setHostname(mailConfig.getServerHost());
         try {
@@ -276,26 +272,29 @@ public class FreeMarkerMailMessageTest {
             person.setName(toName);
             person.setEmail(toAddress);
 
-            emailMessage = mailMessage.get()
+            emailMessage = mailMessage
+                    .get()
                     .from(MailTestUtil.getAddressHeader(fromName, fromAddress))
                     .to(MailTestUtil.getAddressHeader(person.getName(), person.getEmail()))
                     .subject(subject)
                     .put("person", person)
                     .put("version", version)
-                    .bodyHtmlTextAlt(
-                            new FreeMarkerTemplate(resourceProvider.loadResourceStream("template.html.freemarker")),
+                    .bodyHtmlTextAlt(new FreeMarkerTemplate(resourceProvider.loadResourceStream("template.html.freemarker")),
                             new FreeMarkerTemplate(resourceProvider.loadResourceStream("template.text.freemarker")))
                     .importance(MessagePriority.LOW)
                     .deliveryReceipt(fromAddress)
                     .readReceipt("seam.test")
-                    .addAttachment("template.html.freemarker", "text/html", ContentDisposition.ATTACHMENT, resourceProvider.loadResourceStream("template.html.freemarker"))
-                    .addAttachment(new URLAttachment("http://design.jboss.org/seam/logo/final/seam_mail_85px.png", "seamLogo.png", ContentDisposition.INLINE))
-                    .send();
+                    .addAttachment("template.html.freemarker", "text/html", ContentDisposition.ATTACHMENT,
+                            resourceProvider.loadResourceStream("template.html.freemarker"))
+                    .addAttachment(
+                            new URLAttachment("http://design.jboss.org/seam/logo/final/seam_mail_85px.png", "seamLogo.png",
+                                    ContentDisposition.INLINE)).send();
         } finally {
             stop(wiser);
         }
 
-        Assert.assertTrue("Didn't receive the expected amount of messages. Expected 1 got " + wiser.getMessages().size(), wiser.getMessages().size() == 1);
+        Assert.assertTrue("Didn't receive the expected amount of messages. Expected 1 got " + wiser.getMessages().size(), wiser
+                .getMessages().size() == 1);
 
         MimeMessage mess = wiser.getMessages().get(0).getMimeMessage();
 
@@ -323,7 +322,8 @@ public class FreeMarkerMailMessageTest {
         Assert.assertEquals(2, related.getCount());
 
         Assert.assertTrue(html.getContentType().startsWith("text/html"));
-        Assert.assertEquals(expectedHtmlBody(emailMessage, person.getName(), person.getEmail(), version), MailTestUtil.getStringContent(html));
+        Assert.assertEquals(expectedHtmlBody(emailMessage, person.getName(), person.getEmail(), version),
+                MailTestUtil.getStringContent(html));
 
         Assert.assertTrue(textAlt.getContentType().startsWith("text/plain"));
         Assert.assertEquals(expectedTextBody(person.getName(), version), MailTestUtil.getStringContent(textAlt));
@@ -337,39 +337,42 @@ public class FreeMarkerMailMessageTest {
 
     @Test
     public void testSMTPSessionAuthentication() throws MessagingException, MalformedURLException {
-        String subject = "HTML+Text Message from Seam Mail - " + java.util.UUID.randomUUID().toString();        
+        String subject = "HTML+Text Message from Seam Mail - " + java.util.UUID.randomUUID().toString();
         mailConfig.setServerHost("localHost");
         mailConfig.setServerPort(8978);
-        
+
         Wiser wiser = new Wiser(mailConfig.getServerPort());
-        wiser.getServer().setAuthenticationHandlerFactory(new EasyAuthenticationHandlerFactory(new SMTPAuthenticator("test", "test12!")));
+        wiser.getServer().setAuthenticationHandlerFactory(
+                new EasyAuthenticationHandlerFactory(new SMTPAuthenticator("test", "test12!")));
         try {
             wiser.start();
-
 
             person.setName(toName);
             person.setEmail(toAddress);
 
-            mailMessage.get()
+            mailMessage
+                    .get()
                     .from(fromAddress)
                     .to(person.getEmail())
                     .subject(subject)
                     .put("person", person)
                     .put("version", "Seam 3")
-                    .bodyHtmlTextAlt(
-                            new FreeMarkerTemplate(resourceProvider.loadResourceStream("template.html.freemarker")),
+                    .bodyHtmlTextAlt(new FreeMarkerTemplate(resourceProvider.loadResourceStream("template.html.freemarker")),
                             new FreeMarkerTemplate(resourceProvider.loadResourceStream("template.text.freemarker")))
                     .importance(MessagePriority.LOW)
                     .deliveryReceipt(fromAddress)
                     .readReceipt("seam.test")
-                    .addAttachment("template.html.freemarker", "text/html", ContentDisposition.ATTACHMENT, resourceProvider.loadResourceStream("template.html.freemarker"))
-                    .addAttachment(new URLAttachment("http://design.jboss.org/seam/logo/final/seam_mail_85px.png", "seamLogo.png", ContentDisposition.INLINE))
-                    .send(gmailSession);
+                    .addAttachment("template.html.freemarker", "text/html", ContentDisposition.ATTACHMENT,
+                            resourceProvider.loadResourceStream("template.html.freemarker"))
+                    .addAttachment(
+                            new URLAttachment("http://design.jboss.org/seam/logo/final/seam_mail_85px.png", "seamLogo.png",
+                                    ContentDisposition.INLINE)).send(gmailSession);
         } finally {
             stop(wiser);
         }
 
-        Assert.assertTrue("Didn't receive the expected amount of messages. Expected 1 got " + wiser.getMessages().size(), wiser.getMessages().size() == 1);
+        Assert.assertTrue("Didn't receive the expected amount of messages. Expected 1 got " + wiser.getMessages().size(), wiser
+                .getMessages().size() == 1);
 
         MimeMessage mess = wiser.getMessages().get(0).getMimeMessage();
 
@@ -381,27 +384,19 @@ public class FreeMarkerMailMessageTest {
         String uuid = java.util.UUID.randomUUID().toString();
         String subject = "Text Message from $version Mail - " + uuid;
         String version = "Seam 3";
-        
-        //Port is two off so this should fail
+
+        // Port is two off so this should fail
         Wiser wiser = new Wiser(mailConfig.getServerPort() + 2);
-        wiser.setHostname(mailConfig.getServerHost());        
+        wiser.setHostname(mailConfig.getServerHost());
         try {
             wiser.start();
-
 
             person.setName(toName);
             person.setEmail(toAddress);
 
-            mailMessage.get()
-                    .from(fromAddress)
-                    .replyTo(replyToAddress)
-                    .to(toAddress)
-                    .subject(new FreeMarkerTemplate(subject))
+            mailMessage.get().from(fromAddress).replyTo(replyToAddress).to(toAddress).subject(new FreeMarkerTemplate(subject))
                     .bodyText(new FreeMarkerTemplate(resourceProvider.loadResourceStream("template.text.freemarker")))
-                    .put("person", person)
-                    .put("version", version)
-                    .importance(MessagePriority.HIGH)
-                    .send(session.get());
+                    .put("person", person).put("version", version).importance(MessagePriority.HIGH).send(session.get());
         } finally {
             stop(wiser);
         }
@@ -419,7 +414,6 @@ public class FreeMarkerMailMessageTest {
         }
     }
 
-
     private static String expectedHtmlBody(EmailMessage emailMessage, String name, String email, String version) {
         StringBuilder sb = new StringBuilder();
 
@@ -427,7 +421,9 @@ public class FreeMarkerMailMessageTest {
         sb.append("<body>" + "\r\n");
         sb.append("<p><b>Dear <a href=\"mailto:" + email + "\">" + name + "</a>,</b></p>" + "\r\n");
         sb.append("<p>This is an example <i>HTML</i> email sent by " + version + " and FreeMarker.</p>" + "\r\n");
-        sb.append("<p><img src=\"cid:" + EmailAttachmentUtil.getEmailAttachmentMap(emailMessage.getAttachments()).get("seamLogo.png").getContentId() + "\" /></p>" + "\r\n");
+        sb.append("<p><img src=\"cid:"
+                + EmailAttachmentUtil.getEmailAttachmentMap(emailMessage.getAttachments()).get("seamLogo.png").getContentId()
+                + "\" /></p>" + "\r\n");
         sb.append("<p>It has an alternative text body for mail readers that don't support html.</p>" + "\r\n");
         sb.append("</body>" + "\r\n");
         sb.append("</html>");
@@ -440,7 +436,8 @@ public class FreeMarkerMailMessageTest {
 
         sb.append("Hello " + name + ",\r\n");
         sb.append("\r\n");
-        sb.append("This is the alternative text body for mail readers that don't support html. This was sent with " + version + " and FreeMarker.");
+        sb.append("This is the alternative text body for mail readers that don't support html. This was sent with " + version
+                + " and FreeMarker.");
 
         return sb.toString();
     }

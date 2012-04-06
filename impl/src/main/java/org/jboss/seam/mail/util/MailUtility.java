@@ -176,7 +176,7 @@ public class MailUtility {
     }
 
     public static MimeMessage createMimeMessage(EmailMessage e, Session session) {
-        BaseMailMessage b = new BaseMailMessage(session, e.getRootContentType());
+        BaseMailMessage b = new BaseMailMessage(session, e.getCharset(), e.getRootContentType());
 
         if (!Strings.isNullOrBlank(e.getMessageId())) {
             b.setMessageID(e.getMessageId());
@@ -213,8 +213,8 @@ public class MailUtility {
         } else {
             throw new SendFailedException("Unsupported Message Type: " + e.getType());
         }
-        
-        MimeMessage msg = b.getFinalizedMessage();       
+
+        MimeMessage msg = b.getFinalizedMessage();
 
         return msg;
     }
@@ -226,7 +226,7 @@ public class MailUtility {
         } catch (MessagingException e1) {
             throw new SendFailedException("Send Failed", e1);
         }
-        
+
         try {
             e.setMessageId(null);
             e.setLastMessageId(MailUtility.headerStripper(msg.getMessageID()));

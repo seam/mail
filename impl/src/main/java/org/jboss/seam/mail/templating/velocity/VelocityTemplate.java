@@ -31,6 +31,7 @@ import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.exception.MethodInvocationException;
 import org.apache.velocity.exception.ParseErrorException;
 import org.apache.velocity.exception.ResourceNotFoundException;
+import org.apache.velocity.runtime.RuntimeConstants;
 import org.jboss.seam.mail.core.TemplatingException;
 import org.jboss.seam.mail.templating.TemplateProvider;
 
@@ -45,6 +46,8 @@ public class VelocityTemplate implements TemplateProvider {
 
     public VelocityTemplate(InputStream inputStream) {
         velocityEngine = new VelocityEngine();
+        velocityEngine
+                .setProperty(RuntimeConstants.RUNTIME_LOG_LOGSYSTEM_CLASS, "org.apache.velocity.runtime.log.NullLogChute");
         this.inputStream = inputStream;
     }
 

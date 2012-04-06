@@ -32,6 +32,7 @@ import org.jboss.seam.mail.core.InvalidAddressException;
 import org.jboss.seam.mail.core.MailConfig;
 import org.jboss.seam.mail.core.MailTransporter;
 import org.jboss.seam.mail.core.SendFailedException;
+import org.jboss.seam.mail.core.TemplatingException;
 import org.jboss.seam.mail.core.enumerations.ContentDisposition;
 import org.jboss.seam.mail.core.enumerations.ContentType;
 import org.jboss.seam.mail.core.enumerations.MessagePriority;
@@ -330,6 +331,13 @@ public interface MailMessage {
      * 
      */
     public MailMessage bodyHtmlTextAlt(String html, String text);
+
+    /**
+     * Set the charset of the message. Otherwise defaults to Charset.defaultCharset()
+     * 
+     * @param contentType
+     */
+    public MailMessage charset(String charset);
 
     /**
      * Set the Content Type of the message

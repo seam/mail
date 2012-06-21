@@ -27,6 +27,7 @@ import javax.mail.internet.MimeMultipart;
 
 import org.jboss.seam.mail.attachments.InputStreamAttachment;
 import org.jboss.seam.mail.core.EmailMessage;
+import org.jboss.seam.mail.core.MailException;
 import org.jboss.seam.mail.core.enumerations.ContentDisposition;
 
 /**
@@ -38,26 +39,32 @@ public class MessageConverter {
 
     private EmailMessage emailMessage;
 
-    public static EmailMessage convert(Message m) throws MessagingException, IOException {
+    public static EmailMessage convert(Message m) throws MailException {
         MessageConverter mc = new MessageConverter();
         return mc.convertMessage(m);
     }
 
-    public EmailMessage convertMessage(Message m) throws MessagingException, IOException {
+    public EmailMessage convertMessage(Message m) throws MailException {
         emailMessage = new EmailMessage();
 
-        emailMessage.setFromAddresses(MailUtility.getInternetAddressses(m.getFrom()));
-        emailMessage.setToAddresses(MailUtility.getInternetAddressses(m.getRecipients(RecipientType.TO)));
-        emailMessage.setCcAddresses(MailUtility.getInternetAddressses(m.getRecipients(RecipientType.CC)));
-        emailMessage.setBccAddresses(MailUtility.getInternetAddressses(m.getRecipients(RecipientType.BCC)));
-        emailMessage.setSubject(m.getSubject());
-        emailMessage.setMessageId(m.getHeader("Message-ID")[0]);
-        emailMessage.addHeaders(MailUtility.getHeaders(m.getAllHeaders()));
+        try {
+            emailMessage.setFromAddresses(MailUtility.getInternetAddressses(m.getFrom()));
+            emailMessage.setToAddresses(MailUtility.getInternetAddressses(m.getRecipients(RecipientType.TO)));
+            emailMessage.setCcAddresses(MailUtility.getInternetAddressses(m.getRecipients(RecipientType.CC)));
+            emailMessage.setBccAddresses(MailUtility.getInternetAddressses(m.getRecipients(RecipientType.BCC)));
+            emailMessage.setSubject(m.getSubject());
+            emailMessage.setMessageId(m.getHeader("Message-ID")[0]);
+            emailMessage.addHeaders(MailUtility.getHeaders(m.getAllHeaders()));
 
-        if (m.getContentType().toLowerCase().contains("multipart/")) {
-            addMultiPart((MimeMultipart) m.getContent());
-        } else if (m.isMimeType("text/plain")) {
-            emailMessage.setTextBody((String) m.getContent());
+            if (m.getContentType().toLowerCase().contains("multipart/")) {
+                addMultiPart((MimeMultipart) m.getContent());
+            } else if (m.isMimeType("text/plain")) {
+                emailMessage.setTextBody((String) m.getContent());
+            }
+        } catch (IOException e) {
+            throw new MailException(e);
+        } catch (MessagingException e) {
+            throw new MailException(e);
         }
 
         return emailMessage;

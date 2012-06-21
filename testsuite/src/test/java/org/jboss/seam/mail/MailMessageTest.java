@@ -42,6 +42,7 @@ import org.jboss.seam.mail.core.enumerations.MessagePriority;
 import org.jboss.seam.mail.util.Deployments;
 import org.jboss.seam.mail.util.MailTestUtil;
 import org.jboss.seam.mail.util.MailUtility;
+import org.jboss.seam.mail.util.MessageConverter;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.solder.resourceLoader.ResourceProvider;
 import org.junit.Test;
@@ -133,6 +134,8 @@ public class MailMessageTest {
         Assert.assertTrue("Incorrect Charset: " + e.getCharset(),
                 text.getContentType().startsWith("text/plain; charset=" + e.getCharset()));
         Assert.assertEquals(textBody, MailTestUtil.getStringContent(text));
+        EmailMessage convertedMessage = MessageConverter.convert(mess);
+        Assert.assertEquals(convertedMessage.getSubject(), subject);
     }
 
     @Test
@@ -177,6 +180,8 @@ public class MailMessageTest {
         Assert.assertTrue("Incorrect Charset: " + e.getCharset(),
                 text.getContentType().startsWith("text/plain; charset=" + e.getCharset()));
         Assert.assertEquals(specialTextBody, MimeUtility.decodeText(MailTestUtil.getStringContent(text)));
+        EmailMessage convertedMessage = MessageConverter.convert(mess);
+        Assert.assertEquals(convertedMessage.getSubject(), subject);
     }
 
     @Test
@@ -239,6 +244,8 @@ public class MailMessageTest {
 
         Assert.assertTrue(attachment1.getContentType().startsWith("image/png;"));
         Assert.assertEquals("seamLogo.png", attachment1.getFileName());
+        EmailMessage convertedMessage = MessageConverter.convert(mess);
+        Assert.assertEquals(convertedMessage.getSubject(), subject);
     }
 
     @Test
@@ -310,6 +317,8 @@ public class MailMessageTest {
 
         Assert.assertTrue(inlineAttachment.getContentType().startsWith("image/png;"));
         Assert.assertEquals("seamLogo.png", inlineAttachment.getFileName());
+        EmailMessage convertedMessage = MessageConverter.convert(mess);
+        Assert.assertEquals(convertedMessage.getSubject(), subject);
     }
 
     @Test
@@ -365,6 +374,8 @@ public class MailMessageTest {
         Assert.assertTrue("Incorrect Charset: " + e.getCharset(),
                 text.getContentType().startsWith("text/plain; charset=" + e.getCharset()));
         Assert.assertEquals(textBody, MailTestUtil.getStringContent(text));
+        EmailMessage convertedMessage = MessageConverter.convert(mess);
+        Assert.assertEquals(convertedMessage.getSubject(), subject);
     }
 
     @Test(expected = SendFailedException.class)
@@ -460,6 +471,8 @@ public class MailMessageTest {
         Assert.assertTrue("Incorrect Charset: " + e.getCharset(),
                 text.getContentType().startsWith("text/plain; charset=" + e.getCharset()));
         Assert.assertEquals(textBody, MailTestUtil.getStringContent(text));
+        EmailMessage convertedMessage = MessageConverter.convert(mess);
+        Assert.assertEquals(convertedMessage.getSubject(), subject);
     }
 
     @Test
@@ -508,6 +521,8 @@ public class MailMessageTest {
         Assert.assertTrue("Incorrect Charset: " + e.getCharset(),
                 text.getContentType().startsWith("text/plain; charset=" + e.getCharset()));
         Assert.assertEquals(textBody, MailTestUtil.getStringContent(text));
+        EmailMessage convertedMessage = MessageConverter.convert(mess);
+        Assert.assertEquals(convertedMessage.getSubject(), subject);
     }
 
     /**

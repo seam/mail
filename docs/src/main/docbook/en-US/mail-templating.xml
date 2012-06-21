@@ -3,18 +3,65 @@
 <chapter id="mail-templating">
    <title>Templating</title>
   
+  	<section>
+      <title>Basics</title>
+      <para>
+         Instead of creating your message body as a String and setting it via the bodyText, bodyHtml and bodyHtmlTextAlt methods you can
+         use integrated templating to substitute variables for values. Seam Mail supports templating in any of the body parts as well as the subject.
+	  </para>
+	  
+	  <para>
+	  	The template can either be loaded as from a java.lang.String, java.io.File or java.io.InputStream
+	  </para>
+	  
+	  <para>
+	  	Values to be used in place of your template variables are loaded via the put method, as a Map or optionally resolved via EL in Velocity
+	  </para>
+	  	  
+   </section>
+  
    <section>
       <title>Velocity</title>
       <para>
-         TO DO
+         Example Usage. See Velocity documentation for syntax.
 	  </para>
+	  
+	<programlisting role="JAVA"><![CDATA[      	      	
+	MailMessage m = mailMessage.get();
+	m.subject(new VelocityTempalte("Weather for $city, $state")
+	m.bodyText(new VelocityTemplate(new File("myFile.template"));
+	m.put("city", "Boston");
+	m.put("state", "Massachusetts");
+	m.put("now", new Date());]]>
+	</programlisting>
+	
+	<para>
+		A Velocity Template can be optionally created with an CDI injected CDIVelocityContext. This adds the ability to resolve your variables
+		via the built in velocity context and a fall through to resolve CDI beans which are @Named.
+	</para>
+	
+	<programlisting role="JAVA"><![CDATA[
+	@Inject	  
+	private CDIVelocityContext cdiContext;
+	
+	MailMessage m = mailMessage.get();
+	m.bodyText(new VelocityTemplate(new File("myFile.template"), cdiContext);]]>
+	</programlisting>	  
    </section>
    
    <section>
-      <title>Freemarker</title>
+      <title>FreeMarker</title>
       <para>
-         TO DO
+         FreeMarker usage is essentially the same as Velocity except there is no EL functionality. Consult FreeMarker documentation for Syntax
 	  </para>
+	  
+	<programlisting role="JAVA"><![CDATA[      	      	
+	MailMessage m = mailMessage.get();
+	m.subject(new FreeMarkerTemplate("ATTN: ${name}")
+	m.bodyText(new FreeMarkerTemplate("Hello ${name} you have won 1M USD!"));
+	m.put("name", "Ed Mcmahon");]]>
+	</programlisting>
+	
    </section>
 <!--
 vim:et:ts=3:sw=3:tw=120

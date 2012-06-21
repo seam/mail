@@ -6,16 +6,139 @@
    <section>
       <title>MailTransporter</title>
       <para>
-         TO DO
+         MailTransporter is an interface that allows you to control how the message is handled when the send() method is called.
+         The default implementation simply sends the message with a javax.mail.Session. The main drawback of this is that the thread is blocked until
+         your configured email server accepts your messages. This can take milliseconds or minutes depending on the size of your message load on your SMTP
+         server. While this may be fine for most simple cases, larger applications may wish to employ a queuing function so that messages appear to send
+         instantly and do not block application execution.
 	  </para>
+	  
+	  <para>Overiding the default MailTransporter is simple</para>
+	  
+	  <programlisting role="JAVA"><![CDATA[
+	  MailTransporter myTransporter = new MailQueueTransporter();
+	  MailMessage msg = mailMessage.get();
+      msg.setMailTransporter(myTransporter);]]>
+      </programlisting>
+      
+      <para>
+      	A simple implementation might convert the message into a MimeMessage for sending and then fire as a CDI event
+      	so that a CDI @Observer can queue and send the message at a later time.  
+      </para>
+      
+      <para>
+		The MailTransporter might look something like this.  
+      </para>
+  
+  	<programlisting role="JAVA"><![CDATA[
+public class MailQueueTransporter implements Serializable, MailTransporter {
+
+  private static final long serialVersionUID = 1L;
+
+  @Inject
+  @QueuedEmail
+  private Event<MimeMessage> queueEvent;
+
+  @Inject
+  @ExtensionManaged
+  private Instance<Session> session;
+
+  @Override
+  public EmailMessage send(EmailMessage emailMessage) {
+
+      MimeMessage msg = MailUtility.createMimeMessage(emailMessage, session.get());
+      
+      queueEvent.fire(msg);	
+      
+      emailMessage.setMessageId(null);
+      
+      try {
+          emailMessage.setLastMessageId(msg.getMessageID());
+      }
+      catch (MessagingException e) {
+          throw new SendFailedException("Send Failed ", e);
+      }
+      return emailMessage;
+  }
+}]]>
+    </programlisting>
+      	  
    </section>
    
    <section>
       <title>MailConfig</title>
       <para>
-         TO DO
+         MailConfig supports the following options
 	  </para>
-   </section>
+	  
+	  <itemizedlist>
+	      <listitem>
+	         <para>serverHost - SMTP server to connect to</para>
+	      </listitem>
+	      <listitem>
+	         <para>serverPort - Port to connect to SMTP server</para>
+	      </listitem>
+	      <listitem>
+	         <para>domainName - Used to build the Message-ID header. Format is UUID@domainName (uses <literal>java.net.InetAddress.getLocalHost().getHostName()</literal> if unset)</para>
+	      </listitem>	      
+	      <listitem>
+	         <para>username - Used when your SMTP server requires authentication</para>
+	      </listitem>
+	      <listitem>
+	         <para>password - Used when your SMTP server requires authentication</para>
+	      </listitem>
+	      <listitem>
+	         <para>enableTls - Allow TLS to be used on this connection</para>
+	      </listitem>
+	      <listitem>
+	         <para>requireTls - Require TLS to be used on this connection</para>
+	      </listitem>
+	      <listitem>
+	         <para>enableSsl - Allow SSL to be used on this connection</para>
+	      </listitem>
+	      <listitem>
+	         <para>auth - Used when your SMTP server requires authentication</para>
+	      </listitem>
+	      <listitem>
+	         <para>jndiSessionName - Load the javax.mail.Session via JNDI rather than creating a new one</para>
+	      </listitem>
+      </itemizedlist>
+ </section>
+ 
+ <section>
+ 	<title>EmailMessage</title>
+ 	
+ 	<para>
+ 		The MimeMessage as defined by javax.mail is a flexible and thus complicated object to work with in it's simplest configuration. 
+ 		Once multiple content types and attachments are added it can be downright confusing. To make working messages easier to work with, Seam Mail provides the 
+ 		EmailMessage.java class as part of it's core implementation. An instance of EmailMessage is returned from all of the send methods as well after
+ 		manually calling template merge methods.
+ 	</para>
+ 	
+ 	<para>
+ 		While Seam Mail does not provide a mechanism to receive messages it does provide a way to convert a <literal>javax.mail.MimeMessage</literal> 
+ 		or <literal>javax.mail.Message</literal> received via POP or IMAP back into a <literal>EmailMessage.java</literal> for easy of reading and
+ 		manipulation via the MessageConverter.
+ 	</para>
+ 	
+<programlisting role="JAVA"><![CDATA[
+Session session = Session.getInstance(pop3Props, null);
+Store store = new POP3SSLStore(session, url);
+store.connect();
+
+Folder inbox = store.getFolder("INBOX");
+inbox.open(Folder.READ_ONLY);
+
+Message[] messages = inbox.getMessages();
+List<EmailMessage> emailMessages = new LinkedList<EmailMessage>();
+for (Message m : messages) {
+    EmailMessage e = MessageConverter.convert(m);
+    emailMessages.add(e);
+}
+inbox.close(false);
+store.close();]]>
+</programlisting> 	
+</section> 	
 <!--
 vim:et:ts=3:sw=3:tw=120
 -->    

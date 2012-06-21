@@ -29,7 +29,7 @@ import org.jboss.seam.mail.core.enumerations.EmailMessageType;
 import org.jboss.seam.mail.core.enumerations.MessagePriority;
 
 /**
- * Stores infomation about an EmailMessage while it is being build and after sending
+ * Stores information about an EmailMessage while it is being built and after sending
  * 
  * @author Cody Lerum
  */

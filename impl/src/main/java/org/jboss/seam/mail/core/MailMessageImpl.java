@@ -291,6 +291,11 @@ public class MailMessageImpl implements MailMessage {
         return this;
     }
 
+    public MailMessage charset(String charset) {
+        emailMessage.setCharset(charset);
+        return this;
+    }
+
     public MailMessage contentType(ContentType contentType) {
         emailMessage.setRootContentType(contentType);
         return this;

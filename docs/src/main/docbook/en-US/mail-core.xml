@@ -116,20 +116,78 @@
       	User user;
       	
 		MailMessage m = mailMessage.get();
-		m.from("John Doe<john@test.com>")
-		.to(user)]]>
+		m.from("John Doe<john@test.com>");
+		m.to(user);]]>
 		</programlisting>
       	
       </section>
       
       <section>
       	<title>Content</title>
-      	<para>TODO</para>
+      	<para>Adding content to a message is simply a matter of calling the appropriate method</para>
+      	
+      	<para>For plain text body</para>
+      	<programlisting role="JAVA"><![CDATA[      	      	
+		MailMessage m = mailMessage.get();
+		m.bodyText("This is the body of my message");]]>
+		</programlisting>
+		
+		<para>For HTML body</para>
+      	<programlisting role="JAVA"><![CDATA[      	      	
+		MailMessage m = mailMessage.get();
+		m.bodyHtml("This is the <b>body</b> of my message");]]>
+		</programlisting>
+		
+		<para>For HTML + plain text alternative body</para>
+      	<programlisting role="JAVA"><![CDATA[      	      	
+		MailMessage m = mailMessage.get();
+		m.bodyHtmlTextAlt("This is the <b>body</b> of my message", "This is a plain text alternative");]]>
+		</programlisting>
+      	
       </section>
       
       <section>
       	<title>Attachments</title>
-      	<para>TODO</para>
+      	<para>Attachments can be added using a few different implementations of the EmailAttachment.java interface</para>
+      	
+      	<itemizedlist>
+	      <listitem>
+	         <para>BaseAttachment.java: byte[]</para>
+	      </listitem>
+	      <listitem>
+	         <para>InputStreamAttachment.java: java.io.InputStream</para>
+	      </listitem>
+	      <listitem>
+	         <para>FileAttachment.java: java.io.File</para>
+	      </listitem>	      
+	      <listitem>
+	         <para>URLAttachment.java: Loads attachment from URL</para>
+	      </listitem>
+      	</itemizedlist>
+      
+      <para>
+      	Attachments are added by providing the relevant information per implementations as well as a ContentDisposition which
+      	specifics if the attachment is simply "ATTACHMENT" or "INLINE" which allows the attachment to be referenced in the body 
+      	when using templating
+      </para>
+      	<programlisting role="JAVA"><![CDATA[      	      	
+		MailMessage m = mailMessage.get();
+		m.addAttachment(new FileAttachment(ContentDispostion.ATTACHMENT, new File("myFile"));]]>
+		</programlisting>
+		
+		<para>Here is how to reference an attachment inline. Inline attachments are referenced by their filename.</para>
+		
+		<programlisting role="HTML"><![CDATA[
+		<html xmlns="http://www.w3.org/1999/xhtml">
+			<body>
+				<p><b>Dear <a href="mailto:$person.email">$person.name</a>,</b></p>
+				<p>This is an example <i>HTML</i> email sent by $version and Velocity.</p>
+				<p><img src="$mailContext.insert("seamLogo.png")" /></p>
+				<p>It has an alternative text body for mail readers that don't support html.</p>
+			</body>
+		</html>]]>
+		</programlisting>
+      	
       </section>
 	  
    </section>

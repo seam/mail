@@ -46,21 +46,18 @@ import org.jboss.seam.mail.util.MailUtility;
  */
 public class BaseMailMessage {
     private RootMimeMessage rootMimeMessage;
-    private String charset = "UTF-8";
+    private String charset;
     private ContentType rootContentType;
     private Map<String, AttachmentPart> attachments = new HashMap<String, AttachmentPart>();
     private MimeMultipart rootMultipart;
     private MimeMultipart relatedMultipart = new MimeMultipart(ContentType.RELATED.getValue());
     private Session session;
 
-    public BaseMailMessage(Session session, ContentType rootContentType) {
+    public BaseMailMessage(Session session, String charset, ContentType rootContentType) {
         this.session = session;
         this.rootContentType = rootContentType;
+        this.charset = charset;
         initialize();
-    }
-
-    public BaseMailMessage(Session session) {
-        this(session, ContentType.MIXED);
     }
 
     private void initialize() {
@@ -145,7 +142,7 @@ public class BaseMailMessage {
     }
 
     public void setSubject(String value) {
-        setSubject(value, "UTF-8");
+        setSubject(value, charset);
     }
 
     private void setSubject(String value, String charset) {

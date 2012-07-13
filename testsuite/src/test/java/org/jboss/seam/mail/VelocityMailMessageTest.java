@@ -19,7 +19,6 @@ package org.jboss.seam.mail;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
 
 import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
@@ -46,6 +45,7 @@ import org.jboss.seam.mail.templating.velocity.VelocityTemplate;
 import org.jboss.seam.mail.util.Deployments;
 import org.jboss.seam.mail.util.EmailAttachmentUtil;
 import org.jboss.seam.mail.util.MailTestUtil;
+import org.jboss.seam.mail.util.MessageConverter;
 import org.jboss.seam.mail.util.SMTPAuthenticator;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.solder.resourceLoader.ResourceProvider;
@@ -61,10 +61,8 @@ import org.subethamail.wiser.Wiser;
 public class VelocityMailMessageTest {
     @Deployment(name = "velocity")
     public static Archive<?> createTestArchive() {
-        return Deployments.baseVelocityDeployment()
-                .addAsResource("template.text.velocity")
-                .addAsResource("template.html.velocity")
-                .addAsWebResource("seam-mail-logo.png")
+        return Deployments.baseVelocityDeployment().addAsResource("template.text.velocity")
+                .addAsResource("template.html.velocity").addAsWebResource("seam-mail-logo.png")
                 .addPackages(true, VelocityMailMessageTest.class.getPackage());
     }
 
@@ -99,10 +97,13 @@ public class VelocityMailMessageTest {
 
     @Test
     public void testVelocityTextMailMessage() throws MessagingException, IOException {
+
+        EmailMessage e;
+
         String uuid = java.util.UUID.randomUUID().toString();
-        String subject = "Text Message from $version Mail - " + uuid;
+        String subjectTemplate = "Text Message from $version Mail - " + uuid;
         String version = "Seam 3";
-        String mergedSubject = "Text Message from " + version + " Mail - " + uuid;
+        String subject = "Text Message from " + version + " Mail - " + uuid;
 
         Wiser wiser = new Wiser(mailConfig.getServerPort());
         wiser.setHostname(mailConfig.getServerHost());
@@ -112,12 +113,12 @@ public class VelocityMailMessageTest {
             person.setName(toName);
             person.setEmail(toAddress);
 
-            mailMessage
+            e = mailMessage
                     .get()
                     .from(MailTestUtil.getAddressHeader(fromName, fromAddress))
                     .replyTo(replyToAddress)
                     .to(MailTestUtil.getAddressHeader(toName, toAddress))
-                    .subject(new VelocityTemplate(subject, cDIVelocityContext.get()))
+                    .subject(new VelocityTemplate(subjectTemplate, cDIVelocityContext.get()))
                     .bodyText(
                             new VelocityTemplate(resourceProvider.loadResourceStream("template.text.velocity"),
                                     cDIVelocityContext.get())).put("version", version).importance(MessagePriority.HIGH)
@@ -134,7 +135,7 @@ public class VelocityMailMessageTest {
         Assert.assertEquals(MailTestUtil.getAddressHeader(fromName, fromAddress), mess.getHeader("From", null));
         Assert.assertEquals(MailTestUtil.getAddressHeader(replyToAddress), mess.getHeader("Reply-To", null));
         Assert.assertEquals(MailTestUtil.getAddressHeader(toName, toAddress), mess.getHeader("To", null));
-        Assert.assertEquals("Subject has been modified", mergedSubject, MimeUtility.unfold(mess.getHeader("Subject", null)));
+        Assert.assertEquals("Subject has been modified", subject, MimeUtility.unfold(mess.getHeader("Subject", null)));
         Assert.assertEquals(MessagePriority.HIGH.getPriority(), mess.getHeader("Priority", null));
         Assert.assertEquals(MessagePriority.HIGH.getX_priority(), mess.getHeader("X-Priority", null));
         Assert.assertEquals(MessagePriority.HIGH.getImportance(), mess.getHeader("Importance", null));
@@ -146,20 +147,24 @@ public class VelocityMailMessageTest {
         Assert.assertTrue(mixed.getContentType().startsWith("multipart/mixed"));
         Assert.assertEquals(1, mixed.getCount());
 
-        Assert.assertTrue(text.getContentType().startsWith("text/plain; charset=UTF-8"));
+        Assert.assertTrue("Incorrect Charset: " + e.getCharset(),
+                text.getContentType().startsWith("text/plain; charset=" + e.getCharset()));
         Assert.assertEquals(expectedTextBody(person.getName(), version), MailTestUtil.getStringContent(text));
+        EmailMessage convertedMessage = MessageConverter.convert(mess);
+        Assert.assertEquals(convertedMessage.getSubject(), subject);
     }
-    
+
     @Test
     public void testTextMailMessageSpecialCharacters() throws MessagingException, IOException {
-                
+
+        EmailMessage e;
+
         String uuid = java.util.UUID.randomUUID().toString();
-        String subject = "Special Char ü from $version Mail - " + uuid;
+        String subjectTemplate = "Special Char ü from $version Mail - " + uuid;
         String version = "Seam 3";
-        String mergedSubject = "Special Char ü from " + version + " Mail - " + uuid;        
+        String subject = "Special Char ü from " + version + " Mail - " + uuid;
         String specialTextBody = "This is a Text Body with a special character - ü - $version";
         String mergedSpecialTextBody = "This is a Text Body with a special character - ü - " + version;
-
 
         String messageId = "1234@seam.test.com";
 
@@ -171,16 +176,10 @@ public class VelocityMailMessageTest {
             person.setName(toName);
             person.setEmail(toAddress);
 
-            mailMessage.get()
-                .from(MailTestUtil.getAddressHeader(fromName, fromAddress))
-                .replyTo(replyToAddress)
-                .to(MailTestUtil.getAddressHeader(toName, toAddress))
-                .subject(new VelocityTemplate(subject))
-                .bodyText(new VelocityTemplate(specialTextBody))
-                .importance(MessagePriority.HIGH)
-                .messageId(messageId)
-                .put("version", version)
-                .send(session.get());
+            e = mailMessage.get().from(MailTestUtil.getAddressHeader(fromName, fromAddress)).replyTo(replyToAddress)
+                    .to(MailTestUtil.getAddressHeader(toName, toAddress)).subject(new VelocityTemplate(subjectTemplate))
+                    .bodyText(new VelocityTemplate(specialTextBody)).importance(MessagePriority.HIGH).messageId(messageId)
+                    .put("version", version).send(session.get());
         } finally {
             stop(wiser);
         }
@@ -189,12 +188,9 @@ public class VelocityMailMessageTest {
                 .getMessages().size() == 1);
 
         MimeMessage mess = wiser.getMessages().get(0).getMimeMessage();
-       
-        System.out.println(subject);
-        System.out.println(MimeUtility.decodeText(MimeUtility.unfold(mess.getHeader("Subject", null))));
-        System.out.println(mergedSubject);
-        
-        Assert.assertEquals("Subject has been modified", mergedSubject, MimeUtility.decodeText(MimeUtility.unfold(mess.getHeader("Subject", null))));
+
+        Assert.assertEquals("Subject has been modified", subject,
+                MimeUtility.decodeText(MimeUtility.unfold(mess.getHeader("Subject", null))));
 
         MimeMultipart mixed = (MimeMultipart) mess.getContent();
         BodyPart text = mixed.getBodyPart(0);
@@ -202,8 +198,11 @@ public class VelocityMailMessageTest {
         Assert.assertTrue(mixed.getContentType().startsWith("multipart/mixed"));
         Assert.assertEquals(1, mixed.getCount());
 
-        Assert.assertTrue(text.getContentType().startsWith("text/plain; charset=UTF-8"));
+        Assert.assertTrue("Incorrect Charset: " + e.getCharset(),
+                text.getContentType().startsWith("text/plain; charset=" + e.getCharset()));
         Assert.assertEquals(mergedSpecialTextBody, MimeUtility.decodeText(MailTestUtil.getStringContent(text)));
+        EmailMessage convertedMessage = MessageConverter.convert(mess);
+        Assert.assertEquals(convertedMessage.getSubject(), subject);
     }
 
     @Test
@@ -269,6 +268,8 @@ public class VelocityMailMessageTest {
 
         Assert.assertTrue(attachment1.getContentType().startsWith("image/png;"));
         Assert.assertEquals("seamLogo.png", attachment1.getFileName());
+        EmailMessage convertedMessage = MessageConverter.convert(mess);
+        Assert.assertEquals(convertedMessage.getSubject(), subject);
     }
 
     @Test
@@ -348,15 +349,17 @@ public class VelocityMailMessageTest {
 
         Assert.assertTrue(inlineAttachment.getContentType().startsWith("image/png;"));
         Assert.assertEquals("seamLogo.png", inlineAttachment.getFileName());
+        EmailMessage convertedMessage = MessageConverter.convert(mess);
+        Assert.assertEquals(convertedMessage.getSubject(), subject);
     }
 
     @Test
-    public void testSMTPSessionAuthentication() throws MessagingException, MalformedURLException {
+    public void testSMTPSessionAuthentication() throws MessagingException, IOException {
         String subject = "HTML+Text Message from Seam Mail - " + java.util.UUID.randomUUID().toString();
 
         mailConfig.setServerHost("localhost");
         mailConfig.setServerPort(8978);
-        
+
         Wiser wiser = new Wiser(mailConfig.getServerPort());
         wiser.setHostname(mailConfig.getServerHost());
         wiser.getServer().setAuthenticationHandlerFactory(
@@ -396,6 +399,8 @@ public class VelocityMailMessageTest {
         MimeMessage mess = wiser.getMessages().get(0).getMimeMessage();
 
         Assert.assertEquals("Subject has been modified", subject, MimeUtility.unfold(mess.getHeader("Subject", null)));
+        EmailMessage convertedMessage = MessageConverter.convert(mess);
+        Assert.assertEquals(convertedMessage.getSubject(), subject);
     }
 
     @Test(expected = SendFailedException.class)

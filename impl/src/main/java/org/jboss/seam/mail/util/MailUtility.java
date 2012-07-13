@@ -21,10 +21,14 @@ import java.io.UnsupportedEncodingException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Enumeration;
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Properties;
 import java.util.Set;
 
+import javax.mail.Address;
 import javax.mail.MessagingException;
 import javax.mail.Session;
 import javax.mail.Transport;
@@ -37,6 +41,7 @@ import javax.naming.NamingException;
 import org.jboss.seam.mail.core.BaseMailMessage;
 import org.jboss.seam.mail.core.EmailContact;
 import org.jboss.seam.mail.core.EmailMessage;
+import org.jboss.seam.mail.core.Header;
 import org.jboss.seam.mail.core.InvalidAddressException;
 import org.jboss.seam.mail.core.MailConfig;
 import org.jboss.seam.mail.core.MailException;
@@ -98,8 +103,8 @@ public class MailUtility {
         return internetAddresses;
     }
 
-    public static InternetAddress[] getInternetAddressses(InternetAddress emaiAddress) {
-        InternetAddress[] internetAddresses = { emaiAddress };
+    public static InternetAddress[] getInternetAddressses(InternetAddress emailAddress) {
+        InternetAddress[] internetAddresses = { emailAddress };
 
         return internetAddresses;
     }
@@ -119,6 +124,33 @@ public class MailUtility {
         }
     }
 
+    public static List<InternetAddress> getInternetAddressses(Address[] addresses) throws InvalidAddressException {
+        List<InternetAddress> result = new ArrayList<InternetAddress>();
+        if (addresses != null) {
+            for (Address a : addresses) {
+                if (a.getType().equals("rfc822")) {
+                    try {
+                        result.add(new InternetAddress(a.toString()));
+                    } catch (AddressException e) {
+                        throw new InvalidAddressException(e);
+                    }
+                } else {
+                    throw new InvalidAddressException("Not type RFC822");
+                }
+            }
+        }
+        return result;
+    }
+
+    public static List<Header> getHeaders(Enumeration<?> allHeaders) {
+        List<Header> result = new LinkedList<Header>();
+        while (allHeaders.hasMoreElements()) {
+            javax.mail.Header h = (javax.mail.Header) allHeaders.nextElement();
+            result.add(new Header(h.getName(), h.getValue()));
+        }
+        return result;
+    }
+
     public static Session createSession(MailConfig mailConfig) {
 
         if (!Strings.isNullOrBlank(mailConfig.getJndiSessionName())) {
@@ -136,7 +168,7 @@ public class MailUtility {
         if (mailConfig.isValid()) {
             props.setProperty("mail.smtp.host", mailConfig.getServerHost());
             props.setProperty("mail.smtp.port", mailConfig.getServerPort().toString());
-            props.setProperty("mail.smtp.starttls.enable", mailConfig.getEnableSsl().toString());
+            props.setProperty("mail.smtp.starttls.enable", mailConfig.getEnableTls().toString());
             props.setProperty("mail.smtp.starttls.required", mailConfig.getRequireTls().toString());
             props.setProperty("mail.smtp.ssl.enable", mailConfig.getEnableSsl().toString());
             props.setProperty("mail.smtp.auth", mailConfig.getAuth().toString());
@@ -176,7 +208,7 @@ public class MailUtility {
     }
 
     public static MimeMessage createMimeMessage(EmailMessage e, Session session) {
-        BaseMailMessage b = new BaseMailMessage(session, e.getRootContentType());
+        BaseMailMessage b = new BaseMailMessage(session, e.getCharset(), e.getRootContentType());
 
         if (!Strings.isNullOrBlank(e.getMessageId())) {
             b.setMessageID(e.getMessageId());
@@ -213,8 +245,8 @@ public class MailUtility {
         } else {
             throw new SendFailedException("Unsupported Message Type: " + e.getType());
         }
-        
-        MimeMessage msg = b.getFinalizedMessage();       
+
+        MimeMessage msg = b.getFinalizedMessage();
 
         return msg;
     }
@@ -226,7 +258,7 @@ public class MailUtility {
         } catch (MessagingException e1) {
             throw new SendFailedException("Send Failed", e1);
         }
-        
+
         try {
             e.setMessageId(null);
             e.setLastMessageId(MailUtility.headerStripper(msg.getMessageID()));
